@@ -66,7 +66,8 @@ class SubmitFakeASC(FakeASC):
 
     Schnitt B: `items` je Einreichung als Liste von (Beziehung, Kennung); `write_fail` je Schritt
     (`POST reviewSubmissions`, `POST reviewSubmissionItems`, `PATCH reviewSubmissions`) → Status, (Status, Code) oder
-    "drop"; `lag` = so oft zeigt das Lesen einer abgeschickten Einreichung bzw. Version noch den alten Zustand
+    "drop", (Status, Code, meta) bringt `meta` unter `errors[0]` mit, ein dict {status, body} liefert den Rumpf
+    wörtlich (Schnitt C); `lag` = so oft zeigt das Lesen einer abgeschickten Einreichung bzw. Version noch den alten Zustand
     (None = nie den neuen)."""
 
     def __init__(self, *args, submissions=(), platform_filter=True, items=None, write_fail=None, lag=0, **kwargs):
@@ -137,10 +138,12 @@ class SubmitFakeASC(FakeASC):
         failure = self.write_fail.get(step)
         if failure == "drop":
             raise Dropped(step)
+        if isinstance(failure, dict):
+            return failure["status"], failure["body"]
         if failure is not None:
-            status, code = failure if isinstance(failure, tuple) else (failure, None)
+            status, code, *rest = failure if isinstance(failure, tuple) else (failure, None)
             return status, {"errors": [{"status": str(status), "title": WORDING, "detail": RAW_SECRET,
-                                        **({"code": code} if code else {})}]}
+                                        **({"code": code} if code else {}), **({"meta": rest[0]} if rest else {})}]}
         data = (body or {}).get("data") or {}
         if step == "POST reviewSubmissions" and len(parts) == 2:
             return self.create_submission(data)
@@ -577,6 +580,102 @@ class StoreSubmitTests(unittest.TestCase):
                 last = fake.writes()[-1]
                 self.assertEqual((last[0], last[1].split("/")[2]), (method, name))
                 self.assert_clean(result)
+
+    # C: Gründe aus meta.associatedErrors
+    def refused_with(self, meta, step="POST reviewSubmissionItems", code="STATE_ERROR.ENTITY_STATE_INVALID"):
+        fake = self.submit_fake(write_fail={step: (409, code, meta)})
+        return fake, self.einreichen(fake)
+
+    def reason_line(self, result):
+        return [line for line in result.stdout.splitlines() if line.startswith("::error::") and "HTTP 409" in line][0]
+
+    # C AC-1
+    def test_reasons_from_associated_errors_object_form(self):
+        meta = {"associatedErrors": {"/v1/ageRatingDeclarations/12345678": [
+            {"code": "ENTITY_ERROR.ATTRIBUTE.REQUIRED", "title": WORDING, "detail": RAW_SECRET}],
+            "/v1/appInfos/abcd1234-ab12-cd34-ef56-0123456789ab": [{"code": "STATE_ERROR.OTHER"}]}}
+        _, result = self.refused_with(meta)
+        line = self.reason_line(result)
+        self.assertIn("gründe: ", line)
+        self.assertIn("/v1/ageRatingDeclarations/<id>=ENTITY_ERROR.ATTRIBUTE.REQUIRED", line)
+        self.assertIn("/v1/appInfos/<id>=STATE_ERROR.OTHER", line)
+        self.assertIn("STATE_ERROR.ENTITY_STATE_INVALID", line)
+        self.assert_clean(result)
+
+    # C AC-2
+    def test_reasons_from_associated_errors_list_form(self):
+        meta = {"associatedErrors": [
+            {"code": "ENTITY_ERROR.ATTRIBUTE.REQUIRED", "source": {"pointer": "/data/attributes/kidsAgeBand"}},
+            {"code": "STATE_ERROR.OTHER"}]}
+        _, result = self.refused_with(meta)
+        line = self.reason_line(result)
+        self.assertIn("gründe: ", line)
+        self.assertIn("/data/attributes/kidsAgeBand=ENTITY_ERROR.ATTRIBUTE.REQUIRED", line)
+        self.assertIn("?=STATE_ERROR.OTHER", line)
+        self.assert_clean(result)
+
+    # C AC-3
+    def test_unknown_form_shows_meta_key_names_only(self):
+        meta = {"anderes": {"tief": [RAW_SECRET, {"code": RAW_SECRET}]}, "noch_eins": RAW_SECRET}
+        _, result = self.refused_with(meta)
+        line = self.reason_line(result)
+        self.assertIn("meta: anderes, noch_eins", line)
+        self.assertNotIn("gründe:", line)
+        self.assert_clean(result)
+
+    # C AC-4
+    def test_broken_or_missing_meta_changes_nothing(self):
+        cases = (None, "text", 7, [], {}, {"associatedErrors": 5}, {"associatedErrors": "x"},
+                 {"associatedErrors": []}, {"associatedErrors": {}}, {"associatedErrors": [1, "a", None]},
+                 {"associatedErrors": {"/p": "kein-Listenwert"}})
+        for meta in cases:
+            with self.subTest(meta=meta):
+                fake = self.submit_fake(write_fail={"POST reviewSubmissionItems": (409, "STATE_ERROR", meta)})
+                result = self.einreichen(fake)
+                self.assert_refused(result, "STATE_ERROR", "409")
+                line = self.reason_line(result)
+                self.assertNotIn("gründe:", line)
+                self.assertNotIn("Traceback", result.stderr)
+                self.assertTrue(line.endswith("(codes: STATE_ERROR), nicht wiederholt") or "meta:" in line, line)
+        for body in ("kein Objekt", ["errors"], {"errors": "x"}, {"errors": [7]}, {}):
+            with self.subTest(body=body):
+                fake = self.submit_fake(write_fail={"POST reviewSubmissionItems": {"status": 409, "body": body}})
+                result = self.einreichen(fake)
+                self.assert_refused(result, "HTTP 409")
+                self.assertNotIn("Traceback", result.stderr)
+                self.assertNotIn("gründe:", result.stdout)
+
+    # C AC-5
+    def test_reasons_sanitize_ids_wording_and_limit(self):
+        many = {f"/v1/things/{n}/x": [{"code": f"CODE_{n}"}] for n in range(12)}
+        meta = {"associatedErrors": {
+            "/v1/a/0123456789ab/11111111-2222-3333-4444-555555555555": [{"code": "bad code!", "title": WORDING,
+                                                                          "detail": RAW_SECRET}],
+            "/v1/mit leerzeichen\u00e4/x": [{"code": "ok.CODE"}],
+            "/v1/" + "z" * 80: [{"code": "x" * 120}], **many}}
+        _, result = self.refused_with(meta)
+        line = self.reason_line(result)
+        self.assertIn("/v1/a/<id>/<id>=?", line)
+        self.assertNotIn("bad code", line)
+        self.assertIn("?=ok.CODE", line)
+        self.assertEqual(line.split("gründe: ", 1)[1].count("="), 8, line)
+        for leak in ("11111111", "0123456789ab", WORDING, RAW_SECRET, "x" * 120):
+            self.assertNotIn(leak, result.stdout)
+        self.assert_clean(result)
+
+    # C AC-6
+    def test_reasons_keep_single_write_and_exit_one(self):
+        meta = {"associatedErrors": {"/v1/ageRatingDeclarations/12345678": [{"code": "ENTITY_ERROR.REQUIRED"}]}}
+        for step in ("POST reviewSubmissions", "POST reviewSubmissionItems", "PATCH reviewSubmissions"):
+            with self.subTest(step=step):
+                fake, result = self.refused_with(meta, step=step)
+                self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                method, _, name = step.partition(" ")
+                hits = [path for m, path, _ in fake.writes() if m == method and path.split("/")[2] == name]
+                self.assertEqual(len(hits), 1, fake.writes())
+                self.assertNotIn(("anlegen", "MAC_OS"), self.steps(fake))
+                self.assert_allowed_writes(fake)
+                self.assertIn("gründe:", result.stdout)
 
     # B AC-9
     def test_counter_check_failure_exit_one(self):
