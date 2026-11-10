@@ -453,8 +453,10 @@ not scope creep on the current one.
   `KeychainSessionStore` behind `KeychainOperations` (the token in the keychain, this device only, S4b-3).
   `AccountWiring` (S4c-1): `forApp` builds the one `AccountState` in `LooseEndsApp` (main window and Mac settings window), only
   when `isEnabled`: Info `LEAccountEnabled` as Bool (`project.yml` holds `false`; only the TestFlight input `konto` sets it true in the archive, #615 S4c-2a), fallback **off** (missing or another type hides the group in every real build);
-  `serviceURL` reads Info `LEServiceURL`, fallback `https://loose-ends.henemm.com`; under `--ui-testing` always on, store in memory
-  and the stand-in `UITestTransport` (no network; `--ui-testing-account-not-allowed` 401, `--ui-testing-account-retry-later` 503).
+  `serviceURL` reads Info `LEServiceURL`: https with a host, http only to `localhost`/`127.0.0.1` in a Debug build, anything else
+  the fallback `https://loose-ends.henemm.com` (S4c-2b); under `--ui-testing` always on, store in memory
+  and the stand-in `UITestTransport` (no network; `--ui-testing-account-not-allowed` 401, `--ui-testing-account-retry-later` 503,
+  `--ui-testing-account-slow` answers after 15 s). While signing in the Apple button stays, disabled, above the progress row (S4c-2b).
   The view is `LooseEnds/Views/AccountSection.swift`: the group "Claude" in the settings right under iCloud, rows from the pure
   `AccountSection.layout(status:problem:)`, `SignInWithAppleButton` (a plain test button under `--ui-testing`), sign out without a
   question, delete only after the `.destructive` confirmation; nothing is sent before a tap
