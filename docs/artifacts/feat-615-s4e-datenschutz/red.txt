@@ -1,0 +1,171 @@
+# RED #615 Schnitt 4e, 2026-11-10, Commit 62c0dbe (Entwurf docs/reference/datenschutz-entwurf.md unverändert)
+# Befehl: python3 -m unittest scripts/test_datenschutz_text.py -v   → exit=1
+# Rot (AC-7): Kernaussagen fehlen de: 14 Tage, 30 Tage, 90 Tage, Hetzner, Konto löschen, Art. 6 Abs. 1 lit. f;
+#   en: 14 days, 30 days, 90 days, Hetzner, Delete account, Art. 6(1)(f); Konto-Abschnitt fehlt (de/en);
+#   freigegebene Sätze fehlen (de/en); veraltete Sätze vorhanden: „keinen eigenen Server“, „Kein eigenes Backend“,
+#   „no server of our own“, „No backend of our own“.
+# Grün schon jetzt (gewollt, Gegenprobe der Prüfung selbst, Test 2 der Spec): CheckerTests, 5 Tests.
+# Übersprungen, einzeln: LiveTests.test_live_pages — nur mit DATENSCHUTZ_LIVE=1 (AC-11, nach Auslieferung).
+# „Deutschland“/„Germany“ steht schon heute im Text (iCloud-Absatz) und ist deshalb nicht unter den fehlenden.
+
+test_account_without_us_is_allowed (scripts.test_datenschutz_text.CheckerTests.test_account_without_us_is_allowed) ... ok
+test_missing_number_is_caught (scripts.test_datenschutz_text.CheckerTests.test_missing_number_is_caught) ... ok
+test_stale_sentence_is_caught (scripts.test_datenschutz_text.CheckerTests.test_stale_sentence_is_caught) ... ok
+test_transcript_found_in_section (scripts.test_datenschutz_text.CheckerTests.test_transcript_found_in_section) ... ok
+test_wrapped_stale_sentence_is_caught (scripts.test_datenschutz_text.CheckerTests.test_wrapped_stale_sentence_is_caught) ... ok
+test_account_section_exists_in_order (scripts.test_datenschutz_text.DraftTests.test_account_section_exists_in_order) ... FAIL
+test_core_statements_per_language (scripts.test_datenschutz_text.DraftTests.test_core_statements_per_language) ... 
+  test_core_statements_per_language (scripts.test_datenschutz_text.DraftTests.test_core_statements_per_language) (lang='de') ... FAIL
+  test_core_statements_per_language (scripts.test_datenschutz_text.DraftTests.test_core_statements_per_language) (lang='en') ... FAIL
+test_no_stale_phrases (scripts.test_datenschutz_text.DraftTests.test_no_stale_phrases) ... FAIL
+test_no_transcript_in_account_section (scripts.test_datenschutz_text.DraftTests.test_no_transcript_in_account_section) ... 
+  test_no_transcript_in_account_section (scripts.test_datenschutz_text.DraftTests.test_no_transcript_in_account_section) (lang='de') ... FAIL
+  test_no_transcript_in_account_section (scripts.test_datenschutz_text.DraftTests.test_no_transcript_in_account_section) (lang='en') ... FAIL
+test_released_sentences_per_language (scripts.test_datenschutz_text.DraftTests.test_released_sentences_per_language) ... 
+  test_released_sentences_per_language (scripts.test_datenschutz_text.DraftTests.test_released_sentences_per_language) (lang='de') ... FAIL
+  test_released_sentences_per_language (scripts.test_datenschutz_text.DraftTests.test_released_sentences_per_language) (lang='en') ... FAIL
+test_live_pages (scripts.test_datenschutz_text.LiveTests.test_live_pages) ... skipped 'Live-Seiten nur mit DATENSCHUTZ_LIVE=1'
+
+======================================================================
+FAIL: test_account_section_exists_in_order (scripts.test_datenschutz_text.DraftTests.test_account_section_exists_in_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/scripts/test_datenschutz_text.py", line 129, in test_account_section_exists_in_order
+    self.assertTrue(section(de, "de"), "deutscher Konto-Abschnitt fehlt")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '' is not true : deutscher Konto-Abschnitt fehlt
+
+======================================================================
+FAIL: test_core_statements_per_language (scripts.test_datenschutz_text.DraftTests.test_core_statements_per_language) (lang='de')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/scripts/test_datenschutz_text.py", line 117, in test_core_statements_per_language
+    self.assertEqual(missing_core(part, lang), [], f"Kernaussagen fehlen ({lang})")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['14 Tage', '30 Tage', '90 Tage', 'Hetzner[44 chars]. f'] != []
+
+First list contains 6 additional elements.
+First extra element 0:
+'14 Tage'
+
++ []
+- ['14 Tage',
+-  '30 Tage',
+-  '90 Tage',
+-  'Hetzner',
+-  'Konto löschen',
+-  'Art\\. 6 Abs\\. 1 lit\\. f'] : Kernaussagen fehlen (de)
+
+======================================================================
+FAIL: test_core_statements_per_language (scripts.test_datenschutz_text.DraftTests.test_core_statements_per_language) (lang='en')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/scripts/test_datenschutz_text.py", line 117, in test_core_statements_per_language
+    self.assertEqual(missing_core(part, lang), [], f"Kernaussagen fehlen ({lang})")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['14 days', '30 days', '90 days', 'Hetzner[41 chars]\\)'] != []
+
+First list contains 6 additional elements.
+First extra element 0:
+'14 days'
+
++ []
+- ['14 days',
+-  '30 days',
+-  '90 days',
+-  'Hetzner',
+-  'Delete account',
+-  'Art\\. 6\\(1\\)\\(f\\)'] : Kernaussagen fehlen (en)
+
+======================================================================
+FAIL: test_no_stale_phrases (scripts.test_datenschutz_text.DraftTests.test_no_stale_phrases)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/scripts/test_datenschutz_text.py", line 125, in test_no_stale_phrases
+    self.assertEqual(stale_phrases(self.text), [], "veraltete Sätze im Entwurf")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['keinen eigenen Server', 'Kein eigenes Ba[51 chars]own'] != []
+
+First list contains 4 additional elements.
+First extra element 0:
+'keinen eigenen Server'
+
++ []
+- ['keinen eigenen Server',
+-  'Kein eigenes Backend',
+-  'no server of our own',
+-  'No backend of our own'] : veraltete Sätze im Entwurf
+
+======================================================================
+FAIL: test_no_transcript_in_account_section (scripts.test_datenschutz_text.DraftTests.test_no_transcript_in_account_section) (lang='de')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/scripts/test_datenschutz_text.py", line 141, in test_no_transcript_in_account_section
+    self.assertTrue(body, f"Konto-Abschnitt fehlt ({lang})")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '' is not true : Konto-Abschnitt fehlt (de)
+
+======================================================================
+FAIL: test_no_transcript_in_account_section (scripts.test_datenschutz_text.DraftTests.test_no_transcript_in_account_section) (lang='en')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/scripts/test_datenschutz_text.py", line 141, in test_no_transcript_in_account_section
+    self.assertTrue(body, f"Konto-Abschnitt fehlt ({lang})")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '' is not true : Konto-Abschnitt fehlt (en)
+
+======================================================================
+FAIL: test_released_sentences_per_language (scripts.test_datenschutz_text.DraftTests.test_released_sentences_per_language) (lang='de')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/scripts/test_datenschutz_text.py", line 122, in test_released_sentences_per_language
+    self.assertEqual(missing_anchors(part, lang), [], f"freigegebene Sätze fehlen ({lang})")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['Nur wenn du die freiwillige Verbindung z[534 chars]pp.'] != []
+
+First list contains 8 additional elements.
+First extra element 0:
+'Nur wenn du die freiwillige Verbindung zu Claude nutzt'
+
++ []
+- ['Nur wenn du die freiwillige Verbindung zu Claude nutzt',
+-  'Einen eigenen Dienst (Server) gibt es nur für die freiwillige Verbindung zu '
+-  'Claude',
+-  'Das ist freiwillig. Ohne sie gibt es kein Konto bei uns und keinen '
+-  'Datenverkehr zu unserem Dienst.',
+-  'Aufträge und Ergebnisse bleiben gespeichert, bis du dein Konto löschst.',
+-  'Der Dienst läuft auf einem Server der Hetzner Online GmbH in Deutschland.',
+-  'Die Protokolle werden nach 14 Tagen gelöscht.',
+-  'Sicherungen werden höchstens 30 Tage aufbewahrt.',
+-  'ein Konto bei unserem Dienst mit „Konto löschen“ in den Einstellungen der '
+-  'App.'] : freigegebene Sätze fehlen (de)
+
+======================================================================
+FAIL: test_released_sentences_per_language (scripts.test_datenschutz_text.DraftTests.test_released_sentences_per_language) (lang='en')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/scripts/test_datenschutz_text.py", line 122, in test_released_sentences_per_language
+    self.assertEqual(missing_anchors(part, lang), [], f"freigegebene Sätze fehlen ({lang})")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['Only if you use the voluntary connection[474 chars]gs.'] != []
+
+First list contains 8 additional elements.
+First extra element 0:
+'Only if you use the voluntary connection to Claude'
+
++ []
+- ['Only if you use the voluntary connection to Claude',
+-  'There is a service (server) of our own only for the voluntary connection to '
+-  'Claude',
+-  'This is voluntary. Without it there is no account with us and no traffic to '
+-  'our service.',
+-  'Orders and results stay stored until you delete your account.',
+-  'The service runs on a server of Hetzner Online GmbH in Germany.',
+-  'The logs are deleted after 14 days.',
+-  'Backups are kept for 30 days at most.',
+-  'an account with our service with "Delete account" in the app\'s settings.'] : freigegebene Sätze fehlen (en)
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.004s
+
+FAILED (failures=8, skipped=1)
