@@ -5,10 +5,10 @@
         "configurationName" : "Test Scheme Action",
         "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
         "deviceName" : "iPhone 17",
-        "exportedFileName" : "B05ACB15-E587-4EA2-9DB6-D5F3E8313A2F.png",
+        "exportedFileName" : "41BD3459-62FC-42BB-8EE7-C08E5089E19F.png",
         "isAssociatedWithFailure" : false,
-        "suggestedHumanReadableName" : "account-delete-dialog_0_88EAB929-B7D2-493E-B6A0-ED59B0D84D31.png",
-        "timestamp" : 1794295244.006
+        "suggestedHumanReadableName" : "account-delete-dialog_0_BB59A02B-99EB-4586-94E7-C0A44B587A12.png",
+        "timestamp" : 1794295917.693
       }
     ],
     "testIdentifier" : "AccountSettingsTests/testDeleteCancelKeepsSignedIn()",
@@ -20,10 +20,10 @@
         "configurationName" : "Test Scheme Action",
         "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
         "deviceName" : "iPhone 17",
-        "exportedFileName" : "E68BF71D-E41F-499C-9C71-7CA2FB877FBC.png",
+        "exportedFileName" : "BF9D883C-8351-4A91-904E-1CCE0ED9D434.png",
         "isAssociatedWithFailure" : false,
-        "suggestedHumanReadableName" : "account-not-allowed_0_A22580A8-EB18-4635-A3E5-706544CFF578.png",
-        "timestamp" : 1794295298.78
+        "suggestedHumanReadableName" : "account-not-allowed_0_A92BB16A-EED4-4947-829A-FA84AB676C92.png",
+        "timestamp" : 1794295991.718
       }
     ],
     "testIdentifier" : "AccountSettingsTests/testNotAllowedShowsItsSentence()",
@@ -35,10 +35,10 @@
         "configurationName" : "Test Scheme Action",
         "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
         "deviceName" : "iPhone 17",
-        "exportedFileName" : "B345E05B-0982-41FE-BBF4-DEF48D02B234.png",
+        "exportedFileName" : "9A633B0E-75D3-4C95-AC33-72EA546B1F7E.png",
         "isAssociatedWithFailure" : false,
-        "suggestedHumanReadableName" : "account-retry-later_0_5879A675-B8B8-42E0-B6A7-2C037613C2C1.png",
-        "timestamp" : 1794295332.407
+        "suggestedHumanReadableName" : "account-retry-later_0_E0B90FB0-2588-4BF9-806B-211127ED7EDA.png",
+        "timestamp" : 1794296038.904
       }
     ],
     "testIdentifier" : "AccountSettingsTests/testRetryLaterShowsItsSentence()",
@@ -50,10 +50,10 @@
         "configurationName" : "Test Scheme Action",
         "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
         "deviceName" : "iPhone 17",
-        "exportedFileName" : "9E0308D7-3FA4-4767-8E05-BF999BC48E7C.png",
+        "exportedFileName" : "C30B2C37-9CB9-47F8-900C-974AFE956543.png",
         "isAssociatedWithFailure" : false,
-        "suggestedHumanReadableName" : "account-signed-out_0_F1284D91-4284-4B62-8255-330C2DB112AF.png",
-        "timestamp" : 1794295352.713
+        "suggestedHumanReadableName" : "account-signed-out_0_7E46C103-B039-4011-A3B5-7CA9A670B928.png",
+        "timestamp" : 1794296061.741
       }
     ],
     "testIdentifier" : "AccountSettingsTests/testSignedOutShowsGroupBelowICloud()",
@@ -65,19 +65,19 @@
         "configurationName" : "Test Scheme Action",
         "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
         "deviceName" : "iPhone 17",
-        "exportedFileName" : "01044710-2F7F-4301-9B50-B695365392F3.png",
+        "exportedFileName" : "CBA26E4B-AA5F-4254-BCEE-76867C2CA0B4.png",
         "isAssociatedWithFailure" : false,
-        "suggestedHumanReadableName" : "account-signed-in-after-wait_0_28335118-BFEE-4D57-A3EB-F751E1A62FB0.png",
-        "timestamp" : 1794295373.46
+        "suggestedHumanReadableName" : "account-signed-in-after-wait_0_47387577-FD55-4F6F-83B4-67273A5B7EAB.png",
+        "timestamp" : 1794296082.834
       },
       {
         "configurationName" : "Test Scheme Action",
         "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
         "deviceName" : "iPhone 17",
-        "exportedFileName" : "A41A4901-8236-4F42-8727-B565CB4B4039.png",
+        "exportedFileName" : "30B4BC40-7BF3-4431-A717-1B03C6F7087D.png",
         "isAssociatedWithFailure" : false,
-        "suggestedHumanReadableName" : "account-signing-in_0_89FF7822-8DEC-4773-99F3-B2B9181C86A3.png",
-        "timestamp" : 1794295371.117
+        "suggestedHumanReadableName" : "account-signing-in_0_12ABF65B-0B32-43CF-81C7-2E419C67BE44.png",
+        "timestamp" : 1794296080.538
       }
     ],
     "testIdentifier" : "AccountSettingsTests/testSigningInKeepsDisabledAppleButton()",
@@ -89,10 +89,10 @@
         "configurationName" : "Test Scheme Action",
         "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
         "deviceName" : "iPhone 17",
-        "exportedFileName" : "0997BCE4-F912-48E9-9CA4-762128700949.png",
+        "exportedFileName" : "98FE6140-4DAB-4D04-9466-FC62FA53428A.png",
         "isAssociatedWithFailure" : false,
-        "suggestedHumanReadableName" : "account-signed-in_0_A7EB0203-9233-494E-A0AF-818DCF036B2F.png",
-        "timestamp" : 1794295401.028
+        "suggestedHumanReadableName" : "account-signed-in_0_0811F0BB-5602-4379-ADB8-B44128039FBC.png",
+        "timestamp" : 1794296113.083
       }
     ],
     "testIdentifier" : "AccountSettingsTests/testSignInShowsSignedInRows()",

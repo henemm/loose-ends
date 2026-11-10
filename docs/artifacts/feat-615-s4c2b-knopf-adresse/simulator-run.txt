@@ -1,16 +1,16 @@
 # Simulator-Beleg
-erzeugt: 2026-11-10T08:23:51+0100
+erzeugt: 2026-11-10T08:35:46+0100
 befehl: scripts/sim.sh test-proof AccountSettingsTests
 workflow: feat-615-s4c2b-knopf-adresse
-head: ea81403ad287bb13b456ee354eb02d5a5ea7a783
+head: ef650ed9cec5bdd443a7ab6c0a00d3386085d8a5
 basis: d7072d5509c049c6d7acb162b5ee0b6f64be21ec (merge-base origin/main HEAD)
 testklasse: AccountSettingsTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 8 gesamt, 8 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1794295202.07  ende: 1794295429.473
+start: 1794295873.549  ende: 1794296144.5
 geraet: iPhone 17, iOS 27.2
-summary: docs/artifacts/feat-615-s4c2b-knopf-adresse/simulator-run/summary.json  sha256:3eded8602fc23a4ba0becb6d9c1b87917b30104fea5d53c3cdc8f6b38149189a
+summary: docs/artifacts/feat-615-s4c2b-knopf-adresse/simulator-run/summary.json  sha256:42d213fa47d2b9fd6a0a1c8310e6705d2d60b8b30ee4d3594bbecc56a8a814f0
 xcresult: docs/artifacts/feat-615-s4c2b-knopf-adresse/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/feat-615-s4c2b-knopf-adresse/simulator-run/*.png (7 Stück)
 
