@@ -1,0 +1,24 @@
+# AC-4 Knopfbezeichnungen gegen den Katalog, 2026-11-10T20:13:27Z
+Quelle: LooseEnds/Resources/Localizable.xcstrings (Schlüssel -> Wort je Sprache)
+
+'Claude': de='Claude'
+'Delete account': de='Konto löschen'
+'Sign out': de='Abmelden'
+
+Verwendung in LooseEnds/Views/AccountSection.swift:
+  5: /// The rows of the settings group "Claude" (#615 S4c-1): signing in with Apple, out, and deleting the account after a
+  124: Text("Sign out").foregroundStyle(.tint)
+  134: Button("Delete account", role: .destructive) {
+
+Im Entwurf verwendet:
+  31: unserem Dienst mit „Konto löschen“ in den Einstellungen der App.
+  70: du dich in den Einstellungen unter „Claude“ mit Apple anmeldest; damit entsteht dein Konto bei uns. Dann gilt zusätzlich:
+  95: **Löschen.** In den Einstellungen unter „Claude“ löschst du mit „Konto löschen“ dein Konto. Das entfernt dein Konto und
+  97: Sicherungen laufen innerhalb von 30 Tagen aus. „Abmelden“ beendet nur die Sitzung auf diesem Gerät.
+  122: | Freiwillig; ohne Konto kein Verkehr zum Dienst | `LooseEnds/Claude/AccountWiring.swift` (`forApp`, nichts wird vor einem Tipp gesendet), `LooseEnds/Views/Acco
+  131: | „Konto löschen“ entfernt alles zum Konto, widerruft bei Apple | `server/src/accounts.ts` (`deleteAccount`), `server/src/auth.ts` (`POST /auth/delete`), Nachwe
+  133: | „Abmelden“ beendet nur die Sitzung dieses Geräts | `server/src/auth.ts` (`POST /auth/logout` beendet genau diese Sitzung), `LooseEnds/Views/AccountSection.swi
+  226: Apple in Settings under "Claude"; this creates your account with us. Then the following also applies:
+  249: **Deleting.** In Settings under "Claude" you delete your account with "Delete account". This removes your account and
+  251: 30 days. "Sign out" only ends the session on this device.
+  287: account with our service with "Delete account" in the app's settings. For everything else an email to the address above is enough.

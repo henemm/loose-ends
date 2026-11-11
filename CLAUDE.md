@@ -162,7 +162,8 @@ Dialog englisch; `scripts/test_catalog_languages.py` prüft das für jede Sprach
 Der Datenschutztext liegt in `docs/reference/datenschutz-entwurf.md` (Freigabe Henning); öffentlich steht er seit 2026-10-27
 unter https://www.henemm.com/legal/loose-ends/privacy-policy/ (Website-Repo `henemm/henemm-website`, `content/legal/loose-ends/`),
 bei Apple gesetzt über die Repo-Variable `ASC_PRIVACY_POLICY_URL` (en-US: Konstante `PRIVACY_URL_EN` im Skript, englische Seite `…/privacy-policy-en/`, #763) und `asc-beta.yml` `aktion=einrichten` (#705; `aktion=einreichen` reicht zum Beta-Review ein, nur nach Hennings Wort). Eine Änderung
-am Text gilt erst, wenn auch die Website-Seite angepasst ist.
+am Text gilt erst, wenn auch die Website-Seite angepasst ist. Seit 2026-11-10 enthält der Text den Konto-Teil (Verbindung zu Claude,
+`docs/specs/feat-615-schnitt-4e-datenschutz.md`); der Store-Schalter `LEAccountEnabled` bleibt bis #625 aus, die Sicherungsfrist des Dienstes beträgt 30 Tage.
 
 `DEVELOPMENT_TEAM` steht in `project.yml` (`XK87E2B3VR`) und darf dort nicht geleert werden: Xcode
 legt das Team in der erzeugten Projektdatei ab, die bei jedem `generate` neu geschrieben wird — ein

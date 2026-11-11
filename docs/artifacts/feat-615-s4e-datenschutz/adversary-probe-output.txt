@@ -1,0 +1,13 @@
+FAIL DE 14->15 gefangen
+OK   EN 30->60 gefangen
+OK   Abschrift im Abschnitt gefangen
+OK   stale 'No backend of our own' gefangen
+OK   stale im EN-Teil gefangen
+OK   stale case-sensitiv: 'kein eigenes backend' NICHT gefangen (geringe Schwaeche)
+OK   Anker 30->31 gefangen
+OK   core gruen trotz fehlendem Satz, wenn '30 Tage' irgendwo (Schwaeche, vom Anker abgefangen)
+OK   Anker faengt das
+OK   'Deutschland' steht schon vor dem Konto-Abschnitt (core nicht trennscharf)
+INFO Saetze aus Konto-Abschnitt an anderen Ort verschoben, fehlende Anker: []
+DE 14->15 core: [] anchors: ['Die Protokolle werden nach 14 Tagen gelöscht.']
+EN 14->15 core: ['14 days'] anchors: ['The logs are deleted after 14 days.']

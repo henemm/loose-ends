@@ -1,0 +1,4 @@
+Standort des Heimservers (off-site Sicherung, restic-Repository)
+Frage in /60-validate am 2026-11-11: „Steht dein Heimserver, auf dem die Sicherungen liegen, in Deutschland?“
+Antwort Henning (Product Owner, Betreiber des Heimservers): „Ja, in Deutschland“.
+Anlass: henemm-infra docs/backup-offsite.md nennt den Standort nicht; indirekter Hinweis nur Zeitzone Europe/Berlin (sicherung.txt).

@@ -1,0 +1,5 @@
+# AC-9 Standort, nur lesend, 2026-11-10T20:10:08Z
+$ ssh rennwienix curl -s http://169.254.169.254/hetzner/v1/metadata/availability-zone
+nbg1-dc3
+$ ssh rennwienix curl -s http://169.254.169.254/hetzner/v1/metadata/region
+eu-central

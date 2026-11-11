@@ -1,0 +1,24 @@
+# AC-9 Protokollfrist, nur lesend, 2026-11-10T20:10:06Z
+$ ssh rennwienix cat /etc/logrotate.d/nginx
+/var/log/nginx/*.log {
+	daily
+	missingok
+	rotate 14
+	compress
+	delaycompress
+	notifempty
+	create 0640 www-data adm
+	sharedscripts
+	prerotate
+		if [ -d /etc/logrotate.d/httpd-prerotate ]; then \
+			run-parts /etc/logrotate.d/httpd-prerotate; \
+		fi \
+	endscript
+	postrotate
+		invoke-rc.d nginx rotate >/dev/null 2>&1
+	endscript
+}
+
+$ ssh rennwienix grep -rn access_log /etc/nginx/nginx.conf /etc/nginx/sites-enabled/
+/etc/nginx/nginx.conf:40:	access_log /var/log/nginx/access.log;
+/etc/nginx/sites-enabled/henemm.com:92:        access_log off;

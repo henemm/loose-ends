@@ -1,0 +1,273 @@
+Beleg Sicherung Loose Ends 30 Tage - henemm-infra#421 (henemm/loose-ends#615 S4e)
+Erstellt 2026-11-10 (UTC). Hosts: Rennwienix (Hetzner, Quelle) und homeassistant (Heimserver, restic-Repo).
+Hinweis: restic-Tabellen zeigen Ortszeit des Hosts (CET, UTC+1); JSON-Auswertungen und Kopfzeilen sind UTC.
+Keine Passwoerter, Schluessel, restic.env- oder prune.secrets-Inhalte in diesem Beleg.
+
+PR:            https://github.com/henemm/henemm-infra/pull/422 (Closes #421, gemergt 2026-11-10T20:30:31Z; #421 dadurch geschlossen)
+Merge-Commit:  845e1ad6f5f196e3b26970a74efcb53f2f857d76
+Tests:         volle Suite auf Rennwienix im Wegwerf-Klon des Zweigs: 512 passed, 6 skipped
+Folgeticket:   https://github.com/henemm/henemm-infra/issues/423 (Heimserver-Prune laeuft seit 2026-07-15 nie durch)
+
+== 0. Ausrollen ==
+Rennwienix: Auto-Deploy (Cron alle 5 min), Log 2026-11-10T20:35:02Z:
+  "Deployed 12e857e3 -> 845e1ad6: docs/backup-offsite.md scripts/backup.sh scripts/restic-prune-heimserver.sh scripts/restore-test-frieda.sh scripts/restore-test-gregor.sh tests/..."
+Heimserver (homeassistant, 2026-11-10T20:31Z):
+$ cp -p ~/restic-rest/prune.sh ~/restic-rest/prune.sh.vor-421
+$ scp scripts/restic-prune-heimserver.sh ha:restic-rest/prune.sh   (chmod 700, Cron unveraendert: 30 4 * * 1)
+$ sha256sum ~/restic-rest/prune.sh
+9c0d6b2e7ecf94a11240f60c566fde114051a77134aef1433ebea58336c7f3b3  /home/haadmin/restic-rest/prune.sh   (= scripts/restic-prune-heimserver.sh in 845e1ad)
+
+== 1. Vorher: Snapshots mit dem Loose-Ends-Pfad ==
+$ restic snapshots --no-lock --path /home/hem/backups/loose-ends --compact
+# Host homeassistant, 2026-11-10T20:30:59Z
+ID        Time                 Host            Tags
+------------------------------------------------------
+67bcf30a  2026-11-04 09:28:07  henemm-hetzner  offsite
+                                               manual
+e6eb86d0  2026-11-04 09:55:27  henemm-hetzner  offsite
+                                               daily
+fe555096  2026-11-05 04:00:14  henemm-hetzner  offsite
+                                               daily
+e71c59af  2026-11-06 04:00:13  henemm-hetzner  offsite
+                                               daily
+9ef0e2b4  2026-11-07 04:00:19  henemm-hetzner  offsite
+                                               daily
+7b74e21a  2026-11-08 04:00:20  henemm-hetzner  offsite
+                                               daily
+3214acd9  2026-11-09 04:00:12  henemm-hetzner  offsite
+                                               daily
+ec5bdeb9  2026-11-09 12:25:47  henemm-hetzner  offsite
+                                               daily
+2b694944  2026-11-10 04:00:17  henemm-hetzner  offsite
+                                               daily
+------------------------------------------------------
+9 snapshots
+Anzahl: 9 | aeltester: 2026-11-04T08:28:07 | juengster: 2026-11-10T03:00:17
+davon eigene (Tag loose-ends): 0 | gemeinsam (>1 Pfad): 8 | rein ohne Tag: 1
+$ restic snapshots --no-lock --json  (nur Gesamtzahl)
+Snapshots im Repo gesamt: 87
+
+== 2. Dry-run nach dem Ausrollen, vor dem neuen Snapshot ==
+# Host homeassistant, 2026-11-10T20:31:29Z
+$ ~/restic-rest/prune.sh --dry-run
+==> 2026-11-10T20:31:29Z Retention (dry-run=1)
+==> 1/4 Loose Ends: eigene Snapshots, 30 Tage
+Applying Policy: keep all snapshots within 30d of the newest
+==> 2/4 Loose Ends: Altbestand in gemeinsamen Snapshots (0)
+==> 3/4 Loose Ends: reine Snapshots ohne Tag (0)
+==> 4/4 Allgemeine Regel (nur daily/weekly)
+   [gekuerzt: 81 Gruppen 'keep', 0 Gruppen 'remove' - die Liste nennt nur Snapshot-IDs und Pfade]
+exit=0
+
+== 3. Neuer getrennter Loose-Ends-Snapshot + Auswahl der Rueckspielproben (Rennwienix) ==
+# Host Rennwienix, 2026-11-10T20:35:23Z, Checkout 845e1ad
+$ OUT_DIR=/home/hem/backups/loose-ends bash scripts/backup-loose-ends-snapshot.sh   (2026-11-10T20:35:23Z)
+==> Loose-Ends-Dump ok (8 Tabellen, 7 Migrationen, 40K)
+total 40
+-rw------- 1 hem hem 40829 2026-11-10T20:35:24 looseends.sql
+
+$ restic backup --tag offsite --tag loose-ends --host henemm-hetzner /home/hem/backups/loose-ends   (2026-11-10T20:35:24Z)
+using parent snapshot 2b694944
+
+Files:           0 new,     1 changed,     0 unmodified
+Dirs:            0 new,     4 changed,     0 unmodified
+Added to the repository: 41.796 KiB (7.860 KiB stored)
+
+processed 1 files, 39.872 KiB in 0:00
+snapshot becc6b28 saved
+exit=0
+
+$ restic snapshots --tag offsite --host henemm-hetzner --path /home/hem/backups/loose-ends --json | jq 'max_by(.time)'   (Auswahl wie restore-test-loose-ends.sh, 2026-11-10T20:35:25Z)
+gewaehlt: becc6b28… 2026-11-10T20:35:24.703315669Z tags=offsite,loose-ends paths=/home/hem/backups/loose-ends
+Alter: 3 s (Grenze 48 h = 172800 s)
+
+$ restic snapshots --tag offsite,daily --latest 1 --json  (Auswahl restore-test-gregor.sh)
+gewaehlt: 2b694944 2026-11-10T03:00:17 offsite,daily 30 Pfade
+$ restic snapshots --tag offsite,daily --host henemm-hetzner --json | jq max_by(.time)  (Auswahl restore-test-frieda.sh)
+gewaehlt: 2b694944 2026-11-10T03:00:17 offsite,daily 30 Pfade
+$ (zum Vergleich, alte Auswahl) restic snapshots --tag offsite --host henemm-hetzner --json | jq max_by(.time)
+waere gewaehlt: becc6b28 2026-11-10T20:35:24 offsite,loose-ends 1 Pfade
+
+== 4. Nachher: Snapshots mit dem Loose-Ends-Pfad ==
+$ restic snapshots --no-lock --path /home/hem/backups/loose-ends --compact
+# Host homeassistant, 2026-11-10T20:36:00Z
+ID        Time                 Host            Tags
+---------------------------------------------------------
+67bcf30a  2026-11-04 09:28:07  henemm-hetzner  offsite
+                                               manual
+e6eb86d0  2026-11-04 09:55:27  henemm-hetzner  offsite
+                                               daily
+fe555096  2026-11-05 04:00:14  henemm-hetzner  offsite
+                                               daily
+e71c59af  2026-11-06 04:00:13  henemm-hetzner  offsite
+                                               daily
+9ef0e2b4  2026-11-07 04:00:19  henemm-hetzner  offsite
+                                               daily
+7b74e21a  2026-11-08 04:00:20  henemm-hetzner  offsite
+                                               daily
+3214acd9  2026-11-09 04:00:12  henemm-hetzner  offsite
+                                               daily
+ec5bdeb9  2026-11-09 12:25:47  henemm-hetzner  offsite
+                                               daily
+2b694944  2026-11-10 04:00:17  henemm-hetzner  offsite
+                                               daily
+becc6b28  2026-11-10 21:35:24  henemm-hetzner  offsite
+                                               loose-ends
+---------------------------------------------------------
+10 snapshots
+Anzahl: 10 | aeltester: 2026-11-04T08:28:07 | juengster: 2026-11-10T20:35:24
+davon eigene (Tag loose-ends): 1 | gemeinsam (>1 Pfad): 8 | rein ohne Tag: 1
+$ restic snapshots --no-lock --json  (nur Gesamtzahl)
+Snapshots im Repo gesamt: 88
+
+== 5. Dry-run nachher (Loose-Ends-Teile: nichts zu entfernen, Rewrite-Auswahl leer) ==
+# Host homeassistant, 2026-11-10T20:36:03Z
+$ ~/restic-rest/prune.sh --dry-run
+==> 2026-11-10T20:36:03Z Retention (dry-run=1)
+==> 1/4 Loose Ends: eigene Snapshots, 30 Tage
+Applying Policy: keep all snapshots within 30d of the newest
+keep 1 snapshots:
+ID        Time                 Host            Tags                Reasons     Paths
+-----------------------------------------------------------------------------------------------------------
+becc6b28  2026-11-10 21:35:24  henemm-hetzner  offsite,loose-ends  within 30d  /home/hem/backups/loose-ends
+-----------------------------------------------------------------------------------------------------------
+1 snapshots
+
+==> 2/4 Loose Ends: Altbestand in gemeinsamen Snapshots (0)
+==> 3/4 Loose Ends: reine Snapshots ohne Tag (0)
+==> 4/4 Allgemeine Regel (nur daily/weekly)
+   [gekuerzt: 81 Gruppen 'keep', 0 Gruppen 'remove' - die Liste nennt nur Snapshot-IDs und Pfade]
+exit=0
+   (becc6b28 erscheint nur in Schritt 1: die allgemeine Regel betrachtet ihn nicht.)
+
+== 6. Vorschau ohne Loeschen: Auswahl wie am 2026-12-06 (nur dry-run, --no-lock) ==
+# Host homeassistant, 2026-11-10T20:36:21Z
+$ NOW_EPOCH=1796515200 ~/restic-rest/prune.sh --dry-run   (Vorschau: Auswahl wie am 2026-12-06T00:00Z, nur lesend)
+==> 2026-11-10T20:36:21Z Retention (dry-run=1)
+==> 1/4 Loose Ends: eigene Snapshots, 30 Tage
+Applying Policy: keep all snapshots within 30d of the newest
+keep 1 snapshots:
+ID        Time                 Host            Tags                Reasons     Paths
+-----------------------------------------------------------------------------------------------------------
+becc6b28  2026-11-10 21:35:24  henemm-hetzner  offsite,loose-ends  within 30d  /home/hem/backups/loose-ends
+-----------------------------------------------------------------------------------------------------------
+1 snapshots
+
+==> 2/4 Loose Ends: Altbestand in gemeinsamen Snapshots (2)
+
+snapshot e6eb86d0 of [29 Pfade, darunter /home/hem/backups/loose-ends] at 2026-11-04 08:55:27.040024018 +0000 UTC)
+excluding /home/hem/backups/loose-ends
+would save new snapshot
+would remove old snapshot
+
+snapshot fe555096 of [29 Pfade, darunter /home/hem/backups/loose-ends] at 2026-11-05 03:00:14.129314219 +0000 UTC)
+excluding /home/hem/backups/loose-ends
+would save new snapshot
+would remove old snapshot
+
+would modify 2 snapshots
+==> 3/4 Loose Ends: reine Snapshots ohne Tag (1)
+Would have removed the following snapshots:
+{67bcf30a}
+
+==> 4/4 Allgemeine Regel (nur daily/weekly)
+   [gekuerzt: 81 Gruppen 'keep', 0 Gruppen 'remove' - die Liste nennt nur Snapshot-IDs und Pfade]
+exit=0
+
+== 7. Ergebnis ==
+- Vorher 9 Snapshots mit /home/hem/backups/loose-ends (aeltester 2026-11-04T08:28:07Z), nachher 10 (neu: becc6b28, Tags offsite,loose-ends, ein Pfad).
+- Dry-run heute: Schritt 1 behaelt becc6b28 (within 30d), Schritt 2 Auswahl 0 IDs, Schritt 3 Auswahl 0 IDs, nichts zu entfernen.
+- Rueckspielprobe Loose Ends waehlt becc6b28 (3 s alt, Grenze 48 h). Gregor- und Frieda-Probe waehlen weiter den gemeinsamen 2b694944;
+  die alte Frieda-Auswahl haette becc6b28 gewaehlt (deshalb offsite,daily im PR).
+- Erste faellige Loeschung: ab 2026-12-04 (aeltester Dump 2026-11-04T08:28Z + 30 Tage), erster Montagslauf danach 2026-12-07 04:30 Ortszeit.
+  Vorschau (6.): dann Rewrite von e6eb86d0/fe555096 (nur der Loose-Ends-Pfad faellt heraus), Einzel-forget von 67bcf30a, kein gemeinsamer Snapshot geloescht.
+- Ein echter forget-/rewrite-Lauf (AC-10) entfaellt heute: es gibt keinen Loose-Ends-Snapshot, der aelter als 30 Tage ist. Heute wurde nichts geloescht.
+- OFFEN (henemm-infra#423): Der Montagslauf scheitert seit 2026-07-15 an einer verwaisten Sperre ("repository is already locked by PID 303676 on Rennwienix",
+  angelegt 2026-07-15 06:36:31). Solange sie besteht, laeuft auch die 30-Tage-Regel nicht. Nicht angefasst, weil das Entfernen auch die allgemeine
+  Retention wieder in Gang setzt.
+
+== Nachtrag #423 (2026-11-10, henemm/henemm-infra#423) ==
+
+-- Sperre vorher (2026-11-10T20:40:51Z, Heimserver, restic 0.16.4) --
+$ restic list locks --no-lock
+0eba2fac85b7cb733c90cf138a7dd2fc386941a3c692c66dc3733cc207e38b29
+$ restic cat lock 0eba2fac... --no-lock
+  time 2026-07-15T06:36:31Z, exclusive false, hostname Rennwienix, username hem, pid 303676
+-- Pruefung auf Rennwienix (2026-11-10T20:40:50Z) --
+$ uptime -s                         -> 2026-10-16 18:14:09 (Neustart nach Anlage der Sperre)
+$ ps -p 303676 -o pid,lstart,cmd    -> kein Prozess ("PID 303676 laeuft nicht")
+$ ps -eo pid,lstart,cmd | grep restic -> kein restic-Prozess
+=> Sperre verwaist.
+-- Entfernen (2026-11-10T20:41:02Z) --
+$ restic unlock                     -> "successfully removed 1 locks", exit 0   (kein --remove-all)
+-- Sperre nachher --
+$ restic list locks --no-lock       -> leer
+
+-- Dry-run naechster Montagslauf (Skript 845e1ad, sha256 9c0d6b2e..., identisch mit dem ausgerollten) --
+$ ~/restic-rest/prune.sh --dry-run  (2026-11-10T20:41:16Z, exit 0)
+  1/4 eigene Snapshots: keep 1 (becc6b28, within 30d), remove 0
+  2/4 Altbestand: 0 IDs        3/4 reine Snapshots ohne Tag: 0 IDs
+  4/4 allgemeine Regel: 82 'keep'-Bloecke, 0 'remove'
+  => kein kombinierter Snapshot wuerde geloescht; Montagslauf bleibt aktiv.
+-- Allgemeine Regel als Dry-run MIT Sperre (ohne --no-lock) --
+$ restic forget --dry-run --tag daily --tag weekly --keep-daily 7 --keep-weekly 8 --keep-monthly 12 --keep-yearly 3
+  exit 0, Sperre bekommen, 81 'keep', 0 'remove'; danach restic list locks leer.
+
+-- Aenderung (henemm-infra PR #425, https://github.com/henemm/henemm-infra/pull/425) --
+  Merge-Commit c8e021a1e1d8593db4c29a0f98aa95f39018e6eb (2026-11-10), Closes #423.
+  prune.sh --loose-ends-only: Teile 1-3 + restic prune; echte Laeufe --retry-lock 30m.
+  Tests: volle Suite in Wegwerf-Klon auf Rennwienix 517 passed, 6 skipped.
+  Gruppierung der allgemeinen Regel (jeder gemeinsame Snapshot eigene Gruppe) ausgegliedert nach henemm-infra#424 (braucht Freigabe).
+
+-- Ausrollen Heimserver (2026-11-10T20:49Z) --
+  Sicherung vorher: ~/restic-rest/prune.sh.vor-423, ~/restic-rest/crontab.vor-423
+  sha256 ~/restic-rest/prune.sh = b8d0757be9daa4031de0408d2334da55b62731056c06dc1409f63874deb41421 (= scripts/restic-prune-heimserver.sh in c8e021a)
+  crontab haadmin (prune-Zeilen):
+    30 4 * * 1 /home/haadmin/restic-rest/prune.sh >> /home/haadmin/restic-rest/prune.log 2>&1
+    30 5 * * * /home/haadmin/restic-rest/prune.sh --loose-ends-only >> /home/haadmin/restic-rest/prune.log 2>&1
+  (Heimserver Europe/Berlin; Sicherung Rennwienix 03:00 UTC, nach ~40 s fertig)
+
+-- Dry-run Tagesmodus nach Ausrollen --
+$ ~/restic-rest/prune.sh --loose-ends-only --dry-run  (2026-11-10T20:49:26Z, exit 0)
+  1/4 keep 1 (becc6b28), remove 0;  2/4 0 IDs;  3/4 0 IDs
+  4/4 prune --dry-run: this removes 0 blobs / 0 B, to delete 0 B (repack 615 blobs / 3.5 MiB, keine Daten entfernt)
+  10 Snapshots mit /home/hem/backups/loose-ends, aeltester 67bcf30a 2026-11-04T08:28:07Z (manual, ein Pfad).
+
+-- Ergebnis --
+- Heute wurde nichts geloescht (nur die verwaiste Sperre entfernt).
+- Erste echte Loeschung: Tageslauf 2026-12-05 05:30 Ortszeit (erster Lauf, bei dem 67bcf30a aelter als 30 Tage ist;
+  am 2026-12-04 05:30 fehlen noch 3 h). Danach taeglich: ein Dump liegt hoechstens 30 Tage + < 1 Tag (+ 0,5-1,5 h Abstand zur Sicherung).
+- Erster echter Lauf ueberhaupt (prune.log): Tageslauf 2026-11-11 05:30 (entfernt nichts).
+
+== Nachtrag Frist 29d (2026-11-10, Refs henemm-infra#421) ==
+Ziel: Zusage "hoechstens 30 Tage" woertlich. Umgesetzt mit Frist 28 Tage ab jetzt (nicht --keep-within 29d), Begruendung:
+  --keep-within zaehlt ab dem juengsten Snapshot. Die naechtliche Sicherung laeuft jeden Tag zur selben Uhrzeit (03:00 UTC),
+  der Tageslauf 0,5-1,5 h danach -> mit 29d bis zu 30 Tage + 1,5 h; bei ausfallender Sicherung wuerde gar nichts geloescht.
+Regel jetzt: LE_DAYS=28 (eine Konstante im Skript) fuer alle drei Teile, Zeitgrenze = jetzt - 28 Tage, Teil 1 per ID.
+Hoechstalter: Loeschung beim ersten Tageslauf mit Alter > 28 Tage; der Lauf davor sah <= 28 Tage; zwischen zwei Laeufen um
+  05:30 Ortszeit liegen 24 h (bei Zeitumstellung 23 oder 25 h) -> hoechstens 28 Tage + 25 h = 29 Tage 1 Stunde; prune im selben Lauf.
+  Faellt ein Tageslauf aus: hoechstens 30 Tage 1 Stunde.
+
+-- PR --
+  https://github.com/henemm/henemm-infra/pull/426, Merge-Commit 8e6d126ffd9ec0d1c7675d79a9d8bd23c031c34a (Refs #421)
+  Tests: volle Suite in Wegwerf-Klon auf Rennwienix 518 passed, 6 skipped (Grenztest 28 Tage +/- 1 h fuer alle drei Teile).
+
+-- Ausrollen Heimserver (2026-11-10T20:58Z) --
+  Sicherung vorher: ~/restic-rest/prune.sh.vor-28d (sha256 b8d0757b...41421 = Stand c8e021a)
+  sha256 ~/restic-rest/prune.sh = e5c72135c0ead31ab667b0e35021e8cb4329ea802fd3ddab36bbbcab9c39736e (= scripts/restic-prune-heimserver.sh in 8e6d126)
+  crontab unveraendert:
+    30 4 * * 1 /home/haadmin/restic-rest/prune.sh >> /home/haadmin/restic-rest/prune.log 2>&1
+    30 5 * * * /home/haadmin/restic-rest/prune.sh --loose-ends-only >> /home/haadmin/restic-rest/prune.log 2>&1
+
+-- Dry-runs nach Ausrollen --
+$ ~/restic-rest/prune.sh --loose-ends-only --dry-run  (2026-11-10T20:58:19Z, exit 0)
+  1/4 eigene aelter 28 Tage: 0;  2/4 Altbestand: 0;  3/4 reine ohne Tag: 0
+  4/4 prune --dry-run: this removes 0 blobs / 0 B, to delete 0 B
+$ ~/restic-rest/prune.sh --dry-run  (2026-11-10T20:58:27Z, exit 0)
+  Teile 1-3: je 0;  allgemeine Regel: 81 keep, 0 remove
+
+-- Neues Datum der ersten echten Loeschung --
+  Tageslauf 2026-12-03 05:30 Ortszeit (04:30Z): aeltester Dump 67bcf30a (2026-11-04T08:28:07Z) ist dann 28 Tage 20 h alt
+  (am 2026-12-02 05:30 erst 27 Tage 20 h). Mit ihm fallen per Rewrite die gemeinsamen Snapshots mit Loose-Ends-Pfad bis zur Grenze.
+  Eigener Snapshot becc6b28 (2026-11-10T20:35Z): Tageslauf 2026-12-09 05:30.
+- Heute wurde nichts geloescht; kein echter Loeschlauf von Hand.
