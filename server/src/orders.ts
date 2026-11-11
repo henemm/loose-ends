@@ -75,14 +75,20 @@ export async function putOrder(pool: pg.Pool, account: string, doc: unknown): Pr
   return result.rowCount === 1 ? "stored" : "duplicate";
 }
 
-// One statement: the next free order of the account goes to exactly one device. Exactly once, no promised order.
+// A claimed order without a result is taken back once its claim is older than this (database time).
+export const CLAIM_TIMEOUT_MINUTES = 10;
+
+// One statement: the oldest free or reclaimable order of the account goes to exactly one device. At least once:
+// a reclaimed order may run twice; the expected state in the order turns the second run into stale.
 export async function claimOrder(pool: pg.Pool, account: string, device: string): Promise<Order | undefined> {
+  const open = `(claimed_by IS NULL OR (claimed_at < now() - make_interval(mins => $3)
+     AND NOT EXISTS (SELECT 1 FROM order_results WHERE order_id = orders.id)))`;
   const result = await pool.query(
     `UPDATE orders SET claimed_by = $2, claimed_at = now()
-     WHERE id = (SELECT id FROM orders WHERE account_id = $1 AND claimed_by IS NULL ORDER BY created_at, id FOR UPDATE SKIP LOCKED LIMIT 1)
-       AND claimed_by IS NULL
+     WHERE id = (SELECT id FROM orders WHERE account_id = $1 AND ${open} ORDER BY created_at, id FOR UPDATE SKIP LOCKED LIMIT 1)
+       AND ${open}
      RETURNING doc`,
-    [account, device],
+    [account, device, CLAIM_TIMEOUT_MINUTES],
   );
   return result.rows[0]?.doc;
 }
