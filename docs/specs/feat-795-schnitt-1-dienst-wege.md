@@ -183,6 +183,15 @@ RED: `app-routes.ts` existiert nicht, alle Tests schlagen beim Import fehl; AC-1
 - [ ] Vertragsdokument ergänzt (Wege der App, Rückholen), genau drei ```json-Blöcke
 - [ ] #795 kommentiert (Stand S1, Folge S1b nginx), Board-Karte aktuell
 
+## Known Limitations
+
+Aus /60-validate (2026-11-11), am Code geprüft, keine Codeänderung:
+
+- **AC-10(e), zu kleine `Content-Length`:** Der Server liest genau die behauptete Länge; der Überschuss ist für HTTP der Beginn der nächsten Anfrage. Ein 413 ist hier nicht möglich, die Antwort ist ein Nicht-2xx (Formprüfung oder Parserfehler) mit abgebrochener Verbindung. Der Test prüft „kein 2xx“ und am Ende die leere Datenbank; das ist die tragende Zusage („ohne dass Daten abgelegt werden“).
+- **AC-15, Logger-Spion:** Während des absichtlich unerreichbaren Datenbankstarts aus AC-14(a) ist der Spion aus; `main.ts` meldet dort `migrate failed, retrying`. Aus den App-Wegen selbst kommt in keinem Fall eine Zeile.
+- **AC-10(f) gegen AC-14(d):** 401 vor 413 gilt für die Grenze der Route (256 KiB, belegt mit 300 KiB). Über 1 MiB antwortet die globale Grenze des `bridge` mit 413 und `connection: close`, bevor eine Route oder Anmeldung läuft (bestehendes Verhalten seit #615 S3c-2).
+
 ## Changelog
 
 - 2026-11-11: Entwurf (Schnitt S1 von #795)
+- 2026-11-11: Known Limitations aus /60-validate
