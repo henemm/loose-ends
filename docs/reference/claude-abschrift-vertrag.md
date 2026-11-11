@@ -158,3 +158,33 @@ Beispiel (derselbe Auftrag ein zweites Mal ausgeführt):
   "taskID": "6F1C2B0A-0000-4000-8000-000000000001"
 }
 ```
+
+## Wege der App (#795 S1)
+
+Die App spricht mit dem Dienst über drei Wege, alle `POST`, alle mit `Authorization: Bearer <App-Sitzung>` (das Sitzungs-Token
+aus `/auth/apple`, nie das OAuth-Token von Claude). Jede Antwort trägt `Cache-Control: no-store`; jede Ablehnung hat keinen Körper
+und sagt nie, welche Prüfung scheiterte. Reihenfolge der Prüfungen: Methode (405 mit `Allow: POST`), Sitzung (401), Gerät (400),
+Inhaltstyp `application/json` (415), Körper höchstens 256 KiB, beim Lesen gezählt (413), JSON und Form (400).
+
+`X-Device` ist die Kennung der Installation, eine UUID (`8-4-4-4-12` Hex, Groß- oder Kleinschreibung); der Dienst führt sie in
+Kleinschreibung. `transcript` braucht kein Gerät: die Abschrift gehört dem Konto.
+
+```http
+POST /app/transcript
+Authorization: Bearer <App-Sitzung>
+Content-Type: application/json
+
+<Abschrift>
+```
+
+- `POST /app/transcript`: 204 ohne Körper, auch wenn der Dienst schon eine gleich alte oder neuere Abschrift hat (`generatedAt`
+  entscheidet, eine je Konto); 400 bei ungültiger Abschrift.
+- `POST /app/orders/claim` mit `X-Device`, ohne Körper: 200 mit dem Auftrag als JSON, 204, wenn keiner offen ist.
+- `POST /app/orders/result` mit `X-Device` und dem Ergebnis: 204 (auch für dasselbe Ergebnis ein zweites Mal), 409, wenn der Auftrag
+  unbekannt, nie vergeben, einem anderen Gerät oder Konto zugeordnet oder zurückgeholt ist; 400 bei ungültigem Ergebnis.
+
+**Rückholen.** Ein vergebener Auftrag ohne Ergebnis, dessen Vergabe älter als 10 Minuten ist, geht beim nächsten `claim` an das
+fragende Gerät (die Zeit rechnet die Datenbank). Folgen: (a) Ein Ergebnis des alten Geräts danach ist abgelehnt (409). (b) Ein
+Auftrag mit Ergebnis wird nie zurückgeholt. (c) Zugestellt wird mindestens einmal, nicht genau einmal: Hat das alte Gerät den
+Auftrag schon ausgeführt, macht der erwartete Stand aus der zweiten Ausführung `stale`; nur ein `capture` ist nicht geschützt und
+kann doppelt erfasst werden. (d) Fragt dasselbe Gerät erneut, bekommt es seinen Auftrag zurück und darf das Ergebnis melden.

@@ -10,6 +10,7 @@ import pg from "pg";
 import { allowedSubsFromEnv } from "./accounts.ts";
 import { type AppleConfig, type KeyLookup, loadAppleConfig } from "./apple.ts";
 import { createJwks } from "./apple-jwks.ts";
+import { appRoutes } from "./app-routes.ts";
 import { authRoutes } from "./auth.ts";
 import { ErrorWindow, healthHandler } from "./health.ts";
 import { mcpHandler } from "./mcp.ts";
@@ -139,6 +140,11 @@ function mountAuth(options: StartOptions, pool: pg.Pool, isReady: () => boolean,
   return Object.fromEntries(Object.entries(routes).map(([path, route]) => [path, gated(isReady, route)]));
 }
 
+// The app's routes, always mounted (no Apple setup needed), each gated.
+function mountApp(pool: pg.Pool, isReady: () => boolean): Record<string, Route> {
+  return Object.fromEntries(Object.entries(appRoutes({ pool })).map(([path, route]) => [path, gated(isReady, route)]));
+}
+
 const DISCOVERY = new Set(["/.well-known/oauth-authorization-server", "/.well-known/openid-configuration"]);
 type NodeHandler = (req: IncomingMessage, res: ServerResponse) => void;
 const unavailable: NodeHandler = (_req, res) => void res.writeHead(503).end();
@@ -204,9 +210,10 @@ export async function start(options: StartOptions): Promise<Running> {
   const issuer = mountIssuer(options, pool, isReady, window, jwks);
   const verifier = options.oauth?.verifier ?? (issuer.provider ? providerVerifier(issuer.provider, publicUrl) : rejectAll);
   const gate = bearerGate(publicUrl, verifier);
-  // Metadata, /health and /mcp last: neither auth nor extraRoutes can replace them. Metadata needs no database.
+  // Metadata, /health and /mcp last: neither auth, app nor extraRoutes can replace them. Metadata needs no database.
   const routes: Record<string, Route> = {
     ...mountAuth(options, pool, isReady, jwks),
+    ...mountApp(pool, isReady),
     ...options.extraRoutes,
     [METADATA_PATH]: metadataRoute(publicUrl),
     "/health": healthHandler({ pool, isMigrated: isReady, window }),

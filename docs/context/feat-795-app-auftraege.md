@@ -97,3 +97,5 @@ Eigene Routendatei wie `auth.ts`; Sitzung genau wie `/auth/logout` geprüft; Ant
 
 ## Umfangsfreigabe S1 (2026-11-11)
 Henning per Auswahl vor der Spec-Freigabe: „Annehmen, so bauen“ — rund 460 zählende Zeilen (Code ≈125, Tests ≈330) statt 250. Meldeschwelle: Tests nach RED > 380 oder Endstand > 520 → erneut fragen. In /60-validate nicht erneut fragen, solange darunter.
+
+Nach RED (2026-11-11): 464 Testzeilen, über der Meldeschwelle 380; erneut gefragt, Henning „So lassen“ (AC-13/AC-15 bleiben in S1, Issue-Kommentar #795). Neue Grenze für /60-validate: Endstand bis ≈590 zählende Zeilen ohne erneute Frage.
