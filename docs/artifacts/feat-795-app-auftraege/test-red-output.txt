@@ -1,0 +1,7 @@
+Postgres on 127.0.0.1:49857, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.Tw0HvlcjDO
+
+> typecheck
+> tsc --noEmit
+
+test/app-routes.test.ts(10,27): error TS2307: Cannot find module '../src/app-routes.ts' or its corresponding type declarations.
+test/app-routes.test.ts(12,10): error TS2305: Module '"../src/orders.ts"' has no exported member 'CLAIM_TIMEOUT_MINUTES'.
