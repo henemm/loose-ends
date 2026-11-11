@@ -194,6 +194,15 @@ Der Schnitt berührt keinen Pfad der Geräteliste (nur `henemm-infra`, `docs/art
 - [ ] Kein Geheimniswert in Repo, Belegen, Protokoll oder Nachricht (Scan, 0 Treffer)
 - [ ] #795 kommentiert (Stand S1b, Folge S2), Board-Karte aktuell, Memory geschrieben
 
+## Known Limitations
+
+Validierung 2026-11-11 (/60-validate), Abweichungen vom Wortlaut, Inhalt erfüllt:
+
+- **AC-5:** `henemm/henemm-infra` hat keine CI-Prüfung (`gh pr checks 431`: keine). Ersatz: `python3 -m pytest tests -q` im Wegwerfklon des PR-Zweigs auf `rennwienix`, 524 passed, 6 skipped (`infra-pr.txt`).
+- **AC-2 bis AC-4, AC-6, AC-12:** `nginx-T.txt` und `nginx-t.txt` kollidieren auf dem Mac (Dateisystem ohne Groß-/Kleinschreibung); sie heißen `nginx-dump.txt` und `nginx-test.txt`, der Kopf beider Dateien sagt das. `nginx -t` und `reload` tragen dieselbe Sekunde; die Reihenfolge belegt die Textfolge (reload nur im Erfolgszweig).
+- **AC-9:** Der Scan meldet bei Erfolg nur die Gesamtzeile, keine Zeilen je Host. Der Monitor-Diff enthält Zeilen anderer Dienste nur mit Laufzeit- und Zeitangaben (z. B. „Up 18 hours“ → „Up 19 hours“), kein Dienst wechselt seinen Zustand.
+- **Servertests:** `migrate.test.ts` AC-3 (`lockIsFree`) einmal rot, Wiederholung 408/408 grün; Dienstcode in diesem Zweig unverändert, bekanntes Schwanken (#869).
+
 ## Changelog
 
 - 2026-11-11: Initial spec created (Schnitt S1b)
