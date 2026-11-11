@@ -1,0 +1,87 @@
+# AC-2, AC-3, AC-4 (#795 S1b): Auszug aus `sudo nginx -T` auf rennwienix, 2026-11-11 nach dem Reload (21:29:50Z),
+# Datei sites-enabled/loose-ends.henemm.com. Name nginx-dump.txt statt nginx-T.txt (Spec): macOS unterscheidet
+# Groß-/Kleinschreibung nicht, nginx-T.txt und nginx-t.txt würden sich überschreiben (in S4d passiert); der Beleg zu
+# AC-6 heißt entsprechend nginx-test.txt. Zeilen 1–15 (Kopf und Zonen) und 126–173 (^~ /auth/ bis location /) des
+# Dateiblocks; ausgelassen sind /health, /mcp, /.well-known, /oauth/, /auth/apple|logout|delete (unverändert) und die
+# certbot-Zeilen.
+
+# configuration file /etc/nginx/sites-enabled/loose-ends.henemm.com:
+# Loose Ends: Dienst für Claude (henemm/loose-ends#796, henemm-infra#336). Container loose-ends-server auf 127.0.0.1:8780.
+# Nach außen gehen /health, /mcp, die drei /.well-known/…-Pfade (Resource- und Server-Metadaten) und /oauth/
+# (Aussteller für claude.ai, loose-ends#621 S6b) sowie die App-Anmeldung /auth/apple, /auth/logout und /auth/delete
+# (loose-ends#615 S4d) und die App-Wege /app/transcript, /app/orders/claim und /app/orders/result (loose-ends#795 S1b,
+# eigene Zone loose_ends_app). Der Rest unter /auth/ und /app/ und alles andere bleiben 404.
+# Installiert als /etc/nginx/sites-available/loose-ends.henemm.com (Link in sites-enabled); 443-Blöcke von certbot.
+
+# Eigene Zonen hier statt in conf.d/limit-req.conf (Schnitt auf wenige Dateien begrenzt); monitor.sh fragt alle 5 min.
+limit_req_zone $binary_remote_addr zone=loose_ends_health:1m rate=30r/m;
+limit_req_zone $binary_remote_addr zone=loose_ends_oauth:1m rate=10r/s;
+limit_req_zone $binary_remote_addr zone=loose_ends_mcp:1m rate=10r/s;
+limit_req_zone $binary_remote_addr zone=loose_ends_auth:1m rate=5r/s;
+limit_req_zone $binary_remote_addr zone=loose_ends_app:10m rate=10r/s;
+
+    [...]
+
+    # Alles andere unter /auth/ bleibt zu
+    location ^~ /auth/ {
+        return 404;
+    }
+
+    # App-Wege (loose-ends#795 S1b): genau drei Pfade, eigene Zone, damit Anmeldung und Abgleich getrennt zählen.
+    # Der Dienst begrenzt den Körper ebenfalls auf 256 KiB (413). Bei 429 bricht die App den Abholdurchgang ab.
+    location = /app/transcript {
+        limit_req zone=loose_ends_app burst=40 nodelay;
+        limit_req_status 429;
+        client_max_body_size 256k;
+        proxy_pass http://127.0.0.1:8780;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /app/orders/claim {
+        limit_req zone=loose_ends_app burst=40 nodelay;
+        limit_req_status 429;
+        client_max_body_size 256k;
+        proxy_pass http://127.0.0.1:8780;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /app/orders/result {
+        limit_req zone=loose_ends_app burst=40 nodelay;
+        limit_req_status 429;
+        client_max_body_size 256k;
+        proxy_pass http://127.0.0.1:8780;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Alles andere unter /app/ bleibt zu
+    location ^~ /app/ {
+        return 404;
+    }
+
+    location / {
+        return 404;
+    }
+    [...]
+
+# Prüfungen (Mac, über den Auszug oben und nginx-alt.conf = Stand vor dem Reload)
+location = /app/… im Auszug: 3
+zone=loose_ends_app burst=40 nodelay in den App-Blöcken: 3
+client_max_body_size 256k in den App-Blöcken: 3
+limit_req_status 429 in den App-Blöcken: 3
+proxy_pass http://127.0.0.1:8780 in den App-Blöcken: 3
+proxy_set_header (Host, X-Real-IP, X-Forwarded-For, X-Forwarded-Proto) in den App-Blöcken: 12
+zone=loose_ends_auth in den App-Blöcken: 0
+proxy_buffering/proxy_read_timeout in den App-Blöcken: 0
+Zone loose_ends_auth vorher (nginx-alt.conf): limit_req_zone $binary_remote_addr zone=loose_ends_auth:1m rate=5r/s;
+Zone loose_ends_auth jetzt (nginx -T):        limit_req_zone $binary_remote_addr zone=loose_ends_auth:1m rate=5r/s;
+Nutzung zone=loose_ends_auth (Auth-Pfade) vorher: 3, jetzt: 3
+Zone loose_ends_app vorher: 0, jetzt: limit_req_zone $binary_remote_addr zone=loose_ends_app:10m rate=10r/s;

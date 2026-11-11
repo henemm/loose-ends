@@ -188,3 +188,11 @@ fragende Gerät (die Zeit rechnet die Datenbank). Folgen: (a) Ein Ergebnis des a
 Auftrag mit Ergebnis wird nie zurückgeholt. (c) Zugestellt wird mindestens einmal, nicht genau einmal: Hat das alte Gerät den
 Auftrag schon ausgeführt, macht der erwartete Stand aus der zweiten Ausführung `stale`; nur ein `capture` ist nicht geschützt und
 kann doppelt erfasst werden. (d) Fragt dasselbe Gerät erneut, bekommt es seinen Auftrag zurück und darf das Ergebnis melden.
+
+**Mengengrenze (#795 S1b).** Vor dem Dienst begrenzt nginx die drei Wege gemeinsam je Adresse auf 10 Anfragen je Sekunde mit
+einem Stoß von bis zu 40 Anfragen (eigene Zone, getrennt von der Anmeldung); darüber antwortet nginx 429 ohne den Dienst zu
+fragen. Pflicht der App: Bekommt ein Gerät 429, bricht es den laufenden Abholdurchgang sofort ab und setzt ihn erst beim nächsten
+Anlass fort (Start, Vordergrund, Weckruf), nie in einer Schleife und ohne Wiederholung im selben Durchgang. So entsteht höchstens
+eine Ablehnung je Gerät und Anlass; zehn Ablehnungen in zehn Minuten sperren die Adresse sonst für eine Stunde für alle Dienste
+des Servers. Körper über 256 KiB weist nginx schon am `Content-Length` mit 413 ab, ebenfalls ohne den Dienst. Alle anderen Pfade
+unter `/app/` sind 404.
