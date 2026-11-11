@@ -96,3 +96,9 @@ Ablauf: Wortlaut DE als Entwurf in der Spec, Freigabe Henning, EN wortgetreu, Re
 ### Entscheidungen Henning (2026-11-10)
 - **Store-Schalter bleibt in 4e aus.** `LEAccountEnabled` wird erst mit #625 gesetzt, wenn `ALLOWED_APPLE_SUBS` für andere aufgeht; TestFlight `konto=true` bleibt der einzige Weg. 4e ändert nur Text (Repo + Website).
 - **Sicherungen: 30 Tage.** Die Loose-Ends-Sicherung bekommt eine eigene off-site Frist von 30 Tagen (Infra-Issue, von Claude umgesetzt); der Text nennt 30 Tage. Text erst veröffentlichen, wenn die Frist am Heimserver greift oder im selben Zug gesetzt ist.
+
+## Validierung (2026-11-11)
+
+- Umfang: 328 LoC (Entwurf 126, Prüfskript 199, CLAUDE.md 3) statt ≤ 250; Henning in /60-validate: „So übernehmen“.
+- Heimserver in Deutschland: Henning bestätigt, Beleg `docs/artifacts/feat-615-s4e-datenschutz/heimserver.txt`.
+- Statuszeilen des Entwurfs auf den Stand „veröffentlicht am 2026-11-10 (henemm-website#79)“ gebracht.

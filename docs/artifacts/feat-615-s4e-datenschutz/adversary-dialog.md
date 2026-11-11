@@ -31,6 +31,10 @@ Sicherungsfrist: Skript 28 Tage ab jetzt, Höchstalter laut Beleg < 30 Tage. Äl
 **Adversary:** Nachbohren. (1) Statuszeilen: DE (docs/reference/datenschutz-entwurf.md:9-11) und EN (docs/reference/datenschutz-entwurf.md:183-185) sagen noch "veröffentlicht erst, wenn die Sicherungsfrist gilt"; die Seiten sind seit 2026-11-10 live. AC-5 verlangt Freigabe und englische Website-Seite in der Statuszeile: erfüllt. Die Zukunftsform ist aber veraltet und nennt weder Datum noch PR 79. LOW. (2) Hetzner Deutschland belegt durch standort.txt (nbg1-dc3, eu-central). "Weiterer Rechner in Deutschland" nur über Dokumentation (backup-offsite.md), nicht gemessen; nach Beleg-Tabelle hinreichend. Protokolle 14 Tage: protokolle.txt daily/rotate 14; der Loose-Ends-vhost hat keine eigene access_log-Zeile (per API gelesen), es gilt der Standardpfad mit Rotation; compress+delaycompress, Dateien bis etwa 15 Tage alt, "nach 14 Tagen" knapp vertretbar. Fail2ban- und Docker-Logs werden im Text nicht behauptet. (3) Beleg-Tabelle (docs/reference/datenschutz-entwurf.md:119-148) deckt jede Aussage; die Zeile "Kein eigenes Backend, keine Fremd-SDKs" ist ersetzt (Z.123) und nennt URLSession nur im Konto-Teil. "Offen, nicht belegt" ergänzt Aufgabenübertragung und Anthropic (docs/reference/datenschutz-entwurf.md:170-173). (4) CLAUDE.md:165-166: Konto-Teil seit 2026-11-10, Spec-Verweis, LEAccountEnabled aus bis #625, 30 Tage; Diff +2/-1. (5) AC-13: schalter.txt ohne verbotene Pfade, project.yml:84 LEAccountEnabled: false. (6) AC-12: vergleich.txt 25/25 Sätze je Sprache, keine internen Abschnitte. (7) AC-7: red.txt zeigt fehlende 14/30/90 Tage, Hetzner, Konto löschen und veraltete Sätze; red.txt stammt von einer früheren Skriptfassung, inhaltlich unerheblich.
 **Implementierer:** Statuszeilen-Nachzug nicht gate-relevant; Schwächen der Regex-Prüfung sind durch Anker abgedeckt.
 
+### Runde 3
+**Adversary:** (2026-11-11, nach /60-validate) Geprüft nur die Nachträge in docs/reference/datenschutz-entwurf.md. (a) gh pr view 79 -R henemm/henemm-website: MERGED 2026-11-10T20:59:03Z; gh issue view 421 -R henemm/henemm-infra: CLOSED 2026-11-10T20:30:32Z, 29 min vor dem Merge. Statuszeilen docs/reference/datenschutz-entwurf.md:11-12 (DE) und :186 (EN) nennen jetzt veröffentlicht am 2026-11-10 (henemm/henemm-website#79) nach der Sicherungsfrist (#421): belegt. Beleg-Zeile docs/reference/datenschutz-entwurf.md:135 stützt „Deutschland“ auf heimserver.txt (Bestätigung des PO 2026-11-11); das ungedeckte Zitat aus backup-offsite.md ist entfernt. (b) Punkte 1–4 der Spec und die öffentliche Seite unberührt. (c) python3 -m unittest scripts.test_datenschutz_text: 14 OK, 1 übersprungen (Live ohne Variable); mit DATENSCHUTZ_LIVE=1: 14 OK, 0 übersprungen. (d) F001 behoben, keine neuen Befunde.
+**Implementierer:** F001 behoben; Standortbeleg Heimserver nachgetragen (Befund der Validierung zu AC-3).
+
 ## Findings
 
 Finding:
@@ -217,5 +221,32 @@ Checklist: 13/13 points proven
 - blob:941516626ef8941e0eef0e559fb845b761b618a3  docs/artifacts/feat-615-s4e-datenschutz/sicherung.txt
 - blob:a8e46b4e064eb25ab6b5ce472c56be1161d880c2  docs/artifacts/feat-615-s4e-datenschutz/vergleich.txt
 - blob:1557d297e23d4b3d5ab090bdc702b2306f23a2e2  docs/reference/datenschutz-entwurf.md
+- blob:6d088c90969d1da73382557271f390ee79325598  scripts/test_datenschutz_text.py
+- blob:f9021c555938739c3e82db44da2dbe87476941f7  server/src/accounts.ts
+
+## Geprüfte Dateien
+
+- sha256:2322651d5e0cff74f8f9531b096eaf0249344f68c386f025f2f71e027e7ec053  CLAUDE.md
+- sha256:e85727b1cbfd262abe85de11a28691e3d638a1d77e80ee221a55aceb4a5eae73  docs/artifacts/feat-615-s4e-datenschutz/live.txt
+- sha256:f30d03cf1648366358493b469f9bb1e5da86c737e2b3a5c9756cff4e51b69a86  docs/artifacts/feat-615-s4e-datenschutz/protokolle.txt
+- sha256:db0147c0ee1ccf49c0136e39a400920da980feec4676a5ccb370f9e1b8e48f9b  docs/artifacts/feat-615-s4e-datenschutz/red.txt
+- sha256:58b9d184c9277f12bec9a3c1fedfa8f9508d3e7acfdbcc65b5c6888e4e3fadb9  docs/artifacts/feat-615-s4e-datenschutz/schalter.txt
+- sha256:fff1f3407b8530dc4f96b5cfb0e627aef96d388acb10aca884b8a77bc3d573f6  docs/artifacts/feat-615-s4e-datenschutz/sicherung.txt
+- sha256:e6c4120ebfd29e74faf9294a4142b14c85455f2577eeeac4289102dc4d9ca650  docs/artifacts/feat-615-s4e-datenschutz/vergleich.txt
+- sha256:5f1fc0c8a821c0eb6ca7d8532a55dc5d5dacf067ffc967af029f5b7efb91b56d  docs/reference/datenschutz-entwurf.md
+- sha256:1d2b3fc02ac71f9302e22e1ccc7c8c58568b3f5002ae9d5df11425c26c818c00  scripts/test_datenschutz_text.py
+- sha256:b59036c16af390ce5989f8c96ed59e0920a67a5f2e230966b9e8de2277fa2c4a  server/src/accounts.ts
+
+## Prüfbasis
+
+- base: 62c0dbe1f0ece30ddd37a8461b422ecb603f5b09
+- blob:6ee357e0bdda36b7631a206f5bdf3c2e0070d607  CLAUDE.md
+- blob:a22721dad9aea1a4142e657d007e81819d57c2a0  docs/artifacts/feat-615-s4e-datenschutz/live.txt
+- blob:c1af52da22f7c4bf5e504579f5b5dcb1d4a80529  docs/artifacts/feat-615-s4e-datenschutz/protokolle.txt
+- blob:9a3a6291aeed93ddee46b8917d8c9b5459c082c4  docs/artifacts/feat-615-s4e-datenschutz/red.txt
+- blob:42cc61c214c31f71b5b88b0c7b07cd22a1a77fee  docs/artifacts/feat-615-s4e-datenschutz/schalter.txt
+- blob:941516626ef8941e0eef0e559fb845b761b618a3  docs/artifacts/feat-615-s4e-datenschutz/sicherung.txt
+- blob:a8e46b4e064eb25ab6b5ce472c56be1161d880c2  docs/artifacts/feat-615-s4e-datenschutz/vergleich.txt
+- blob:b9426640ab496054aa3588028581a8aa28edf2d6  docs/reference/datenschutz-entwurf.md
 - blob:6d088c90969d1da73382557271f390ee79325598  scripts/test_datenschutz_text.py
 - blob:f9021c555938739c3e82db44da2dbe87476941f7  server/src/accounts.ts

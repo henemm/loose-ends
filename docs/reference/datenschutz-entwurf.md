@@ -8,7 +8,8 @@ ist die Fassung ohne die Abschnitte „Beleg im Code“ und „Offen, nicht bele
 wenn auch die Website-Seite angepasst ist.
 Konto-Teil (Abschnitt „Wenn du die Verbindung zu Claude nutzt“ und die Änderungen an Kurzfassung, „Wo es liegt“ und
 Löschsatz) von Henning freigegeben am 2026-11-10 (#615 Schnitt 4e, `docs/specs/feat-615-schnitt-4e-datenschutz.md`);
-veröffentlicht auf der Website-Seite erst, wenn die Sicherungsfrist von 30 Tagen gilt (henemm/henemm-infra#421).
+veröffentlicht auf der Website-Seite am 2026-11-10 (henemm/henemm-website#79), nachdem die Sicherungsfrist von
+30 Tagen galt (henemm/henemm-infra#421).
 
 Geschrieben aus dem, was der Code am 2026-10-26 belegt (#342, Teil 2). Jede Aussage hat unten einen Beleg im
 Code; was der Code nicht beweist, steht unter „Offen, nicht belegt“.
@@ -131,7 +132,7 @@ Die App fragt **nicht** nach Kontakten. Sie liest keine Kontakte.
 | „Konto löschen“ entfernt alles zum Konto, widerruft bei Apple | `server/src/accounts.ts` (`deleteAccount`), `server/src/auth.ts` (`POST /auth/delete`), Nachweis `docs/artifacts/feat-615-s4d-auth-oeffnen/loeschen-lokal.md` |
 | Aufträge aus Claude mit Inhalt und Ergebnis, bis zur Kontolöschung | `server/migrations/001_claude_schema.sql` (`orders`, `order_results`, kein Ablauf), `server/migrations/007_order_kinds.sql`, `server/src/mcp.ts` (`capture_task`, `complete_task`, `set_due` und weitere Auftragswerkzeuge), `server/src/accounts.ts` (`deleteAccount` löscht Aufträge und Ergebnisse) |
 | „Abmelden“ beendet nur die Sitzung dieses Geräts | `server/src/auth.ts` (`POST /auth/logout` beendet genau diese Sitzung), `LooseEnds/Views/AccountSection.swift` (Hinweis „Signing out disconnects only this device“) |
-| Sicherungen auf einem weiteren Rechner in Deutschland, verschlüsselt | `henemm-infra` `docs/backup-offsite.md` (restic, verschlüsselt, Heimserver in Deutschland, append-only), Beleg `sicherung.txt` (AC-10) |
+| Sicherungen auf einem weiteren Rechner in Deutschland, verschlüsselt | `henemm-infra` `docs/backup-offsite.md` (restic, verschlüsselt, append-only), Beleg `sicherung.txt` (AC-10); Standort Deutschland: Bestätigung Henning 2026-11-11 (`docs/artifacts/feat-615-s4e-datenschutz/heimserver.txt`) |
 | Apple und Anthropic handeln nach eigenem Datenschutz | kein Code-Beleg möglich; Verweis auf fremde Verantwortung, steht deshalb unter „Offen, nicht belegt“ als bewusst nicht prüfbar |
 | Rechtsgrundlage Protokolle | Art. 6 Abs. 1 lit. f DSGVO (Recherche im Kontext: Server-Logs mit IP 7 bis 14 Tage gängig) |
 | Speicher auf dem Gerät + privates CloudKit | `Shared/Persistence/ModelContainerFactory.swift`: `groupContainer: .identifier(appGroup)`, `cloudKitDatabase: .private(cloudContainer)`; Rückfall ohne Abgleich `cloudKitDatabase: .none` |
@@ -182,7 +183,7 @@ Datenschutz-URL der Beta-Lokalisierung en-US gesetzt, wenn `asc-beta.yml` mit `a
 gilt erst, wenn auch dieser Abschnitt und die englische Website-Seite angepasst sind.
 Konto-Teil (Abschnitt 4 und die Änderungen an Abschnitt 2, 3 und 7) wortgetreu aus der Spec übernommen, von Henning
 freigegeben am 2026-11-10 (#615 Schnitt 4e); veröffentlicht auf https://www.henemm.com/legal/loose-ends/privacy-policy-en/
-erst, wenn die Sicherungsfrist von 30 Tagen gilt (henemm/henemm-infra#421).
+am 2026-11-10 (henemm/henemm-website#79), nachdem die Sicherungsfrist von 30 Tagen galt (henemm/henemm-infra#421).
 
 *Last updated: November 10, 2026*
 
