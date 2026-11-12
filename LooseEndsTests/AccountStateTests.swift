@@ -7,7 +7,7 @@ import Testing
     /// Records every request and answers it with the next prepared reply; runs `hook` once, before the first answer,
     /// so a test can look at the state or call it again while that request is still open.
     actor Wire: HTTPTransport {
-        enum Reply: Equatable, Sendable { case status(Int), token(String), offline, invalid, cancel }
+        enum Reply: Equatable, Sendable { case status(Int), token(String), offline, invalid, cancel, hang }
         private(set) var requests: [URLRequest] = []
         private var replies: [Reply]
         private var hook: (@MainActor @Sendable () async -> Void)?
@@ -22,6 +22,7 @@ import Testing
             case .offline: throw URLError(.notConnectedToInternet)
             case .invalid: throw ServiceError.invalidResponse
             case .cancel: throw CancellationError()
+            case .hang: try await Task.sleep(for: .seconds(3600)); throw CancellationError()
             case .token(let token): return (Data(#"{"sessionToken":"\#(token)"}"#.utf8), Self.response(request, 200))
             case .status(let status): return (Data(), Self.response(request, status))
             }
@@ -304,5 +305,140 @@ import Testing
         let nonce = try #require(try body(first)["nonce"])
         #expect(seen.count == 7 && store.token == nil)
         for text in seen { #expect(!text.contains(marker) && !text.contains(nonce) && !text.contains(hashed)) }
+    }
+
+    // MARK: withSession (#795 S2b)
+
+    /// Holds a running `deleteAccount` so a test can cancel it at the end.
+    @MainActor final class Running { var task: Task<Void, Never>? }
+
+    /// One claim through `withSession`; the wire's next reply answers it.
+    private func claim(_ state: AccountState) async throws -> ServiceClient.Claim? {
+        try await state.withSession { client, token in try await client.claimOrder(sessionToken: token, device: UUID()) }
+    }
+
+    @Test("session: zugang nur aus signedin", arguments: [
+        AccountState.Status.signedOut, .signingIn, .deleting, .notAllowed, .retryLater,
+    ])
+    func withSessionOnlyWhenSignedIn(start: AccountState.Status) async throws {
+        let first: [Wire.Reply] = switch start {
+        case .notAllowed: [.status(401)]
+        case .retryLater: [.status(503)]
+        case .deleting: [.hang]
+        default: []
+        }
+        let (state, _, wire) = make(first, token: start == .deleting ? "T1" : nil)
+        let running = Running()
+        switch start {
+        case .notAllowed, .retryLater: try await signIn(state)
+        case .signingIn: _ = try state.beginSignIn()
+        case .deleting:
+            running.task = Task { await state.deleteAccount() }
+            while await wire.requests.isEmpty { await Task.yield() }
+        default: break
+        }
+        #expect(state.status == start)
+        let sent = await wire.requests.count
+        var ran = false
+        let result: Int? = try await state.withSession { _, _ in ran = true; return 1 }
+        #expect(result == nil && !ran && state.status == start)
+        #expect(await wire.requests.count == sent)
+        running.task?.cancel()
+        await running.task?.value
+    }
+
+    @Test("session: ohne lesbaren token nil", arguments: [true, false])
+    func withSessionWithoutReadableTokenIsNil(unreadable: Bool) async throws {
+        let (state, store, wire) = make([.status(204)], token: "T1")
+        if unreadable { store.failNext(load: true) } else { try store.clear() }
+        var ran = false
+        let result: Int? = try await state.withSession { _, _ in ran = true; return 1 }
+        #expect(result == nil && !ran)
+        #expect(await wire.requests.isEmpty)
+    }
+
+    @Test("session: frischer token je nutzung")
+    func withSessionPassesFreshToken() async throws {
+        let (state, store, wire) = make([.status(204), .status(204)], token: "T1")
+        #expect(try await claim(state) == ServiceClient.Claim.none)
+        let seen: String? = try await state.withSession { _, token in token }
+        #expect(seen == "T1")
+        try store.save("T2")
+        #expect(try await claim(state) == ServiceClient.Claim.none)
+        let requests = await wire.requests
+        #expect(requests.map { $0.value(forHTTPHeaderField: "Authorization") } == ["Bearer T1", "Bearer T2"])
+        #expect(state.status == .signedIn)
+    }
+
+    /// `nil` stands for `CancellationError`.
+    @Test("session: andere fehler behalten die sitzung", arguments: [
+        ServiceError.tooManyRequests, .refused, .unavailable, .rejected(500), .invalidResponse, nil,
+    ] as [ServiceError?])
+    func withSessionKeepsSessionOnOtherErrors(failure: ServiceError?) async {
+        let (state, store, wire) = make([], token: "T1")
+        do {
+            let _: Int? = try await state.withSession { _, _ in throw failure ?? CancellationError() }
+            Issue.record("no error")
+        } catch let error as ServiceError {
+            #expect(error == failure)
+        } catch {
+            #expect(failure == nil && error is CancellationError)
+        }
+        #expect(store.token == "T1" && state.status == .signedIn && state.lastProblem == nil)
+        #expect(await wire.requests.isEmpty)
+    }
+
+    @Test("session: 401 raeumt denselben token")
+    func unauthorizedClearsSameToken() async {
+        let (state, store, _) = make([.status(401)], token: "T1")
+        await #expect(throws: ServiceError.unauthorized) { try await claim(state) }
+        #expect(store.token == nil && state.status == .signedOut)
+    }
+
+    @Test("session: 401 zu altem token raeumt neue sitzung nicht")
+    func unauthorizedKeepsNewerToken() async {
+        let (state, store, wire) = make([.status(401)], token: "T1")
+        await wire.onFirst {
+            do { try store.save("T2") } catch { Issue.record(error) }
+        }
+        await #expect(throws: ServiceError.unauthorized) { try await claim(state) }
+        #expect(store.token == "T2" && state.status == .signedIn)
+    }
+
+    @Test("session: 401 ueberschreibt keinen laufenden ablauf", arguments: [AccountState.Status.signingIn, .deleting])
+    func unauthorizedNeverOverwritesRunningFlow(flow: AccountState.Status) async {
+        // The flow's own request takes the first reply; the claim, held open by the hook, gets the 401 after it.
+        let (state, _, wire) = make(flow == .deleting ? [.hang, .status(401)] : [.status(204), .status(401)], token: "T1")
+        let running = Running()
+        await wire.onFirst {
+            if flow == .deleting {
+                running.task = Task { await state.deleteAccount() }
+                while await wire.requests.count < 2 { await Task.yield() }
+            } else {
+                await state.signOut()
+                do { _ = try state.beginSignIn() } catch { Issue.record(error) }
+            }
+            #expect(state.status == flow)
+        }
+        await #expect(throws: ServiceError.unauthorized) { try await claim(state) }
+        #expect(state.status == flow)
+        running.task?.cancel()
+        await running.task?.value
+    }
+
+    @Test("session: lastproblem bleibt")
+    func withSessionLeavesLastProblemAlone() async throws {
+        let replies: [Wire.Reply?] = [nil, .status(204), .status(429), .status(409), .status(503), .cancel, .status(401)]
+        for reply in replies {
+            let (state, store, _) = make(reply.map { [$0] } ?? [], token: "T1")
+            if reply == nil { store.failNext(load: true) }
+            do { _ = try await claim(state) } catch { /* the failure itself is AC-14/AC-15; here only lastProblem counts */ }
+            #expect(state.lastProblem == nil, "\(String(describing: reply))")
+        }
+        let (failed, failedStore, _) = make([.status(503), .status(401)], token: "T1")
+        await failed.deleteAccount()
+        #expect(failed.lastProblem == .retryLater && failedStore.token == "T1")
+        await #expect(throws: ServiceError.unauthorized) { try await claim(failed) }
+        #expect(failed.lastProblem == .retryLater && failed.status == .signedOut)
     }
 }
