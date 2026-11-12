@@ -467,7 +467,8 @@ not scope creep on the current one.
   #795 S3a: `ClaudeSync` (`@MainActor`, dependencies passed in): `sendTranscript()` sends the transcript of every task, `pullOrders()`
   claims, runs each order through `OrderExecutor` (an unreadable one is answered `rejected/invalid`), reports, and claims again until
   204, at most `maxOrdersPerPass` = 15; the device id is read once per pass; 429, 401, 5xx, cancel or a failed run end the pass
-  (`Ending`/`Stop`, only case names in the log), a 409 on a result is dropped; one pass of each kind at a time (`busy`); nothing calls it yet (S3b).
+  (`Ending`/`Stop`, only case names in the log), a 409 on a result is dropped; one pass of each kind at a time (`busy`); called by `ClaudeSyncTrigger` (S3b-1).
+  #795 S3b-1: `ClaudeSyncTrigger` (process-wide like `WidgetReload`, `start()` once in `LooseEndsApp` via `forApp`, only with an account, silent under tests): start and `didBecomeActive` (UIKit/AppKit, no `scenePhase`) send then pull; `ModelContext.didSave` and a finished import only send, 2 s debounced; never pulls on a save; sends never overlap, one queued resend at most.
   `AccountWiring` (S4c-1): `forApp` builds the one `AccountState` in `LooseEndsApp` (main window and Mac settings window), only
   when `isEnabled`: Info `LEAccountEnabled` as Bool (`project.yml` holds `false`; only the TestFlight input `konto` sets it true in the archive, #615 S4c-2a), fallback **off** (missing or another type hides the group in every real build);
   `serviceURL` reads Info `LEServiceURL`: https with a host, http only to `localhost`/`127.0.0.1` in a Debug build, anything else
