@@ -1,0 +1,21 @@
+# Simulator-Beleg
+erzeugt: 2026-11-12T12:42:27+0100
+befehl: scripts/sim.sh test-proof AccountSettingsTests
+workflow: feat-795-s2b-device-identity
+head: 2d08ea12d685c785f124facee4db211550f9bf6a
+basis: 9722328da3505a07dacdf00ff45239a8626461d5 (merge-base origin/main HEAD)
+testklasse: AccountSettingsTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 8 gesamt, 8 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794483534.563  ende: 1794483746.302
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-795-s2b-device-identity/simulator-run/summary.json  sha256:f6ad1c402cf84d9f3cb8998614f8af5d6f1d70774c54c7a7ddce9093bec0b35c
+xcresult: docs/artifacts/feat-795-s2b-device-identity/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-795-s2b-device-identity/simulator-run/*.png (7 Stück)
+
+## Geprüfte Dateien
+- sha256:538b7d5f583f3011799b600a05170fc1baeb481e921b41f65c54e245319e5588  LooseEnds/Claude/AccountState.swift
+- sha256:7b759c80fdc89cc56eba84c6911495b8d643cbf1c35a5eb9cad3538506bebcab  LooseEnds/Claude/DeviceIdentity.swift
+- sha256:287b6ca81a4d1dfe30acbc43fde3052326ae52a1b80bc726d004d6161d209f34  LooseEndsTests/AccountStateTests.swift
+- sha256:1141bfdf1a8a8185ca9421a73abf9f839210af8b50a7b81ce705ecfced89c2db  LooseEndsTests/DeviceIdentityTests.swift

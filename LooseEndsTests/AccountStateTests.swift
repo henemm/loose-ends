@@ -402,7 +402,7 @@ import Testing
             do { try store.save("T2") } catch { Issue.record(error) }
         }
         await #expect(throws: ServiceError.unauthorized) { try await claim(state) }
-        #expect(store.token == "T2" && state.status == .signedIn)
+        #expect(store.token == "T2" && state.status == .signedIn && state.lastProblem == nil)
     }
 
     @Test("session: 401 ueberschreibt keinen laufenden ablauf", arguments: [AccountState.Status.signingIn, .deleting])
@@ -421,7 +421,7 @@ import Testing
             #expect(state.status == flow)
         }
         await #expect(throws: ServiceError.unauthorized) { try await claim(state) }
-        #expect(state.status == flow)
+        #expect(state.status == flow && state.lastProblem == nil)
         running.task?.cancel()
         await running.task?.value
     }
