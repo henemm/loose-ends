@@ -1,0 +1,8 @@
+$ rg "DeviceIdentity|withSession" LooseEnds LooseEndsWatch LooseEndsWidgets LooseEndsShare Shared
+LooseEnds/Claude/DeviceIdentity.swift:enum DeviceIdentityError: Error, Equatable {
+LooseEnds/Claude/DeviceIdentity.swift:struct DeviceIdentity: Sendable {
+LooseEnds/Claude/DeviceIdentity.swift:        guard status == errSecItemNotFound else { throw DeviceIdentityError.keychain(status) }
+LooseEnds/Claude/DeviceIdentity.swift:        guard added == errSecDuplicateItem else { throw DeviceIdentityError.keychain(added) }
+LooseEnds/Claude/DeviceIdentity.swift:        guard again == errSecSuccess else { throw DeviceIdentityError.keychain(again) }
+LooseEnds/Claude/DeviceIdentity.swift:            throw DeviceIdentityError.corruptData
+LooseEnds/Claude/AccountState.swift:    func withSession<T: Sendable>(_ call: (ServiceClient, String) async throws -> T) async throws -> T? {

@@ -455,6 +455,10 @@ not scope creep on the current one.
   #795 S2a: `ServiceClient` also speaks the app routes `putTranscript`, `claimOrder` (→ `Claim`: `.none` on 204, `.order`, or
   `.unreadable(id)` for an order it cannot read but whose `id` it rescues, so S3 can refuse it) and `putResult`, `X-Device` as
   lower-case UUID passed in; 429 is `tooManyRequests` (end the pass, never retry), 409 `refused`, on every route; nothing calls them yet.
+  #795 S2b: `DeviceIdentity.current()` (the installation's UUID for `X-Device`, own keychain entry `com.henning.looseends.device`,
+  `AfterFirstUnlockThisDeviceOnly`, created once, a read error or a broken entry throws and never makes a new one, no cache) and
+  `AccountState.withSession` (the one door to the app routes: only from `signedIn`, token read fresh, a 401 clears the store only
+  if it still holds that token and signs out only from `signedIn`, every other error goes to the caller); nothing calls them yet.
   `AccountWiring` (S4c-1): `forApp` builds the one `AccountState` in `LooseEndsApp` (main window and Mac settings window), only
   when `isEnabled`: Info `LEAccountEnabled` as Bool (`project.yml` holds `false`; only the TestFlight input `konto` sets it true in the archive, #615 S4c-2a), fallback **off** (missing or another type hides the group in every real build);
   `serviceURL` reads Info `LEServiceURL`: https with a host, http only to `localhost`/`127.0.0.1` in a Debug build, anything else

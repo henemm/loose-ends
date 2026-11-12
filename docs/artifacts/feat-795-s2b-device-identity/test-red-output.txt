@@ -1,0 +1,89 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/DeviceIdentityTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:116:35: [31mcannot find 'DeviceIdentityError' in scope[0m
+114 | 
+[36m115 |     @Test("device: duplikat ohne lesbare gegenstelle", arguments: [[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:120:29: [31mcannot find type 'DeviceIdentityError' in scope[0m
+118 |         (errSecInteractionNotAllowed, nil, .keychain(errSecInteractionNotAllowed)),
+[36m119 |         (errSecSuccess, Data("nicht-eine-uuid".utf8), .corruptData),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:116:30: [31m'nil' requires a contextual type[0m
+114 | 
+[36m115 |     @Test("device: duplikat ohne lesbare gegenstelle", arguments: [[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:117:36: [31m'nil' requires a contextual type[0m
+115 |     @Test("device: duplikat ohne lesbare gegenstelle", arguments: [
+[36m116 |         (errSecItemNotFound, nil, DeviceIdentityError.keychain(errSecItemNotFound)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:117:42: [31mcannot infer contextual base in reference to member 'keychain'[0m
+115 |     @Test("device: duplikat ohne lesbare gegenstelle", arguments: [
+[36m116 |         (errSecItemNotFound, nil, DeviceIdentityError.keychain(errSecItemNotFound)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:118:39: [31m'nil' requires a contextual type[0m
+116 |         (errSecItemNotFound, nil, DeviceIdentityError.keychain(errSecItemNotFound)),
+[36m117 |         (errSecMissingEntitlement, nil, .keychain(errSecMissingEntitlement)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:118:45: [31mcannot infer contextual base in reference to member 'keychain'[0m
+116 |         (errSecItemNotFound, nil, DeviceIdentityError.keychain(errSecItemNotFound)),
+[36m117 |         (errSecMissingEntitlement, nil, .keychain(errSecMissingEntitlement)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:119:56: [31mcannot infer contextual base in reference to member 'corruptData'[0m
+117 |         (errSecMissingEntitlement, nil, .keychain(errSecMissingEntitlement)),
+[36m118 |         (errSecInteractionNotAllowed, nil, .keychain(errSecInteractionNotAllowed)),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:121:82: [31mcannot find type 'DeviceIdentityError' in scope[0m
+119 |         (errSecSuccess, Data("nicht-eine-uuid".utf8), .corruptData),
+[36m120 |     ] as [(OSStatus, Data?, DeviceIdentityError)])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:47:22: [31mcannot find 'DeviceIdentity' in scope[0m
+ 45 |     func firstCallCreatesAndStoresOnce() throws {
+[36m 46 |         let keychain = Keychain([(errSecItemNotFound, nil), (errSecSuccess, nil)])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:55:17: [31mcannot find 'DeviceIdentity' in scope[0m
+ 53 |     func entryUsesDeviceOnlyAccessAndOwnService() throws {
+[36m 54 |         let keychain = Keychain([(errSecItemNotFound, nil), (errSecSuccess, nil)])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:71:24: [31mcannot find 'DeviceIdentity' in scope[0m
+ 69 |     func storedIdentityIsReturnedUnchanged() throws {
+[36m 70 |         let keychain = Keychain([(errSecSuccess, data(Self.stored)), (errSecSuccess, data(Self.stored))])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:80:24: [31mcannot find 'DeviceIdentity' in scope[0m
+ 78 |     func noInMemoryCache() throws {
+[36m 79 |         let keychain = Keychain([(errSecSuccess, data(Self.stored)), (errSecSuccess, data(Self.later))])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:89:25: [31mcannot find 'DeviceIdentityError' in scope[0m
+ 87 |     func readErrorThrowsAndNeverCreates(status: OSStatus) {
+[36m 88 |         let keychain = Keychain([(status, data(Self.stored))])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:89:69: [31mcannot find 'DeviceIdentity' in scope[0m
+ 87 |     func readErrorThrowsAndNeverCreates(status: OSStatus) {
+[36m 88 |         let keychain = Keychain([(status, data(Self.stored))])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:96:25: [31mcannot find 'DeviceIdentityError' in scope[0m
+ 94 |     func corruptEntryThrowsAndIsNotReplaced(entry: Data?) {
+[36m 95 |         let keychain = Keychain([(errSecSuccess, entry)])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:96:64: [31mcannot find 'DeviceIdentity' in scope[0m
+ 94 |     func corruptEntryThrowsAndIsNotReplaced(entry: Data?) {
+[36m 95 |         let keychain = Keychain([(errSecSuccess, entry)])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:103:25: [31mcannot find 'DeviceIdentityError' in scope[0m
+101 |     func addErrorThrows(status: OSStatus) {
+[36m102 |         let keychain = Keychain([(errSecItemNotFound, nil), (status, nil)])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:103:69: [31mcannot find 'DeviceIdentity' in scope[0m
+101 |     func addErrorThrows(status: OSStatus) {
+[36m102 |         let keychain = Keychain([(errSecItemNotFound, nil), (status, nil)])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:110:21: [31mcannot find 'DeviceIdentity' in scope[0m
+108 |     func duplicateReturnsStoredIdentity() throws {
+[36m109 |         let keychain = Keychain([(errSecItemNotFound, nil), (errSecDuplicateItem, nil), (errSecSuccess, data(Self.stored))])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:123:41: [31mcannot find 'DeviceIdentity' in scope[0m
+121 |     func duplicateThenUnreadableThrows(status: OSStatus, entry: Data?, expected: DeviceIdentityError) {
+[36m122 |         let keychain = Keychain([(errSecItemNotFound, nil), (errSecDuplicateItem, nil), (status, entry)])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/DeviceIdentityTests.swift:132:26: [31mcannot find 'DeviceIdentity' in scope[0m
+130 |         func collect(_ steps: [(OSStatus, Data?)]) {
+[36m131 |             let keychain = Keychain(steps)[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m DeviceIdentityTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m AccountStateTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-cached-churning-yao/Logs/Test/Test-LooseEnds-2026.11.12_12-24-28-+0100.xcresult

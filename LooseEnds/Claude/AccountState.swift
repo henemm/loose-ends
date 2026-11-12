@@ -101,7 +101,7 @@ enum AccountError: Error, Equatable {
             clearStore()
             status = .signedOut
         } catch ServiceError.unauthorized {
-            status = dropSession(token)
+            status = dropSession(token, during: "delete")
         } catch is CancellationError {
             status = .signedIn
         } catch {
@@ -111,9 +111,23 @@ enum AccountError: Error, Equatable {
         }
     }
 
+    /// The one way to the app routes (#795 S2b): only from `signedIn`, with the token read fresh from the store; without
+    /// one nothing is sent and the result is `nil`. Every failure goes to the caller unchanged; a 401 first drops the
+    /// session, but only if the store still holds that token, and only turns a status that is still `signedIn`.
+    func withSession<T: Sendable>(_ call: (ServiceClient, String) async throws -> T) async throws -> T? {
+        guard status == .signedIn, let token = Self.storedToken(in: store) else { return nil }
+        do {
+            return try await call(client, token)
+        } catch ServiceError.unauthorized {
+            let next = dropSession(token, during: "session")
+            if status == .signedIn { status = next }
+            throw ServiceError.unauthorized
+        }
+    }
+
     /// The service no longer knows `token`: clear the store only if it still holds that one (a newer session stays).
-    private func dropSession(_ token: String) -> Status {
-        Self.logger.info("delete: session unknown at service")
+    private func dropSession(_ token: String, during reason: StaticString) -> Status {
+        Self.logger.info("\(reason.description, privacy: .public): session unknown at service")
         guard let stored = Self.storedToken(in: store) else { return .signedOut }
         guard stored == token else { return .signedIn }
         clearStore()
