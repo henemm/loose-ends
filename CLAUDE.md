@@ -452,6 +452,9 @@ not scope creep on the current one.
   over the replaceable `HTTPTransport`, failures as `ServiceError`, never a token or body in an error; a cancelled `URLError` is a `CancellationError`, S4b-3);
   `SessionStoring` with `InMemorySessionStore` and `SessionStoreError` (S4b-2) and `AccountState` (the account's state, S4b-2);
   `KeychainSessionStore` behind `KeychainOperations` (the token in the keychain, this device only, S4b-3).
+  #795 S2a: `ServiceClient` also speaks the app routes `putTranscript`, `claimOrder` (→ `Claim`: `.none` on 204, `.order`, or
+  `.unreadable(id)` for an order it cannot read but whose `id` it rescues, so S3 can refuse it) and `putResult`, `X-Device` as
+  lower-case UUID passed in; 429 is `tooManyRequests` (end the pass, never retry), 409 `refused`, on every route; nothing calls them yet.
   `AccountWiring` (S4c-1): `forApp` builds the one `AccountState` in `LooseEndsApp` (main window and Mac settings window), only
   when `isEnabled`: Info `LEAccountEnabled` as Bool (`project.yml` holds `false`; only the TestFlight input `konto` sets it true in the archive, #615 S4c-2a), fallback **off** (missing or another type hides the group in every real build);
   `serviceURL` reads Info `LEServiceURL`: https with a host, http only to `localhost`/`127.0.0.1` in a Debug build, anything else

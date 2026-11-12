@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-11-12T09:27:47+0100
+befehl: scripts/sim.sh test-proof StartNumberTests
+workflow: feat-795-s2-app-client
+head: 7c797442505d68e9f55b2c39df473eff27f9eda5
+basis: 5a09c81555226c1181f2dfee6a58b99f3d7d6e7a (merge-base origin/main HEAD)
+testklasse: StartNumberTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794472035.148  ende: 1794472067.185
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-795-s2-app-client/simulator-run/summary.json  sha256:772335352532094a0c0c32f8448a1c6c9024681e84805825dbfabcd789c9addd
+xcresult: docs/artifacts/feat-795-s2-app-client/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-795-s2-app-client/simulator-run/*.png (2 Stück)
+
+## Geprüfte Dateien
+- sha256:bd7d6c3e45cbcaed9ae9be271cce398f0ab31bf9fa33cb41f6c900a09a20c8a8  LooseEnds/Claude/ServiceClient.swift
+- sha256:3411b7a9c8b5c025e2db883ac40488927818f96d3de7aee8d9ed275b63dabc05  LooseEndsTests/ServiceClientTests.swift
