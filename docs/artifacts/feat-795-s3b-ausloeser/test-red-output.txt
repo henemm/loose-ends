@@ -1,0 +1,46 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/ClaudeSyncTriggerTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTriggerTests.swift:57:42: [31mcannot find type 'ClaudeSyncTrigger' in scope[0m
+ 55 |     }
+[36m 56 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTriggerTests.swift:94:58: [31mcannot find type 'ClaudeSyncTrigger' in scope[0m
+ 92 |     }
+[36m 93 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTriggerTests.swift:58:9: [31mcannot find 'ClaudeSyncTrigger' in scope[0m
+ 56 | 
+[36m 57 |     private func make(_ calls: Calls) -> ClaudeSyncTrigger {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTriggerTests.swift:163:23: [31mcannot find 'ClaudeSyncTrigger' in scope[0m
+161 |         let calls = Calls()
+[36m162 |         let store = try TestStore()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTriggerTests.swift:237:23: [31mcannot find 'ClaudeSyncTrigger' in scope[0m
+235 |         XCTAssertTrue(ModelContainerFactory.isRunningTests)
+[36m236 |         let store = try TestStore()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTriggerTests.swift:274:22: [31mcannot find 'ClaudeSyncTrigger' in scope[0m
+272 |     func testWiringRuleNeedsAnAccount() async throws {
+[36m273 |         let store = try TestStore()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTriggerTests.swift:282:17: [31mcannot find 'ClaudeSyncTrigger' in scope[0m
+280 |             XCTAssertEqual(account.status, .signedOut)
+[36m281 |             let trigger = try XCTUnwrap([0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTriggerTests.swift:281:31: [31mgeneric parameter 'T' could not be inferred[0m
+279 |                                        store: InMemorySessionStore())
+[36m280 |             XCTAssertEqual(account.status, .signedOut)[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m ClaudeSyncTriggerTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-cached-churning-yao/Logs/Test/Test-LooseEnds-2026.11.12_21-47-27-+0100.xcresult
