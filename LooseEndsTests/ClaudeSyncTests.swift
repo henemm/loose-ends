@@ -437,7 +437,8 @@ import Testing
             #expect(leaks.isEmpty, "\(text)")
             if case .stopped(let stop) = ending {
                 let name: String = stop.rawValue
-                #expect(name.allSatisfy(\.isLetter), "\(name)")
+                let lettersOnly = name.allSatisfy(\.isLetter)
+                #expect(lettersOnly, "\(name)")
             }
         }
         #expect(endings.contains(.stopped(.executionFailed)) && endings.contains(.stopped(.deviceIdentity)))
