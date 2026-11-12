@@ -143,7 +143,7 @@ wegziehen. Wer zuerst wartet, bekommt die Sperre zuerst: jeder Wartende stellt e
 Warteliste `<Sperre>.queue`, nur der Kopf greift zu, tote Marken fallen heraus, Handskripte ohne Liste können
 vordrängeln, ohne etwas zu verklemmen (#516). Schreibt `xcodebuild` 15 min nichts ins Log (`LOOSEENDS_SILENCE_MAX`, Sekunden), beendet ein Wächter nur den
 Lauf dieser Sitzung und meldet „hängt seit N min, abgebrochen“ samt letzter Logzeile; die Sperre wird frei,
-CoreSimulatorService startet er nicht neu (#516). `boot` und der CI-Job `ui-smoke` rufen `scripts/sim_prepare.sh` auf (#578): es markiert den Tastatur-Hinweis „Speed up your typing…“ als gezeigt
+CoreSimulatorService startet er nicht neu (#516). `boot` und der CI-Job `ui-smoke-shard` rufen `scripts/sim_prepare.sh` auf (#578): es markiert den Tastatur-Hinweis „Speed up your typing…“ als gezeigt
 (auf einem frischen Simulator hängt er sonst jede UI-Abfrage nach dem ersten `typeText` auf) und erteilt der App den Kalenderzugriff vorab
 per `simctl privacy grant`. Der Kalender-Systemdialog wird in der CI nicht mehr durchgespielt; die 3-s-Suche im Test bleibt als Rückfall.
 DerivedData liegt je Worktree unter `LooseEnds-session-<Ordnername>` (`CLAUDE_SESSION_ID` überschreibt den
@@ -241,6 +241,11 @@ CI runs on GitHub's preview label `xcode-27` with Xcode 27.0 pinned: every job u
 `.github/actions/select-xcode-27`, which selects `/Applications/Xcode_27.app` and stops the run if it
 reports any other version. The deployment target stays at 27.0, nothing in `project.yml` is changed, and
 UI Smoke and Speech Stress run only on an iPhone 17 simulator with iOS 27.0 (otherwise the step stops).
+UI Smoke runs as a matrix of four parts (#910): `ui-smoke-plan` splits the classes of `LooseEndsUITests` (not `Watch/`) with
+`scripts/ui_smoke_shards.py` (weight = number of tests, the two photo classes 4 and never in one part, Mac classes 0, greedy,
+deterministic), each `ui-smoke-shard` runs its classes on its own runner and simulator (job 60 min, test step 45, artifacts
+`UITestResults-<n>` and `DesignGallery-<n>`), and the job `ui-smoke` keeps the protected check name „UI Smoke (iOS Simulator)“:
+it runs always and is red unless every part is green. A new class is placed automatically; the part count is the argument `4`.
 The job `ui-smoke-lang` runs `InboxDrawerSmokeTests` and `StartNumberTests` once per shipped language (matrix from `LanguagePacks.shipped`, `LOOSEENDS_UI_LANG`, `LooseEndsUITests/LaunchLanguage.swift`, #761).
 If the label goes away or is renamed, follow `docs/reference/testflight.md` and adjust `runs-on` in
 `ci.yml`, `speech-stress.yml` and `testflight.yml`.

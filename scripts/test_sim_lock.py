@@ -259,19 +259,19 @@ class SimPrepareTests(unittest.TestCase):
 
     def test_ci_prepares_simulator_before_tests(self):
         text = (SCRIPTS.parent / ".github" / "workflows" / "ci.yml").read_text()
-        job = text[text.index("\n  ui-smoke:"):]
+        job = text[text.index("\n  ui-smoke-shard:"):]
         nxt = re.search(r"\n  [a-z0-9-]+:\n", job[5:])
         job = job[:nxt.start() + 5] if nxt else job
         wait = job.find("Wait until the simulator has finished booting")
         prepare = job.find('scripts/sim_prepare.sh "$SIM_UDID"')
         run = job.find("Run UI smoke tests")
-        self.assertGreaterEqual(wait, 0, "ui-smoke wartet nicht auf den fertigen Boot (Schritt fehlt)")
-        self.assertGreaterEqual(prepare, 0, "ui-smoke ruft scripts/sim_prepare.sh \"$SIM_UDID\" nicht")
-        self.assertGreaterEqual(run, 0, "ui-smoke hat keinen Schritt „Run UI smoke tests“")
+        self.assertGreaterEqual(wait, 0, "ui-smoke-shard wartet nicht auf den fertigen Boot (Schritt fehlt)")
+        self.assertGreaterEqual(prepare, 0, "ui-smoke-shard ruft scripts/sim_prepare.sh \"$SIM_UDID\" nicht")
+        self.assertGreaterEqual(run, 0, "ui-smoke-shard hat keinen Schritt „Run UI smoke tests“")
         self.assertLess(wait, prepare, "Vorbereitung vor dem fertigen Boot")
         self.assertLess(prepare, run, "Vorbereitung nach dem Testlauf")
         start = job.find("- name: Prepare the simulator")
-        self.assertGreaterEqual(start, 0, "ui-smoke hat keinen Schritt „Prepare the simulator“")
+        self.assertGreaterEqual(start, 0, "ui-smoke-shard hat keinen Schritt „Prepare the simulator“")
         block = job[start:job.find("\n      - name:", start)]
         for swallow in ("continue-on-error", "|| true"):
             self.assertNotIn(swallow, block, f"Fehler der Vorbereitung wird verschluckt ({swallow})")

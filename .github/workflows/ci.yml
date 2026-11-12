@@ -110,13 +110,35 @@ jobs:
             DEVELOPMENT_TEAM= \
             | xcbeautify
 
-  ui-smoke:
-    name: UI Smoke (iOS Simulator)
+  # #910: the classes of LooseEndsUITests, read from the code, split into four parts (scripts/ui_smoke_shards.py), so a
+  # new class can never fall out of the run. Each part runs on its own runner and simulator (#228: never two in one job).
+  ui-smoke-plan:
+    name: UI Smoke plan
     runs-on: xcode-27
-    # #905: this job needs 100-113 min when it is healthy (green runs 2026-11-10 to 2026-11-12), so unlike its
-    # neighbours (40-45 min) it cannot take 45. The limit sits above that, so a real hang ends red instead of after
-    # the default 360 min; the test step ends first and leaves room for the diagnose and upload steps.
-    timeout-minutes: 160
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.split.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Select Xcode 27.0
+        uses: ./.github/actions/select-xcode-27
+      - id: split
+        run: |
+          matrix=$(python3 scripts/ui_smoke_shards.py 4)
+          echo "$matrix" | python3 -m json.tool
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  ui-smoke-shard:
+    name: UI Smoke part ${{ matrix.shard }}
+    needs: ui-smoke-plan
+    runs-on: xcode-27
+    # #905: the whole run needed 100-113 min, so it got 160/135. #910: a part carries about a quarter of the tests
+    # (≈ 20 min plus ≈ 12 min build and boot); the limits sit above that, so a real hang ends red instead of after the
+    # default 360 min; the test step ends first and leaves room for the diagnose and upload steps.
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.ui-smoke-plan.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v7
       - name: Select Xcode 27.0
@@ -202,14 +224,19 @@ jobs:
             sleep 20
           done' > host-load.log 2>&1 &
       - name: Run UI smoke tests
-        timeout-minutes: 135
+        timeout-minutes: 45
+        env:
+          ONLY: ${{ matrix.only }}
         run: |
           set -o pipefail
+          echo "part ${{ matrix.shard }}: ${{ matrix.classes }}"
+          # $ONLY unquoted on purpose: one -only-testing:LooseEndsUITests/<class> per class of this part.
+          # shellcheck disable=SC2086
           xcodebuild test \
             -project LooseEnds.xcodeproj \
             -scheme LooseEnds \
             -destination "platform=iOS Simulator,id=$SIM_UDID" \
-            -only-testing:LooseEndsUITests \
+            $ONLY \
             -parallel-testing-enabled NO \
             -resultBundlePath UITestResults.xcresult \
             CODE_SIGNING_ALLOWED=NO \
@@ -301,13 +328,16 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          # #182: the screenshots DesignGalleryTests attaches, under their attachment names.
+          # #182: the screenshots DesignGalleryTests attaches, under their attachment names. #910: only one part runs
+          # DesignGalleryTests; in the others there are no gallery pictures (or no attachments at all), which is fine.
           mkdir -p gallery-raw DesignGallery
-          xcrun xcresulttool export attachments --path UITestResults.xcresult --output-path gallery-raw
+          xcrun xcresulttool export attachments --path UITestResults.xcresult --output-path gallery-raw \
+            || echo "no attachments exported"
           python3 - <<'PY'
           import json, pathlib, shutil
           raw, out = pathlib.Path("gallery-raw"), pathlib.Path("DesignGallery")
-          for test in json.loads((raw / "manifest.json").read_text()):
+          manifest = raw / "manifest.json"
+          for test in (json.loads(manifest.read_text()) if manifest.is_file() else []):
               for a in test.get("attachments", []):
                   name = a.get("suggestedHumanReadableName", "")
                   if name.startswith("gallery-"):
@@ -319,14 +349,14 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: DesignGallery
+          name: DesignGallery-${{ matrix.shard }}
           path: DesignGallery
           if-no-files-found: warn
       - name: Upload UI test results
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: UITestResults
+          name: UITestResults-${{ matrix.shard }}
           path: |
             UITestResults.xcresult
             ui-smoke.log
@@ -335,6 +365,28 @@ jobs:
             host-load.log
             hang-reports
           if-no-files-found: warn
+
+  # #910: the check branch protection on main asks for. It runs always and is red unless every part is green: a failed,
+  # cancelled or skipped part (or a failed plan) turns it red, so no red part can slip through as "skipped".
+  ui-smoke:
+    name: UI Smoke (iOS Simulator)
+    needs: [ui-smoke-shard]
+    if: always()
+    runs-on: xcode-27
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - name: Select Xcode 27.0
+        uses: ./.github/actions/select-xcode-27
+      - name: All parts green
+        env:
+          RESULT: ${{ needs.ui-smoke-shard.result }}
+        run: |
+          echo "ui-smoke-shard: $RESULT"
+          if [ "$RESULT" != "success" ]; then
+            echo "::error::UI Smoke parts ended with '$RESULT', not 'success'"
+            exit 1
+          fi
 
   # #761: the shipped languages, read from the code (`LanguagePacks.shipped`), as the matrix of `ui-smoke-lang`.
   languages:

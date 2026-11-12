@@ -4,7 +4,7 @@ Aufruf: python3 scripts/test_ci_settle_sync.py
 
 Composite-Schritte mit `shell: bash` laufen als `bash --noprofile --norc -e -o pipefail`. `grep` liefert ohne Treffer
 Exit 1; in der Zeile `busy=$(ps … | grep -i poster | …)` beendet das den ganzen Schritt, bevor die Schleife den guten
-Fall „kein Prozess, ruhig“ erreicht (PR #797, Lauf 41347564840). Die Zeile steht in der Action und im Job `ui-smoke`
+Fall „kein Prozess, ruhig“ erreicht (PR #797, Lauf 41347564840). Die Zeile steht in der Action und im Job `ui-smoke-shard`
 von ci.yml; beide müssen gleich und geschützt sein.
 """
 import re
