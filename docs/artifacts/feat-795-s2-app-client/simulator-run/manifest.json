@@ -1,0 +1,32 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "C6B701C4-CD0B-4BCF-85CB-E62BA54628DF.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "start-number-4_0_DC974792-733F-4920-A59D-9D86FC84C711.png",
+        "timestamp" : 1794472058.643
+      }
+    ],
+    "testIdentifier" : "StartNumberTests/testNewDateFromNowLowersTheNumber()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/StartNumberTests/testNewDateFromNowLowersTheNumber"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "51A5CDF2-5E82-4A49-B938-0864B02F05FB.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "start-number-5_0_2BDF3716-21B2-4301-A249-05E1C1B23045.png",
+        "timestamp" : 1794472066.619
+      }
+    ],
+    "testIdentifier" : "StartNumberTests/testNumberOverNowIsTheNumberOfRows()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/StartNumberTests/testNumberOverNowIsTheNumberOfRows"
+  }
+]
