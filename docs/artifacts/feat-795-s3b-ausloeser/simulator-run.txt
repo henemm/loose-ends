@@ -1,22 +1,20 @@
 # Simulator-Beleg
-erzeugt: 2026-11-12T21:57:52+0100
+erzeugt: 2026-11-12T22:44:17+0100
 befehl: scripts/sim.sh test-proof InboxDrawerSmokeTests
 workflow: feat-795-s3b-ausloeser
-head: 7777c4f12fbed41c4e58f6b1a12fa4dc3f024f4e
-basis: 36aac30375b718bdcdb22b90638b3b71744d1d18 (merge-base origin/main HEAD)
+head: 7c4dabb8fbdd15821821e2337515ed0f43b5d49c
+basis: 315a7a65938190a365221d52fc2d17ce897ba97c (merge-base origin/main HEAD)
 testklasse: InboxDrawerSmokeTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1794516990.279  ende: 1794517070.476
+start: 1794519801.015  ende: 1794519856.327
 geraet: iPhone 17, iOS 27.2
-summary: docs/artifacts/feat-795-s3b-ausloeser/simulator-run/summary.json  sha256:dfae140526b7f0a7ea3bd9f9d7f766a2062aa899ec9f685e917f9f86643d8048
+summary: docs/artifacts/feat-795-s3b-ausloeser/simulator-run/summary.json  sha256:140148655771c572cb1de46c4acefd2828fc699290269d2e08d28c4f4a7fc7d5
 xcresult: docs/artifacts/feat-795-s3b-ausloeser/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/feat-795-s3b-ausloeser/simulator-run/*.png (4 Stück)
 
 ## Geprüfte Dateien
 - sha256:8ec78a61dd44ef80beba072749013ca9547cc6e03132344b2ff76983cef9e3d5  LooseEnds/App/LooseEndsApp.swift
-- sha256:58a64db08eafe345b0ad0ffb4301bff7da58087cd21749028a525af8f3b87b49  LooseEnds/Claude/ClaudeSync.swift
 - sha256:41ecb14884dd2daac1812b36707be86c2e533e78664c488df89bd6d194281927  LooseEnds/Claude/ClaudeSyncTrigger.swift
-- sha256:0f2065841317edd2545fec235cc0295e91f0d0a99ef1c9e0d6ad707072843419  LooseEndsTests/ClaudeSyncTests.swift
 - sha256:425e2f5180e0ca5f4a1a302d08f326af4290eff3445bb94d6f21a33976257093  LooseEndsTests/ClaudeSyncTriggerTests.swift
