@@ -113,6 +113,10 @@ jobs:
   ui-smoke:
     name: UI Smoke (iOS Simulator)
     runs-on: xcode-27
+    # #905: this job needs 100-113 min when it is healthy (green runs 2026-11-10 to 2026-11-12), so unlike its
+    # neighbours (40-45 min) it cannot take 45. The limit sits above that, so a real hang ends red instead of after
+    # the default 360 min; the test step ends first and leaves room for the diagnose and upload steps.
+    timeout-minutes: 160
     steps:
       - uses: actions/checkout@v7
       - name: Select Xcode 27.0
@@ -198,6 +202,7 @@ jobs:
             sleep 20
           done' > host-load.log 2>&1 &
       - name: Run UI smoke tests
+        timeout-minutes: 135
         run: |
           set -o pipefail
           xcodebuild test \
