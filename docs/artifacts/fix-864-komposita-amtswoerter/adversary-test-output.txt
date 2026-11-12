@@ -1,0 +1,49 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/ImportanceUrgencyRuleTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-12 23:13:43.777.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-12 23:13:43.778.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-12 23:13:43.778.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest run started.[0m
+Suite "Regelschritt: Wichtigkeit und Dringlichkeit" started
+    [32m✔[0m "Wichtigkeits-Treffer je Kategorie (AC-1)" ([33m0.059[0m seconds)
+    [32m✔[0m "Dringlichkeits-Treffer je Kategorie (AC-2)" (0.012 seconds)
+    [32m✔[0m "„wichtig“ setzt hohe Wichtigkeit, mit eigener Begründung (#214)" (0.004 seconds)
+    [32m✔[0m "Das ausdrückliche Wort geht den indirekten Signalen vor (#214)" (0.001 seconds)
+    [32m✔[0m "Eine Verneinung zwei Wörter vorher ohne Verstärker zählt nicht (#214)" (0.001 seconds)
+    [32m✔[0m "Ein verneintes und ein bejahtes „wichtig“: das bejahte zählt (#214)" (0.001 seconds)
+    [32m✔[0m "Eine Frist bleibt ein Treffer, auch neben verneinter Eile (#220)" (0.003 seconds)
+    [32m✔[0m "Kein Treffer bleibt nil, kein Default (AC-3)" ([33m0.027[0m seconds)
+    [32m✔[0m "Wichtigkeit und Dringlichkeit sind unabhängig (AC-4)" ([33m0.040[0m seconds)
+    [32m✔[0m "Alle sechs Begründungssätze sind im deutschen Bundle übersetzt (AC-8, #214)" (0.001 seconds)
+    [32m✔[0m "Steuerbescheid trifft ohne „wichtig“ mit der Amtsbegründung (#864 AC-4)" (0.017 seconds)
+    [32m✔[0m "Die Spanne deckt das ganze Kompositum ab (#864 AC-5)" ([33m0.056[0m seconds)
+    [32m✔[0m "Der Regelschritt liegt im Produktmodul" (0.001 seconds)
+Suite "Regelschritt: Wichtigkeit und Dringlichkeit" passed after 0.991 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-whimsical-nibbling-bird/Logs/Test/Test-LooseEnds-2026.11.12_23-13-30-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log

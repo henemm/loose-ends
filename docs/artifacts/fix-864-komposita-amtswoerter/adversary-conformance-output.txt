@@ -1,0 +1,40 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/LanguagePackConformanceTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-12 23:18:41.606.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-12 23:18:41.607.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-12 23:18:41.607.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest run started.[0m
+Suite "Sprachpakete halten die Regeln ein" started
+    [32m✔[0m "Kein Wort steht in zwei Paketen mit verschiedenem Wert" (0.001 seconds)
+    [32m✔[0m "Keine Tabelle ist leer, außer wo die Sprache die Sache nicht kennt" (0.001 seconds)
+    [32m✔[0m "Jedes Wort ist gefaltet, ohne Leerzeichen am Rand und nicht leer" (0.001 seconds)
+    [32m✔[0m "Ein Wort mit zwei Rollen in zwei Paketen steht in der Liste der erlaubten Kreuzungen" (0.001 seconds)
+Suite "Sprachpakete halten die Regeln ein" passed after 0.004 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-whimsical-nibbling-bird/Logs/Test/Test-LooseEnds-2026.11.12_23-18-30-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
