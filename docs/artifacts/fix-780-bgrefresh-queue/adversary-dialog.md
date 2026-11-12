@@ -14,7 +14,7 @@ Datum: 2026-10-31 18:30
 - [x] **AC-4:** Beleg: run.sh jetzt: Fall 1 exit=133, Fall A exit=0, Fall B exit=0.
 - [x] **AC-5:** Beleg: Signaturen register/schedule unverändert (Diff), Guards Zeilen 19 und 50 unverändert, Simulator: build, launch, Wechsel zu Preferences, kein LooseEnds-Absturzbericht in ~/Library/Logs/DiagnosticReports, Screenshot adversary-screenshot.png zeigt laufende App (Startseite). Voller Lauf test-green-full-output.txt: Executed 12 tests, 0 failures (Anmerkung: nur XCTest-Zeilen gezählt, Lauf vor kleiner Teständerung; Einzellauf jetzt erneut grün).
 - [x] **AC-6:** Beleg: git diff --stat: CLAUDE.md, BackgroundRefresh.swift, BackgroundRefreshTests.swift; kein project.yml, Info.plist, Entitlements, DueNotificationCenter.
-- [ ] **AC-7:** nachgelagert: TestFlight + Absturz-Abruf nach dem Merge, vor dem Merge nicht belegbar.
+- [x] **AC-7:** Beleg: Absturz-Abruf `asc-crashes.yml` Lauf 43057528300 (2026-11-11), entschlüsselt: 6 Meldungen, davon 3 mit `BackgroundRefresh.register` (Build 98 vom 21.10., Build 126 vom 31.10. 04:58 und 19:49); keine Meldung von Build 127 oder neuer, 11 Tage nach dem Fix-Bau. Einschränkung: Abwesenheit ist nur ein schwacher Beleg, ob iOS die Auffrischung auf Build 127 gestartet hat, ist nicht beobachtbar.
 
 ## Dialog
 
@@ -25,6 +25,10 @@ Datum: 2026-10-31 18:30
 ### Runde 2
 **Adversary:** Edge Cases: (a) setTaskCompleted doppelt bei Ablauf und späterem Erfolg? (b) Reihenfolge reschedule vor schedule vor completed? (c) RefreshHandle @unchecked Sendable, Retain? (d) unter Tests/--ui-testing sofortige Rückkehr? (e) Im Ablauftest: bleibt die Arbeit hängen, Leak?
 **Implementierer:** (a) Ja, möglich: nach Ablauf (Zeile 40, success:false) läuft der Task in Zeile 41-44 weiter und meldet später success:true. Der Test macht das nicht sichtbar (onComplete = nil vor gate.open(), Tests:43-44). Das war im alten Code ebenso (Task nicht abgebrochen), kein neues Verhalten; Finding F001 LOW. (b) Zeile 20-23: `await notifications.reschedule(); schedule()` im reschedule-Closure, danach erst Zeile 43 completed(true): Reihenfolge erhalten. (c) RefreshHandle (Zeile 73-76) ist final class mit unveränderlichem `let`, hält Task stark bis beide Closures freigegeben sind; BGTask ist ohnehin Referenztyp, kein Zyklus, da der Task den Handler hält und der Handler das Handle (gleichzeitig Zyklus task -> expirationHandler -> handle -> task, vom System nach Completion gelöst; wie im alten Code, der task direkt einfing). (d) Zeile 19 und 50 Guards unverändert, im Diff nicht berührt. (e) Gate.open() am Testende gibt die Arbeit frei, kein hängender Task.
+
+### Runde 3
+**Adversary:** Behauptung: AC-7 ist erfüllt, weil der Abruf nach dem Fix keine Meldung zeigt. Ich prüfe: (a) Stammt jede der 3 BackgroundRefresh-Meldungen von einem Bau ohne Fix? (b) Gibt es überhaupt einen Bau ≥ 127 in Nutzung, sodass eine Meldung hätte entstehen können? (c) Sind die geprüften Code-Dateien seit dem Dialog unverändert?
+**Implementierer:** (a) Ja: Build 98, 126, 126 (Version in den `.crash`-Dateien, Zeile `Version:`); alle drei haben `closure #1 in static BackgroundRefresh.register(_:)` im Stapel, die neue vom 31.10. 19:49 ist Build 126, also vor Build 127. (b) Nicht belegbar: der Abruf liefert nur Abstürze, keine Sitzungen; die Auffrischung lief vor dem Fix an drei Tagen in 21 Tagen in den Absturz, danach gibt es in 11 Tagen keine Meldung. Schwacher, aber widerspruchsfreier Beleg; mehr gibt TestFlight ohne Gerätezugriff nicht her. (c) `shasum -a 256` von BackgroundRefresh.swift und BackgroundRefreshTests.swift ist gleich dem Hash-Block; CLAUDE.md hat sich durch andere Tickets geändert (nur Dokument).
 
 ## Findings und Bestätigungen
 
@@ -74,6 +78,12 @@ Confirmation:
   Evidence: git diff --stat nur 3 erlaubte Dateien; Halbsatz zu #780 in CLAUDE.md.
   Status: CONFIRMED
 
+Confirmation:
+  AC: AC-7
+  Code reference: LooseEnds/Notifications/BackgroundRefresh.swift:25
+  Evidence: Abruf 43057528300: keine BackgroundRefresh-Meldung von Build ≥ 127 in 11 Tagen; alle drei Meldungen stammen von Build 98 und 126 (ohne Fix). Schwacher Abwesenheitsbeleg, siehe Runde 3.
+  Status: CONFIRMED
+
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
@@ -82,7 +92,7 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
 ### Verdict: VERIFIED
 
-AC-1 bis AC-6 belegt, AC-7 nachgelagert (TestFlight + Absturz-Abruf nach dem Merge), F001 LOW vorbestehend.
+AC-1 bis AC-7 belegt (AC-7 durch den Absturz-Abruf vom 2026-11-11, schwacher Abwesenheitsbeleg), F001 LOW vorbestehend.
 
 ## Geprüfte Dateien
 
@@ -94,5 +104,18 @@ AC-1 bis AC-6 belegt, AC-7 nachgelagert (TestFlight + Absturz-Abruf nach dem Mer
 
 - base: 28d57cb1195be22b8c1567e85dc7be61be3f1ab2
 - blob:c30b5e82feddbf834bea30be60617d46575a1bc1  CLAUDE.md
+- blob:6c9ec5717f81ca52ff84c322668d9fe472998302  LooseEnds/Notifications/BackgroundRefresh.swift
+- blob:f5159fbc9689b2624b4367005ca09abc85b6c170  LooseEndsTests/BackgroundRefreshTests.swift
+
+## Geprüfte Dateien
+
+- sha256:079da45f8e66a388ab0d4b62531102a4262bf93d2269165d7e0f3962adac754d  CLAUDE.md
+- sha256:48352848d289b95435062862b764db4b6f8236f6e558d65039030c695e58d99d  LooseEnds/Notifications/BackgroundRefresh.swift
+- sha256:66d7099f16ae62180414e338ed556266049aca0f98613b21e0a73a6b70f8269e  LooseEndsTests/BackgroundRefreshTests.swift
+
+## Prüfbasis
+
+- base: 62c0dbe1f0ece30ddd37a8461b422ecb603f5b09
+- blob:5f8c8d048ba212e2affbb6916257a3c7f4455150  CLAUDE.md
 - blob:6c9ec5717f81ca52ff84c322668d9fe472998302  LooseEnds/Notifications/BackgroundRefresh.swift
 - blob:f5159fbc9689b2624b4367005ca09abc85b6c170  LooseEndsTests/BackgroundRefreshTests.swift
