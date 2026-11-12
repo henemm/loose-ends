@@ -439,6 +439,31 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertEqual(XCTWaiter().wait(for: [showsHigh], timeout: 5), .completed, "Row label was \(importanceRow.label)")
     }
 
+    /// #864: a compound with an official word sets the importance by the rule, a look-alike does not.
+    @MainActor
+    private func importanceLabel(afterCapturing text: String, in app: XCUIApplication) -> String {
+        _ = captureAndOpenDetail(text, in: app)
+        let importanceRow = revealField("field_importance", in: app)
+        XCTAssertTrue(importanceRow.waitForExistence(timeout: 5), "Detail should list Importance")
+        // The rule runs after capture: give it the moment it needs, then read the row.
+        _ = XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: NSPredicate(format: "label CONTAINS 'High'"),
+                                                              object: importanceRow)], timeout: 5)
+        attachScreenshot(app, "864-\(text.replacingOccurrences(of: " ", with: "-"))")
+        return importanceRow.label
+    }
+
+    @MainActor
+    func testOfficialCompoundSetsImportance() throws {
+        let label = importanceLabel(afterCapturing: "Steuerbescheid prüfen", in: launch())
+        XCTAssertTrue(label.contains("High"), "Steuerbescheid should set high importance, row label was \(label)")
+    }
+
+    @MainActor
+    func testLookAlikeWordLeavesImportanceAlone() throws {
+        let label = importanceLabel(afterCapturing: "Steuerrad reparieren", in: launch())
+        XCTAssertFalse(label.contains("High"), "Steuerrad is no official word, row label was \(label)")
+    }
+
     @MainActor
     func testRepeatEditorUpdatesDetail() throws {
         let app = launch()
