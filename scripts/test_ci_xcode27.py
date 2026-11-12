@@ -132,13 +132,13 @@ class Workflows(unittest.TestCase):
             self.assertIn(expected, names)
 
     def test_ui_smoke_has_a_diagnosis_step_that_never_fails(self):
-        job = load(CI)["jobs"]["ui-smoke"]
+        job = load(CI)["jobs"]["ui-smoke-shard"]
         step = step_named(job, "Diagnose")
         self.assertTrue(step.get("continue-on-error"), "Diagnose darf den Lauf nie abbrechen")
         self.assertIn("xcodebuild -version", step["run"])
 
     def test_workflows_wait_for_the_simulator_to_finish_booting(self):
-        for workflow, key, first_use in ((CI, "ui-smoke", "Run UI smoke tests"), (STRESS, "stress", "Build for testing")):
+        for workflow, key, first_use in ((CI, "ui-smoke-shard", "Run UI smoke tests"), (STRESS, "stress", "Build for testing")):
             steps = load(workflow)["jobs"][key]["steps"]
             names = [s.get("name") for s in steps]
             wait = step_named(load(workflow)["jobs"][key], "Wait until the simulator")
@@ -148,7 +148,7 @@ class Workflows(unittest.TestCase):
                             names.index(wait["name"]), workflow.name)
 
     def test_ui_smoke_lets_the_simulator_settle_and_runs_without_parallel_clones(self):
-        job = load(CI)["jobs"]["ui-smoke"]
+        job = load(CI)["jobs"]["ui-smoke-shard"]
         names = [s.get("name") for s in job["steps"]]
         settle = step_named(job, "Let the simulator settle")
         self.assertTrue(settle.get("continue-on-error"), "Das Abwarten darf den Lauf nie abbrechen")
@@ -265,9 +265,9 @@ cp "$FIXTURE"/* "$out"/
                              ["mac-gallery-light-1-start.png", "mac-gallery-light-window-size.txt"])
 
     def test_ui_smoke_neither_runs_nor_exports_the_mac_gallery(self):
-        smoke = load(CI)["jobs"]["ui-smoke"]
+        smoke = load(CI)["jobs"]["ui-smoke-shard"]
         self.assertNotIn("MacGallery", yaml.safe_dump(smoke))
-        self.assertEqual(step_named(smoke, "Upload design gallery")["with"]["name"], "DesignGallery")
+        self.assertEqual(step_named(smoke, "Upload design gallery")["with"]["name"], "DesignGallery-${{ matrix.shard }}")
 
     MAC_SOURCES = ("MacGalleryTests.swift", "MacUITestSupport.swift", "MacDetailClickTests.swift")
 
@@ -326,14 +326,14 @@ else echo "unexpected xcrun $*" >&2; exit 2; fi
 
     def test_picks_iphone_17_on_ios_27_0(self):
         devices = {RUNTIME_26: self.iphone("iPhone 17", "OLD"), RUNTIME_27: self.iphone("iPhone 17", "NEW")}
-        for workflow, key in ((CI, "ui-smoke"), (STRESS, "stress")):
+        for workflow, key in ((CI, "ui-smoke-shard"), (STRESS, "stress")):
             result, env = self.pick(workflow, key, devices)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertIn("SIM_UDID=NEW", env, workflow.name)
 
     def test_fails_without_iphone_17_on_ios_27_0(self):
         devices = {RUNTIME_26: self.iphone("iPhone 17", "OLD"), RUNTIME_27: self.iphone("iPhone 16e", "OTHER")}
-        for workflow, key in ((CI, "ui-smoke"), (STRESS, "stress")):
+        for workflow, key in ((CI, "ui-smoke-shard"), (STRESS, "stress")):
             result, env = self.pick(workflow, key, devices)
             self.assertNotEqual(result.returncode, 0, workflow.name)
             self.assertIn("::error::", result.stdout + result.stderr, workflow.name)

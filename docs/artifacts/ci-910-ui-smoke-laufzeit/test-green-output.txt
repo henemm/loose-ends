@@ -1,0 +1,14 @@
+test_ac1_every_class_exactly_once (scripts.test_ui_smoke_shards.ShardTests.test_ac1_every_class_exactly_once) ... ok
+test_ac2_no_shard_empty_and_photo_classes_apart (scripts.test_ui_smoke_shards.ShardTests.test_ac2_no_shard_empty_and_photo_classes_apart) ... ok
+test_ac3_deterministic_and_new_class_is_assigned (scripts.test_ui_smoke_shards.ShardTests.test_ac3_deterministic_and_new_class_is_assigned) ... ok
+test_ac4_greedy_quality (scripts.test_ui_smoke_shards.ShardTests.test_ac4_greedy_quality) ... ok
+test_cli_prints_matrix_json (scripts.test_ui_smoke_shards.ShardTests.test_cli_prints_matrix_json) ... ok
+test_f001_attribute_and_own_base_class_are_found (scripts.test_ui_smoke_shards.ShardTests.test_f001_attribute_and_own_base_class_are_found) ... ok
+test_f002_empty_only_is_an_error (scripts.test_ui_smoke_shards.ShardTests.test_f002_empty_only_is_an_error) ... ok
+test_f002_only_skips_weight_zero_and_is_never_empty (scripts.test_ui_smoke_shards.ShardTests.test_f002_only_skips_weight_zero_and_is_never_empty) ... ok
+test_ac5_collector_job_keeps_the_protected_name (scripts.test_ui_smoke_shards.WorkflowTests.test_ac5_collector_job_keeps_the_protected_name) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.112s
+
+OK

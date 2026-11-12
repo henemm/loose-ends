@@ -58,18 +58,22 @@ Ohne Aufteilung geht es nicht, weil: 98 Tests × 48 s wartedominierte Laufzeit (
 - **AC-3:** Die Aufteilung ist deterministisch (zweimal aufgerufen, gleiche Ausgabe), und eine neu angelegte Testklasse in einem temporären Verzeichnis wird automatisch einem Teil zugeordnet.
 - **AC-4:** Das Gewicht des schwersten Teils übersteigt den Durchschnitt höchstens um das größte Einzelgewicht (Güte der gierigen Verteilung, geprüft am echten Verzeichnis).
 - **AC-5:** In `ci.yml` heißt genau ein Job `UI Smoke (iOS Simulator)`, es ist der Sammel-Job mit `if: always()` und `needs: [ui-smoke-shard]`; der Test liest die YAML und prüft das.
-- **AC-6:** Echter CI-Lauf auf dem PR: alle vier Teile grün, jeder Teil unter 45 min, die Gesamtzeit der Prüfung „UI Smoke (iOS Simulator)“ unter 60 min; Zahlen im PR-Beleg.
-- **AC-7:** Rote Probe vor dem Merge: ein absichtlich roter Teil (Testzweig oder `workflow_dispatch`) macht „UI Smoke (iOS Simulator)“ rot; ein abgebrochener Teil ebenso. Beleg im PR.
-- **AC-8:** Die in #910 genannten Berichtsdaten bleiben erhalten: `UITestResults-<n>` je Teil und `DesignGallery-<n>` (mit dem Teil, der `DesignGalleryTests` enthält, nicht leer).
-
 ## Definition of Done
 
-Ein echter CI-Lauf auf dem PR zeigt alle vier Teile grün, jeden unter 45 Minuten, die Prüfung „UI Smoke (iOS Simulator)“ insgesamt unter 60 Minuten (AC-6); die rote Probe belegt, dass ein roter oder abgebrochener Teil die Sammel-Prüfung rot macht (AC-7); die Skript-Tests sind grün (AC-1 bis AC-5); `CLAUDE.md` beschreibt die neue Aufteilung. Zahlen stehen im PR und im Issue #910.
+Die Skript-Tests sind grün (AC-1 bis AC-5); `CLAUDE.md` beschreibt die neue Aufteilung. Dazu drei Belege aus dem echten CI-Lauf auf dem PR (Phase 7, bewusst keine ACs, weil das QA-Gate in Phase 6 keinen Aufschub kennt); die Zahlen stehen im PR und im Issue #910:
+
+- **Beleg A (Laufzeit):** alle vier Teile grün, jeder Teil unter 45 min, die Gesamtzeit der Prüfung „UI Smoke (iOS Simulator)“ unter 60 min.
+- **Beleg B (rote Probe vor dem Merge):** ein absichtlich roter Teil (Testzweig oder `workflow_dispatch`) macht „UI Smoke (iOS Simulator)“ rot; ein abgebrochener Teil ebenso.
+- **Beleg C (Berichtsdaten):** `UITestResults-<n>` je Teil und `DesignGallery-<n>` bleiben erhalten (der Teil mit `DesignGalleryTests` ist nicht leer).
 
 ## Test Plan
 
 - `scripts/test_ui_smoke_shards.py` (Python `unittest`, läuft im CI-Schritt der Skriptprüfungen mit): AC-1 bis AC-5.
-- AC-6 bis AC-8: echter CI-Lauf auf dem PR und die rote Probe; Auswertung der Laufzeiten per `gh run view`.
+- Belege A bis C: echter CI-Lauf auf dem PR und die rote Probe; Auswertung der Laufzeiten per `gh run view`.
+
+## Changelog
+
+- 2026-11-12: AC-6 bis AC-8 aus den Acceptance Criteria in die Definition of Done verschoben (Belege A bis C), weil sie erst auf dem PR belegbar sind und das QA-Gate in Phase 6 sonst blockiert.
 
 ## Scope
 

@@ -1,6 +1,6 @@
 name: Prepare the UI-test simulator
 description: Picks the iPhone 17 (or the given device) with iOS 27.0, boots it, prepares it (#578) and lets it settle (#228). Sets SIM_UDID.
-# #761: the language matrix `ui-smoke-lang` needs the same simulator as `ui-smoke`. The job `ui-smoke` keeps its own
+# #761: the language matrix `ui-smoke-lang` needs the same simulator as `ui-smoke-shard`. The job `ui-smoke-shard` keeps its own
 # copy of these steps untouched; a change here belongs there too (and the other way round).
 # #799: the `busy=` line of the settle step stays identical in both copies, and its `grep` must be guarded with
 # `|| true`: composite steps run with `-e -o pipefail`, so a grep without a hit would end the step.

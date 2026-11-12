@@ -71,6 +71,38 @@ class ShardTests(unittest.TestCase):
         average = sum(sums) / len(sums)
         self.assertLessEqual(max(sums), average + max(weight.values()))
 
+    def test_f001_attribute_and_own_base_class_are_found(self):
+        mod = _module()
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, "A.swift").write_text(
+                "@MainActor final class AttributedTests: XCTestCase {\n func testOne() {}\n}\n")
+            Path(tmp, "Base.swift").write_text(
+                "class BaseUITestCase: XCTestCase {\n func launch() {}\n override class var defaultTestSuite: XCTestSuite"
+                " { super.defaultTestSuite }\n}\n")
+            Path(tmp, "Sub.swift").write_text(
+                "final class SubTests: BaseUITestCase {\n func testA() {}\n func testB() {}\n}\n"
+                "final class Helper: NSObject {\n func testNot() {}\n}\n")
+            self.assertEqual(mod.weights(Path(tmp)), {"AttributedTests": 1, "BaseUITestCase": 0, "SubTests": 2})
+
+    def test_f002_only_skips_weight_zero_and_is_never_empty(self):
+        mod = _module()
+        weight = mod.weights(UI_TESTS)
+        for entry in mod.matrix(UI_TESTS, 4)["include"]:
+            self.assertTrue(entry["only"], f"Teil {entry['shard']}: only ist leer")
+            named = re.findall(r"-only-testing:LooseEndsUITests/(\w+)", entry["only"])
+            self.assertTrue(named)
+            self.assertFalse([name for name in named if weight[name] == 0], "Gewicht-0-Klasse in -only-testing")
+            self.assertEqual(set(named), {name for name in entry["classes"].split() if weight[name] > 0})
+
+    def test_f002_empty_only_is_an_error(self):
+        mod = _module()
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, "A.swift").write_text("final class AlphaTests: XCTestCase {\n func testOne() {}\n}\n")
+            Path(tmp, "M.swift").write_text("#if os(macOS)\nfinal class MacTests: XCTestCase {\n func testM() {}\n}\n#endif\n")
+            with self.assertRaises(SystemExit) as raised:
+                mod.matrix(Path(tmp), 2)
+            self.assertNotIn(raised.exception.code, (0, None))
+
     def test_cli_prints_matrix_json(self):
         out = subprocess.run([sys.executable, str(SCRIPT), "4"], capture_output=True, text=True, check=True)
         import json
