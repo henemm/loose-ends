@@ -1,0 +1,186 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/ClaudeSyncTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:173:43: [31mcannot find 'ClaudeSync' in scope[0m
+171 | 
+[36m172 |     @Test("AC-3: jeder Fehler der Abschrift beendet den Durchgang", arguments: [[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:174:11: [31mcannot infer contextual base in reference to member 'status'[0m
+172 |     @Test("AC-3: jeder Fehler der Abschrift beendet den Durchgang", arguments: [
+[36m173 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:174:25: [31mcannot infer contextual base in reference to member 'tooManyRequests'[0m
+172 |     @Test("AC-3: jeder Fehler der Abschrift beendet den Durchgang", arguments: [
+[36m173 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:175:11: [31mcannot infer contextual base in reference to member 'status'[0m
+173 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),
+[36m174 |         (.status(429), .tooManyRequests),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:175:25: [31mcannot infer contextual base in reference to member 'unavailable'[0m
+173 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),
+[36m174 |         (.status(429), .tooManyRequests),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:176:11: [31mcannot infer contextual base in reference to member 'status'[0m
+174 |         (.status(429), .tooManyRequests),
+[36m175 |         (.status(503), .unavailable),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:176:25: [31mcannot infer contextual base in reference to member 'serviceError'[0m
+174 |         (.status(429), .tooManyRequests),
+[36m175 |         (.status(503), .unavailable),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:177:11: [31mcannot infer contextual base in reference to member 'cancel'[0m
+175 |         (.status(503), .unavailable),
+[36m176 |         (.status(400), .serviceError),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:177:20: [31mcannot infer contextual base in reference to member 'cancelled'[0m
+175 |         (.status(503), .unavailable),
+[36m176 |         (.status(400), .serviceError),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:283:43: [31mcannot find 'ClaudeSync' in scope[0m
+281 | 
+[36m282 |     @Test("AC-11: weitere Fehler am claim beenden den Durchgang", arguments: [[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:284:11: [31mcannot infer contextual base in reference to member 'status'[0m
+282 |     @Test("AC-11: weitere Fehler am claim beenden den Durchgang", arguments: [
+[36m283 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:284:25: [31mcannot infer contextual base in reference to member 'unavailable'[0m
+282 |     @Test("AC-11: weitere Fehler am claim beenden den Durchgang", arguments: [
+[36m283 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:285:11: [31mcannot infer contextual base in reference to member 'status'[0m
+283 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),
+[36m284 |         (.status(503), .unavailable),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:285:25: [31mcannot infer contextual base in reference to member 'serviceError'[0m
+283 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),
+[36m284 |         (.status(503), .unavailable),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:286:11: [31mcannot infer contextual base in reference to member 'body'[0m
+284 |         (.status(503), .unavailable),
+[36m285 |         (.status(500), .serviceError),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:286:29: [31mcannot infer contextual base in reference to member 'serviceError'[0m
+284 |         (.status(503), .unavailable),
+[36m285 |         (.status(500), .serviceError),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:287:11: [31mcannot infer contextual base in reference to member 'cancel'[0m
+285 |         (.status(500), .serviceError),
+[36m286 |         (.body(200, "{}"), .serviceError),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:287:20: [31mcannot infer contextual base in reference to member 'cancelled'[0m
+285 |         (.status(500), .serviceError),
+[36m286 |         (.body(200, "{}"), .serviceError),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:300:15: [31mcannot find 'ClaudeSync' in scope[0m
+298 | 
+[36m299 |     @Test("AC-12: scheitert das Melden, endet der Durchgang und die Änderung bleibt", arguments: [[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:300:52: [31mcannot infer contextual base in reference to member 'serviceError'[0m
+298 | 
+[36m299 |     @Test("AC-12: scheitert das Melden, endet der Durchgang und die Änderung bleibt", arguments: [[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:91:23: [31mcannot find type 'ClaudeSync' in scope[0m
+ 89 | 
+[36m 90 |     @MainActor final class Box {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:103:19: [31mcannot find type 'ClaudeSync' in scope[0m
+101 |         let wire: FakeTransport
+[36m102 |         let probe: DeviceProbe[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:179:71: [31mcannot find type 'ClaudeSync' in scope[0m
+177 |         (.cancel, .cancelled),
+[36m178 |     ])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:289:66: [31mcannot find type 'ClaudeSync' in scope[0m
+287 |         (.cancel, .cancelled),
+[36m288 |     ])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:302:71: [31mcannot find type 'ClaudeSync' in scope[0m
+300 |         (503, ClaudeSync.Stop.unavailable), (500, .serviceError),
+[36m301 |     ])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:119:19: [31mcannot find type 'ClaudeSync' in scope[0m
+117 |         let sessions = InMemorySessionStore(token: token)
+[36m118 |         let account = AccountState(client: ServiceClient(baseURL: Self.base, transport: wire), store: sessions)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:121:20: [31mcannot find 'ClaudeSync' in scope[0m
+119 |         let sync: ClaudeSync
+[36m120 |         if let execute {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:126:20: [31mcannot find 'ClaudeSync' in scope[0m
+124 |             )
+[36m125 |         } else {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:339:17: [31mcannot find 'ClaudeSync' in scope[0m
+337 |     @Test("AC-15: nach 15 Aufträgen ist Schluss")
+[36m338 |     func passStopsAtFifteenOrders() async throws {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:378:23: [31mcannot find type 'ClaudeSync' in scope[0m
+376 |     func lockIsReleasedAfterEveryEnding(ending: String) async throws {
+[36m377 |         let h: Harness[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:392:27: [31mcannot infer contextual base in reference to member 'busy'[0m
+390 |         #expect(await h.sync.pullOrders() == expected)
+[36m391 |         let again = await h.sync.pullOrders()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:416:23: [31mcannot find type 'ClaudeSync' in scope[0m
+414 |     @Test("AC-19: Ausgänge tragen nur Fallnamen")
+[36m415 |     func endingsCarryNoSecrets() async throws {[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m ClaudeSyncTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:173:43: [31mcannot find 'ClaudeSync' in scope[0m
+171 | 
+[36m172 |     @Test("AC-3: jeder Fehler der Abschrift beendet den Durchgang", arguments: [[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:174:11: [31mcannot infer contextual base in reference to member 'status'[0m
+172 |     @Test("AC-3: jeder Fehler der Abschrift beendet den Durchgang", arguments: [
+[36m173 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:174:25: [31mcannot infer contextual base in reference to member 'tooManyRequests'[0m
+172 |     @Test("AC-3: jeder Fehler der Abschrift beendet den Durchgang", arguments: [
+[36m173 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:175:11: [31mcannot infer contextual base in reference to member 'status'[0m
+173 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),
+[36m174 |         (.status(429), .tooManyRequests),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:175:25: [31mcannot infer contextual base in reference to member 'unavailable'[0m
+173 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),
+[36m174 |         (.status(429), .tooManyRequests),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:176:11: [31mcannot infer contextual base in reference to member 'status'[0m
+174 |         (.status(429), .tooManyRequests),
+[36m175 |         (.status(503), .unavailable),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:176:25: [31mcannot infer contextual base in reference to member 'serviceError'[0m
+174 |         (.status(429), .tooManyRequests),
+[36m175 |         (.status(503), .unavailable),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:177:11: [31mcannot infer contextual base in reference to member 'cancel'[0m
+175 |         (.status(503), .unavailable),
+[36m176 |         (.status(400), .serviceError),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:177:20: [31mcannot infer contextual base in reference to member 'cancelled'[0m
+175 |         (.status(503), .unavailable),
+[36m176 |         (.status(400), .serviceError),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:283:43: [31mcannot find 'ClaudeSync' in scope[0m
+281 | 
+[36m282 |     @Test("AC-11: weitere Fehler am claim beenden den Durchgang", arguments: [[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:284:11: [31mcannot infer contextual base in reference to member 'status'[0m
+282 |     @Test("AC-11: weitere Fehler am claim beenden den Durchgang", arguments: [
+[36m283 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:284:25: [31mcannot infer contextual base in reference to member 'unavailable'[0m
+282 |     @Test("AC-11: weitere Fehler am claim beenden den Durchgang", arguments: [
+[36m283 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:285:11: [31mcannot infer contextual base in reference to member 'status'[0m
+283 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),
+[36m284 |         (.status(503), .unavailable),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:285:25: [31mcannot infer contextual base in reference to member 'serviceError'[0m
+283 |         (FakeTransport.Reply.status(401), ClaudeSync.Stop.unauthorized),
+[36m284 |         (.status(503), .unavailable),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:286:11: [31mcannot infer contextual base in reference to member 'body'[0m
+284 |         (.status(503), .unavailable),
+[36m285 |         (.status(500), .serviceError),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:286:29: [31mcannot infer contextual base in reference to member 'serviceError'[0m
+284 |         (.status(503), .unavailable),
+[36m285 |         (.status(500), .serviceError),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:287:11: [31mcannot infer contextual base in reference to member 'cancel'[0m
+285 |         (.status(500), .serviceError),
+[36m286 |         (.body(200, "{}"), .serviceError),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:287:20: [31mcannot infer contextual base in reference to member 'cancelled'[0m
+285 |         (.status(500), .serviceError),
+[36m286 |         (.body(200, "{}"), .serviceError),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:300:15: [31mcannot find 'ClaudeSync' in scope[0m
+298 | 
+[36m299 |     @Test("AC-12: scheitert das Melden, endet der Durchgang und die Änderung bleibt", arguments: [[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:300:52: [31mcannot infer contextual base in reference to member 'serviceError'[0m
+298 | 
+[36m299 |     @Test("AC-12: scheitert das Melden, endet der Durchgang und die Änderung bleibt", arguments: [[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:91:23: [31mcannot find type 'ClaudeSync' in scope[0m
+ 89 | 
+[36m 90 |     @MainActor final class Box {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:103:19: [31mcannot find type 'ClaudeSync' in scope[0m
+101 |         let wire: FakeTransport
+[36m102 |         let probe: DeviceProbe[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:179:71: [31mcannot find type 'ClaudeSync' in scope[0m
+177 |         (.cancel, .cancelled),
+[36m178 |     ])[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEndsTests/ClaudeSyncTests.swift:289:66: [31mcannot find type 'ClaudeSync' in scope[0m
+287 |         (.cancel, .cancelled),
+[36m288 |     ])[0m
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-cached-churning-yao/Logs/Test/Test-LooseEnds-2026.11.12_17-37-11-+0100.xcresult

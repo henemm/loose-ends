@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-11-12T20:55:12+0100
+befehl: scripts/sim.sh test-proof AccountSettingsTests
+workflow: feat-795-s3-claude-sync
+head: 4e88976c7d23ae59c7016b4ec90076133e26b8db
+basis: 36aac30375b718bdcdb22b90638b3b71744d1d18 (merge-base origin/main HEAD)
+testklasse: AccountSettingsTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 8 gesamt, 8 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794513090.206  ende: 1794513310.512
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-795-s3-claude-sync/simulator-run/summary.json  sha256:970263dd422d83ffe2e5c997e3f151683b3906ad486f4ef7b16392647d7a1ae3
+xcresult: docs/artifacts/feat-795-s3-claude-sync/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-795-s3-claude-sync/simulator-run/*.png (7 Stück)
+
+## Geprüfte Dateien
+- sha256:58a64db08eafe345b0ad0ffb4301bff7da58087cd21749028a525af8f3b87b49  LooseEnds/Claude/ClaudeSync.swift
+- sha256:0f2065841317edd2545fec235cc0295e91f0d0a99ef1c9e0d6ad707072843419  LooseEndsTests/ClaudeSyncTests.swift

@@ -1,0 +1,30 @@
+./scripts/sim.sh unit - 2026-11-12, Ergebnis: Test Succeeded
+xcresult: Test-LooseEnds-2026.11.12_17-42-19-+0100.xcresult
+result=Passed total=1318 passed=1305 failed=0 skipped=13
+
+Uebersprungen (je einzeln):
+- Skipped | Guardrail report from the iPhone result file (#71) | Ergebnisdatei und Korpus werden vollständig zu Rohdaten und Zusammenfassung
+- Skipped | RawSentenceReportTests | Schreibt den Abschnitt „Echte Rohsätze“ nach stdout, ohne Modellaufruf
+- Skipped | Rohsatz-Export | Hilfstest: legt den Kunst-Speicher fixture.store für den Skriptlauf ab
+- Skipped | Rohsatz-Export | Hilfstest: lädt die vom Skript geschriebene Datei mit dem echten Leser
+- Skipped | RealModelGuardrailTests | Every text twice through the real model, refusals classified and written as raw probes
+- Skipped | RealModelLatencyTests | One cold and ten warm calls, timed and written as raw probes
+- Skipped | RealModelTests | Apple Intelligence is available on this Mac
+- Skipped | RealModelTests | Every note gets an answer in time, and its title is short enough for a row
+- Skipped | RealModelTests | Most titles keep a word of their note (the writer drops the rest, #460)
+- Skipped | SelfConsistencyReportTests | Schreibt den Selbstkonsistenz-Bericht aus zwei bereits vorhandenen Dateien, ohne Modellaufruf (AC-9)
+- Skipped | Speech latency (#274) | The first word arrives within 3 s of speech start
+- Skipped | Speech latency (#274) | The final text keeps the key words
+- Skipped | TextFormModelReportTests | Schreibt den Textform-Bericht aus der vorhandenen Ergebnisdatei nach stdout
+
+Skript-Zusammenfassung:
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: Sprache de_DE wird hier nicht unterstützt (isAvailable false, supportedLocales.count 0, installedLocales.count 0)
+[sim]   The final text keeps the key words – NICHT gemessen: Sprache de_DE wird hier nicht unterstützt (isAvailable false, supportedLocales.count 0, installedLocales.count 0)
