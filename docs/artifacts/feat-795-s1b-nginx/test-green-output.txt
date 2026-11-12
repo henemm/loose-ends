@@ -1,0 +1,36 @@
+# Testausgabe #795 S1b (Betriebsschnitt, kein Dienst- oder App-Code) — 2026-11-11
+
+## check-app.sh von außen (GREEN, green.txt)
+OK    401 POST /app/transcript ohne Bearer (soll 401)
+OK    401 POST /app/orders/claim ohne Bearer (soll 401)
+OK    401 POST /app/orders/result ohne Bearer (soll 401)
+OK    405 GET /app/transcript (soll 405)
+OK    405 GET /app/orders/claim (soll 405)
+OK    405 GET /app/orders/result (soll 405)
+OK    404 GET /app/x (soll 404)
+OK    413 POST /app/transcript mit 300-KiB-Körper, ohne Bearer, daher von nginx (soll 413)
+Anfragen gesendet: 8 (genau 8), 429 gesehen: nein
+Stand: 2026-11-11T21:30:05Z gegen https://loose-ends.henemm.com
+Exit: 0
+
+## henemm-infra: python3 -m pytest tests -q (Wegwerfklon des PR-Zweigs 3b109c5 auf rennwienix, infra-pr.txt)
+524 passed, 6 skipped in 54.84s
+Exit: 0
+
+## nginx -t vor dem reload (nginx-test.txt)
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+reload: 2026-11-11T21:29:50Z
+reload Exit: 0
+
+## Exposure-Prüfung (scan.txt)
+OK: Außensicht entspricht der Soll-Liste
+Exit: 0
+
+## Vertrag: grep -c '^```json' docs/reference/claude-abschrift-vertrag.md (soll 3)
+3
+
+## Wertscan über den Belegordner (PEM-Kopfzeile, Bearer-Kopf mit Wert, JWK-Feld d; Muster wie in der Spec, AC-12)
+Treffer: 0
+
+All checks PASSED

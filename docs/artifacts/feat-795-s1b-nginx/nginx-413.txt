@@ -1,0 +1,12 @@
+# 413 kommt von nginx, nicht vom Dienst (AC-8) — 2026-11-11, rennwienix
+
+Anfrage: `POST /app/transcript` mit 300-KiB-JSON-Körper aus check-app.sh (green.txt, 2026-11-11T21:30:05Z), ohne
+Authorization-Kopf. Der Dienst prüft die Sitzung vor dem Körper und hätte 401 geantwortet; 413 kann ohne Sitzung nur
+von `client_max_body_size 256k` in nginx kommen.
+
+$ sudo grep -h "/app/transcript" /var/log/nginx/access.log | grep " 413 " | tail -2   (Adresse durch <adresse> ersetzt)
+<adresse> - - [11/Nov/2026:21:30:05 +0000] "POST /app/transcript HTTP/1.1" 413 176 "-" "curl/8.7.1"
+
+Zugriffsprotokoll: /var/log/nginx/access.log (globales `access_log` in nginx.conf, Format `combined`, ohne Hostspalte;
+der Pfad /app/transcript ist nur am Host loose-ends.henemm.com freigegeben). Die 176 Bytes sind nginx' eigene
+413-Fehlerseite; der Dienst antwortet nackt ohne Körper. Genau eine solche Zeile, Zeitpunkt gleich dem GREEN-Lauf.

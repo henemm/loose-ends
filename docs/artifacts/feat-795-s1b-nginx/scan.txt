@@ -1,0 +1,30 @@
+# Exposure-Prüfung ohne Abweichung (AC-9) — 2026-11-11
+
+Einzelaufruf desselben Wegs, den der Wochenlauf nimmt (Messung auf dem Heimserver, Auswertung auf rennwienix gegen
+security/expected-exposure.json aus henemm-infra main bd6c405, PR #431), nach dem nginx-Reload (21:29:50Z).
+
+Erster Lauf 21:30:19Z: endete auf dem Server mit Erfolg (Stempel /home/hem/backups/external-exposure.success
+= 2026-11-11T21:46:49Z; das Skript schreibt den Stempel nur bei Exit 0 der Auswertung), die Ausgabe kam wegen einer
+hängenden ssh-Sitzung aber nicht beim Mac an. Daher ein zweiter Lauf mit Ausgabe in eine Datei auf dem Server
+(nohup, danach gelöscht), wörtlich:
+
+$ bash /home/hem/henemm-infra/scripts/check-external-exposure.sh
+Start: 2026-11-11T21:51:55Z
+Messung auf dem Heimserver gestartet
+OK: Außensicht entspricht der Soll-Liste
+Exit: 0
+Ende: 2026-11-11T22:08:24Z
+Erfolgsstempel: /home/hem/backups/external-exposure.success  2026-11-11T22:08:24Z
+
+Die Soll-Liste enthält für loose-ends.henemm.com: tls_hosts-Eintrag und die URLs
+/health 200, /mcp 401, /.well-known/oauth-authorization-server 200, /auth/apple 405, /auth/logout 405,
+/auth/delete 405, /auth/x 404, /app/transcript 405, /app/orders/claim 405, /app/orders/result 405, /app/x 404, / 404.
+Das Skript meldet bei Erfolg nur die Gesamtzeile; jede Abweichung (eine dieser URLs oder TLS des Hosts) hätte es als
+Fehlerzeile mit Exit ≠ 0 gemeldet. Also: keine Abweichung für loose-ends.henemm.com. Die Einzelcodes der vier
+/app-Pfade von außen belegt green.txt mit denselben Werten wie die Soll-Liste.
+
+Monitor (monitor-vorher.txt 21:26:39Z, monitor-nachher.txt 21:52:00Z): `diff` zeigt nur Zeitstempel, Uptime, Load,
+CPU/RAM/Swap-Werte (die CPU-Zeile wechselt von ! 73 % auf ✓ 18 %, weil die Last fiel; kein Dienst), „letzter Lauf vor …“-Angaben, den Infra-Stand von auto-deploy-infra (0390351f → bd6c4050, der
+`git pull` dieses Schnitts) und den Außensicht-Scan „vor 1 Tagen“ → „vor 0 Tagen“ (dieser Lauf). Kein Dienst wechselt
+seinen Zustand; Loose-Ends (200) und loose-ends-db sind vorher wie nachher ✓. Die Frieda-Zeilen „kein Pfad im Snippet“
+waren schon vorher ✗ (auch in S4d) und sind unverändert.

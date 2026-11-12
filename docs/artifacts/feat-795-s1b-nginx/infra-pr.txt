@@ -1,0 +1,19 @@
+# Infra-PR #795 S1b (AC-5) — 2026-11-11
+
+PR: https://github.com/henemm/henemm-infra/pull/431 (Zweig feat-795-s1b-app-nginx von main 0390351, Commits a61a5ab und 3b109c5),
+gemergt (squash) 2026-11-11T21:29:27Z → main bd6c405085ac36535611ec1ffb16d5cd96dbe789
+
+$ gh api repos/henemm/henemm-infra/compare/main...feat-795-s1b-app-nginx (vor dem Merge)
+nginx/loose-ends.henemm.com.conf +43 -1
+security/expected-exposure.json +4 -0
+
+Genau diese zwei Dateien. Git nur über die GitHub-API (Zweig und Commits per REST), kein lokaler Klon im Worktree.
+expected-exposure.json: neu /app/transcript [405], /app/orders/claim [405], /app/orders/result [405], /app/x [404];
+die /auth/-Einträge und alle anderen Hosts unverändert.
+
+CI: henemm-infra hat keine GitHub-Actions-Prüfung (`gh pr checks 431`: „no checks reported“, wie #419 und #420 in S4d).
+Ersatz: `python3 -m pytest tests -q` auf rennwienix im Wegwerfklon des PR-Zweigs unter /tmp (3b109c5,
+2026-11-11T21:28:17Z): `524 passed, 6 skipped in 54.84s`, Exit 0; Klon danach gelöscht.
+Kein Test oder Skript im Infra-Repo nennt /app/ (`grep -rn /app/ tests scripts` im Klon: keine Treffer).
+
+Server: /home/hem/henemm-infra `git pull --ff-only` 0390351 → bd6c405.

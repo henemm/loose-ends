@@ -1,0 +1,11 @@
+OK    401 POST /app/transcript ohne Bearer (soll 401)
+OK    401 POST /app/orders/claim ohne Bearer (soll 401)
+OK    401 POST /app/orders/result ohne Bearer (soll 401)
+OK    405 GET /app/transcript (soll 405)
+OK    405 GET /app/orders/claim (soll 405)
+OK    405 GET /app/orders/result (soll 405)
+OK    404 GET /app/x (soll 404)
+OK    413 POST /app/transcript mit 300-KiB-Körper, ohne Bearer, daher von nginx (soll 413)
+Anfragen gesendet: 8 (genau 8), 429 gesehen: nein
+Stand: 2026-11-11T21:30:05Z gegen https://loose-ends.henemm.com
+Exit: 0
