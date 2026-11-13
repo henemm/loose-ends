@@ -404,7 +404,7 @@ async function freePort(): Promise<number> {
 }
 
 test("app: einhaengen vor migrate und ohne auth", async (t) => {
-  const paths = ["/app/transcript", "/app/orders/claim", "/app/orders/result"];
+  const paths = ["/app/transcript", "/app/orders/claim", "/app/orders/result", "/app/device"];
   assert.deepEqual(Object.keys(appRoutes({ pool: new pg.Pool() })).sort(), [...paths].sort());
   watching = false;
   const down = await start({ databaseUrl: `postgres://postgres@127.0.0.1:${await freePort()}/postgres`, port: 0, migrationsDir: migrations, retryMs: 50, maxAttempts: 20 });
