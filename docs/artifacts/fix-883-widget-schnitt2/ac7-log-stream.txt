@@ -1,0 +1,7 @@
+getpwuid_r did not find a match for uid 501
+Filtering the log data using "subsystem == "com.henning.looseends" AND category == "Widget""
+Timestamp               Ty Process[PID:TID]
+2026-11-13 09:51:41.103 I  LooseEnds[30482:3d2650] [com.henning.looseends:Widget] Widget reload listens for saves, imports and becoming active
+2026-11-13 09:51:44.032 I  LooseEnds[30482:3d2650] [com.henning.looseends:Widget] Widget reload requested
+2026-11-13 09:52:02.056 I  LooseEnds[30482:3d2650] [com.henning.looseends:Widget] Widget reload requested
+Child process terminated with signal 15: Terminated

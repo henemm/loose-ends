@@ -5,8 +5,14 @@ import WidgetKit
 #if canImport(CoreData)
 import CoreData
 #endif
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
-/// Reloads the "Next up" widget for every save and every finished CloudKit import (#883). It lives with the
+/// Reloads the "Next up" widget for every save, every finished CloudKit import and every move to the foreground
+/// (#883). It lives with the
 /// process, not with a window: on the Mac the app runs with its window closed, and an import from another
 /// device never saves through the app's context. Before, only `ContentView` reloaded (#307).
 @MainActor final class WidgetReload {
@@ -19,6 +25,16 @@ import CoreData
     private var pending: Task<Void, Never>?
     private var saveObserver: (any NSObjectProtocol)?
     private var importObserver: (any NSObjectProtocol)?
+    private var activeObserver: (any NSObjectProtocol)?
+
+    /// The process-wide signal that the app became active; `scenePhase` is per window.
+    private static var becameActive: Notification.Name {
+        #if canImport(UIKit)
+        UIApplication.didBecomeActiveNotification
+        #else
+        NSApplication.didBecomeActiveNotification
+        #endif
+    }
 
     /// Unit and UI tests never reach WidgetKit unless they hand in their own reload.
     private static var suppressed: Bool {
@@ -32,7 +48,10 @@ import CoreData
         } else if Self.suppressed {
             self.reload = {}
         } else {
-            self.reload = { WidgetCenter.shared.reloadTimelines(ofKind: WidgetReload.kind) }
+            self.reload = {
+                WidgetReload.logger.info("Widget reload requested")
+                WidgetCenter.shared.reloadTimelines(ofKind: WidgetReload.kind)
+            }
         }
     }
 
@@ -61,7 +80,13 @@ import CoreData
             MainActor.assumeIsolated { self?.handle(event) }
         }
         #endif
-        Self.logger.info("Widget reload listens for saves and imports")
+        // A widget may have missed a change while the app was away; coming back draws it fresh (Schnitt 2).
+        activeObserver = NotificationCenter.default.addObserver(
+            forName: Self.becameActive, object: nil, queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.reloadSoon() }
+        }
+        Self.logger.info("Widget reload listens for saves, imports and becoming active")
     }
 
     /// One mirroring event; only a finished, successful import reloads.

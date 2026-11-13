@@ -1,6 +1,11 @@
 import Foundation
 import SwiftData
 import Testing
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 @testable import LooseEnds
 
 /// #883: the "Next up" widget reloads for every save and every finished CloudKit import, with no window
@@ -60,6 +65,34 @@ import Testing
         let counter = Counter()
         let reload = make(counter)
         for _ in 0..<10 { reload.handle(event(.imported, ended: Date())) }
+        try await settle()
+        #expect(counter.count == 1)
+    }
+
+    private var becameActive: Notification.Name {
+        #if canImport(UIKit)
+        UIApplication.didBecomeActiveNotification
+        #else
+        NSApplication.didBecomeActiveNotification
+        #endif
+    }
+
+    @Test("Becoming active reloads exactly once (#883 Schnitt 2, AC-3)")
+    func testBecomingActiveReloadsOnce() async throws {
+        let counter = Counter()
+        let reload = make(counter)
+        reload.start()
+        NotificationCenter.default.post(name: becameActive, object: nil)
+        try await settle()
+        #expect(counter.count == 1)
+    }
+
+    @Test("Ten active messages within a second reload once (#883 Schnitt 2, AC-3)")
+    func testBurstOfActiveMessagesReloadsOnce() async throws {
+        let counter = Counter()
+        let reload = make(counter)
+        reload.start()
+        for _ in 0..<10 { NotificationCenter.default.post(name: becameActive, object: nil) }
         try await settle()
         #expect(counter.count == 1)
     }

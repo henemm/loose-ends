@@ -1,0 +1,14 @@
+getpwuid_r did not find a match for uid 501
+Timestamp               Ty Process[PID:TID]
+2026-11-13 09:47:14.158 I  LooseEnds[25044:3cc27e] [com.henning.looseends:Widget] Widget reload listens for saves, imports and becoming active
+2026-11-13 09:47:15.025 I  LooseEnds[25044:3cc27e] [com.henning.looseends:Widget] Widget reload listens for saves, imports and becoming active
+2026-11-13 09:47:15.450 I  LooseEnds[25044:3cc27e] [com.henning.looseends:Widget] Widget reload listens for saves, imports and becoming active
+2026-11-13 09:48:40.513 I  LooseEnds[27053:3ce703] [com.henning.looseends:Widget] Widget reload listens for saves, imports and becoming active
+2026-11-13 09:49:30.462 I  LooseEnds[27053:3ce703] [com.henning.looseends:Widget] Widget completion: task is not open any more
+2026-11-13 09:49:30.465 I  LooseEnds[27053:3ce703] [com.henning.looseends:Widget] Widget completion: task no longer exists
+2026-11-13 09:50:22.271 I  LooseEnds[27053:3ce703] [com.henning.looseends:Widget] Widget reload listens for saves, imports and becoming active
+2026-11-13 09:50:23.109 I  LooseEnds[27053:3ce703] [com.henning.looseends:Widget] Widget reload listens for saves, imports and becoming active
+2026-11-13 09:50:23.522 I  LooseEnds[27053:3ce703] [com.henning.looseends:Widget] Widget reload listens for saves, imports and becoming active
+2026-11-13 09:51:41.104 I  LooseEnds[30482:3d2650] [com.henning.looseends:Widget] Widget reload listens for saves, imports and becoming active
+2026-11-13 09:51:44.033 I  LooseEnds[30482:3d2650] [com.henning.looseends:Widget] Widget reload requested
+2026-11-13 09:52:02.057 I  LooseEnds[30482:3d2650] [com.henning.looseends:Widget] Widget reload requested
