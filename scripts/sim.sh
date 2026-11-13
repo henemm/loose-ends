@@ -343,11 +343,16 @@ run_xcodebuild() {
         done
     ) </dev/null >/dev/null &
     watcher=$!
+    # Ad-hoc-Signatur nur auf Wunsch (#795 S3b-2): ein unsignierter Simulatorbau hat keine simulierten Berechtigungen,
+    # der Schlüsselbund antwortet -34018. LOOSEENDS_SIM_SIGN=1 legt sie ad hoc in die App (Debug-Weg A/B, kein Konto);
+    # ohne den Schalter bleibt der Aufruf wie bisher.
+    local sign=()
+    [ "${LOOSEENDS_SIM_SIGN:-}" = 1 ] && sign=(CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER=)
     # Die Rohausgabe geht ins Log, bevor xcbeautify sie kürzt: Messberichte stehen darin.
     if command -v xcbeautify >/dev/null; then
-        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG" | xcbeautify || status=$?
+        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" "${sign[@]:-CODE_SIGNING_ALLOWED=NO}" 2>&1 | tee "$BUILD_LOG" | xcbeautify || status=$?
     else
-        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$BUILD_LOG" || status=$?
+        xcodebuild "$@" -derivedDataPath "$SESSION_DERIVED_DATA" "${sign[@]:-CODE_SIGNING_ALLOWED=NO}" 2>&1 | tee "$BUILD_LOG" || status=$?
     fi
     # Hat der Wächter ausgelöst, darf er seinen KILL-Schritt beenden; die Markierung entscheidet, nicht pipefail.
     [ -e "$hung" ] || kill "$watcher" 2>/dev/null || true

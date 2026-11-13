@@ -199,4 +199,85 @@ import Testing
             try await away.signIn(identityToken: "UITEST-IDENTITY", nonce: "n", code: "UITEST-CODE")
         }
     }
+
+    // MARK: Debug-Weg zum lokalen Dienst (#795 S3b-2)
+
+    static func debugArgs(_ url: String, _ token: String = "TOKEN") -> [String] {
+        ["-LEDebugService", url, "-LEDebugSession", token]
+    }
+
+    @Test("debug: adresse und sitzung gelesen")
+    func debugServiceReadsAddressAndSession() throws {
+        let local = try #require(URL(string: "http://localhost:8780"))
+        let plain = try #require(AccountWiring.debugService(arguments: Self.debugArgs("http://localhost:8780"), debugBuild: true))
+        #expect(plain.url == local)
+        #expect(plain.token == "TOKEN")
+        let reordered = ["-x", "-LEDebugSession", "TOKEN", "--other", "-LEDebugService", "http://localhost:8780", "-y"]
+        let mixed = try #require(AccountWiring.debugService(arguments: reordered, debugBuild: true))
+        #expect(mixed.url == local)
+        #expect(mixed.token == "TOKEN")
+    }
+
+    @Test("debug: nie im release")
+    func debugServiceNeverInRelease() {
+        let args = Self.debugArgs("http://localhost:8780")
+        #expect(AccountWiring.debugService(arguments: args, debugBuild: false) == nil)
+        #expect(!AccountWiring.isEnabled(info: nil, arguments: args, debugBuild: false))
+        #expect(AccountWiring.forApp(info: nil, arguments: args, debugBuild: false) == nil)
+    }
+
+    @Test("debug: beide argumente noetig")
+    func debugServiceNeedsBothArguments() {
+        for args in [["-LEDebugService", "http://localhost:8780"], ["-LEDebugSession", "TOKEN"],
+                     ["-LEDebugSession", "TOKEN", "-LEDebugService"], ["-LEDebugService", "http://localhost:8780", "-LEDebugSession"],
+                     Self.debugArgs("http://localhost:8780", ""), Self.debugArgs("http://localhost:8780", "  \n\t ")] {
+            #expect(AccountWiring.debugService(arguments: args, debugBuild: true) == nil, "\(args)")
+        }
+    }
+
+    @Test("debug: nur http localhost")
+    func debugServiceAcceptsOnlyLocalhostHTTP() {
+        let refused = ["https://localhost:8780", "http://127.0.0.1:8780", "http://fremd.example:8780",
+                       "http://localhost.evil.example:8780", "http://user@localhost:8780", "http://user:pw@localhost:8780",
+                       "http://localhost:8780#x", "http://localhost:8780/pfad", "http://localhost:8780/?x=1",
+                       "ftp://localhost:8780", "kein url", ""]
+        for address in refused {
+            #expect(AccountWiring.debugService(arguments: Self.debugArgs(address), debugBuild: true) == nil, "\(address)")
+        }
+        for address in ["http://LOCALHOST:8780", "http://localhost:8780/"] {
+            #expect(AccountWiring.debugService(arguments: Self.debugArgs(address), debugBuild: true) != nil, "\(address)")
+        }
+    }
+
+    @Test("debug: port ist pflicht")
+    func debugServiceNeedsAPort() {
+        #expect(AccountWiring.debugService(arguments: Self.debugArgs("http://localhost"), debugBuild: true) == nil)
+        #expect(AccountWiring.debugService(arguments: Self.debugArgs("http://localhost/"), debugBuild: true) == nil)
+    }
+
+    @Test("debug: argumente schalten das konto ein")
+    func debugArgumentsSwitchTheAccountOn() {
+        #expect(AccountWiring.isEnabled(info: nil, arguments: Self.debugArgs("http://localhost:8780"), debugBuild: true))
+        #expect(!AccountWiring.isEnabled(info: nil, arguments: [], debugBuild: true))
+        #expect(!AccountWiring.isEnabled(info: nil, arguments: ["-LEDebugService", "http://localhost:8780"], debugBuild: true))
+        #expect(!AccountWiring.isEnabled(info: nil, arguments: ["-LEDebugSession", "TOKEN"], debugBuild: true))
+        #expect(!AccountWiring.isEnabled(info: nil, arguments: Self.debugArgs("https://localhost:8780"), debugBuild: true))
+        #expect(AccountWiring.isEnabled(info: nil, arguments: ["--ui-testing"], debugBuild: false))
+        #expect(AccountWiring.isEnabled(info: ["LEAccountEnabled": true], arguments: [], debugBuild: false))
+        #expect(!AccountWiring.isEnabled(info: ["LEAccountEnabled": false], arguments: [], debugBuild: true))
+    }
+
+    @Test("debug: forApp ist angemeldet")
+    func forAppWithDebugArgumentsIsSignedIn() throws {
+        let state = try #require(AccountWiring.forApp(info: nil, arguments: Self.debugArgs("http://localhost:8780")))
+        #expect(state.status == .signedIn)
+        #expect(AccountWiring.forApp(info: nil, arguments: Self.debugArgs("http://fremd.example:8780")) == nil)
+    }
+
+    @Test("debug: ui-testing gewinnt")
+    func uiTestingBeatsDebugArguments() throws {
+        let state = try #require(AccountWiring.forApp(info: nil,
+                                                      arguments: ["--ui-testing"] + Self.debugArgs("http://localhost:8780")))
+        #expect(state.status == .signedOut)
+    }
 }
