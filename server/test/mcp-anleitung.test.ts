@@ -44,7 +44,7 @@ test("AC-2: the instructions fit two kilobytes", () => {
 test("AC-3: the instructions name only existing tools", async (t) => {
   const client = await connect(t, await migrated(t));
   const tools = (await client.listTools()).tools.map((tool) => tool.name);
-  const named = anleitung.match(/[a-z]+_[a-z_]+/g) ?? [];
+  const named: string[] = anleitung.match(/[a-z]+_[a-z_]+/g) ?? [];
   for (const word of named) assert.ok(tools.includes(word), `${word} ist kein Werkzeug`);
   for (const must of ["get_view", "capture_task", "add_subtask", "get_order_result"]) assert.ok(named.includes(must), `${must} fehlt`);
 });
