@@ -6,10 +6,12 @@ import Foundation
 enum AccountWiring {
     static let fallbackURL = URL(string: "https://loose-ends.henemm.com")!
 
-    /// On under `--ui-testing`; otherwise only when the Info value `LEAccountEnabled` is a true Bool. Missing or of
-    /// another type counts as off.
-    static func isEnabled(info: [String: Any]?, arguments: [String]) -> Bool {
+    /// On under `--ui-testing` or with a valid debug way (#795 S3b-2); otherwise only when the Info value
+    /// `LEAccountEnabled` is a true Bool. Missing or of another type counts as off.
+    static func isEnabled(info: [String: Any]?, arguments: [String],
+                          debugBuild: Bool = AccountWiring.debugBuild) -> Bool {
         if arguments.contains("--ui-testing") { return true }
+        if debugService(arguments: arguments, debugBuild: debugBuild) != nil { return true }
         guard let number = info?["LEAccountEnabled"] as? NSNumber, CFGetTypeID(number) == CFBooleanGetTypeID() else {
             return false
         }
@@ -40,13 +42,38 @@ enum AccountWiring {
         }
     }
 
+    /// The debug way to a service on this machine (#795 S3b-2): two launch arguments, the address
+    /// `http://localhost:<port>` and the session token, Debug build only. The address must be exactly http, host `localhost`, a port, no
+    /// user, no password, path empty or `/`, no query, no fragment; the token not blank. Anything else is nil.
+    /// Only for the simulator against a throwaway database: never pass a token of the live service as an argument.
+    static func debugService(arguments: [String],
+                             debugBuild: Bool = AccountWiring.debugBuild) -> (url: URL, token: String)? {
+        guard debugBuild else { return nil }
+        func value(after flag: String) -> String? {
+            guard let index = arguments.firstIndex(of: flag), index + 1 < arguments.count else { return nil }
+            return arguments[index + 1]
+        }
+        guard let address = value(after: "-LEDebugService"), let token = value(after: "-LEDebugSession"),
+              !token.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              let parts = URLComponents(string: address), let url = parts.url,
+              parts.scheme?.lowercased() == "http", parts.host?.lowercased() == "localhost", parts.port != nil,
+              parts.user == nil, parts.password == nil, ["", "/"].contains(parts.path),
+              parts.query == nil, parts.fragment == nil else { return nil }
+        return (url, token)
+    }
+
     /// The app's one account state, or nil while the switch is off (then nothing is read and nothing built).
-    @MainActor static func forApp(info: [String: Any]?, arguments: [String]) -> AccountState? {
-        guard isEnabled(info: info, arguments: arguments) else { return nil }
+    /// `--ui-testing` beats the debug way, so a UI test never talks to a local service.
+    @MainActor static func forApp(info: [String: Any]?, arguments: [String],
+                                  debugBuild: Bool = AccountWiring.debugBuild) -> AccountState? {
+        guard isEnabled(info: info, arguments: arguments, debugBuild: debugBuild) else { return nil }
         if arguments.contains("--ui-testing") {
             let transport = UITestTransport(arguments: arguments)
             return AccountState(client: ServiceClient(baseURL: serviceURL(info: info), transport: transport),
                                 store: InMemorySessionStore())
+        }
+        if let debug = debugService(arguments: arguments, debugBuild: debugBuild) {
+            return AccountState(client: ServiceClient(baseURL: debug.url), store: InMemorySessionStore(token: debug.token))
         }
         return AccountState(client: ServiceClient(baseURL: serviceURL(info: info)), store: KeychainSessionStore())
     }

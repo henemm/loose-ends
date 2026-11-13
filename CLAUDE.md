@@ -101,6 +101,7 @@ brew install xcodegen xcbeautify
 ./scripts/sim.sh generate     # LooseEnds.xcodeproj aus project.yml
 ./scripts/sim.sh unit         # Unit-Tests im iOS-Simulator (Mac als Host nur mit LOOSEENDS_MAC_HOST=1)
 ./scripts/sim.sh build        # iOS-App für den Simulator
+LOOSEENDS_SIM_SIGN=1 ./scripts/sim.sh build  # nur auf Wunsch: ad hoc signiert statt CODE_SIGNING_ALLOWED=NO, damit der Schlüsselbund im Simulator geht (-34018 sonst; Debug-Weg A/B, #795 S3b-2); danach baut ein normaler build wieder unsigniert
 ./scripts/sim.sh test-proof <Klasse>  # UI-Test + maschineller Simulator-Beleg (#145)
 ./scripts/sim.sh watch-test-proof <Klasse>  # dasselbe im watchOS-Simulator, App vorher deinstalliert (#409)
 ./scripts/sim.sh store-screenshots    # App-Store-Bilder iPhone 17 + iPad Pro 13″, de, hell, 9:41, nach docs/store/screenshots/de/ samt manifest.json (#742); Watch-/Mac-Einträge und README bleiben stehen
@@ -123,7 +124,12 @@ LOOSEENDS_LANG=en ./scripts/sim.sh sim-unit <Klasse>  # Testsprache en (-testLan
 
 The server (`server/`, #613) has its own chain, no Xcode: `./server/scripts/test-local.sh` starts a throwaway Postgres 18
 (temp data folder, free port, TCP only), runs `npm run typecheck` and `npm test` in `server/` against it and always cleans up;
-with a `DATABASE_URL` set, both run directly in `server/`.
+with a `DATABASE_URL` set, both run directly in `server/`. `./server/scripts/local-service.sh` (#795 S3b-2) runs the service
+itself on `127.0.0.1` against such a throwaway Postgres, without Apple and OAuth (inherited `APPLE_*`, `OAUTH_*`,
+`ALLOWED_APPLE_SUBS`, `PUBLIC_URL` unset), writes `<tmp>/state.env` (`DATABASE_URL`, `PORT`, `SERVICE_URL`, `SESSION_TOKEN`),
+prints `STATE=<path>` and cleans up on a signal; `node server/scripts/local-fixture.ts session|transcript|order <text>|result <id>`
+works on that database only (host `127.0.0.1`/`localhost`). Start it from a Bash with `set -m`, or SIGINT stays ignored.
+Only for the simulator against this throwaway database: never pass a token of the live service as a launch argument.
 
 `launch-measure` baut einen Release-Prüfbau und startet ihn per devicectl; es läuft nur nach Hennings
 ausdrücklichem „jetzt ist ein Test möglich“ (Regel im Stufe-3-Absatz unten, nicht umgehen).
@@ -478,6 +484,12 @@ not scope creep on the current one.
   The view is `LooseEnds/Views/AccountSection.swift`: the group "Claude" in the settings right under iCloud, rows from the pure
   `AccountSection.layout(status:problem:)`, `SignInWithAppleButton` (a plain test button under `--ui-testing`), sign out without a
   question, delete only after the `.destructive` confirmation; nothing is sent before a tap
+  #795 S3b-2, the debug way: `AccountWiring.debugService` takes `-LEDebugService http://localhost:<port>` (exactly that: http,
+  `localhost`, a port, no user, path, query or fragment) and `-LEDebugSession <token>`, Debug build only (`debugBuild`); then
+  `forApp` builds the real `ServiceClient` with the token in memory (`signedIn`, no keychain), and `--ui-testing` beats it.
+  Counterpart `server/scripts/local-service.sh` (throwaway service, `STATE=<path>` with `SERVICE_URL`, `SESSION_TOKEN`) and
+  `local-fixture.ts` (`session`, `transcript`, `order <text>`, `result <id>`); evidence A/B in `docs/artifacts/feat-795-s3b2-debug-weg/`.
+  Only for the simulator against that throwaway database: never pass a token of the live service as a launch argument.
 - `LooseEnds/App/LaunchTimings.swift` — cold-start measuring points (#22): signposts always, `Documents/launch-timings.json`
   only in the probe build (`.probe`); launch argument `-measureLaunch` opens the capture scene
 - `LooseEnds/App/WidgetReload.swift` (#883) — the one place that reloads the widget timelines, on app level: every `ModelContext.didSave`, every finished CloudKit import and every move to the foreground (`didBecomeActive`, #883 Schnitt 2), merged to one reload per second, no window needed (Mac in the menu bar); `ContentView` no longer reloads itself

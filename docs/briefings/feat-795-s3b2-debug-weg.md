@@ -1,7 +1,7 @@
 ---
 spec_file: docs/specs/feat-795-schnitt-3b2-debug-weg.md
-spec_sha256: e304c5f6c060139087d75a2f5b5529d20fdf6ff934c52406ce9b4ebba8b1c57b
-spec_frozen_sha256: 3cc0016e1e594c1a45b8040cfffbc20132be750f3746073da4a5411809ecd0da
+spec_sha256: 0e2ef933d9cdb9c39fbf7c893baf60b5bc570b23cd4abbdc7bcca8173d6ddbfc
+spec_frozen_sha256: 796385f6656527d4f08b0229c204757078da05f29e46fdfb26c1593760a3b0b1
 ---
 
 # PO-Briefing: feat-795-s3b2-debug-weg
@@ -16,15 +16,15 @@ Entwickler können die Verbindung zwischen App und Claude-Dienst lokal im Simula
 
 ## Definition of Done
 
-Zwei Simulatoren spielen gegen einen lokalen Dienst durch: Aufgabe von B wird als „Claude“-Änderung angelegt, sichtbar per Screenshot und im Dienst.
+Zwei Simulatoren laufen gegen einen lokalen Dienst: Abschrift von A im Dienst, Auftrag auf B als Revision „Claude“ ausgeführt, Ergebnis im Dienst.
 
 ## Wie geprüft wird
 
-Acht automatische Tests prüfen die Schutzregeln (nie im Store-Bau); ein echter Durchlauf belegt die Kette, nicht aber Apple-Anmeldung oder Server im Internet.
+Acht automatische Tests sichern die Schutzregeln, ein echter Durchlauf belegt die Kette; Apple-Anmeldung und Internet-Server bleiben ungeprüft.
 
 ## Kritische Anmerkungen
 
-- Issue #795 ließ sich nicht direkt lesen; Abgleich nur gegen Kontext-Dokument und Vorgänger-Spec.
+- Zusatz: signierter Simulatorbau nur auf Schalter; Standard und CI bleiben unverändert.
 - Skript- und Simulator-Belege sind Protokolle, keine automatischen Tests.
 
 ## Freigabe-Frage
