@@ -1,0 +1,21 @@
+# Simulator-Beleg
+erzeugt: 2026-11-12T23:53:44+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests/testOfficialCompoundSetsImportance
+workflow: fix-864-komposita-amtswoerter
+head: 50ed8b7f8dfc31172a71b48b29b3188e2efc442e
+basis: 315a7a65938190a365221d52fc2d17ce897ba97c (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests/testOfficialCompoundSetsImportance
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794523970.864  ende: 1794524022.966
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/fix-864-komposita-amtswoerter/simulator-run/summary.json  sha256:68c81a04d1c972dc13376e3ea856990a5cdd219bfdc357bced26cbae1e2f5dee
+xcresult: docs/artifacts/fix-864-komposita-amtswoerter/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-864-komposita-amtswoerter/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+- sha256:afb3b05286865182f6113bd27cc1967c5af1060bee1e8f6d62cf01f15559bd1a  LooseEndsTests/ImportanceUrgencyRuleTests.swift
+- sha256:995a963ac669b251caa0e969baf60683b9a4e3eccaa9baa3238a2e79fde0f9e2  LooseEndsUITests/CaptureSmokeTests.swift
+- sha256:e057fbeaba1fb854b1dee77a59cd9eee749d00bd229e16a246cad7fcb4c7915f  Shared/Enrichment/ImportanceUrgencyRule.swift
+- sha256:dc18a22db75590a0e3ccf20b8b08a8f0f98f9dbecfcbeb5242f36a254119a1c9  Shared/Language/GermanPack.swift

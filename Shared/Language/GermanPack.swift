@@ -52,6 +52,16 @@ extension LanguagePack {
                       "überweisung"],
             "official": ["finanzamt", "amt", "behörde", "gericht", "anwalt", "anwältin", "notar", "vertrag",
                          "steuer", "steuererklärung", "bußgeld"],
+            // #864: Zusammensetzungen aus dem Amtsbereich. Stämme vorn (Grenze links, rechts offen: „Steuerbescheide“),
+            // Köpfe hinten (links offen, Grenze rechts: „Mietvertrag“, nicht „Vertragsnummer“). Positivlisten, weil
+            // ein generisches „steuer…“/„…amt“/„…gericht“ „Steuerung“, „Gesamt“ und „Hauptgericht“ träfe.
+            "officialStem": ["steuerbescheid", "steuerberater", "steuernachzahlung", "steuererstattung",
+                             "steuerunterlagen", "steuernummer", "steuerschuld", "steuerklasse", "steuerid",
+                             "umsatzsteuer", "einkommensteuer", "kirchensteuer", "lohnsteuer", "grundsteuer",
+                             "gewerbesteuer", "amtsgericht", "landgericht", "nachlassgericht", "sozialgericht",
+                             "arbeitsgericht", "finanzgericht", "ordnungsamt", "gesundheitsamt", "standesamt",
+                             "jugendamt", "sozialamt", "bauamt"],
+            "officialHead": ["vertrag", "anwalt", "anwältin", "notar", "behörde"],
             "peopleWaiting": ["wartet auf", "warten auf", "erwartet eine antwort", "erwartet antwort"],
         ],
         urgencyWords: [

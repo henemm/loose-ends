@@ -50,8 +50,8 @@ struct ImportanceUrgencyRuleTests {
     }
 
     /// #214: Das ausdrückliche Wort „wichtig" setzt die Wichtigkeit, vor allen indirekten Signalen.
-    /// „Steuerbescheid" trifft das Amtssignal „steuer" nicht (Wortgrenze) — ohne das neue Signal
-    /// blieb die Wichtigkeit hier leer.
+    /// „Steuerbescheid" trifft seit #864 auch das Amtssignal (Zusammensetzung); das Wort „wichtig" geht
+    /// ihm trotzdem vor, die Begründung bleibt die des ausdrücklichen Wortes.
     @Test("„wichtig“ setzt hohe Wichtigkeit, mit eigener Begründung (#214)")
     func explicitWordSetsImportance() throws {
         let match = try #require(ImportanceUrgencyRule.matchImportance(in: "Morgen wichtig Steuerbescheid prüfen"))
@@ -144,6 +144,62 @@ struct ImportanceUrgencyRuleTests {
         for key in keys {
             let translated = germanBundle.localizedString(forKey: key, value: key, table: nil)
             #expect(translated != key, "\(key)")
+        }
+    }
+
+    // MARK: - #864 Zusammensetzungen mit Amtswörtern
+
+    private var officialReason: String { String(localized: "From official or legal language in the note.") }
+
+    @Test("Amtswort-Stamm vorn setzt hohe Wichtigkeit (#864 AC-1)", arguments: [
+        "Steuerbescheid prüfen", "Steuernachzahlung überweisen", "Steuerberater anrufen",
+        "Steuerbescheide ablegen", "Umsatzsteuer melden", "Amtsgerichts Post lesen",
+    ])
+    func compoundStemsSetImportance(sentence: String) throws {
+        let match = try #require(ImportanceUrgencyRule.matchImportance(in: sentence), "\(sentence)")
+        #expect(match.value == .high, "\(sentence)")
+        #expect(match.confidence == 1.0, "\(sentence)")
+        #expect(match.reason == officialReason, "\(sentence)")
+    }
+
+    @Test("Amtswort hinten setzt hohe Wichtigkeit (#864 AC-2)", arguments: [
+        "Mietvertrag kündigen", "Scheidungsanwalt anrufen", "Waffenbehörde fragen", "Staatsanwalt",
+    ])
+    func compoundHeadsSetImportance(sentence: String) throws {
+        let match = try #require(ImportanceUrgencyRule.matchImportance(in: sentence), "\(sentence)")
+        #expect(match.value == .high, "\(sentence)")
+        #expect(match.reason == officialReason, "\(sentence)")
+    }
+
+    @Test("Nur ähnlich aussehende Wörter treffen nicht (#864 AC-3)", arguments: [
+        "Steuerrad reparieren", "Steuerung einbauen", "Steuerknüppel kaufen", "Lenksteuer",
+        "Gesamt zählen", "insgesamt drei", "Hauptgericht kochen", "Beamtenrecht lesen",
+        "Vertragsnummer notieren",
+    ])
+    func lookAlikesDoNotSetImportance(sentence: String) {
+        #expect(ImportanceUrgencyRule.matchImportance(in: sentence) == nil, "\(sentence)")
+    }
+
+    @Test("Bisherige Amtstreffer bleiben (#864 AC-4)", arguments: [
+        "Finanzamt anrufen", "Steuererklärung", "Amt", "Vertrag", "Check the tax notice today",
+    ])
+    func formerOfficialHitsStay(sentence: String) throws {
+        let match = try #require(ImportanceUrgencyRule.matchImportance(in: sentence), "\(sentence)")
+        #expect(match.value == .high, "\(sentence)")
+        #expect(match.reason == officialReason, "\(sentence)")
+    }
+
+    @Test("Steuerbescheid trifft ohne „wichtig“ mit der Amtsbegründung (#864 AC-4)")
+    func steuerbescheidNeedsNoImportantWord() throws {
+        let match = try #require(ImportanceUrgencyRule.matchImportance(in: "Steuerbescheid prüfen"))
+        #expect(match.reason == officialReason)
+    }
+
+    @Test("Die Spanne deckt das ganze Kompositum ab (#864 AC-5)")
+    func triggerCoversWholeCompound() throws {
+        for (sentence, word) in [("Steuerbescheide ablegen", "Steuerbescheide"), ("Mietvertrag kündigen", "Mietvertrag")] {
+            let range = try #require(ImportanceUrgencyRule.importanceTrigger(in: sentence), "\(sentence)")
+            #expect(String(sentence[range]) == word, "\(sentence)")
         }
     }
 

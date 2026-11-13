@@ -218,8 +218,9 @@ final class DriveSmokeTests: XCTestCase {
             .matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "taskRow_", "Steuerberater"))
             .firstMatch
         row.tap()
-        let show = element("revisionsButton", in: app)
-        XCTAssertTrue(show.waitForExistence(timeout: 10), "The detail offers no change list")
+        // "Steuerberater" sets the importance by rule (#864): one more row, the button lies below the fold.
+        let show = scrolledTo("revisionsButton", in: app)
+        XCTAssertTrue(show.exists, "The detail offers no change list")
         show.tap()
         XCTAssertTrue(app.staticTexts["Perle sammeln"].waitForExistence(timeout: 5), "The change list does not say \"Perle sammeln\"")
         XCTAssertFalse(app.staticTexts["Counts"].exists, "The English key shows on a German device")

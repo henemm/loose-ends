@@ -111,12 +111,41 @@ enum ImportanceUrgencyRule {
 
         /// Where this signal stands earliest; the outright word only where the note does not negate it.
         func range(in text: String) -> Range<String.Index>? {
-            self == .explicit
-                ? ImportanceUrgencyRule.firstUnnegatedRange(of: keywords, in: text)
-                : ImportanceUrgencyRule.firstRange(of: keywords, in: text)
+            switch self {
+            case .explicit: ImportanceUrgencyRule.firstUnnegatedRange(of: keywords, in: text)
+            case .official: ImportanceUrgencyRule.officialRange(in: text, words: keywords)
+            default: ImportanceUrgencyRule.firstRange(of: keywords, in: text)
+            }
         }
 
         func matches(_ text: String) -> Bool { range(in: text) != nil }
+    }
+
+    /// The official signal (#864): whole words as before, plus compounds from the pack's lists. A stem
+    /// ("steuerbescheid") needs the boundary on the left only, so inflections count ("Steuerbescheide"); a head
+    /// ("vertrag") on the right only, so "Mietvertrag" counts and "Vertragsnummer" does not. Every hit covers the
+    /// whole word it stands in, so the field editor marks "Steuerbescheide", not its stem; the earliest wins.
+    private static func officialRange(in text: String, words: [String]) -> Range<String.Index>? {
+        let stems = LanguagePacks.importanceWords(for: "officialStem")
+        let heads = LanguagePacks.importanceWords(for: "officialHead")
+        let hits = words.compactMap { range(of: $0, in: text) }
+            + stems.compactMap { range(of: $0, in: text, rightBoundary: false) }
+            + heads.compactMap { range(of: $0, in: text, leftBoundary: false) }
+        return hits.map { wholeWord(around: $0, in: text) }.min { $0.lowerBound < $1.lowerBound }
+    }
+
+    /// The hit widened to the letters and digits around it, the same characters the boundary checks look at.
+    private static func wholeWord(around hit: Range<String.Index>, in text: String) -> Range<String.Index> {
+        let isWordCharacter: (Character) -> Bool = { $0.isLetter || $0.isNumber }
+        var lower = hit.lowerBound
+        while lower > text.startIndex, isWordCharacter(text[text.index(before: lower)]) {
+            lower = text.index(before: lower)
+        }
+        var upper = hit.upperBound
+        while upper < text.endIndex, isWordCharacter(text[upper]) {
+            upper = text.index(after: upper)
+        }
+        return lower..<upper
     }
 
     private enum UrgencySignal: String, CaseIterable {
@@ -144,13 +173,14 @@ enum ImportanceUrgencyRule {
 
     /// Case-insensitive and at word boundaries, so "Amt" does not fire inside "Beamtenrecht". A
     /// keyword that starts or ends with a symbol ("€") gets no boundary on that side — "250€" is
-    /// one word to the regex engine.
-    private static func range(of keyword: String, in text: String, from start: String.Index? = nil) -> Range<String.Index>? {
+    /// one word to the regex engine. A compound part (#864) leaves one side open on purpose.
+    private static func range(of keyword: String, in text: String, from start: String.Index? = nil,
+                              leftBoundary: Bool = true, rightBoundary: Bool = true) -> Range<String.Index>? {
         var pattern = NSRegularExpression.escapedPattern(for: keyword)
-        if keyword.first?.isLetter == true || keyword.first?.isNumber == true {
+        if leftBoundary, keyword.first?.isLetter == true || keyword.first?.isNumber == true {
             pattern = "(?<![\\p{L}\\p{N}])" + pattern
         }
-        if keyword.last?.isLetter == true || keyword.last?.isNumber == true {
+        if rightBoundary, keyword.last?.isLetter == true || keyword.last?.isNumber == true {
             pattern += "(?![\\p{L}\\p{N}])"
         }
         return text.range(of: pattern, options: [.regularExpression, .caseInsensitive],
