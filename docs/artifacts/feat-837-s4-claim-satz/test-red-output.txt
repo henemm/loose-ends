@@ -1,0 +1,38 @@
+test_claude_md_zeile_3_beginnt_mit_dem_kern (__main__.ClaimSatzTests.test_claude_md_zeile_3_beginnt_mit_dem_kern) ... FAIL
+test_readme_zeile_3_ist_der_kern (__main__.ClaimSatzTests.test_readme_zeile_3_ist_der_kern) ... FAIL
+test_verworfenes_versprechen_steht_in_keiner_der_beiden (__main__.ClaimSatzTests.test_verworfenes_versprechen_steht_in_keiner_der_beiden) ... FAIL
+
+======================================================================
+FAIL: test_claude_md_zeile_3_beginnt_mit_dem_kern (__main__.ClaimSatzTests.test_claude_md_zeile_3_beginnt_mit_dem_kern)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-puzzling-pascal/scripts/test_claim_satz.py", line 25, in test_claude_md_zeile_3_beginnt_mit_dem_kern
+    self.assertTrue(line3("CLAUDE.md").startswith(CLAIM + " Task capture with on-device Apple Intelligence"))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_readme_zeile_3_ist_der_kern (__main__.ClaimSatzTests.test_readme_zeile_3_ist_der_kern)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-puzzling-pascal/scripts/test_claim_satz.py", line 22, in test_readme_zeile_3_ist_der_kern
+    self.assertEqual(CLAIM, line3("README.md"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Say it. Clear your head.' != "Say it, it's sorted."
+- Say it. Clear your head.
++ Say it, it's sorted.
+
+
+======================================================================
+FAIL: test_verworfenes_versprechen_steht_in_keiner_der_beiden (__main__.ClaimSatzTests.test_verworfenes_versprechen_steht_in_keiner_der_beiden)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-puzzling-pascal/scripts/test_claim_satz.py", line 30, in test_verworfenes_versprechen_steht_in_keiner_der_beiden
+    self.assertNotIn(DISCARDED, text, name)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "it's sorted" unexpectedly found in "# Loose Ends\n\nSay it, it's sorted.\n\nA task app for iPhone, iPad, Mac and Apple Watch: one text field that takes anything, a quiet secretary\n(on-device Apple Intelligence) that turns it into structure once, and views that fit the situation you are in.\n\nStatus: scaffold. The screens exist as a design canvas; the code is the data model, persistence, intents and\ntargets. See `docs/project/` for the decisions, user story, data model and design briefing.\n\n## Build\n\n```bash\nbrew install xcodegen xcbeautify\nxcodegen generate\nopen LooseEnds.xcodeproj\n```\n\nRequires Xcode 26 and a device with Apple Intelligence (iPhone 15 Pro or later) for enrichment.\n\n## License\n\nApache License 2.0, see `LICENSE`. Copyright 2026 Henning Emmrich.\n" : README.md
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+FAILED (failures=3)
