@@ -4,6 +4,7 @@ import { z } from "zod";
 import { randomUUID } from "node:crypto";
 import { checkOrder, getResult, putOrder } from "./orders.ts";
 import { getTranscript, type Transcript, type TranscriptTask } from "./transcripts.ts";
+import { anleitung } from "./anleitung.ts";
 
 type Group = "knaeuel" | "today" | "lined" | "waiting";
 
@@ -190,7 +191,7 @@ function resulting(pool: pg.Pool) {
 // Stateless: a fresh server with the read tools, the order tools and get_order_result for every request, so nothing is cached.
 export function mcpHandler(pool: pg.Pool): McpHttpHandler {
   return createMcpHandler(() => {
-    const server = new McpServer({ name: "loose-ends", version: "1" });
+    const server = new McpServer({ name: "loose-ends", version: "1" }, { instructions: anleitung });
     server.registerTool("get_now", {
       description: "Die Zahl über „Jetzt“ und die Zeilen von „Jetzt“ aus der letzten Abschrift",
       inputSchema: z.object({}),
