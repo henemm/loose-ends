@@ -161,7 +161,7 @@ Beispiel (derselbe Auftrag ein zweites Mal ausgeführt):
 
 ## Wege der App (#795 S1)
 
-Die App spricht mit dem Dienst über drei Wege, alle `POST`, alle mit `Authorization: Bearer <App-Sitzung>` (das Sitzungs-Token
+Die App spricht mit dem Dienst über vier Wege, alle `POST`, alle mit `Authorization: Bearer <App-Sitzung>` (das Sitzungs-Token
 aus `/auth/apple`, nie das OAuth-Token von Claude). Jede Antwort trägt `Cache-Control: no-store`; jede Ablehnung hat keinen Körper
 und sagt nie, welche Prüfung scheiterte. Reihenfolge der Prüfungen: Methode (405 mit `Allow: POST`), Sitzung (401), Gerät (400),
 Inhaltstyp `application/json` (415), Körper höchstens 256 KiB, beim Lesen gezählt (413), JSON und Form (400).
@@ -182,6 +182,26 @@ Content-Type: application/json
 - `POST /app/orders/claim` mit `X-Device`, ohne Körper: 200 mit dem Auftrag als JSON, 204, wenn keiner offen ist.
 - `POST /app/orders/result` mit `X-Device` und dem Ergebnis: 204 (auch für dasselbe Ergebnis ein zweites Mal), 409, wenn der Auftrag
   unbekannt, nie vergeben, einem anderen Gerät oder Konto zugeordnet oder zurückgeholt ist; 400 bei ungültigem Ergebnis.
+- `POST /app/device` mit `X-Device` (Pflicht) und dem Gerätetoken (#795 S5a-1): 204 ohne Körper; 400 ohne oder mit falschem
+  `X-Device` oder bei ungültigem Körper, 401, 405, 413, 415 wie oben. Der Dienst legt das Token je Konto und Gerät in
+  `device_tokens` ab, für den späteren Weckruf per stiller Mitteilung.
+
+```http
+POST /app/device
+Authorization: Bearer <App-Sitzung>
+X-Device: <UUID der Installation>
+Content-Type: application/json
+
+{"token": "<Hex, 64 bis 200 Zeichen, gerade Länge>", "environment": "sandbox" | "production"}
+```
+
+**Gerätetoken.** Genau die Schlüssel `token` (Hex-Ziffern, Groß- oder Kleinschreibung, gerade Länge, 64 bis 200 Zeichen; der Dienst
+führt es in Kleinschreibung) und `environment` (`sandbox` für Xcode-Läufe, `production` für TestFlight und Store). Eine neue
+Meldung desselben Geräts ersetzt Token und Umgebung. Ein Token gehört genau einem Konto und Gerät: meldet es ein anderes Gerät oder
+Konto, zieht es um, und der alte Eintrag fällt weg. Höchstens 10 Geräte je Konto: meldet sich ein elftes, fällt das am längsten
+nicht gemeldete (bei Gleichstand die kleinere Kennung), nie das eben gemeldete. Abmelden entfernt den Eintrag nicht (die Sitzung
+kennt kein Gerät, die App holt nur mit Konto), Konto löschen schon. Von außen ist der Weg erst ab S5b erreichbar (nginx), bis
+dahin 404; die App ruft ihn erst ab S5c.
 
 **Rückholen.** Ein vergebener Auftrag ohne Ergebnis, dessen Vergabe älter als 10 Minuten ist, geht beim nächsten `claim` an das
 fragende Gerät (die Zeit rechnet die Datenbank). Folgen: (a) Ein Ergebnis des alten Geräts danach ist abgelehnt (409). (b) Ein
@@ -189,7 +209,7 @@ Auftrag mit Ergebnis wird nie zurückgeholt. (c) Zugestellt wird mindestens einm
 Auftrag schon ausgeführt, macht der erwartete Stand aus der zweiten Ausführung `stale`; nur ein `capture` ist nicht geschützt und
 kann doppelt erfasst werden. (d) Fragt dasselbe Gerät erneut, bekommt es seinen Auftrag zurück und darf das Ergebnis melden.
 
-**Mengengrenze (#795 S1b).** Vor dem Dienst begrenzt nginx die drei Wege gemeinsam je Adresse auf 10 Anfragen je Sekunde mit
+**Mengengrenze (#795 S1b).** Vor dem Dienst begrenzt nginx die vier Wege gemeinsam (die Zone für `/app/device` legt S5b fest) je Adresse auf 10 Anfragen je Sekunde mit
 einem Stoß von bis zu 40 Anfragen (eigene Zone, getrennt von der Anmeldung); darüber antwortet nginx 429 ohne den Dienst zu
 fragen. Pflicht der App: Bekommt ein Gerät 429, bricht es den laufenden Abholdurchgang sofort ab und setzt ihn erst beim nächsten
 Anlass fort (Start, Vordergrund, Weckruf), nie in einer Schleife und ohne Wiederholung im selben Durchgang. So entsteht höchstens

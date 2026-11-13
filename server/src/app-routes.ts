@@ -1,6 +1,7 @@
 import type pg from "pg";
 import { resolveSession } from "./accounts.ts";
 import { bearerToken } from "./auth.ts";
+import { checkDevice, type DeviceDoc, putDevice } from "./devices.ts";
 import type { Route } from "./main.ts";
 import { checkResult, claimOrder, putResult } from "./orders.ts";
 import { checkTranscript, putTranscript } from "./transcripts.ts";
@@ -102,11 +103,22 @@ async function result(deps: AppDeps, request: Request): Promise<Response> {
   return status(outcome === "refused" ? 409 : 204);
 }
 
+// The device's Apple token for the wake-up; a new token replaces the device's old one.
+async function register(deps: AppDeps, request: Request): Promise<Response> {
+  const checked = await admitted(deps, request, { device: true });
+  if (checked instanceof Response) return checked;
+  const body = await jsonBody(request, checkDevice);
+  if (body instanceof Response) return body;
+  await putDevice(deps.pool, checked.account, checked.device, body.doc as DeviceDoc);
+  return status(204);
+}
+
 // Exceptions are not caught here: dispatch in main.ts turns them into 500 without a body.
 export function appRoutes(deps: AppDeps): Record<string, Route> {
   return {
     "/app/transcript": (request) => transcript(deps, request),
     "/app/orders/claim": (request) => claim(deps, request),
     "/app/orders/result": (request) => result(deps, request),
+    "/app/device": (request) => register(deps, request),
   };
 }
