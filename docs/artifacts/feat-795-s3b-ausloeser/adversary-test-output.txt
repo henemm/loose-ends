@@ -1,0 +1,51 @@
+[0;34m[sim][0m Testsperre belegt — warte (0 s, Platz 1 von 1 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao, Befehl test-proof, PID 20030
+[0;34m[sim][0m Testsperre belegt — warte (31 s, Platz 1 von 1 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao, Befehl test-proof, PID 20030
+[0;34m[sim][0m Testsperre belegt — warte (62 s, Platz 1 von 1 in der Warteliste). Halter: Worktree /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao, Befehl test-proof, PID 20030
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/ClaudeSyncTriggerTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-12 21:58:16.239.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-12 21:58:16.242.
+Test Suite 'ClaudeSyncTriggerTests' started at 2026-11-12 21:58:16.242.
+    [32m✔[0m testBecomingActiveSendsThenPulls ([31m0.344[0m seconds)
+    [32m✔[0m testOnlyAFinishedImportSends ([31m1.321[0m seconds)
+    [32m✔[0m testPullNeverFollowsSaveOrImport ([31m0.472[0m seconds)
+    [32m✔[0m testPullWaitsForSendToFinish ([31m0.212[0m seconds)
+    [32m✔[0m testSaveDuringASendSendsOnceMoreAfterIt ([31m1.960[0m seconds)
+    [32m✔[0m testSavesAreDebouncedToOneSendAndNeverPull ([31m0.383[0m seconds)
+    [32m✔[0m testSaveSendsOnlyAfterTheDebounce ([31m0.751[0m seconds)
+    [32m✔[0m testSecondStartChangesNothing ([31m0.642[0m seconds)
+    [32m✔[0m testStartSendsThenPullsOnce ([31m0.317[0m seconds)
+    [32m✔[0m testWiringRuleNeedsAnAccount ([31m4.869[0m seconds)
+    [32m✔[0m testWithoutClosuresItIsSilentUnderTests ([31m0.326[0m seconds)
+    [32m✔[0m testWithoutStartNothingReacts ([31m0.319[0m seconds)
+Executed 12 tests, with 0 failures (0 unexpected) in 11.915 (11.923) seconds
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-12 21:58:28.168.
+Executed 12 tests, with 0 failures (0 unexpected) in 11.915 (11.926) seconds
+Executed 12 tests, with 0 failures (0 unexpected) in 11.915 (11.930) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-cached-churning-yao/Logs/Test/Test-LooseEnds-2026.11.12_21-58-02-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
+EXIT=0

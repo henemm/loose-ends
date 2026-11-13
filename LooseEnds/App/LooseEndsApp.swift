@@ -17,6 +17,8 @@ struct LooseEndsApp: App {
     let fieldSettings: FieldSettingsStore
     /// The account for Claude (#615 S4c-1); nil in every build whose switch `LEAccountEnabled` is off.
     let account: AccountState?
+    /// The occasions for the pass for Claude (#795 S3b-1); nil without an account.
+    let claudeSync: ClaudeSyncTrigger?
 
     init() {
         LaunchTimings.mark(.initStart)
@@ -57,6 +59,9 @@ struct LooseEndsApp: App {
         fieldSettings.activate()
         // Reads only the store, sends nothing (ADR-21).
         account = AccountWiring.forApp(info: Bundle.main.infoDictionary, arguments: ProcessInfo.processInfo.arguments)
+        // Only with an account; silent under tests (#795 S3b-1).
+        claudeSync = ClaudeSyncTrigger.forApp(account: account, container: container)
+        claudeSync?.start()
         if ModelContainerFactory.isUITesting { MainThreadWatchdog.start() }
         LaunchTimings.mark(.initEnd)
     }

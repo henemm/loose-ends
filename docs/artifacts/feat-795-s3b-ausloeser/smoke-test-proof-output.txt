@@ -1,0 +1,34 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test mit Beleg: InboxDrawerSmokeTests → docs/artifacts/feat-795-s3b-ausloeser/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-12 21:57:02.171.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-12 21:57:02.173.
+Test Suite 'InboxDrawerSmokeTests' started at 2026-11-12 21:57:02.173.
+    [32m✔[0m testReturnOpensTheDrawerAndATapBesideFoldsIt ([31m47.694[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 47.694 (47.704) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-11-12 21:57:49.883.
+Executed 1 test, with 0 failures (0 unexpected) in 47.694 (47.710) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 47.694 (47.712) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/cached-churning-yao/docs/artifacts/feat-795-s3b-ausloeser/simulator-run/run.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden, Beleg: docs/artifacts/feat-795-s3b-ausloeser/simulator-run.txt
