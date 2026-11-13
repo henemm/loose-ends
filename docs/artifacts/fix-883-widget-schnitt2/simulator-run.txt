@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-11-13T09:57:18+0100
+befehl: scripts/sim.sh test-proof InboxDrawerSmokeTests
+workflow: fix-883-widget-schnitt2
+head: 394a25ea2f28b52225f367331c51a542a3ab55a5
+basis: 646c64252ff77f40fd8127875b08568351d55360 (merge-base origin/main HEAD)
+testklasse: InboxDrawerSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794560204.362  ende: 1794560237.576
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/fix-883-widget-schnitt2/simulator-run/summary.json  sha256:c017300f3fb335ea9426fd626c99e008c1a9f0ce3e6292c8a32b97c6a46380ec
+xcresult: docs/artifacts/fix-883-widget-schnitt2/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-883-widget-schnitt2/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+- sha256:03d93183261edf2a281850473ead3e987cc3cafd6320d6b0ef4f78849ac018f8  LooseEnds/App/WidgetReload.swift
+- sha256:6a2fc01460e10be045bead7222c1fc1a84f9adc9e4ed9fe08331416d224caa67  LooseEndsTests/WidgetReloadTests.swift
