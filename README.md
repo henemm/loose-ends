@@ -1,6 +1,6 @@
 # Loose Ends
 
-Say it, it's sorted.
+Say it. Clear your head.
 
 A task app for iPhone, iPad, Mac and Apple Watch: one text field that takes anything, a quiet secretary
 (on-device Apple Intelligence) that turns it into structure once, and views that fit the situation you are in.

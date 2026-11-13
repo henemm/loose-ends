@@ -1,6 +1,6 @@
 # CLAUDE.md — Loose Ends
 
-Say it, it's sorted. Task capture with on-device Apple Intelligence for iPhone, iPad, Mac and Watch.
+Say it. Clear your head. Task capture with on-device Apple Intelligence for iPhone, iPad, Mac and Watch.
 
 ## Rollen und Zusammenarbeit (PO-Vorgabe 2026-11-08, gilt für jede Sitzung, auch Cloud)
 
