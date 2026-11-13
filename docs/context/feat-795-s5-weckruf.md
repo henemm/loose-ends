@@ -85,3 +85,7 @@ Ursprüngliche Empfehlung (verworfen vom PO): B, nur der Mac-Takt: Die Menüleis
 - [x] PO: Weckruf per Mitteilung (A), Mac holt im Takt (B) oder nichts (C)? → **A, echter Weckruf per Push** (Henning, 2026-11-13, AskUserQuestion; Empfehlung war B, Drosselung und Portal-Anmeldung waren ihm erklärt)
 - [ ] Neuer APNs-Schlüssel: Henning meldet sich einmal im Apple-Portal an (Passkey), Claude legt den Schlüssel an und bringt ihn auf den Server — erst wenn Schnitt S5a gemergt ist und der Dienst ihn braucht, alles vorher fertig
 - [ ] Umgebung je Token: App meldet `sandbox`/`production` mit (aus dem Bau, nicht geraten)
+
+## Umfang nach RED (S5a-1)
+
+2026-11-13: Nach RED 193 Testzeilen in `server/test/devices.test.ts` (Spec: höchstens 144), Gesamtschätzung ≈ 295 LoC (Code ≈ 93, Tests ≈ 199, CLAUDE.md ≈ 3). Henning per AskUserQuestion: „So übernehmen“. In /60-validate nicht erneut fragen, solange der Endstand nicht nennenswert über ≈ 320 liegt.
