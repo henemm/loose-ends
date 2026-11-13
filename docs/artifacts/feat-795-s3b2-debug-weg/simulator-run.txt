@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-11-13T13:00:40+0100
+befehl: scripts/sim.sh test-proof AccountSettingsTests
+workflow: feat-795-s3b2-debug-weg
+head: c836888a5032acf2063ebfe6eebd162cd5241a34
+basis: 24a6da6f1198c6756e51dd04150eb53ea045977a (merge-base origin/main HEAD)
+testklasse: AccountSettingsTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 8 gesamt, 8 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794571016.769  ende: 1794571238.912
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-795-s3b2-debug-weg/simulator-run/summary.json  sha256:aac03a285b26e396a9bf2755d5bb382f131406c53a785e839e57908757885301
+xcresult: docs/artifacts/feat-795-s3b2-debug-weg/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-795-s3b2-debug-weg/simulator-run/*.png (7 Stück)
+
+## Geprüfte Dateien
+- sha256:3559d5a5ef5143e53b281aeb002474e67b27ef36dbfb5016623799232065006a  LooseEnds/Claude/AccountWiring.swift
+- sha256:78162fd95f3831cdeba2d0a52947345e4264e303ed97600f8b471936e800c7e9  LooseEndsTests/AccountSectionTests.swift
