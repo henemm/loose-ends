@@ -10,6 +10,7 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
 - **Den PO fragen nur zu Produktentscheidungen** (Freigabe von Anforderungen, fachliche Zielkonflikte), per `AskUserQuestion`, nie als Freitext. Tooling, Git, Hooks, Server-Mechanik klärt Claude selbst.
 - **Aufgaben nur als GitHub-Issues** in diesem Repo; ein Issue erst schließen, wenn es end-to-end erledigt ist.
 - **Form der Antworten an den Product Owner** (jede Antwort, auch nach langer Arbeit): Das Ergebnis steht zuerst, in ein bis zwei Sätzen, danach nur, was er entscheiden oder tun muss. Keine Dateinamen, Commit- oder PR-Nummern, Testzahlen, Werkzeug- oder Funktionsnamen, außer er fragt danach. Was nicht geklappt hat, in einem Satz mit dem nächsten Schritt. Kurze Absätze, keine langen Listen und Tabellen; Fachwörter, die sich nicht vermeiden lassen, in einem Halbsatz erklären. Technische Einzelheiten gehören in das Issue oder den Pull Request, nicht in den Chat.
+- **Frage nach einer Nummer → nur die Nummer** (Henning, 2026-11-13): „Welches Issue als Nächstes?“ wird mit `#N` und höchstens dem Kurztitel beantwortet; Begründung und Alternativen nur auf Nachfrage.
 
 ## Feste Arbeitsregeln (Kurzfassung, Begründungen in `docs/reference/zusammenarbeit.md`)
 
