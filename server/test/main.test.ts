@@ -17,6 +17,8 @@ import { connect } from "node:net";
 import { createSession, findOrCreate, resolveSession } from "../src/accounts.ts";
 import { loadAppleConfig } from "../src/apple.ts";
 import { OAuthError, OAuthErrorCode, type AuthInfo } from "@modelcontextprotocol/server";
+import { putDevice } from "../src/devices.ts";
+import { apnsConfigFromEnv, type ApnsConfig, type ApnsRequest, type ApnsResponse } from "../src/apns.ts";
 
 type Doc = Record<string, any>;
 type T = { after: (fn: () => Promise<void>) => void; mock: any };
@@ -442,7 +444,7 @@ test("einhaengen: weiche apple env", async () => {
 const MAIN = join(import.meta.dirname, "../src/main.ts");
 function child(env: Record<string, string>) {
   const base = Object.fromEntries(Object.entries(process.env)
-    .filter(([k]) => !k.startsWith("APPLE_") && !k.startsWith("OAUTH_") && k !== "ALLOWED_APPLE_SUBS" && k !== "NODE_TEST_CONTEXT"));
+    .filter(([k]) => !k.startsWith("APPLE_") && !k.startsWith("OAUTH_") && !k.startsWith("APNS_") && k !== "ALLOWED_APPLE_SUBS" && k !== "NODE_TEST_CONTEXT"));
   const proc = spawn(process.execPath, [MAIN], { env: { ...base, HOST: "127.0.0.1", ...env }, stdio: ["ignore", "pipe", "pipe"] });
   let output = "";
   proc.stdout.on("data", (chunk) => { output += chunk; });
@@ -719,4 +721,128 @@ test("einhaengen: grenze und doku", () => {
   assert.doesNotMatch(deleteLine, /nothing calls the route yet/);
   const mainLines = doc.filter((line) => line.includes("`src/main.ts`")).join("\n");
   for (const word of ["auth", "APPLE_", "1 MiB", "413", "logError"]) assert.ok(mainLines.includes(word), `CLAUDE.md main.ts-Zeile ohne ${word}`);
+});
+
+// #795 S5a-2b: the wake-up behind the order tools. APNS_* all or nothing; the sender only through a stand-in, never Apple.
+const nEc = generateKeyPairSync("ec", { namedCurve: "prime256v1" });
+const N_ENV: Record<string, string> = {
+  APNS_TEAM_ID: "TEAMWECK4711", APNS_KEY_ID: "KEYWECK4711",
+  APNS_PRIVATE_KEY: String(nEc.privateKey.export({ type: "pkcs8", format: "pem" })), APNS_TOPIC: "com.henning.looseends.weck",
+};
+const nConfig = apnsConfigFromEnv(N_ENV) as ApnsConfig;
+const nPemLine = N_ENV.APNS_PRIVATE_KEY.split("\n")[1];
+const nTok = (n: number) => `abcdef${n.toString(16).padStart(58, "0")}`;
+const nDev = (n: number) => `d0000000-0000-4000-8000-${String(n).padStart(12, "0")}`;
+
+test("main: halbe apns-konfiguration bricht ab", async (t) => {
+  const dbHits: number[] = [];
+  const fakeDb = createServer((socket) => { dbHits.push(1); socket.destroy(); });
+  await new Promise<void>((done) => fakeDb.listen(0, "127.0.0.1", done));
+  t.after(() => new Promise<void>((done) => fakeDb.close(() => done())));
+  const dbUrl = `postgres://postgres@127.0.0.1:${(fakeDb.address() as { port: number }).port}/postgres`;
+  const cases: [string, Record<string, string>, string][] = Object.keys(N_ENV).map((name) => {
+    const env = { ...N_ENV };
+    delete env[name];
+    return [`${name} fehlt`, env, name];
+  });
+  cases.push(["Schlüssel unlesbar", { ...N_ENV, APNS_PRIVATE_KEY: "kein-schluessel-weck-4711" }, "APNS_PRIVATE_KEY"]);
+  for (const [name, env, variable] of cases) {
+    dbHits.length = 0;
+    const run = child({ ...env, DATABASE_URL: dbUrl, PORT: String(await freePort()) });
+    const code = await within(run.exited, 5000, () => run.proc.kill("SIGKILL"));
+    assert.equal(code, 1, `${name}: Exit-Code: ${run.output()}`);
+    assert.match(run.output(), new RegExp(`apns config invalid: .*${variable}`), name);
+    assert.doesNotMatch(run.output(), /listening/, `${name}: hat gelauscht`);
+    assert.equal(dbHits.length, 0, `${name}: Pool geöffnet`);
+    for (const value of ["TEAMWECK4711", "KEYWECK4711", "com.henning.looseends.weck", nPemLine, "kein-schluessel-weck-4711"]) {
+      assert.ok(!run.output().includes(value), `${name}: Wert in der Ausgabe`);
+    }
+  }
+});
+
+// A verifier that maps a bearer token to an account, filled once the accounts exist.
+function accountVerifier(accounts: Map<string, string>) {
+  return {
+    verifyAccessToken: async (token: string): Promise<AuthInfo> => {
+      const account = accounts.get(token);
+      if (account === undefined) throw new OAuthError(OAuthErrorCode.InvalidToken, "unknown token");
+      return { token, clientId: "test", scopes: [], expiresAt: Math.floor(Date.now() / 1000) + 3600,
+        resource: new URL("https://loose-ends.henemm.com/mcp"), extra: { account } };
+    },
+  };
+}
+async function captureVia(t: T, url: string, token: string, text: string) {
+  const client = new Client({ name: "test", version: "1" });
+  await client.connect(new StreamableHTTPClientTransport(new URL(`${url}/mcp`), { requestInit: { headers: { Authorization: `Bearer ${token}` } } }));
+  t.after(async () => { await client.close(); });
+  const result: Doc = await client.callTool({ name: "capture_task", arguments: { text } });
+  return { text: result.content.map((part: Doc) => part.text).join("") as string, isError: result.isError === true };
+}
+async function until(check: () => boolean | Promise<boolean>, ms = 3000) {
+  for (let waited = 0; waited < ms && !(await check()); waited += 25) await new Promise((done) => setTimeout(done, 25));
+}
+
+test("main: keine apns-variablen startet wie bisher", async (t) => {
+  const admin = new pg.Pool({ connectionString: databaseUrl });
+  const schema = `t_${randomUUID().replaceAll("-", "")}`;
+  await admin.query(`CREATE SCHEMA ${schema}`);
+  t.after(async () => { await admin.query(`DROP SCHEMA ${schema} CASCADE`); await admin.end(); });
+  const dbUrl = new URL(databaseUrl!);
+  dbUrl.searchParams.set("options", `-c search_path=${schema}`);
+  const port = await freePort();
+  const run = child({ DATABASE_URL: dbUrl.toString(), PORT: String(port) });
+  let status = 0;
+  for (let i = 0; i < 100 && status !== 200; i++) {
+    await new Promise((done) => setTimeout(done, 100));
+    status = await fetch(`http://127.0.0.1:${port}/health`).then((answer) => answer.status, () => 0);
+  }
+  run.proc.kill("SIGTERM");
+  assert.equal(status, 200, `ohne APNS_* kein /health 200: ${run.output()}`);
+  assert.equal(await within(run.exited, 5000, () => run.proc.kill("SIGKILL")), 0);
+  assert.doesNotMatch(run.output(), /apns/);
+  // In process: without apns an order is stored and no wake-up is tried, so no apns line ever appears.
+  const lines = capturedLines(t);
+  const accounts = new Map<string, string>();
+  const running = await service(t, { oauth: { verifier: accountVerifier(accounts) } } as Options);
+  await running.ready;
+  const pool = dataPool(t, running.databaseUrl);
+  const account = await findOrCreate(pool, "sub.ohne-apns");
+  await putDevice(pool, account, nDev(1), { token: nTok(1), environment: "production" });
+  accounts.set("tok-ohne", account);
+  const answer = await captureVia(t, running.url, "tok-ohne", "Ohne Weckruf");
+  assert.equal(answer.isError, false, answer.text);
+  await new Promise((done) => setTimeout(done, 200));
+  assert.equal((await pool.query("SELECT count(*)::int AS n FROM orders")).rows[0].n, 1);
+  assert.ok(!lines.some((line) => /apns/.test(line)), lines.join("\n"));
+});
+
+test("main: capture_task sendet ueber den waker", async (t) => {
+  const calls: ApnsRequest[] = [];
+  let answerWith: ApnsResponse = { status: 200 };
+  const send = async (request: ApnsRequest) => { calls.push(request); return answerWith; };
+  const accounts = new Map<string, string>();
+  const running = await service(t, { oauth: { verifier: accountVerifier(accounts) }, apns: { config: nConfig, send } } as Options);
+  await running.ready;
+  const pool = dataPool(t, running.databaseUrl);
+  const mine = await findOrCreate(pool, "sub.weck");
+  const other = await findOrCreate(pool, "sub.fremd");
+  await putDevice(pool, mine, nDev(1), { token: nTok(1), environment: "production" });
+  await putDevice(pool, other, nDev(2), { token: nTok(2), environment: "production" });
+  accounts.set("tok-mine", mine);
+  const first = await captureVia(t, running.url, "tok-mine", "Weck mich");
+  assert.equal(first.isError, false, first.text);
+  await until(() => calls.length >= 1);
+  await new Promise((done) => setTimeout(done, 100));
+  assert.equal(calls.length, 1, "genau ein Aufruf");
+  assert.equal(calls[0].token, nTok(1));
+  assert.equal(calls[0].topic, "com.henning.looseends.weck");
+  assert.ok(!calls.some((call) => call.token === nTok(2)), "fremdes Konto geweckt");
+  answerWith = { status: 410, reason: "Unregistered" };
+  const second = await captureVia(t, running.url, "tok-mine", "Weck mich nochmal");
+  assert.equal(second.isError, false, second.text);
+  const mineLeft = async () => (await pool.query("SELECT count(*)::int AS n FROM device_tokens WHERE token = $1", [nTok(1)])).rows[0].n as number;
+  await until(async () => (await mineLeft()) === 0);
+  assert.equal(calls.length, 2);
+  assert.equal(await mineLeft(), 0, "toter Token bleibt");
+  assert.equal((await pool.query("SELECT count(*)::int AS n FROM device_tokens WHERE token = $1", [nTok(2)])).rows[0].n, 1);
 });
