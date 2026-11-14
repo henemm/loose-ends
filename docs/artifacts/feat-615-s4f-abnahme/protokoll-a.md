@@ -32,6 +32,15 @@ Attrappe belegt (`server/test/auth.test.ts`, Prüfungen `revokes(…)` gegen `ht
 **`oauth_records`:** bleibt in diesem Lauf vorher und nachher 0 (lokal kein OAuth-Aussteller, keine claude.ai-Verbindung).
 Die Null ist darum kein Beleg für das Löschen dieser Zeilen; das belegen die Server-Tests (Known Limitations der Spec).
 
+**Belegdateien und Stand (Nachtrag aus der Validierung):** `test-proof` schreibt jeden Beleg nach `simulator-run.txt`; nach
+jedem Lauf wurde er umbenannt. Die Rohausgaben unten nennen darum `simulator-run.txt`, gemeint sind: AC-4 →
+`simulator-run-skip.txt`, AC-5 → `simulator-run-signout.txt`, AC-6 → `simulator-run-delete.txt`; das heutige
+`simulator-run.txt` ist der Lauf `AccountSettingsTests` (AC-9, Kopie `simulator-run-accountsettings.txt`). Das Startbild aus
+Schritt 2 heißt `schritt2-app.png` (in der Rohausgabe `step2-app.png`). Die Belege nennen `head: 2b3d192`, weil
+`local-fixture.ts` und `sim.sh` erst nach den Läufen im Commit `76e2c90` festgeschrieben wurden; beide Dateien wurden zuletzt
+um 07:04 UTC geändert, vor dem ersten Lauf (07:06 UTC), und danach nicht mehr: die Läufe liefen auf genau dem Inhalt dieses
+Commits.
+
 ## AC-1 und AC-2: Fixture auf einer frisch migrierten Wegwerf-Datenbank
 
 Eigene Wegwerf-Datenbank (wie `local-service.sh`, aber ohne die Startsitzung, damit es wirklich kein Konto gibt), danach
