@@ -47,3 +47,15 @@ export async function putDevice(pool: pg.Pool, account: string, device: string, 
     client.release();
   }
 }
+
+// Every device row of the account, by device ascending; database errors reach the caller.
+export async function listTokens(pool: pg.Pool, account: string): Promise<DeviceDoc[]> {
+  const { rows } = await pool.query("SELECT token, environment FROM device_tokens WHERE account_id = $1 ORDER BY device", [account]);
+  return rows.map((r) => ({ token: r.token as string, environment: r.environment as DeviceDoc["environment"] }));
+}
+
+// Drops only the row holding this token in this environment, so a row re-registered meanwhile stays.
+export async function dropToken(pool: pg.Pool, token: string, environment: DeviceDoc["environment"]): Promise<boolean> {
+  const result = await pool.query("DELETE FROM device_tokens WHERE token = $1 AND environment = $2", [token.toLowerCase(), environment]);
+  return (result.rowCount ?? 0) > 0;
+}

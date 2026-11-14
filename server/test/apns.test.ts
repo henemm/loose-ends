@@ -30,11 +30,11 @@ const part = (jwt: string, i: number) => JSON.parse(Buffer.from(jwt.split(".")[i
 const iat = (r: ApnsRequest) => part(r.jwt, 1).iat as number;
 
 // An account with one device per entry, plus a foreign account with one device that must never be touched.
-async function setup(t: T, envs: Env[]) {
+async function setup(t: T, envs: Env[], from = 1) {
   const pool = await freshPool(t);
   await migrate(pool, migrations);
   const account = await findOrCreate(pool, "sub.apns");
-  for (const [i, environment] of envs.entries()) await putDevice(pool, account, dev(i + 1), { token: tok(i + 1), environment });
+  for (const [i, environment] of envs.entries()) await putDevice(pool, account, dev(from + i), { token: tok(from + i), environment });
   await putDevice(pool, await findOrCreate(pool, "sub.other"), dev(99), { token: tok(99), environment: "production" });
   const count = async () => (await pool.query("SELECT token FROM device_tokens ORDER BY token")).rows.map((r) => r.token as string);
   return { pool, account, count };
@@ -132,12 +132,16 @@ const failures: Array<() => ApnsResponse> = [() => ({ status: 500 }), () => ({ s
   () => ({ status: 410 }), () => ({ status: 400 }), () => { throw new Error("connect ECONNREFUSED"); }, () => { throw new Error("apns timeout"); }];
 const failing: Answer = (r) => (nr(r) <= failures.length ? failures[nr(r) - 1]() : { status: 200 });
 
+// putDevice keeps at most MAX_DEVICES = 10 per account, so the cases run in parts of at most ten devices.
 test("apns: andere fehler loeschen nichts", async (t) => {
-  const envs: Env[] = Array(failures.length + 1).fill("production");
-  const { pool, account, count } = await setup(t, envs);
-  const [before, logs, s] = [await count(), [] as string[], stub(failing)];
-  await waker(pool, s, logs).wake(account);
-  assert.deepEqual([s.calls.length, await count(), logs], [envs.length, before, Array(failures.length).fill("apns send failed")]);
+  for (const [from, to] of [[1, 5], [6, failures.length + 1]]) {
+    const envs: Env[] = Array(to - from + 1).fill("production");
+    const { pool, account, count } = await setup(t, envs, from);
+    const [before, logs, s] = [await count(), [] as string[], stub(failing)];
+    await waker(pool, s, logs).wake(account);
+    const failed = Math.min(to, failures.length) - from + 1;
+    assert.deepEqual([s.calls.length, await count(), logs], [envs.length, before, Array(failed).fill("apns send failed")]);
+  }
 });
 
 test("apns: wake wirft nie", async (t) => {
@@ -165,15 +169,20 @@ test("apns: log nur feste namen", async (t) => {
   const [printed, error, log] = [[] as unknown[], console.error, console.log];
   console.error = console.log = (...a: unknown[]) => { printed.push(a); };
   t.after(async () => { console.error = error; console.log = log; });
-  const { pool, account } = await setup(t, Array(failures.length + 3).fill("production"));
   const dropped = [{ status: 410, reason: "Unregistered" }, { status: 400, reason: "BadDeviceToken" }, { status: 400, reason: "DeviceTokenNotForTopic" }];
-  const logs: string[] = [];
+  const [logs, accounts] = [[] as string[], [] as string[]];
   const s = stub((r, n) => (nr(r) <= failures.length ? failing(r, n) : dropped[nr(r) - failures.length - 1]));
-  await waker(pool, s, logs).wake(account);
-  await waker(pool, s, logs, () => Number.NaN).wake(account);
+  // At most MAX_DEVICES = 10 per account, so two parts; every case must really be sent.
+  for (const [from, to] of [[1, 7], [8, failures.length + 3]]) {
+    const { pool, account } = await setup(t, Array(to - from + 1).fill("production"), from);
+    accounts.push(account);
+    await waker(pool, s, logs).wake(account);
+    await waker(pool, s, logs, () => Number.NaN).wake(account);
+  }
+  assert.deepEqual(s.calls.map(nr), Array.from({ length: failures.length + 3 }, (_, i) => i + 1));
   assert.ok(logs.length > failures.length + 3, String(logs.length));
   for (const l of logs) assert.ok(["apns send failed", "apns token dropped", "apns jwt failed"].includes(l), l);
-  assert.ok(!logs.some((l) => l.includes(account) || /abcdef|Unregistered|BadDevice|Expired|ECONNREFUSED|timeout/.test(l)));
+  assert.ok(!logs.some((l) => accounts.some((a) => l.includes(a)) || /abcdef|Unregistered|BadDevice|Expired|ECONNREFUSED|timeout/.test(l)));
   assert.deepEqual(printed, []);
 });
 
