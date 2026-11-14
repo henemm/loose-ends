@@ -24,6 +24,10 @@ Datum: 2026-11-14 10:46
 **Adversary:** Tiefere Prüfung. (a) Test-Schärfe: Der Duplicate-Test nutzt dieselbe ID in Kleinschreibung und prüft Antwort, Zählung und genau einen Eintrag in orders; der Test mit `wake`, das nach 200 ms auflöst, prüft `state.resolved === false` zum Antwortzeitpunkt, also echte Entkopplung; unhandledRejection wird für alle drei Fälle gesammelt. (b) `createWaker` mit `send: undefined`: die Destrukturierung mit Default `send = sendHttp2` greift bei undefined, Typecheck grün. (c) Herunterfahren: Festlegung 6 verlangt kein Warten; `close()` unverändert; der Waker fängt DB-Fehler selbst. (d) AC-7-Abweichung: Die Spec formuliert "echter Prozess ... capture_task legt einen Auftrag ab"; der Test startet den echten Prozess nur für `/health` und Log-Freiheit, den Auftrag legt er in einem In-Process-Dienst ohne apns ab. Die Kernaussage (ohne `apns` kein Weckruf, keine apns-Zeile) ist abgedeckt; schwach, aber nicht falsch. (e) Weckruf nach geschlossenem Pool erzeugt keine Ausgabe, der Waker fängt. (f) Zwei Aufträge = zwei Weckrufe, wie in der Spec bewusst.
 **Implementierer:** Abweichung (d) ist bekannt: Capture im echten Prozess bräuchte ein gültiges Bearer-Token ohne OAuth-Schlüssel, daher In-Process; die Aussage hängt an derselben Verdrahtung.
 
+### Runde 3
+**Implementierer:** /60-validate wertet F002 strenger: `mcpHandler` wurde in diesem Schnitt geändert (Signatur), AC-9 verlangt wörtlich jede Funktion ≤ 50 Zeilen. Fix: reine Herauslösung der 14 `server.registerTool`-Aufrufe in `registerViews` (get_now, list_tasks, get_view), `registerLookups` (search_tasks, get_task, list_projects, list_contexts) und `registerOrders` (capture_task bis add_subtask, mit `wake`); `mcpHandler` ruft nur noch diese drei.
+**Adversary:** Alle `registerTool`-Blöcke aus `HEAD` und Arbeitsstand per Klammerabgleich extrahiert und whitespace-normalisiert verglichen: 14 gegen 14, gleiche Reihenfolge, identisch (Namen, Beschreibungen, Schemata, Annotationen, Handler). `wake` erreicht alle sechs schreibenden Fabriken (mcp.ts:270, 281, 290, 298, 303, 308), `resulting` zu Recht ohne. Der Test „AC-3: the instructions name only existing tools“ (mcp-anleitung.test.ts:44) gegen `listTools()` grün. Funktionslängen: mcpHandler 9, registerViews 20, registerLookups 37, registerOrders 46, main 47, start 42; keine über 50. `./server/scripts/test-local.sh`: 441 pass, 0 fail, 0 skipped, Exit 0. Dateiliste nach AC-9 unverändert (CLAUDE.md, main.ts, mcp.ts, main.test.ts, mcp-wake.test.ts). Keine neuen Findings; F002 behoben.
+
 ### Structured Findings
 
 Finding:
@@ -44,7 +48,7 @@ Finding:
   Description: mcpHandler ist 103 Zeilen lang (Festlegung 7: höchstens 50 je Funktion), unverändert gegenüber origin/main, nur die Signatur wurde geändert (zweites Argument).
   Spec requirement: AC-9 — jede Funktion höchstens 50 Zeilen
   Conflict: Wörtlich verletzt, aber Altbestand, vom Schnitt nicht verschlechtert; ein Umbau läge außerhalb des Umfangs.
-  Remediation: In /60-validate als Altbestand vermerken; ggf. eigenes Refactoring-Ticket.
+  Remediation: Behoben in Runde 3: mcpHandler (9 Zeilen) ruft registerViews, registerLookups, registerOrders; Werkzeugblöcke maschinell identisch.
 
 ### Confirmations
 
@@ -98,8 +102,8 @@ Confirmation:
 
 Confirmation:
   AC: AC-9
-  Code reference: server/src/mcp.ts:108
-  Evidence: Dateiliste exakt wie gefordert (inkl. CLAUDE.md); keine verbotene Datei geändert; einzige Funktion über 50 Zeilen ist der unveränderte Altbestand mcpHandler (F002).
+  Code reference: server/src/mcp.ts:192
+  Evidence: Dateiliste exakt wie gefordert (inkl. CLAUDE.md); keine verbotene Datei geändert; nach Runde 3 keine Funktion über 50 Zeilen (größte: registerOrders 46, main 47).
   Status: CONFIRMED
 
 Confirmation:
@@ -128,5 +132,20 @@ VERDICT: VERIFIED
 - base: ab79cb30c1a73a902dca9b6e9d12a7db5081f594
 - blob:596278ee9086d894b24fbd902b98380edf2ac7c1  server/src/main.ts
 - blob:50d17db6df52759355ee852b99d3510e1481b1cc  server/src/mcp.ts
+- blob:50a10aebaa886cf5657735cf776e21c0beec03b5  server/test/main.test.ts
+- blob:89623cfd64ba02062571d581b901e7716883a161  server/test/mcp-wake.test.ts
+
+## Geprüfte Dateien
+
+- sha256:34d588c4b17a787ab8dca9cb564af6ef0592fbba16c84c01505736006fb52f55  server/src/main.ts
+- sha256:a45eb1551bc2aec1cda595de3f28bc06df8cfcc46eff73c8e82273b20595c243  server/src/mcp.ts
+- sha256:efb46c20b7cc3636ded090be4f64009bda3126f3ed5a7c9342d86992c446c06a  server/test/main.test.ts
+- sha256:8d404a95b662dc19d3d8f4cddd5eb20409de4be3b85833f4873ea3cb78e7054b  server/test/mcp-wake.test.ts
+
+## Prüfbasis
+
+- base: ab79cb30c1a73a902dca9b6e9d12a7db5081f594
+- blob:596278ee9086d894b24fbd902b98380edf2ac7c1  server/src/main.ts
+- blob:2a21ffbb60cf31b0ed16d2c6583f72aade583347  server/src/mcp.ts
 - blob:50a10aebaa886cf5657735cf776e21c0beec03b5  server/test/main.test.ts
 - blob:89623cfd64ba02062571d581b901e7716883a161  server/test/mcp-wake.test.ts
