@@ -104,6 +104,7 @@ brew install xcodegen xcbeautify
 ./scripts/sim.sh build        # iOS-App für den Simulator
 LOOSEENDS_SIM_SIGN=1 ./scripts/sim.sh build  # nur auf Wunsch: ad hoc signiert statt CODE_SIGNING_ALLOWED=NO, damit der Schlüsselbund im Simulator geht (-34018 sonst; Debug-Weg A/B, #795 S3b-2); danach baut ein normaler build wieder unsigniert
 ./scripts/sim.sh test-proof <Klasse>  # UI-Test + maschineller Simulator-Beleg (#145)
+LOOSEENDS_DEBUG_SERVICE=<url> LOOSEENDS_DEBUG_SESSION=<token> ./scripts/sim.sh test-proof AccountLocalServiceTests/<test>  # nur beide gesetzt gehen als TEST_RUNNER_… an den Test, nur gegen local-service.sh, nie ein Live-Token; ohne sie springen beide Tests (#615 S4f)
 ./scripts/sim.sh watch-test-proof <Klasse>  # dasselbe im watchOS-Simulator, App vorher deinstalliert (#409)
 ./scripts/sim.sh store-screenshots    # App-Store-Bilder iPhone 17 + iPad Pro 13″, de, hell, 9:41, nach docs/store/screenshots/de/ samt manifest.json (#742); Watch-/Mac-Einträge und README bleiben stehen
 LOOSEENDS_UI_LANG=en ./scripts/sim.sh store-screenshots  # dasselbe englisch nach docs/store/screenshots/en/ (en-US), nur de|en, Belege store-proof-<lang>-<gerät>.txt (#842)
@@ -129,7 +130,8 @@ with a `DATABASE_URL` set, both run directly in `server/`. `./server/scripts/loc
 itself on `127.0.0.1` against such a throwaway Postgres, without Apple and OAuth (inherited `APPLE_*`, `OAUTH_*`,
 `ALLOWED_APPLE_SUBS`, `PUBLIC_URL` unset), writes `<tmp>/state.env` (`DATABASE_URL`, `PORT`, `SERVICE_URL`, `SESSION_TOKEN`),
 prints `STATE=<path>` and cleans up on a signal; `node server/scripts/local-fixture.ts session|transcript|order <text>|result <id>`
-works on that database only (host `127.0.0.1`/`localhost`). Start it from a Bash with `set -m`, or SIGINT stays ignored.
+works on that database only (host `127.0.0.1`/`localhost`); `rows` counts eight tables whole and only reads (never creates
+the account), `apple-token` stores one undecryptable `apple_tokens` row for the fixture account (#615 S4f). Start it from a Bash with `set -m`, or SIGINT stays ignored.
 Only for the simulator against this throwaway database: never pass a token of the live service as a launch argument.
 
 `launch-measure` baut einen Release-Prüfbau und startet ihn per devicectl; es läuft nur nach Hennings

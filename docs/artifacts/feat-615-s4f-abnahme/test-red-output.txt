@@ -1,0 +1,21 @@
+# RED #615 S4f (Fixture), 2026-11-14T06:49:01Z
+$ DATABASE_URL=postgres://u@127.0.0.1:1/x node server/scripts/local-fixture.ts rows
+local-fixture: Unterbefehl: session | transcript | order <text> | result <id> | due <taskID> <datum>
+exit=1
+$ DATABASE_URL=postgres://u@127.0.0.1:1/x node server/scripts/local-fixture.ts apple-token
+local-fixture: Unterbefehl: session | transcript | order <text> | result <id> | due <taskID> <datum>
+exit=1
+
+# RED #615 S4f (UI-Test), 2026-11-14T06:52Z
+$ LOOSEENDS_DEBUG_SERVICE=http://localhost:9 LOOSEENDS_DEBUG_SESSION=red-probe ./scripts/sim.sh test-proof AccountLocalServiceTests
+Test Suite 'AccountLocalServiceTests' started at 2026-11-14 07:52:44.879.
+    ⊘ testDeleteRemovesTheAccount (0.742 seconds)
+    ⊘ testSignOutEndsOnlyThisSession (0.156 seconds)
+Executed 2 tests, with 2 tests skipped and 0 failures (0 unexpected) in 0.898 (0.902) seconds
+xcresult: "Test skipped - kein lokaler Dienst: LOOSEENDS_DEBUG_SERVICE und LOOSEENDS_DEBUG_SESSION fehlen" (je Test)
+[sim_proof] ergebnis: Unbekannt  -> Beleg ungültig, exit=1
+
+Befund RED: obwohl beide Variablen in der Shell gesetzt sind, kommen sie im Testläufer nicht an (sim.sh reicht
+LOOSEENDS_DEBUG_* noch nicht als TEST_RUNNER_... durch, Teil 3). Beide Tests werden übersprungen, statt die App
+auf dem Debug-Weg zu starten: AC-5 und AC-6 nicht erreichbar. Die Fixture kennt `rows` und `apple-token` nicht
+(oben, exit 1): AC-1 bis AC-3, AC-5 bis AC-8 nicht prüfbar. Der Skip-Zweig selbst (AC-4) wirkt bereits.

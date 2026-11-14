@@ -165,3 +165,11 @@ Sprache (Matrix aus `LanguagePacks.shipped`, gelesen von `scripts/shipped_langua
 `test` als `TEST_RUNNER_LOOSEENDS_UI_LANG` durch, `LOOSEENDS_UI_LANG=de ./scripts/sim.sh test-proof StartNumberTests` fährt eine
 Klasse lokal deutsch, Bildnamen tragen dann `-de`. Wörter, die ein Test vom Bildschirm liest, stehen in `LaunchLanguage.phrase`;
 eine neue Sprache ohne Eintrag dort scheitert mit ihrem Namen.
+
+## Konto-Abnahme gegen den lokalen Dienst (#615 S4f)
+
+`AccountLocalServiceTests` (Abmelden und Löschen) laufen gegen `server/scripts/local-service.sh`, nie gegen den Live-Dienst.
+`sim.sh test`/`test-proof` reichen `LOOSEENDS_DEBUG_SERVICE` und `LOOSEENDS_DEBUG_SESSION` nur dann als `TEST_RUNNER_…` durch, wenn
+beide gesetzt sind; ohne sie springen die Tests (`XCTSkip`). Den Zustand vorher und nachher zeigt
+`node server/scripts/local-fixture.ts rows` (nur lesend, legt kein Konto an); `apple-token` legt die eine nicht entschlüsselbare
+`apple_tokens`-Zeile des Fixture-Kontos an.

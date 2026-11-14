@@ -18,6 +18,8 @@
 #   ./scripts/sim.sh sim-unit [Suite[/test]]  # Unit-Tests im iOS-Simulator
 #   ./scripts/sim.sh test <Class[/test]>      # UI-Test im iOS-Simulator
 #   ./scripts/sim.sh test-proof <Class[/test]> # UI-Test + Simulator-Beleg in docs/artifacts/<workflow>/ (#145)
+#     LOOSEENDS_DEBUG_SERVICE=<url> LOOSEENDS_DEBUG_SESSION=<token> davor: gehen als TEST_RUNNER_… an den Test (#615 S4f);
+#     nur gegen die Wegwerf-Datenbank von server/scripts/local-service.sh, nie ein Token des Live-Dienstes
 #   ./scripts/sim.sh watch-test-proof <Class[/test]> # dasselbe im watchOS-Simulator (#409)
 #   ./scripts/sim.sh watch-test <Class[/test]> # UI-Test im Watch-Simulator ohne Beleg (Bilder, Sichtprüfung, #742)
 #   ./scripts/sim.sh store-watch              # App-Store-Bilder Apple Watch 416×496 nach docs/store/screenshots/<de|en>/watch/ (LOOSEENDS_UI_LANG, #742, #842)
@@ -316,6 +318,11 @@ run_xcodebuild() {
     [ "${1:-}" = test ] && [ -n "${LOOSEENDS_UPDATE_GOLDEN:-}" ] && export TEST_RUNNER_LOOSEENDS_UPDATE_GOLDEN="$LOOSEENDS_UPDATE_GOLDEN"
     # Sprache der UI-Tests (#761): LOOSEENDS_UI_LANG=de startet die App der UI-Tests auf Deutsch (LooseEndsUITests/LaunchLanguage.swift).
     [ "${1:-}" = test ] && [ -n "${LOOSEENDS_UI_LANG:-}" ] && export TEST_RUNNER_LOOSEENDS_UI_LANG="$LOOSEENDS_UI_LANG"
+    # Lokaler Dienst (#615 S4f): nur wenn beide gesetzt sind, für AccountLocalServiceTests; nur gegen die Wegwerf-Datenbank
+    # von server/scripts/local-service.sh, nie ein Token des Live-Dienstes.
+    if [ "${1:-}" = test ] && [ -n "${LOOSEENDS_DEBUG_SERVICE:-}" ] && [ -n "${LOOSEENDS_DEBUG_SESSION:-}" ]; then
+        export TEST_RUNNER_LOOSEENDS_DEBUG_SERVICE="$LOOSEENDS_DEBUG_SERVICE" TEST_RUNNER_LOOSEENDS_DEBUG_SESSION="$LOOSEENDS_DEBUG_SESSION"
+    fi
     # Stille-Wächter (#516): Bleibt das Log LOOSEENDS_SILENCE_MAX s stumm, endet nur der xcodebuild dieser
     # Sitzung (eigener -derivedDataPath) samt Kindern, sonst hielte er die rechnerweite Sperre unbegrenzt.
     # Der Wächter endet mit sim.sh ($$ in der Subshell): Ein xcodebuild einer per KILL gestorbenen sim.sh bleibt
@@ -644,7 +651,7 @@ cmd_test() {
 # UI-Test mit maschinellem Beleg (#145): Beleg, summary.json und Screenshots entstehen aus diesem
 # Lauf (Ergebnisbündel + xcodebuild-Rückgabewert), nie aus Handkopie. Prüfungen vor jedem Werkzeug.
 cmd_test_proof() {
-    [ -z "${1:-}" ] && { error "Usage: ./scripts/sim.sh test-proof <Testklasse>[/<test>]"; return 1; }
+    [ -z "${1:-}" ] && { error "Usage: [LOOSEENDS_DEBUG_SERVICE=<url> LOOSEENDS_DEBUG_SESSION=<token>] ./scripts/sim.sh test-proof <Testklasse>[/<test>] (Variablen nur gegen local-service.sh, nie Live-Token)"; return 1; }
     local wf="" wf_file="$PROJECT_DIR/.claude/active_workflow"
     [ -f "$wf_file" ] && wf=$(tr -d '[:space:]' < "$wf_file")
     [ -z "$wf" ] && { error "Kein aktiver Workflow (.claude/active_workflow), Beleg hätte keinen Ablageort"; return 1; }

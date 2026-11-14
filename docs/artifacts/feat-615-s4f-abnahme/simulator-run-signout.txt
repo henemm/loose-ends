@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-11-14T08:13:08+0100
+befehl: scripts/sim.sh test-proof AccountLocalServiceTests/testSignOutEndsOnlyThisSession
+workflow: feat-615-s4f-abnahme
+head: 2b3d192eb841c78d89c21264e0988010b8914317
+basis: 92e8ab7970263177bae543486eac463224c2c1a2 (merge-base origin/main HEAD)
+testklasse: AccountLocalServiceTests/testSignOutEndsOnlyThisSession
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794640283.032  ende: 1794640387.442
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-615-s4f-abnahme/simulator-run/summary.json  sha256:b765331d1077b4620d77eced4f594205e8e53c53f3f5141cc6d0ddacc5207ba9
+xcresult: docs/artifacts/feat-615-s4f-abnahme/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-615-s4f-abnahme/simulator-run/*.png (2 Stück)
+
+## Geprüfte Dateien
+- sha256:65cf3182954f5d4ff51ab40a182c2e33760c77bf186d5715d5d5e08ba049708c  LooseEndsUITests/AccountLocalServiceTests.swift

@@ -1,0 +1,35 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "06E16743-B4F6-4584-A2BA-41F365FAB38A.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "local-after-delete_0_553C6696-A953-4548-B05D-CB703764584D.png",
+        "timestamp" : 1794640442.747
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "EA21E693-22B7-48B5-B513-27CF4EF9D6D6.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "local-delete-dialog_0_C2B36F61-D17A-4B8C-A572-B0265EC067D0.png",
+        "timestamp" : 1794640436.839
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "BC70585F-FDA4-4359-A0EC-18BFE453EEE2.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "local-before-delete_0_6DA5AEB7-762F-4487-837D-8B9EEE31995D.png",
+        "timestamp" : 1794640433.008
+      }
+    ],
+    "testIdentifier" : "AccountLocalServiceTests/testDeleteRemovesTheAccount()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/AccountLocalServiceTests/testDeleteRemovesTheAccount"
+  }
+]
