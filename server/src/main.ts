@@ -10,6 +10,7 @@ import pg from "pg";
 import { allowedSubsFromEnv } from "./accounts.ts";
 import { type AppleConfig, type KeyLookup, loadAppleConfig } from "./apple.ts";
 import { createJwks } from "./apple-jwks.ts";
+import { type ApnsConfig, apnsConfigFromEnv, type ApnsRequest, type ApnsResponse, createWaker } from "./apns.ts";
 import { appRoutes } from "./app-routes.ts";
 import { authRoutes } from "./auth.ts";
 import { ErrorWindow, healthHandler } from "./health.ts";
@@ -31,6 +32,7 @@ export type StartOptions = {
   oauth?: { publicUrl?: string; verifier?: OAuthTokenVerifier; keys?: OAuthKeys; fetch?: typeof fetch; interaction?: Interaction;
     appleReturn?: ReturnHandler;
   };
+  apns?: { config?: ApnsConfig; send?: (request: ApnsRequest) => Promise<ApnsResponse>; wake?: (account: string) => Promise<void> };
 };
 export type Running = { url: string; ready: Promise<void>; close: () => Promise<void> };
 
@@ -145,6 +147,14 @@ function mountApp(pool: pg.Pool, isReady: () => boolean): Record<string, Route> 
   return Object.fromEntries(Object.entries(appRoutes({ pool })).map(([path, route]) => [path, gated(isReady, route)]));
 }
 
+// A handed-in wake wins (tests); else one waker per process, only with a config; without both nothing is woken.
+function wakeFor(options: StartOptions, pool: pg.Pool): ((account: string) => Promise<void>) | undefined {
+  const { config, send, wake } = options.apns ?? {};
+  if (wake !== undefined) return wake;
+  if (config === undefined) return undefined;
+  return createWaker({ config, pool, send, log: logError }).wake;
+}
+
 const DISCOVERY = new Set(["/.well-known/oauth-authorization-server", "/.well-known/openid-configuration"]);
 type NodeHandler = (req: IncomingMessage, res: ServerResponse) => void;
 const unavailable: NodeHandler = (_req, res) => void res.writeHead(503).end();
@@ -202,7 +212,7 @@ export async function start(options: StartOptions): Promise<Running> {
   const { databaseUrl, port, host = "127.0.0.1", migrationsDir, retryMs = 2000, maxAttempts = 60 } = options;
   const pool = createPool(databaseUrl, options.applicationName);
   const window = new ErrorWindow(options.now ?? Date.now);
-  const mcp = mcpHandler(pool);
+  const mcp = mcpHandler(pool, { wake: wakeFor(options, pool) });
   let migrated = false;
   const isReady = () => migrated;
   const { publicUrl = DEFAULT_PUBLIC_URL } = options.oauth ?? {};
@@ -261,6 +271,16 @@ function allowedSubsOrExit(): ReadonlySet<string> | undefined {
   }
 }
 
+// APNS_* all or nothing; a half or invalid set stops the process before pool and port (the message names only the variable).
+function apnsConfigOrExit(): ApnsConfig | undefined {
+  try {
+    return apnsConfigFromEnv(process.env);
+  } catch (error) {
+    logError(`apns config invalid: ${(error as Error).message}`);
+    process.exit(1);
+  }
+}
+
 // The process: settings from the environment, one shutdown on SIGTERM or SIGINT, exit 1 when migrate gives up.
 async function main(): Promise<void> {
   const databaseUrl = process.env.DATABASE_URL;
@@ -283,6 +303,7 @@ async function main(): Promise<void> {
     logError(`oauth config invalid: ${(error as Error).message}`);
     process.exit(1);
   }
+  const apns = apnsConfigOrExit();
   let publicUrl: string;
   try {
     publicUrl = publicUrlFromEnv(process.env);
@@ -293,6 +314,7 @@ async function main(): Promise<void> {
   const running = await start({
     databaseUrl, port: Number(process.env.PORT ?? 8080), host: process.env.HOST ?? "127.0.0.1",
     migrationsDir: join(import.meta.dirname, "../migrations"), auth: { config, allowedSubs }, oauth: { publicUrl, keys },
+    apns: { config: apns },
   });
   let stopping = false;
   const stop = async (code: number) => {

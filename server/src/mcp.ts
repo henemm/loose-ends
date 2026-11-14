@@ -73,19 +73,12 @@ function reading<A = Record<string, never>>(pool: pg.Pool, render: (doc: Transcr
 }
 
 // The service gives the id; the form check is checkOrder's, its message goes back as it is. Neither text nor id is logged.
-function capturing(pool: pg.Pool) {
+function capturing(pool: pg.Pool, wake?: Wake) {
   return async ({ text }: { text: string }, ctx: ServerContext): Promise<CallToolResult> => {
     const owner = account(ctx);
     if (owner === undefined) return { ...reply("kein Konto"), isError: true };
     if (text.trim() === "") return { ...reply("Text fehlt"), isError: true };
-    const doc = { version: 1, id: randomUUID().toUpperCase(), kind: "capture", text };
-    try {
-      checkOrder(doc);
-    } catch (error) {
-      return { ...reply((error as Error).message), isError: true };
-    }
-    await putOrder(pool, owner, doc);
-    return reply(JSON.stringify({ orderID: doc.id, state: "waiting" }));
+    return storeOrder(pool, owner, { version: 1, id: randomUUID().toUpperCase(), kind: "capture", text }, wake);
   };
 }
 
@@ -108,74 +101,80 @@ async function expected(pool: pg.Pool, ctx: ServerContext, taskID: string, gener
   };
 }
 
-// checkOrder's message goes back as it is; nothing is logged.
-async function storing(pool: pg.Pool, owner: string, doc: Record<string, unknown> & { id: string }): Promise<CallToolResult> {
+export type Wake = (account: string) => Promise<void>;
+
+// checkOrder's message goes back as it is; nothing is logged. Only a newly stored order wakes the account's devices,
+// detached: a throwing, rejecting or slow wake changes neither the answer nor its timing (the app also fetches by itself).
+export async function storeOrder(
+  pool: pg.Pool, owner: string, doc: Record<string, unknown> & { id: string }, wake?: Wake,
+): Promise<CallToolResult> {
   try {
     checkOrder(doc);
   } catch (error) {
     return { ...reply((error as Error).message), isError: true };
   }
-  await putOrder(pool, owner, doc);
+  const stored = await putOrder(pool, owner, doc);
+  if (stored === "stored" && wake !== undefined) void Promise.resolve().then(() => wake(owner)).catch(() => {});
   return reply(JSON.stringify({ orderID: doc.id, state: "waiting" }));
 }
 
-function completing(pool: pg.Pool) {
+function completing(pool: pg.Pool, wake?: Wake) {
   return async ({ taskID, generatedAt }: { taskID: string; generatedAt: string }, ctx: ServerContext): Promise<CallToolResult> => {
     const target = await expected(pool, ctx, taskID, generatedAt);
     if (typeof target === "string") return { ...reply(target), isError: true };
     const { owner, taskID: id, expectedStatus, expectedDueDate } = target;
-    return storing(pool, owner, {
+    return storeOrder(pool, owner, {
       version: 1, id: randomUUID().toUpperCase(), kind: "complete", taskID: id, expectedStatus,
       ...(expectedDueDate === undefined ? {} : { expectedDueDate }),
-    });
+    }, wake);
   };
 }
 
 // Into "Next up" (on) or out of it; the rank the transcript showed is the expected state, so a moved list is refused by the device.
-function lining(pool: pg.Pool) {
+function lining(pool: pg.Pool, wake?: Wake) {
   return async (args: { taskID: string; generatedAt: string; on: boolean }, ctx: ServerContext): Promise<CallToolResult> => {
     const target = await expected(pool, ctx, args.taskID, args.generatedAt);
     if (typeof target === "string") return { ...reply(target), isError: true };
     const { owner, taskID, expectedStatus, expectedNextRank } = target;
-    return storing(pool, owner, {
+    return storeOrder(pool, owner, {
       version: 1, id: randomUUID().toUpperCase(), kind: "setNext", taskID, expectedStatus, on: args.on,
       ...(expectedNextRank === undefined ? {} : { expectedNextRank }),
-    });
+    }, wake);
   };
 }
 
-function parking(pool: pg.Pool) {
+function parking(pool: pg.Pool, wake?: Wake) {
   return async ({ taskID, generatedAt }: { taskID: string; generatedAt: string }, ctx: ServerContext): Promise<CallToolResult> => {
     const target = await expected(pool, ctx, taskID, generatedAt);
     if (typeof target === "string") return { ...reply(target), isError: true };
     const { owner, taskID: id, expectedStatus } = target;
-    return storing(pool, owner, { version: 1, id: randomUUID().toUpperCase(), kind: "park", taskID: id, expectedStatus });
+    return storeOrder(pool, owner, { version: 1, id: randomUUID().toUpperCase(), kind: "park", taskID: id, expectedStatus }, wake);
   };
 }
 
 // The line goes as typed; an empty one is refused here, before an order is made. The app trims it and answers invalid for a parent that cannot take one.
-function subtasking(pool: pg.Pool) {
+function subtasking(pool: pg.Pool, wake?: Wake) {
   return async (args: { taskID: string; generatedAt: string; text: string }, ctx: ServerContext): Promise<CallToolResult> => {
     if (args.text.trim() === "") return { ...reply("Text fehlt"), isError: true };
     const target = await expected(pool, ctx, args.taskID, args.generatedAt);
     if (typeof target === "string") return { ...reply(target), isError: true };
     const { owner, taskID, expectedStatus } = target;
-    return storing(pool, owner, { version: 1, id: randomUUID().toUpperCase(), kind: "addSubtask", taskID, expectedStatus, text: args.text });
+    return storeOrder(pool, owner, { version: 1, id: randomUUID().toUpperCase(), kind: "addSubtask", taskID, expectedStatus, text: args.text }, wake);
   };
 }
 
 // Without a date the due date is removed, and then hasTime is always false.
-function setting(pool: pg.Pool) {
+function setting(pool: pg.Pool, wake?: Wake) {
   return async (args: { taskID: string; generatedAt: string; date?: string; hasTime?: boolean }, ctx: ServerContext): Promise<CallToolResult> => {
     const target = await expected(pool, ctx, args.taskID, args.generatedAt);
     if (typeof target === "string") return { ...reply(target), isError: true };
     const { owner, taskID, expectedDueDate } = target;
     const { date } = args;
     const hasTime = date !== undefined && (args.hasTime ?? false);
-    return storing(pool, owner, {
+    return storeOrder(pool, owner, {
       version: 1, id: randomUUID().toUpperCase(), kind: "setDue", taskID, hasTime,
       ...(date === undefined ? {} : { date }), ...(expectedDueDate === undefined ? {} : { expectedDueDate }),
-    });
+    }, wake);
   };
 }
 
@@ -189,7 +188,8 @@ function resulting(pool: pg.Pool) {
 }
 
 // Stateless: a fresh server with the read tools, the order tools and get_order_result for every request, so nothing is cached.
-export function mcpHandler(pool: pg.Pool): McpHttpHandler {
+// With wake, every newly stored order wakes the caller's devices; without it nothing is woken.
+export function mcpHandler(pool: pg.Pool, { wake }: { wake?: Wake } = {}): McpHttpHandler {
   return createMcpHandler(() => {
     const server = new McpServer({ name: "loose-ends", version: "1" }, { instructions: anleitung });
     server.registerTool("get_now", {
@@ -250,7 +250,7 @@ export function mcpHandler(pool: pg.Pool): McpHttpHandler {
         + "abholt. Den Stand liefert get_order_result mit der zurückgegebenen orderID",
       inputSchema: z.object({ text: z.string() }),
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-    }, capturing(pool));
+    }, capturing(pool, wake));
     server.registerTool("get_order_result", {
       description: "Stand eines Auftrags: unknown, waiting (wartet auf ein Gerät), claimed (bei einem Gerät) oder result mit dem Ergebnis",
       inputSchema: z.object({ orderID: z.string() }),
@@ -261,7 +261,7 @@ export function mcpHandler(pool: pg.Pool): McpHttpHandler {
         + "mitgeben; abgehakt wird auf einem Gerät, den Stand liefert get_order_result mit der zurückgegebenen orderID",
       inputSchema: z.object({ taskID: z.string(), generatedAt: z.string() }),
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-    }, completing(pool));
+    }, completing(pool, wake));
     server.registerTool("set_due", {
       description: "Legt einen Auftrag zum Setzen der Fälligkeit an; ohne date wird sie entfernt. date als Zeitpunkt in UTC, ganze "
         + "Sekunden, mit Z (z. B. 2026-03-14T08:30:00Z); hasTime sagt, ob die Uhrzeit gilt. Zuerst list_tasks oder get_now lesen "
@@ -270,7 +270,7 @@ export function mcpHandler(pool: pg.Pool): McpHttpHandler {
         + "Verschieben auf einen anderen Tag",
       inputSchema: z.object({ taskID: z.string(), generatedAt: z.string(), date: z.string().optional(), hasTime: z.boolean().optional() }),
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-    }, setting(pool));
+    }, setting(pool, wake));
     const write = { readOnlyHint: false, destructiveHint: false, idempotentHint: false };
     const how = "Zuerst list_tasks oder get_now lesen und deren generatedAt mitgeben; ausgeführt wird auf einem Gerät, den Stand liefert get_order_result mit der zurückgegebenen orderID";
     server.registerTool("set_next", {
@@ -278,17 +278,17 @@ export function mcpHandler(pool: pg.Pool): McpHttpHandler {
         + "Geparkte Aufgaben lehnt das Gerät als invalid ab",
       inputSchema: z.object({ taskID: z.string(), generatedAt: z.string(), on: z.boolean() }),
       annotations: write,
-    }, lining(pool));
+    }, lining(pool, wake));
     server.registerTool("park_task", {
       description: `Legt einen Auftrag an, eine offene Aufgabe zu parken (sie verlässt „Als nächstes“). ${how}`,
       inputSchema: z.object({ taskID: z.string(), generatedAt: z.string() }),
       annotations: write,
-    }, parking(pool));
+    }, parking(pool, wake));
     server.registerTool("add_subtask", {
       description: `Legt einen Auftrag an, unter einer Aufgabe eine Zeile (Unteraufgabe) hinzuzufügen; sie bleibt, wie getippt. ${how}`,
       inputSchema: z.object({ taskID: z.string(), generatedAt: z.string(), text: z.string() }),
       annotations: write,
-    }, subtasking(pool));
+    }, subtasking(pool, wake));
     return server;
   });
 }
