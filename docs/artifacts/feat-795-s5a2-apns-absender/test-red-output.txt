@@ -1,0 +1,44 @@
+Postgres on 127.0.0.1:55624, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.dI0sbrFxHX
+
+> typecheck
+> tsc --noEmit
+
+test/apns.test.ts(10,10): error TS2305: Module '"../src/devices.ts"' has no exported member 'dropToken'.
+test/apns.test.ts(10,21): error TS2305: Module '"../src/devices.ts"' has no exported member 'listTokens'.
+test/apns.test.ts(11,113): error TS2307: Cannot find module '../src/apns.ts' or its corresponding type declarations.
+test/apns.test.ts(49,56): error TS7006: Parameter 'e' implicitly has an 'any' type.
+node:internal/modules/esm/resolve:241
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/src/apns.ts' imported from /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/apns.test.ts
+    at finalizeResolution (node:internal/modules/esm/resolve:241:11)
+    at moduleResolve (node:internal/modules/esm/resolve:846:10)
+    at defaultResolve (node:internal/modules/esm/resolve:973:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:708:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:728:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:766:56)
+    at #resolve (node:internal/modules/esm/loader:690:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:610:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:277:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:389:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/src/apns.ts'
+}
+
+Node.js v26.13.0
+✖ test/apns.test.ts (400.426084ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 409.459166
+
+✖ failing tests:
+
+test at test/apns.test.ts:1:1
+✖ test/apns.test.ts (400.426084ms)
+  'test failed'
