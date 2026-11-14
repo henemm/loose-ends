@@ -34,11 +34,11 @@ def run_in(folder, script):
 
 
 class MarketingVersionTests(unittest.TestCase):
-    def test_marketing_version_is_1_0_1(self):
-        # 1.0 ist bei Apple freigegeben und für neue Builds geschlossen (2026-11-04, Henning: 1.0.1).
+    def test_marketing_version_is_1_0_2(self):
+        # 1.0.1 ist bei Apple freigegeben und für neue Builds geschlossen (2026-11-14, Henning: 1.0.2; davor 1.0 → 1.0.1, 2026-11-04).
         values = re.findall(r'^ *MARKETING_VERSION: *(.*)$', PROJECT.read_text(), re.MULTILINE)
         self.assertEqual(len(values), 1, f"genau eine MARKETING_VERSION-Zeile erwartet, gefunden: {values}")
-        self.assertEqual(values[0].strip(), '"1.0.1"')
+        self.assertEqual(values[0].strip(), '"1.0.2"')
 
     def test_no_version_literal_in_workflow(self):
         literals = re.findall(r'MARKETING="[0-9][^"]*"', WORKFLOW.read_text())
@@ -51,7 +51,7 @@ class MarketingVersionTests(unittest.TestCase):
         echo = lines[0] + '\nprintf %s "$MARKETING"\n'
         real = run_in(ROOT, echo)
         self.assertEqual(real.returncode, 0, real.stderr)
-        self.assertEqual(real.stdout, "1.0.1")
+        self.assertEqual(real.stdout, "1.0.2")
         with tempfile.TemporaryDirectory() as folder:
             text = re.sub(r'(MARKETING_VERSION: *)"[^"]*"', r'\1"2.3.4"', PROJECT.read_text())
             (Path(folder) / "project.yml").write_text(text)
