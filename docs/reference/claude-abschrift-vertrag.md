@@ -216,3 +216,10 @@ Anlass fort (Start, Vordergrund, Weckruf), nie in einer Schleife und ohne Wieder
 eine Ablehnung je Gerät und Anlass; zehn Ablehnungen in zehn Minuten sperren die Adresse sonst für eine Stunde für alle Dienste
 des Servers. Körper über 256 KiB weist nginx schon am `Content-Length` mit 413 ab, ebenfalls ohne den Dienst. Alle anderen Pfade
 unter `/app/` sind 404.
+
+**Weckruf (#795 S5a-2b).** Nach jedem neu abgelegten Auftrag (alle sechs Auftragswerkzeuge) schickt der Dienst an alle Geräte des
+Kontos aus `device_tokens` eine stille Mitteilung (`content-available`, ohne Text, Ton oder Zahl am Symbol) mit dem Schlüssel
+`looseends`, an dem die App den Weckruf erkennt. Eine schon bekannte Auftrags-ID und ein abgelehnter Aufruf wecken nicht. Der
+Weckruf läuft neben der Antwort an Claude her und kann sie weder verzögern noch scheitern lassen. Ohne Apple-Schlüssel im Dienst
+(`APNS_*` nicht gesetzt) gibt es keinen Weckruf. Die App holt wie bisher auch selbst (Start, Vordergrund); der Weckruf macht das
+nur früher.

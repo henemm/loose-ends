@@ -1,0 +1,162 @@
+== typecheck
+
+> typecheck
+> tsc --noEmit
+
+== tests
+✖ main: halbe apns-konfiguration bricht ab (5008.372292ms)
+✔ main: keine apns-variablen startet wie bisher (603.067625ms)
+2026-11-14T09:41:03.338Z listening
+2026-11-14T09:41:03.356Z migrated
+✖ main: capture_task sendet ueber den waker (3359.254834ms)
+✖ mcp-wake: jedes auftragswerkzeug weckt genau einmal (116.611416ms)
+✖ mcp-wake: duplicate weckt nicht (0.625292ms)
+✖ mcp-wake: weckfehler stoert nicht (77.55625ms)
+✖ mcp-wake: abgelehnte werkzeuge wecken nicht (49.447542ms)
+✖ mcp-wake: ohne wake wie bisher (31.683792ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 1
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9357.794459
+
+✖ failing tests:
+
+test at test/main.test.ts:737:1
+✖ main: halbe apns-konfiguration bricht ab (5008.372292ms)
+  AssertionError [ERR_ASSERTION]: APNS_TEAM_ID fehlt: Exit-Code: 2026-11-14T09:40:57.952Z listening
+  2026-11-14T09:40:57.956Z migrate failed, retrying (1/60)
+  2026-11-14T09:40:59.961Z migrate failed, retrying (2/60)
+  2026-11-14T09:41:01.966Z migrate failed, retrying (3/60)
+  
+  
+  'late' !== 1
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/main.test.ts:753:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'late',
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/main.test.ts:819:1
+✖ main: capture_task sendet ueber den waker (3359.254834ms)
+  AssertionError [ERR_ASSERTION]: genau ein Aufruf
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/main.test.ts:836:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/mcp-wake.test.ts:74:1
+✖ mcp-wake: jedes auftragswerkzeug weckt genau einmal (116.611416ms)
+  AssertionError [ERR_ASSERTION]: capture_task: Weckrufe
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/mcp-wake.test.ts:82:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/mcp-wake.test.ts:87:1
+✖ mcp-wake: duplicate weckt nicht (0.625292ms)
+  AssertionError [ERR_ASSERTION]: storeOrder fehlt
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/mcp-wake.test.ts:88:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/mcp-wake.test.ts:105:1
+✖ mcp-wake: weckfehler stoert nicht (77.55625ms)
+  AssertionError [ERR_ASSERTION]: wirft synchron: Weckruf versucht
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/mcp-wake.test.ts:122:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/mcp-wake.test.ts:129:1
+✖ mcp-wake: abgelehnte werkzeuge wecken nicht (49.447542ms)
+  AssertionError [ERR_ASSERTION]: storeOrder fehlt
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/mcp-wake.test.ts:146:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/mcp-wake.test.ts:156:1
+✖ mcp-wake: ohne wake wie bisher (31.683792ms)
+  AssertionError [ERR_ASSERTION]: storeOrder fehlt
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/mcp-wake.test.ts:165:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
