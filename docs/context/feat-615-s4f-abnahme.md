@@ -106,4 +106,4 @@ Widerruf bei Apple angenommen; danach neu anmelden und claude.ai neu verbinden.
 Lokaler Dienst (Node 26, Postgres 18), Debug-Weg #795 S3b-2, TestFlight-Eingabe `konto` (#615 S4c-2a), Live-Dienst und ssh rennwienix.
 
 ### Open Questions
-- [ ] PO: Soll im TestFlight-Lauf das Konto live gelöscht werden (danach neu anmelden, claude.ai neu verbinden)?
+- [x] PO (Henning, 2026-11-14): **Nein, live nicht löschen.** Stufe 3 = Anmelden, Abmelden, wieder Anmelden über TestFlight. Löschen und „keine Zeile mehr“ nur im Simulator gegen den lokalen Dienst; Widerruf dort `apple revoke skipped`, der Apple-Aufruf selbst bleibt über die Server-Tests (Attrappe) belegt. Das wird im Abschluss so benannt.
