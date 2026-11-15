@@ -1,16 +1,22 @@
 import type pg from "pg";
-import { type Check, fail, flag, id, rank, reporting, shape, text, time } from "./transcripts.ts";
+import { type Check, fail, flag, id, names, rank, reporting, shape, text, time } from "./transcripts.ts";
 
 type Status = "unprocessed" | "unverified" | "active" | "parked" | "done" | "removed";
 
 export type Order = { version: 1; id: string } & (
-  | { kind: "capture"; text: string }
+  | { kind: "capture"; text: string; fields?: Fields }
   | { kind: "complete"; taskID: string; expectedStatus: Status; expectedDueDate?: string }
   | { kind: "setDue"; taskID: string; hasTime: boolean; date?: string; expectedDueDate?: string }
   | { kind: "setNext"; taskID: string; expectedStatus: Status; on: boolean; expectedNextRank?: number }
   | { kind: "park"; taskID: string; expectedStatus: Status }
   | { kind: "addSubtask"; taskID: string; expectedStatus: Status; text: string }
 );
+
+type Level = "low" | "medium" | "high";
+export type Fields = {
+  title?: string; notes?: string; dueDate?: string; dueHasTime?: boolean; importance?: Level; urgency?: Level;
+  duration?: "minutes5" | "minutes15" | "minutes30" | "hour1" | "hours2plus"; energy?: number; contexts?: string[]; project?: string;
+};
 
 export type OrderResult = {
   orderID: string;
@@ -30,9 +36,28 @@ const version: Check = (v, p) => { if (v !== 1) fail(p, "nicht 1"); };
 const outcome = oneOf(["done", "rejected"], "unbekanntes Ergebnis");
 const reason = oneOf(["invalid", "missing", "stale"], "unbekannter Grund");
 
+export const LEVELS = ["low", "medium", "high"] as const;
+export const DURATIONS = ["minutes5", "minutes15", "minutes30", "hour1", "hours2plus"] as const;
+const level = oneOf([...LEVELS], "unbekannte Stufe");
+const duration = oneOf([...DURATIONS], "unbekannte Dauer");
+const energy: Check = (v, p) => { if (!Number.isInteger(v) || Math.abs(v as number) > 3) fail(p, "keine ganze Zahl von −3 bis 3"); };
+
+// The form of fields, never its meaning: names against the catalogs and an empty title are the app's (invalid).
+// dueDate and dueHasTime only together; notes only where a task is captured (withNotes).
+export const fieldsCheck = (withNotes: boolean): Check => (v, p) => {
+  shape(v, p, {}, {
+    title: text, ...(withNotes ? { notes: text } : {}), dueDate: time, dueHasTime: flag,
+    importance: level, urgency: level, duration, energy, contexts: names, project: text,
+  });
+  const has = (key: string) => Object.hasOwn(v as object, key);
+  if (has("dueDate") && !has("dueHasTime")) fail(`${p}.dueHasTime`, "fehlt, nur mit dueDate zusammen");
+  if (has("dueHasTime") && !has("dueDate")) fail(`${p}.dueDate`, "fehlt, nur mit dueHasTime zusammen");
+};
+export const captureFields = fieldsCheck(true);
+
 // Per kind: required and optional keys beside version, id and kind.
 const forms: Record<string, [Record<string, Check>, Record<string, Check>]> = {
-  capture: [{ text }, {}],
+  capture: [{ text }, { fields: captureFields }],
   complete: [{ taskID: id, expectedStatus: orderStatus }, { expectedDueDate: time }],
   setDue: [{ taskID: id, hasTime: flag }, { date: time, expectedDueDate: time }],
   setNext: [{ taskID: id, expectedStatus: orderStatus, on: flag }, { expectedNextRank: rank }],

@@ -2,7 +2,7 @@ import type pg from "pg";
 import { createMcpHandler, McpServer, type CallToolResult, type McpHttpHandler, type ServerContext } from "@modelcontextprotocol/server";
 import { z } from "zod";
 import { randomUUID } from "node:crypto";
-import { checkOrder, getResult, putOrder } from "./orders.ts";
+import { checkOrder, DURATIONS, type Fields, getResult, LEVELS, putOrder } from "./orders.ts";
 import { getTranscript, type Transcript, type TranscriptTask } from "./transcripts.ts";
 import { anleitung } from "./anleitung.ts";
 
@@ -73,12 +73,15 @@ function reading<A = Record<string, never>>(pool: pg.Pool, render: (doc: Transcr
 }
 
 // The service gives the id; the form check is checkOrder's, its message goes back as it is. Neither text nor id is logged.
+// fields goes into the order only when given, so an order without it stays as before.
 function capturing(pool: pg.Pool, wake?: Wake) {
-  return async ({ text }: { text: string }, ctx: ServerContext): Promise<CallToolResult> => {
+  return async ({ text, fields }: { text: string; fields?: Fields }, ctx: ServerContext): Promise<CallToolResult> => {
     const owner = account(ctx);
     if (owner === undefined) return { ...reply("kein Konto"), isError: true };
     if (text.trim() === "") return { ...reply("Text fehlt"), isError: true };
-    return storeOrder(pool, owner, { version: 1, id: randomUUID().toUpperCase(), kind: "capture", text }, wake);
+    return storeOrder(pool, owner, {
+      version: 1, id: randomUUID().toUpperCase(), kind: "capture", text, ...(fields === undefined ? {} : { fields }),
+    }, wake);
   };
 }
 
@@ -260,12 +263,21 @@ function registerLookups(server: McpServer, pool: pg.Pool): void {
   }, reading(pool, (doc) => ({ generatedAt: doc.generatedAt, contexts: counted(doc.tasks.flatMap((task) => task.contexts)) })));
 }
 
+// Claude's view of fields at capture; strict, so a typo like "titel" is refused instead of dropped. checkOrder stays the check.
+const captureFieldsSchema = z.object({
+  title: z.string(), notes: z.string(), dueDate: z.string(), dueHasTime: z.boolean(),
+  importance: z.enum(LEVELS), urgency: z.enum(LEVELS), duration: z.enum(DURATIONS), energy: z.number().int().min(-3).max(3),
+  contexts: z.array(z.string()), project: z.string(),
+}).partial().strict();
+
 // The order tools and get_order_result; with wake every newly stored order wakes the caller's devices.
 function registerOrders(server: McpServer, pool: pg.Pool, wake: Wake | undefined): void {
   server.registerTool("capture_task", {
     description: "Legt einen Auftrag zum Erfassen einer Aufgabe an; erfasst wird sie auf einem Gerät, sobald eines den Auftrag "
-      + "abholt. Den Stand liefert get_order_result mit der zurückgegebenen orderID",
-    inputSchema: z.object({ text: z.string() }),
+      + "abholt. Den Stand liefert get_order_result mit der zurückgegebenen orderID. text ist der Wortlaut des Nutzers, unverändert. "
+      + "fields ist optional: Titel, Notiz, Fälligkeit (dueDate in UTC mit Z, nur zusammen mit dueHasTime), Wichtigkeit, "
+      + "Dringlichkeit, Dauer, Energie (−3 bis 3), Tags und Projekt; Tags und Projekt nur mit Namen, die es schon gibt",
+    inputSchema: z.object({ text: z.string(), fields: captureFieldsSchema.optional() }),
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
   }, capturing(pool, wake));
   server.registerTool("get_order_result", {
