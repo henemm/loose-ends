@@ -6,7 +6,9 @@
 #   ./scripts/next-ticket.sh
 #
 # Erste Ausgabezeile ist maschinenlesbar: NEXT=#N | NEXT=none | NEXT=unknown. Danach Klartext.
-# Epic = führende #N im herdr-Namen der Sitzung; hat #N keine Teil-Tickets, ist sein Eltern-Ticket der Epic.
+# Zuständigkeit = führende #N im herdr-Namen der Sitzung: #N mit seinen Teil-Tickets, ohne Teil-Tickets #N allein (Henning
+# 2026-11-15). Was eine andere Sitzung vorne im Namen trägt, fällt heraus (die genauere Nummer gewinnt); beginnen zwei
+# Sitzungen mit derselben #N, gibt es keinen Vorschlag.
 # Abzug: Board In progress/In review, offener PR, lebende fremde Sitzung (Lock), offenes „blocked by“.
 # Reihenfolge: Priority, dann Hennings Board-Reihenfolge. Überschneidungen mit Hotspots werden gemeldet.
 # Liest nur: schreibt nichts nach GitHub, ändert keine Datei. Endet immer mit Exit 0.
@@ -63,45 +65,57 @@ locks_dir() {
     [ -n "$common" ] && echo "$(dirname "$common")/.claude/session-locks"
 }
 
-top_parent() {  # top_parent <n>: setzt EPIC auf das oberste Eltern-Ticket (bis 404, höchstens 10 Ebenen), sonst <n>
-    local n="$1" depth=0 err
-    while [ "$depth" -lt 10 ]; do
-        if ! gh_run api "repos/$REPO/issues/$n/parent" > "$WORK/parent.json" 2> "$WORK/parent.err"; then
-            err="$(cat "$WORK/parent.err")"
-            case "$err" in *404*|*"Not Found"*) break ;; esac
-            unknown "Eltern-Ticket von #$n nicht abrufbar"
-        fi
-        n="$(json_get "$WORK/parent.json" 'd["number"]')" || unknown "Eltern-Ticket von #$n nicht lesbar"
-        depth=$((depth + 1))
-    done
-    EPIC="$n"
-}
-
 epic_of() {
     command -v herdr >/dev/null 2>&1 || unknown "herdr fehlt"
     command -v gh >/dev/null 2>&1 || unknown "gh fehlt"
     command -v python3 >/dev/null 2>&1 || unknown "python3 fehlt"
     [ -n "${HERDR_WORKSPACE_ID:-}" ] || no_epic "HERDR_WORKSPACE_ID ist nicht gesetzt, die Sitzung hat keinen Namen."
     herdr workspace get "$HERDR_WORKSPACE_ID" > "$WORK/ws.json" 2>/dev/null || unknown "herdr workspace get scheitert"
-    local label n
+    local label n state
     label="$(json_get "$WORK/ws.json" '(d.get("result") or d)["workspace"]["label"]')" || unknown "herdr-Antwort ohne Namen"
     [[ "$label" =~ ^#([0-9]+) ]] || no_epic "Der Sitzungsname „${label}“ beginnt nicht mit #N."
     n="${BASH_REMATCH[1]}"
-    top_parent "$n"
-    if [ "$EPIC" = "$n" ]; then
-        gh_run api "repos/$REPO/issues/$n/sub_issues?per_page=100" > "$WORK/sub.json" 2>/dev/null \
-            || unknown "Teil-Tickets von #$n nicht abrufbar"
-        [ "$(json_get "$WORK/sub.json" 'len(d)')" != "0" ] \
-            || no_epic "#$n hat weder ein Eltern-Ticket noch Teil-Tickets."
-        LABEL_NOTE="Sitzung „${label}“: Epic #$EPIC (das Ticket selbst)."
-    else
-        LABEL_NOTE="Sitzung „${label}“: #$n gehört zu Epic #$EPIC (oberstes Eltern-Ticket)."
+    other_sessions "$n"
+    EPIC="$n"
+    gh_run api "repos/$REPO/issues/$n/sub_issues?per_page=100" > "$WORK/sub.json" 2>/dev/null \
+        || unknown "Teil-Tickets von #$n nicht abrufbar"
+    if [ "$(json_get "$WORK/sub.json" 'sum(str(i.get("state", "open")).lower() == "open" for i in d)')" != "0" ]; then
+        LABEL_NOTE="Sitzung „${label}“: #$n mit seinen Teil-Tickets."
+        return
+    fi
+    gh_run api "repos/$REPO/issues/$n" > "$WORK/issue.json" 2>/dev/null || no_epic "#$n ist nicht abrufbar."
+    state="$(json_get "$WORK/issue.json" 'str(d.get("state", "")).lower()')" || unknown "#$n nicht lesbar"
+    [ "$state" = "open" ] || no_epic "#$n ist geschlossen und hat keine offenen Teil-Tickets."
+    SINGLE="$(json_get "$WORK/issue.json" 'd.get("title", "")')" || unknown "#$n nicht lesbar"
+    LABEL_NOTE="Sitzung „${label}“: nur #$n (keine Teil-Tickets)."
+}
+
+other_sessions() {  # other_sessions <n>: OTHERS = führende #M der anderen Sitzungen; dieselbe #N wie hier = kein Vorschlag
+    herdr workspace list > "$WORK/wsl.json" 2>/dev/null || unknown "herdr workspace list scheitert"
+    OTHERS="$(python3 - "$WORK/wsl.json" "$HERDR_WORKSPACE_ID" <<'PY2'
+import json, re, sys
+d = json.load(open(sys.argv[1]))
+for w in (d.get("result") or d).get("workspaces", []):
+    if w.get("workspace_id") == sys.argv[2]:
+        continue
+    m = re.match(r"#(\d+)", w.get("label") or "")
+    if m:
+        print(m.group(1))
+PY2
+)" || unknown "herdr-Liste nicht lesbar"
+    if grep -qx "$1" <<< "$OTHERS"; then
+        unknown "Zwei Sitzungen beginnen mit #$1. Eine muss umbenannt werden, bevor es einen Vorschlag gibt."
     fi
 }
 
 tree_leaves() {  # schreibt <nummer>\t<titel> je offenem Ticket ohne offene Teil-Tickets im Baum unter $EPIC
     local queue="$EPIC" n seen=" " kids
     : > "$WORK/cand.tsv"
+    : > "$WORK/up.tsv"
+    if [ -n "$SINGLE" ]; then
+        printf '%s\t%s\n' "$EPIC" "$SINGLE" > "$WORK/cand.tsv"
+        return
+    fi
     while [ -n "$queue" ]; do
         n="${queue%% *}"; queue="${queue#"$n"}"; queue="${queue# }"
         case "$seen" in *" $n "*) continue ;; esac
@@ -119,14 +133,38 @@ PY
         else
             python3 -c 'import json,sys; [print("%s\t%s" % (i["number"], i.get("title", ""))) for i in json.load(open(sys.argv[1]))]' \
                 "$WORK/sub.json" >> "$WORK/titles.tsv" || unknown "Titel unter #$n nicht lesbar"
+            for k in $kids; do printf '%s\t%s\n' "$k" "$n" >> "$WORK/up.tsv"; done
             queue="$queue $kids"; queue="${queue# }"
         fi
     done
 }
 
+drop_others() {  # nimmt heraus, was selbst oder über ein Eltern-Ticket einer anderen Sitzung gehört
+    python3 - "$WORK/cand.tsv" "$WORK/up.tsv" "$OTHERS" "$EPIC" > "$WORK/cand.own" 2> "$WORK/others.txt" <<'PY2' \
+        || unknown "Zuständigkeit nicht auswertbar"
+import sys
+up = dict(l.rstrip("\n").split("\t")[:2] for l in open(sys.argv[2]) if "\t" in l)
+others, root, dropped = set(sys.argv[3].split()), sys.argv[4], set()
+for line in open(sys.argv[1]):
+    n = line.split("\t")[0]
+    while n and n != root and n not in others:
+        n = up.get(n)
+    if n in others:
+        dropped.add(n)
+    else:
+        sys.stdout.write(line)
+if dropped:
+    sys.stderr.write(" ".join("#" + n for n in sorted(dropped, key=int)))
+PY2
+    mv "$WORK/cand.own" "$WORK/cand.tsv"
+    [ -s "$WORK/others.txt" ] && LABEL_NOTE="$LABEL_NOTE Gehört anderen Sitzungen: $(cat "$WORK/others.txt")."
+    return 0
+}
+
 candidates() {
     : > "$WORK/titles.tsv"
     tree_leaves
+    [ -n "$OTHERS" ] && drop_others
     gh_run project item-list 1 --owner henemm --format json --limit 1000 > "$WORK/board.json" 2>/dev/null \
         || unknown "Board nicht abrufbar"
     gh_run pr list --repo "$REPO" --state open --limit 200 --json number,title,body,headRefName \
@@ -263,7 +301,7 @@ print_skips() {
 
 notify_blocked() {
     command -v herdr >/dev/null 2>&1 || return 0
-    herdr notification show "Kein freies Ticket in Epic #$EPIC" \
+    herdr notification show "Kein freies Ticket unter #$EPIC" \
         --body "Alle offenen Teil-Tickets sind belegt oder blockiert." >/dev/null 2>&1 || true
 }
 
@@ -273,11 +311,11 @@ render() {
         echo "NEXT=none"
         echo "$LABEL_NOTE"
         if [ -s "$WORK/cand.tsv" ]; then
-            echo "Kein Teil-Ticket von Epic #$EPIC ist frei."
+            echo "Kein Ticket unter #$EPIC ist für diese Sitzung frei."
             print_skips
             notify_blocked
         else
-            echo "Epic #$EPIC hat keine offenen Teil-Tickets mehr."
+            echo "Unter #$EPIC ist für diese Sitzung nichts mehr offen."
         fi
         return
     fi
@@ -295,6 +333,8 @@ render() {
 
 EPIC=""
 LABEL_NOTE=""
+SINGLE=""
+OTHERS=""
 epic_of
 candidates
 live_locks
