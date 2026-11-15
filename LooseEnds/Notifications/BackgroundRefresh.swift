@@ -2,6 +2,7 @@
 import BackgroundTasks
 import Foundation
 import OSLog
+import Synchronization
 
 /// The notification plan holds without an app start (#553). Morning and evening are planned seven
 /// days ahead and renewed on every save and foreground; without this, eight days without opening the
@@ -31,16 +32,16 @@ enum BackgroundRefresh {
     }
 
     /// The handler's body, callable from any queue (#780): it inherits no actor and hops to the main actor
-    /// only for the work. On expiry the task ends without success.
+    /// only for the work. On expiry the task ends without success; either way it ends exactly once (#782).
     nonisolated static func launchHandler(
         reschedule: @escaping @MainActor @Sendable () async -> Void
     ) -> @Sendable (any RefreshTask) -> Void {
         { task in
             let handle = RefreshHandle(task)
-            task.expirationHandler = { @Sendable in handle.task.setTaskCompleted(success: false) }
+            task.expirationHandler = { @Sendable in handle.finish(success: false) }
             Task { @MainActor in
                 await reschedule()
-                handle.task.setTaskCompleted(success: true)
+                handle.finish(success: true)
             }
         }
     }
@@ -70,8 +71,18 @@ protocol RefreshTask: AnyObject {
 extension BGTask: RefreshTask {}
 
 /// The system hands the task to a background queue; the box carries it onto the main actor.
+/// The first `finish` ends the task, every later one does nothing (#782), from any queue.
 private final class RefreshHandle: @unchecked Sendable {
-    let task: any RefreshTask
+    private let task: any RefreshTask
+    private let finished = Mutex(false)
     init(_ task: any RefreshTask) { self.task = task }
+
+    func finish(success: Bool) {
+        let first = finished.withLock { done in
+            defer { done = true }
+            return !done
+        }
+        if first { task.setTaskCompleted(success: success) }
+    }
 }
 #endif
