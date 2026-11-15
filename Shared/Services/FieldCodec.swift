@@ -24,6 +24,9 @@ enum FieldCodec {
         case .notes: return task.notes
         case .knaeuel: return task.knaeuelAt?.ISO8601Format()
         case .counts: return task.countsAt?.ISO8601Format()
+        case .status: return task.status.rawValue
+        case .nextRank: return task.nextRank.map { String($0) }
+        case .subtasks: return nil
         }
     }
 
@@ -88,7 +91,7 @@ enum FieldCodec {
             task.knaeuelAt = encoded.flatMap { ISO8601DateFormatter().date(from: $0) }
         case .counts:
             task.countsAt = encoded.flatMap { ISO8601DateFormatter().date(from: $0) }
-        case .blockedBy:
+        case .blockedBy, .status, .nextRank, .subtasks:
             break
         }
     }

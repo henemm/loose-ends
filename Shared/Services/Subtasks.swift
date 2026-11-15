@@ -14,11 +14,12 @@ enum SubtaskError: Error, Equatable {
 enum Subtasks {
     /// Adds a line under a top-level task. The text is trimmed once and never touched again (ADR-3).
     @discardableResult
-    static func add(_ text: String, to parent: TaskItem, in context: ModelContext, now: Date = Date()) throws -> TaskItem {
+    static func add(_ text: String, to parent: TaskItem, in context: ModelContext, now: Date = Date(),
+                    via: CaptureChannel = .app) throws -> TaskItem {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { throw SubtaskError.emptyText }
         guard parent.parent == nil else { throw SubtaskError.nested }
-        let subtask = TaskItem(rawText: trimmed, capturedVia: .app, ownerID: parent.ownerID)
+        let subtask = TaskItem(rawText: trimmed, capturedVia: via, ownerID: parent.ownerID)
         // The typed line is its title as typed (#565): its own detail shows it, not an empty "Title".
         subtask.title = trimmed
         subtask.capturedAt = now

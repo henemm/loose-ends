@@ -49,7 +49,7 @@ enum OrderExecutor {
         case .capture: return try capture(order, in: context)
         case .complete: return try complete(order, in: context, now: now, calendar: calendar)
         case .setDue: return try setDue(order, in: context, now: now, calendar: calendar)
-        case .setNext: return try setNext(order, in: context)
+        case .setNext: return try setNext(order, in: context, now: now)
         case .park: return try park(order, in: context, now: now)
         case .addSubtask: return try addSubtask(order, in: context, now: now)
         }
@@ -73,7 +73,11 @@ enum OrderExecutor {
         guard task.status == expected, same(order.expectedDueDate, task.dueDate) else {
             return refuse(order, .stale, task: id)
         }
-        TaskActions.complete(task, now: now, calendar: calendar)
+        // A round of a repeating task reads "→ done" too; its date moves without a revision (no postponement, #622).
+        recording(.status, on: task, now: now) {
+            TaskActions.complete(task, now: now, calendar: calendar)
+            return TaskStatus.done.rawValue
+        }
         try commit(context)
         return OrderResult(orderID: order.id, outcome: .done, taskID: id)
     }
@@ -98,8 +102,8 @@ enum OrderExecutor {
 
     /// Into "Next up" at the end or out of it (#622), like the swipe. Status and rank are the expected state; a task that
     /// is not open (parked included, "Next up" lists open tasks only) or already in the asked state is `invalid`.
-    /// Status and rank are no revised fields, so there is no revision, as with `complete`.
-    private static func setNext(_ order: Order, in context: ModelContext) throws -> OrderResult {
+    /// It leaves one `nextRank` revision with the reason "Claude" (#622 Schnitt 1).
+    private static func setNext(_ order: Order, in context: ModelContext, now: Date) throws -> OrderResult {
         guard let id = order.taskID, let expected = order.expectedStatus, let on = order.on, Self.listable.contains(expected) else {
             return refuse(order, .invalid)
         }
@@ -107,7 +111,10 @@ enum OrderExecutor {
         guard task.status == expected, task.nextRank == order.expectedNextRank else { return refuse(order, .stale, task: id) }
         guard (task.nextRank != nil) != on else { return refuse(order, .invalid, task: id) }
         let all = try context.fetch(FetchDescriptor<TaskItem>())
-        TaskActions.toggleNext(task, among: all)
+        recording(.nextRank, on: task, now: now) {
+            TaskActions.toggleNext(task, among: all)
+            return FieldCodec.encode(.nextRank, of: task)
+        }
         try commit(context)
         return OrderResult(orderID: order.id, outcome: .done, taskID: id)
     }
@@ -119,7 +126,10 @@ enum OrderExecutor {
         }
         guard let task = try find(id, in: context) else { return refuse(order, .missing) }
         guard task.status == expected else { return refuse(order, .stale, task: id) }
-        TaskActions.park(task, now: now)
+        recording(.status, on: task, now: now) {
+            TaskActions.park(task, now: now)
+            return FieldCodec.encode(.status, of: task)
+        }
         try commit(context)
         return OrderResult(orderID: order.id, outcome: .done, taskID: id)
     }
@@ -133,12 +143,31 @@ enum OrderExecutor {
         guard let task = try find(id, in: context) else { return refuse(order, .missing) }
         guard task.status == expected else { return refuse(order, .stale, task: id) }
         do {
-            try Subtasks.add(text, to: task, in: context, now: now)
+            try recording(.subtasks, on: task, now: now) {
+                try Subtasks.add(text, to: task, in: context, now: now, via: .claude).rawText
+            }
         } catch {
             return refuse(order, .invalid, task: id)
         }
         try commit(context)
         return OrderResult(orderID: order.id, outcome: .done, taskID: id)
+    }
+
+    /// Runs the action and leaves one user revision of `field` with the reason "Claude" (#622): old value before,
+    /// `action`'s result as the new one. Side revisions the action wrote without a reason (the Knäuel mark falls)
+    /// get the same reason; a reason that was there stays. A throwing action writes no revision.
+    private static func recording(_ field: RevisedField, on task: TaskItem, now: Date,
+                                  _ action: () throws -> String?) rethrows {
+        let earlier = Set((task.revisions ?? []).map(\.persistentModelID))
+        let old = FieldCodec.encode(field, of: task)
+        let new = try action()
+        for side in task.revisions ?? [] where side.reason == nil && !earlier.contains(side.persistentModelID) {
+            side.reason = reason
+        }
+        let revision = Revision(task: task, field: field, oldValue: old, newValue: new, author: .user, reason: reason)
+        revision.createdAt = now
+        revision.seenAt = now
+        task.revisions = (task.revisions ?? []) + [revision]
     }
 
     /// The statuses a task can be listed in as open: not parked, done or removed.

@@ -19,6 +19,9 @@ enum FieldFormatting {
         case .notes: String(localized: "Note")
         case .knaeuel: String(localized: "The Tangle")
         case .counts: String(localized: "Collect bead")
+        case .status: String(localized: "Status")
+        case .nextRank: String(localized: "Next up")
+        case .subtasks: String(localized: "Subtask")
         }
     }
 
@@ -26,8 +29,12 @@ enum FieldFormatting {
     static func value(_ encoded: String?, for field: RevisedField, hasTime: Bool = false) -> String? {
         guard let encoded, !encoded.isEmpty else { return nil }
         switch field {
-        case .title, .project, .notes:
+        case .title, .project, .notes, .subtasks:
             return encoded
+        case .status:
+            return status(encoded)
+        case .nextRank:
+            return String(localized: "Yes")
         case .dueDate:
             guard let date = ISO8601DateFormatter().date(from: encoded) else { return nil }
             return date.formatted(date: .abbreviated, time: hasTime ? .shortened : .omitted)
@@ -96,6 +103,16 @@ enum FieldFormatting {
         case (.weekly, _): return String(localized: "Every \(n) weeks", bundle: bundle)
         case (.monthly, _): return String(localized: "Every \(n) months", bundle: bundle)
         case (.yearly, _): return String(localized: "Every \(n) years", bundle: bundle)
+        }
+    }
+
+    /// A status as the revision list reads it (#622): every open state reads "Open".
+    static func status(_ raw: String) -> String? {
+        switch TaskStatus(rawValue: raw) {
+        case .done: String(localized: "Done")
+        case .parked: String(localized: "Parked")
+        case .unprocessed, .unverified, .active: String(localized: "Open")
+        case .removed, nil: nil
         }
     }
 

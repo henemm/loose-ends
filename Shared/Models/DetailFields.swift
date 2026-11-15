@@ -83,7 +83,7 @@ enum DetailField: String, CaseIterable, Codable, Sendable {
         case .project: self = .project
         case .knaeuel: self = .knaeuel
         case .counts: self = .counts
-        case .title, .people, .blockedBy: return nil
+        case .title, .people, .blockedBy, .status, .nextRank, .subtasks: return nil
         }
     }
 

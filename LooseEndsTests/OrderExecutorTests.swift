@@ -1,6 +1,7 @@
 import Foundation
 import SwiftData
 import Testing
+import XCTest
 @testable import LooseEnds
 
 /// Orders from Claude (#613 Schnitt 1, Weg B): capture, complete, set the due date. Each is a user change with
@@ -580,5 +581,245 @@ import Testing
         let document = try ContractDocument.text()
         #expect(document.contains(Self.orderFixture))
         #expect(document.contains(Self.resultFixture))
+    }
+}
+
+/// #622 Schnitt 1: every order that changes a task leaves one user revision with the reason "Claude", and the side
+/// revisions an action writes (the Knäuel mark falls) carry that reason too. XCTest, so the QA gate counts it.
+/// The new fields are looked up by raw value, so the tests compile before `RevisedField` knows them.
+@MainActor final class OrderExecutorRevisionTests: XCTestCase {
+    private typealias Suite = OrderExecutorTests
+
+    private func field(_ raw: String) throws -> RevisedField {
+        try XCTUnwrap(RevisedField(rawValue: raw), "RevisedField has no case \(raw)")
+    }
+
+    private func revisions(_ raw: String, of task: TaskItem) -> [Revision] {
+        (task.revisions ?? []).filter { $0.fieldRaw == raw }
+    }
+
+    private func assertByClaude(_ revision: Revision, file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertEqual(revision.author, .user, file: file, line: line)
+        XCTAssertEqual(revision.reason, OrderExecutor.reason, file: file, line: line)
+    }
+
+    // MARK: AC-2
+
+    func testCompleteOneOffWritesOneStatusRevision() throws {
+        let store = try TestStore()
+        let task = try Suite.insert("Rechnung bezahlen", in: store)
+        let order = Order(id: UUID(), kind: .complete, taskID: task.id, expectedStatus: .active)
+
+        XCTAssertEqual(try Suite.run(order, in: store).outcome, .done)
+
+        let status = revisions("status", of: task)
+        XCTAssertEqual(status.count, 1)
+        let revision = try XCTUnwrap(status.first)
+        XCTAssertEqual(revision.oldValue, TaskStatus.active.rawValue)
+        XCTAssertEqual(revision.newValue, TaskStatus.done.rawValue)
+        assertByClaude(revision)
+    }
+
+    // MARK: AC-3, AC-7
+
+    func testCompleteRepeatingWritesStatusNotDueAndStampsTheKnaeuel() throws {
+        let store = try TestStore()
+        let task = try Suite.insert("Blumen gießen", due: Suite.day(0), in: store)
+        task.repeatRule = RepeatRule(frequency: .daily)
+        task.knaeuelAt = Suite.day(-1)
+        let earlier = Revision(task: task, field: .title, oldValue: nil, newValue: "Blumen gießen", author: .user, reason: "Siri")
+        task.revisions = (task.revisions ?? []) + [earlier]
+        try store.context.save()
+        let postponed = ViewRules.postponeCount(task)
+        let order = Order(id: UUID(), kind: .complete, taskID: task.id, expectedStatus: .active,
+                          expectedDueDate: Suite.day(0))
+
+        XCTAssertEqual(try Suite.run(order, in: store).outcome, .done)
+
+        XCTAssertTrue(revisions(RevisedField.dueDate.rawValue, of: task).isEmpty, "a round is no postponement")
+        XCTAssertEqual(ViewRules.postponeCount(task), postponed)
+        let status = revisions("status", of: task)
+        XCTAssertEqual(status.count, 1)
+        XCTAssertEqual(status.first?.newValue, TaskStatus.done.rawValue)
+        status.first.map { assertByClaude($0) }
+        let knaeuel = revisions(RevisedField.knaeuel.rawValue, of: task)
+        XCTAssertEqual(knaeuel.count, 1)
+        XCTAssertEqual(knaeuel.first?.reason, OrderExecutor.reason)
+        XCTAssertEqual(earlier.reason, "Siri", "a reason that was there stays")
+    }
+
+    // MARK: AC-4
+
+    func testSetNextWritesRankRevisionOnAndOff() throws {
+        let store = try TestStore()
+        let task = TranscriptCodecTests.task("Steuer machen")
+        store.context.insert(task)
+        try store.context.save()
+
+        let on = Order(id: UUID(), kind: .setNext, taskID: task.id, expectedStatus: .active, on: true)
+        XCTAssertEqual(try Suite.run(on, in: store).outcome, .done)
+        let rank = try XCTUnwrap(task.nextRank)
+        let off = Order(id: UUID(), kind: .setNext, taskID: task.id, expectedStatus: .active, on: false, expectedNextRank: rank)
+        XCTAssertEqual(try Suite.run(off, in: store).outcome, .done)
+
+        let ranks = revisions("nextRank", of: task).sorted { ($0.oldValue == nil ? 0 : 1) < ($1.oldValue == nil ? 0 : 1) }
+        XCTAssertEqual(ranks.count, 2)
+        guard ranks.count == 2 else { return }
+        XCTAssertNil(ranks[0].oldValue)
+        XCTAssertEqual(ranks[0].newValue, String(rank))
+        XCTAssertEqual(ranks[1].oldValue, String(rank))
+        XCTAssertNil(ranks[1].newValue)
+        ranks.forEach { assertByClaude($0) }
+    }
+
+    // MARK: AC-5, AC-7
+
+    func testParkWritesStatusAndStampsTheKnaeuel() throws {
+        let store = try TestStore()
+        let task = TranscriptCodecTests.task("Steuer machen", rank: 1)
+        task.knaeuelAt = Suite.day(-1)
+        store.context.insert(task)
+        try store.context.save()
+        let order = Order(id: UUID(), kind: .park, taskID: task.id, expectedStatus: .active)
+
+        XCTAssertEqual(try Suite.run(order, in: store).outcome, .done)
+
+        let status = revisions("status", of: task)
+        XCTAssertEqual(status.count, 1)
+        XCTAssertEqual(status.first?.oldValue, TaskStatus.active.rawValue)
+        XCTAssertEqual(status.first?.newValue, TaskStatus.parked.rawValue)
+        status.first.map { assertByClaude($0) }
+        let knaeuel = revisions(RevisedField.knaeuel.rawValue, of: task)
+        XCTAssertEqual(knaeuel.count, 1)
+        knaeuel.first.map { assertByClaude($0) }
+    }
+
+    // MARK: AC-6
+
+    func testAddSubtaskWritesRevisionOnTheParentAndCapturesViaClaude() throws {
+        let store = try TestStore()
+        let task = try Suite.insert("Umzug planen", in: store)
+        let order = Order(id: UUID(), kind: .addSubtask, text: "  Kartons besorgen ", taskID: task.id, expectedStatus: .active)
+
+        XCTAssertEqual(try Suite.run(order, in: store).outcome, .done)
+
+        let line = try XCTUnwrap(Subtasks.ordered(of: task).first)
+        XCTAssertEqual(line.capturedVia, .claude)
+        let added = revisions("subtasks", of: task)
+        XCTAssertEqual(added.count, 1)
+        XCTAssertNil(added.first?.oldValue)
+        XCTAssertEqual(added.first?.newValue, line.rawText)
+        added.first.map { assertByClaude($0) }
+
+        let byHand = try Subtasks.add("Klebeband", to: task, in: store.context, now: Suite.now)
+        XCTAssertEqual(byHand.capturedVia, .app)
+    }
+
+    // MARK: AC-8
+
+    func testSetDueUnchangedAndCaptureWritesNoRevision() throws {
+        let store = try TestStore()
+        let task = try Suite.insert("Angebot schreiben", in: store)
+        let due = Order(id: UUID(), kind: .setDue, taskID: task.id, date: Suite.day(2, hour: 15), hasTime: true)
+        XCTAssertEqual(try Suite.run(due, in: store).outcome, .done)
+        XCTAssertEqual(task.revisions?.count, 1)
+        XCTAssertEqual(task.revisions?.first?.fieldRaw, RevisedField.dueDate.rawValue)
+        task.revisions?.first.map { assertByClaude($0) }
+
+        let capture = Order(id: UUID(), kind: .capture, text: "Zahnarzt anrufen")
+        let result = try Suite.run(capture, in: store)
+        let captured = try XCTUnwrap(try store.context.fetch(FetchDescriptor<TaskItem>()).first { $0.id == result.taskID })
+        XCTAssertTrue((captured.revisions ?? []).isEmpty)
+    }
+
+    // MARK: AC-9
+
+    func testRefusedOrdersLeaveNoRevision() throws {
+        let store = try TestStore()
+        let task = try Suite.insert("Steuer machen", in: store)
+        let before = try Suite.Snapshot(store)
+        let refused: [Order] = [
+            Order(id: UUID(), kind: .complete, taskID: task.id, expectedStatus: .unverified),
+            Order(id: UUID(), kind: .complete, taskID: UUID(), expectedStatus: .active),
+            Order(id: UUID(), kind: .setNext, taskID: task.id, expectedStatus: .active, on: false),
+            Order(id: UUID(), kind: .setNext, taskID: task.id, expectedStatus: .active, on: true, expectedNextRank: 9),
+            Order(id: UUID(), kind: .park, taskID: task.id, expectedStatus: .unverified),
+            Order(id: UUID(), kind: .park, taskID: UUID(), expectedStatus: .active),
+            Order(id: UUID(), kind: .addSubtask, text: "  ", taskID: task.id, expectedStatus: .active),
+            Order(id: UUID(), kind: .addSubtask, text: "Kartons", taskID: task.id, expectedStatus: .unverified),
+        ]
+        for order in refused {
+            XCTAssertEqual(try Suite.run(order, in: store).outcome, .rejected, "\(order.kind)")
+        }
+        XCTAssertEqual(try Suite.Snapshot(store), before)
+    }
+
+    // MARK: AC-1, AC-10
+
+    func testNewFieldsExistAndCannotBeReset() throws {
+        let status = try field("status"), rank = try field("nextRank"), subtasks = try field("subtasks")
+        XCTAssertEqual(Array(RevisedField.allCases.suffix(3)), [status, rank, subtasks])
+        XCTAssertEqual(RevisedField.allCases.prefix(15).map(\.rawValue), [
+            "title", "dueDate", "importance", "urgency", "duration", "energy", "contexts", "people", "project",
+            "blockedBy", "repeatRule", "place", "notes", "knaeuel", "counts",
+        ])
+
+        let store = try TestStore()
+        let task = TranscriptCodecTests.task("Steuer machen", rank: 1)
+        task.knaeuelAt = Suite.day(-1)
+        store.context.insert(task)
+        try store.context.save()
+        let park = Order(id: UUID(), kind: .park, taskID: task.id, expectedStatus: .active)
+        XCTAssertEqual(try Suite.run(park, in: store).outcome, .done)
+
+        XCTAssertTrue(RevisionService.automaticFields(on: task).isEmpty)
+        let count = task.revisions?.count
+        XCTAssertTrue(RevisionService.revertAll(on: task, contexts: [], projects: []).isEmpty)
+        XCTAssertEqual(task.revisions?.count, count)
+        for new in [status, rank, subtasks] {
+            XCTAssertNil(RevisionService.origin(of: new, on: task), "\(new)")
+        }
+
+        FieldCodec.apply(TaskStatus.active.rawValue, to: status, of: task, as: .user, contexts: [], projects: [])
+        FieldCodec.apply("7", to: rank, of: task, as: .user, contexts: [], projects: [])
+        FieldCodec.apply("Kartons", to: subtasks, of: task, as: .user, contexts: [], projects: [])
+        XCTAssertEqual(task.status, .parked)
+        XCTAssertNil(task.nextRank)
+        XCTAssertTrue(Subtasks.ordered(of: task).isEmpty)
+    }
+
+    // MARK: AC-11
+
+    func testEncodeAndFormatting() throws {
+        let status = try field("status"), rank = try field("nextRank"), subtasks = try field("subtasks")
+        let task = TranscriptCodecTests.task("Steuer machen", rank: 4)
+        XCTAssertEqual(FieldCodec.encode(status, of: task), TaskStatus.active.rawValue)
+        XCTAssertEqual(FieldCodec.encode(rank, of: task), String(4.0))
+        XCTAssertNil(FieldCodec.encode(subtasks, of: task))
+        task.nextRank = nil
+        XCTAssertNil(FieldCodec.encode(rank, of: task))
+
+        XCTAssertEqual(FieldFormatting.label(status), String(localized: "Status"))
+        XCTAssertEqual(FieldFormatting.label(rank), String(localized: "Next up"))
+        XCTAssertEqual(FieldFormatting.label(subtasks), String(localized: "Subtask"))
+        XCTAssertEqual(FieldFormatting.value(TaskStatus.done.rawValue, for: status), String(localized: "Done"))
+        XCTAssertEqual(FieldFormatting.value(TaskStatus.parked.rawValue, for: status), String(localized: "Parked"))
+        for open in [TaskStatus.active, .unverified, .unprocessed] {
+            XCTAssertEqual(FieldFormatting.value(open.rawValue, for: status), String(localized: "Open"), "\(open)")
+        }
+        XCTAssertEqual(FieldFormatting.value("4.0", for: rank), String(localized: "Yes"))
+        XCTAssertNil(FieldFormatting.value(nil, for: rank))
+        XCTAssertEqual(FieldFormatting.value("Kartons besorgen", for: subtasks), "Kartons besorgen")
+
+        let catalog = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("LooseEnds/Resources/Localizable.xcstrings")
+        let strings = try XCTUnwrap(
+            (try JSONSerialization.jsonObject(with: Data(contentsOf: catalog)) as? [String: Any])?["strings"] as? [String: Any]
+        )
+        for key in ["Status", "Next up", "Subtask", "Open", "Done", "Parked", "Yes"] {
+            let entry = strings[key] as? [String: Any]
+            let german = ((entry?["localizations"] as? [String: Any])?["de"] as? [String: Any])?["stringUnit"] as? [String: Any]
+            XCTAssertNotNil(german?["value"] as? String, "no German for \(key)")
+        }
     }
 }
