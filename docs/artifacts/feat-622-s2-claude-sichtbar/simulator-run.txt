@@ -1,0 +1,23 @@
+# Simulator-Beleg
+erzeugt: 2026-11-15T09:14:04+0100
+befehl: scripts/sim.sh test-proof ClaudeChangeTests
+workflow: feat-622-s2-claude-sichtbar
+head: cd12fa9b4e15afb4a6410a610748e91dd119e77b
+basis: c82871d5383cbe225c827dae5768a9750e41166a (merge-base origin/main HEAD)
+testklasse: ClaudeChangeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794730367.7  ende: 1794730443.186
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-622-s2-claude-sichtbar/simulator-run/summary.json  sha256:5f302d5ac38d56c03b0fca760d333f66d6a18d2fd6da4cd848faec3660c70cb8
+xcresult: docs/artifacts/feat-622-s2-claude-sichtbar/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-622-s2-claude-sichtbar/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+- sha256:120c12c16474b3fba4724320f6c37f7ef6ad170c2a3d606341e8914f25522b32  LooseEnds/App/LooseEndsApp.swift
+- sha256:cb8a89c1d154c4f5e72e533273514df6dfea21570003e77a877526cef77c5cc0  LooseEnds/Views/FieldFormatting.swift
+- sha256:84062210cb6d6dbe6b5b8551d5ec044d878e9f7c75c9f6275d6402ea0a3f6af0  LooseEnds/Views/TaskDetailView.swift
+- sha256:be6782aa31c89fa29b4ad08a2040c492190dd2373b58c640dcd0cbb03077cad0  LooseEndsTests/RevisionServiceClaudeTests.swift
+- sha256:5f42b1428c87ab83aee6c0aaac3d96713ff70c4cfd8774876f6c7f95650cf38f  LooseEndsUITests/ClaudeChangeTests.swift
+- sha256:07866336c2cb4090b80907d205bef458fd2851ba9243334a1e408abccd0a3e99  Shared/Services/RevisionService.swift

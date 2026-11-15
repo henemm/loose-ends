@@ -220,7 +220,7 @@ struct TaskDetailView: View {
 
             wordLine
 
-            if !aiFields.isEmpty {
+            if !aiFields.isEmpty || RevisionService.lastClaudeChange(on: task) != nil {
                 Section {
                     HStack {
                         Text(originSummary)
@@ -378,7 +378,18 @@ struct TaskDetailView: View {
         var parts: [String] = []
         if read > 0 { parts.append(String(localized: "\(read) from your words")) }
         if estimated > 0 { parts.append(String(localized: "\(estimated) from AI")) }
+        if let claude = RevisionService.lastClaudeChange(on: task) {
+            parts.append(String(localized: "Last by Claude · \(Self.when(claude.createdAt))"))
+        }
         return parts.joined(separator: " · ")
+    }
+
+    /// "today 14:02", "yesterday 09:10", else day, month and time as in the change list (#622).
+    private static func when(_ date: Date, calendar: Calendar = .current) -> String {
+        let time = date.formatted(.dateTime.hour().minute())
+        if calendar.isDateInToday(date) { return String(localized: "today \(time)") }
+        if calendar.isDateInYesterday(date) { return String(localized: "yesterday \(time)") }
+        return date.formatted(.dateTime.day().month().hour().minute())
     }
 
     /// The set lines of one group (#538, rule 3), in the group's order; nothing while the group is empty.
@@ -863,12 +874,13 @@ struct RevisionsSheet: View {
                     HStack {
                         Text(FieldFormatting.label(revision.field)).font(.headline)
                         Spacer()
-                        Text(FieldFormatting.author(revision.author))
+                        Text(FieldFormatting.author(of: revision))
                             .font(.caption)
                             .foregroundStyle(revision.author.isAutomatic ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                     }
                     Text("\(FieldFormatting.value(revision.oldValue, for: revision.field) ?? String(localized: "Empty")) \(Image(systemName: "arrow.right")) \(FieldFormatting.value(revision.newValue, for: revision.field) ?? String(localized: "Empty"))")
-                    if let reason = revision.reason, !reason.isEmpty {
+                    // "Claude" already stands as the author (#622), so its reason is not repeated.
+                    if let reason = revision.reason, !reason.isEmpty, !RevisionService.isByClaude(revision) {
                         Text(reason).font(.footnote).foregroundStyle(.secondary)
                     }
                     HStack {
