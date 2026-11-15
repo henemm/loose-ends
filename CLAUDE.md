@@ -422,7 +422,7 @@ not scope creep on the current one.
   `CaptureService.save(attachments:)` reads each once, #399), `SharedAttachmentFile` (the share extension's file I/O: which
   registered type is an attachment, copy out of the provider's handler into a temp folder, over 50 MB not copied, remove the
   folder on Done and Cancel, #442). All pure over the model objects; the
-  caller saves. Exception: `OrderExecutor` (#613, Weg B) runs an order from Claude (`capture`, `complete`, `setDue`, `setNext`, `park`, `addSubtask`) as a user
+  caller saves. Exception: `OrderExecutor` (#613, Weg B) runs an order from Claude (`capture`, `complete`, `setDue`, `setNext`, `park`, `addSubtask`, `update`; #932: `capture` and `update` carry `fields` (title, due date with `dueHasTime`, importance, urgency, duration, energy, tags and project by catalog name, never created; notes only on `capture`), each set field one user revision, the model's title never replaces a user title) as a user
   change with the reason "Claude" (every order leaves a revision since #622 Schnitt 1, side revisions such as the Knäuel mark get the reason too), checks the expected state before the first write (`stale`, `missing`, `invalid`) and saves
   itself; `TranscriptCodec` builds the transcript for Claude (open tasks, "Now" and its count from `ViewRules`, no raw text or
   note). Contract version 1: `docs/reference/claude-abschrift-vertrag.md`. Nothing in the app calls either yet.
