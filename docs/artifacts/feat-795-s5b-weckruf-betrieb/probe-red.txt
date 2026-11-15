@@ -1,0 +1,17 @@
+## Lauf 1: ohne APNS-Variablen (erwartet: FEHLT, Exit 1)
+FEHLT APNS_TEAM_ID fehlt oder leer
+FEHLT APNS_KEY_ID fehlt oder leer
+FEHLT APNS_PRIVATE_KEY fehlt oder leer
+FEHLT APNS_TOPIC fehlt oder leer
+Stand: 2026-11-15T15:45:53.378Z, erwartet: production=400:BadDeviceToken,sandbox=400:BadDeviceToken
+exit=1
+
+## Lauf 2: Wegwerf-Schlüssel nur im Speicher, bei Apple unbekannt (erwartet: 403 InvalidProviderToken an beiden Hosts, FEHLT, Exit 1)
+OK    APNS_TEAM_ID vorhanden, Länge 10
+OK    APNS_KEY_ID vorhanden, Länge 10
+OK    APNS_PRIVATE_KEY vorhanden, Länge 244
+OK    APNS_TOPIC vorhanden, Länge 21
+FEHLT api.push.apple.com 403 InvalidProviderToken (soll 400 BadDeviceToken)
+FEHLT api.sandbox.push.apple.com 403 InvalidProviderToken (soll 400 BadDeviceToken)
+Stand: 2026-11-15T15:46:01.228Z, erwartet: production=400:BadDeviceToken,sandbox=400:BadDeviceToken
+exit=1

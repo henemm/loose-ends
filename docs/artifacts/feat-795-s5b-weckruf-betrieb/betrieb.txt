@@ -1,0 +1,45 @@
+# Dienst mit Schlüssel, ohne Startschleife (AC-9) — 2026-11-15, rennwienix
+
+Neustart gefahren von der #612-Sitzung (Regel „One session, one scope“: Ausrollen hält die Epic-Sitzung), nach Hennings
+claude.ai-Durchlauf für #622/#623: Sicherung `secrets/server.env.bak-20261115T164540Z` (600), Kandidat eingesetzt,
+einmal `LE_COMMIT=9bbb4cd scripts/deploy-loose-ends.sh` (per `bash`; der erste Aufruf 16:45:40Z scheiterte an
+„Permission denied“, weil das Skript nicht ausführbar ist, und startete nichts). Deploy-Beginn 16:46:06Z.
+Prüfung danach durch diese Sitzung, Hilfsskript ohne Werte (Sitzungs-Scratchpad `betrieb.sh`, auf dem Server unter
+`/tmp/s5b`, danach gelöscht). Ausgabe wörtlich (der Probe-Teil steht in probe-nachher.txt):
+
+    ## Dateien (Name, Rechte, Zeilen)
+    600 /home/hem/henemm-infra/loose-ends/secrets/server.env.bak-20261108T112209Z
+    600 /home/hem/henemm-infra/loose-ends/secrets/server.env.bak-20261108T132949Z
+    600 /home/hem/henemm-infra/loose-ends/secrets/server.env.bak-20261115T164540Z
+    600 /home/hem/henemm-infra/loose-ends/secrets/server.env
+    600 /home/hem/henemm-infra/loose-ends/secrets/server.env.candidate
+    Sicherung gegen laufende Datei, nur Namen:
+    > APNS_TEAM_ID
+    > APNS_KEY_ID
+    > APNS_PRIVATE_KEY
+    > APNS_TOPIC
+    Nicht-APNS-Zeilen gleich: ja
+    laufende Datei = Kandidat: ja
+    ## APNS_* in der laufenden Datei (nur Länge)
+    APNS_TEAM_ID vorhanden, Länge 10
+    APNS_KEY_ID vorhanden, Länge 10
+    APNS_PRIVATE_KEY vorhanden, Länge 262
+    APNS_TOPIC vorhanden, Länge 21
+    ## Container
+    /loose-ends-server loose-ends-server:9bbb4cd gestartet 2026-11-15T16:46:11.81316242Z Neustarts 0 Status running
+    ## APNS_* im laufenden Container (nur Länge)
+    APNS_TEAM_ID vorhanden, Länge 10
+    APNS_KEY_ID vorhanden, Länge 10
+    APNS_PRIVATE_KEY vorhanden, Länge 262
+    APNS_TOPIC vorhanden, Länge 21
+    ## /health: intern 200, außen 200
+    ## Log seit Start: Zeilen gesamt 2, Treffer 'apns config invalid': 0, Treffer 'invalid': 0
+
+`/health` innerhalb von 60 s: Start 16:46:11Z, die #612-Sitzung meldete 200 intern und außen direkt nach dem Deploy; diese
+Prüfung lief vor 16:46:57Z (Zeitstempel der anschließenden Probe), also spätestens 46 s nach dem Start. Neustarts 0 =
+keine Startschleife. Gesicherte Datei unterscheidet sich von der laufenden nur durch die vier `APNS_*`.
+Danach aufgeräumt: `server.env.candidate` entfernt (`ls | grep -c candidate` → 0), `/tmp/s5b` gelöscht. Die .p8 bleibt als
+`secrets/apns-SKU593YN3B.p8` (600) liegen.
+
+Rückweg (nicht nötig gewesen): `server.env.bak-20261115T164540Z` zurück nach `server.env`, `bash scripts/deploy-loose-ends.sh`
+mit `LE_COMMIT=9bbb4cd`.

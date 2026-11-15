@@ -1,0 +1,42 @@
+# Probe vor dem Neustart (AC-8) — 2026-11-15, rennwienix, Fall (a) „Sandbox & Production“
+
+Kandidat `secrets/server.env.candidate` (0600) = laufende Geheimnisdatei ohne `APNS_*` plus die vier `APNS_*`
+(Schlüssel einzeilig mit `\n` aus `secrets/apns-SKU593YN3B.p8`). Probe `apns-probe.mjs` per stdin
+(`node --input-type=module -`) in `docker compose run --rm --no-deps -T` mit einem Compose-Override, das nur `env_file`
+des Dienstes auf den Kandidaten setzt (`env_file: !override ./secrets/server.env.candidate`, Compose 5.6.0); Image wie
+der laufende Dienst. Der laufende Container `loose-ends-server` blieb unberührt (vorher und nachher „Up 2 hours“).
+Hilfsskript ohne Werte: Sitzungs-Scratchpad `probe-vorher.sh`, auf dem Server unter `/tmp/s5b` (danach gelöscht).
+
+## Ausgabe, wörtlich
+
+    APNS_* in der laufenden Datei vorher: 0
+    Kandidat: 600 /home/hem/henemm-infra/loose-ends/secrets/server.env.candidate, Zeilen alt 11, neu 15
+    Unterschied alt→neu (nur Namen):
+    > APNS_TEAM_ID
+    > APNS_KEY_ID
+    > APNS_PRIVATE_KEY
+    > APNS_TOPIC
+    ## /health vorher: 200
+    ## Einmal-Container: docker compose run --rm --no-deps -T (Image loose-ends-server:9bbb4cd), env_file = Kandidat
+     Container loose-ends-server-run-aeb2603baa2f Creating
+     Container loose-ends-server-run-aeb2603baa2f Created
+    OK    APNS_TEAM_ID vorhanden, Länge 10
+    OK    APNS_KEY_ID vorhanden, Länge 10
+    OK    APNS_PRIVATE_KEY vorhanden, Länge 262
+    OK    APNS_TOPIC vorhanden, Länge 21
+    OK    api.push.apple.com 400 BadDeviceToken (soll 400 BadDeviceToken)
+    OK    api.sandbox.push.apple.com 400 BadDeviceToken (soll 400 BadDeviceToken)
+    Stand: 2026-11-15T16:09:58.183Z, erwartet: production=400:BadDeviceToken,sandbox=400:BadDeviceToken
+    probe exit=0
+    ## /health nachher: 200
+    loose-ends-server Up 2 hours
+
+## Probe berührt weder createWaker noch die Datenbank
+
+    $ grep -nE "createWaker|dropToken|pg|Pool|DATABASE|query\(" apns-probe.mjs
+    3:// erfundenes, wohlgeformtes Token. Nie createWaker, nie die Datenbank, nie ein echtes Token.
+
+Einziger Treffer ist der Kommentar; kein Import, kein Aufruf. Importiert werden nur `apnsConfigFromEnv` und `sendHttp2`.
+
+Ergebnis: beide Hosts 400 `BadDeviceToken`. Team, Schlüssel und Kennung gelten bei Apple (Sandbox und Production), nur
+das erfundene Token ist falsch. `/health` blieb 200.

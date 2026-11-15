@@ -1,0 +1,31 @@
+# Wertscan Belegordner docs/artifacts/feat-795-s5b-weckruf-betrieb/ (2026-11-15, AC-12)
+# Nur Trefferzahlen, nie Inhalte; wertscan.txt selbst ausgenommen; 18 Dateien gescannt.
+# entspricht je Muster: grep -rEc -- '<Muster>' --exclude=wertscan.txt . (Summe) und grep -rlE (Dateien)
+Muster -----BEGIN [A-Z ]*KEY----- -> Treffer: 2, Dateien: 2
+Muster Bearer [A-Za-z0-9] -> Treffer: 0, Dateien: 0
+Muster "d": -> Treffer: 0, Dateien: 0
+Muster APNS_PRIVATE_KEY=. -> Treffer: 1, Dateien: 1
+
+# Vollständigkeit der Belege laut AC-12
+vorhanden: check-device.sh
+vorhanden: apns-probe.mjs
+vorhanden: red.txt
+vorhanden: green.txt
+vorhanden: nginx-alt.conf
+vorhanden: nginx-dump.txt
+vorhanden: nginx-test.txt
+vorhanden: infra-pr.txt
+vorhanden: scan.txt
+vorhanden: portal.md
+vorhanden: probe-vorher.txt
+vorhanden: betrieb.txt
+vorhanden: probe-nachher.txt
+vorhanden: monitor-vorher.txt
+vorhanden: monitor-nachher.txt
+
+# Einordnung der drei Roh-Treffer (Prüfung ohne Inhaltsausgabe: Zeilenstruktur, Base64-Läufe)
+# AC-12 verlangt 0 Treffer für Muster MIT Wert (Schlüsselkörper nach der Kopfzeile, Wert nach "=").
+apns-probe.mjs Z. 25: Kopfzeilen-Muster als Regex im Prüfcode (Zeichenklassen), nächste Zeile kein Base64, kein Base64-Lauf >= 40 -> kein Wert
+portal.md Z. 19: Kopfzeilen-Muster als Text der Scan-Beschreibung, nächste Zeile kein Base64, kein Base64-Lauf >= 40 -> kein Wert
+stand.md Z. 8: Variablenname gefolgt von einem Suchmuster in Backticks (Scan-Beschreibung), kein Base64-Lauf >= 40 -> kein Wert
+Ergebnis: Wertmuster mit Wert (Schlüsselkörper, Bearer-Wert, JWK "d", APNS_PRIVATE_KEY-Wert): 0 Treffer.

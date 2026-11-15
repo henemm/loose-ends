@@ -1,0 +1,22 @@
+# nginx nur nach Test geladen, mit Rückweg (AC-4) — 2026-11-15, rennwienix
+
+Name nginx-test.txt wie in S1b (macOS unterscheidet Groß-/Kleinschreibung nicht; der Auszug aus `nginx -T` heißt nginx-dump.txt).
+
+Vorprüfung (zweimal: vor dem PR und direkt vor dem Austausch): die Live-Datei /etc/nginx/sites-available/loose-ends.henemm.com
+war byte-gleich mit henemm-infra 37abb6b (Stand vor PR #460), keine Drift.
+Ablauf in einem Aufruf: alte Datei sichern, neue aus /home/hem/henemm-infra/nginx/ kopieren, `nginx -t`,
+`systemctl reload nginx` nur im Erfolgszweig, sonst Rückkopie der Sicherung und kein reload. Kein Neustart.
+
+Sicherung: /home/hem/backups/nginx-loose-ends.henemm.com.20261115T155528Z.conf (Inhalt: nginx-alt.conf in diesem Ordner,
+byte-gleich mit henemm-infra 37abb6b)
+nginx -t: 2026-11-15T15:55:28Z
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+reload: 2026-11-15T15:55:28Z
+reload Exit: 0
+live = henemm-infra main de4216b
+
+Reihenfolge: Ausgabe von `nginx -t` vollständig vor der Zeile `reload:` (gleiche Sekunde; reload lief nur, weil der Test Exit 0 hatte).
+Die neue Datei ist byte-gleich mit henemm-infra main de4216b (PR #460), `nginx/loose-ends.henemm.com.conf` (`cmp` ohne Ausgabe).
+Rückweg: Sicherung nach /etc/nginx/sites-available/loose-ends.henemm.com kopieren, `nginx -t`, `systemctl reload nginx`.
+Erste Prüfung von außen grün: 15:55:49Z (green.txt).

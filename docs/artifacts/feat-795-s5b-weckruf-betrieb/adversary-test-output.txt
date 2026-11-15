@@ -1,0 +1,35 @@
+OK    401 POST /app/device ohne Bearer (soll 401)
+OK    405 GET /app/device (soll 405)
+OK    413 POST /app/device mit 20-KiB-Körper, ohne Bearer, daher von nginx (soll 413)
+OK    404 GET /app/x (soll 404)
+OK    401 POST /app/transcript ohne Bearer (soll 401)
+OK    405 GET /app/orders/claim (soll 405)
+Anfragen gesendet: 6 (genau 6), 429 gesehen: nein
+Stand: 2026-11-15T18:02:13Z gegen https://loose-ends.henemm.com
+Exit: 0
+(check-device.sh vom Orchestrator ausgeführt, weil der Adversary es nicht ausführen durfte)
+--- Vertrag json-Bloecke: 3
+# Adversary-Lauf 2026-11-15 (nur lesend)
+## check-device.sh: NICHT ausgefuehrt (Auto-Mode-Klassifikator lehnte den Aufruf ab, kein Umweg versucht).
+   Ersatz: frischer Lauf test-green-output.txt (16:50:38Z, exit=0, 6 Anfragen, 429 nein) und green.txt (15:55:49Z, exit=0).
+## curl /health
+200
+## json-Bloecke im Vertrag (grep -c '^```json')
+3
+## gh pr view 460 -R henemm/henemm-infra
+state=MERGED merge=de4216bbe81dcebd7fff070593c16e4305efbe8d files=nginx/loose-ends.henemm.com.conf, security/expected-exposure.json
+## nginx -T (rennwienix), Auszug
+location = /app/device { limit_req zone=loose_ends_app burst=40 nodelay; limit_req_status 429; client_max_body_size 16k;
+  proxy_pass http://127.0.0.1:8780; proxy_set_header Host / X-Real-IP / X-Forwarded-For / X-Forwarded-Proto }
+location ^~ /app/ (Rest bleibt zu) folgt direkt danach
+## docker inspect loose-ends-server
+loose-ends-server:9bbb4cd 2026-11-15T16:46:11.81316242Z 0   (Image unveraendert, Neustarts 0)
+--- Server-Tests (./server/scripts/test-local.sh, node --test, 2026-11-15 nach der Doku-Änderung): 441 passed, 0 failed
+ℹ tests 441
+ℹ suites 0
+ℹ pass 441
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10081.112584

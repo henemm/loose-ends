@@ -1,0 +1,28 @@
+# Probe mit dem laufenden Stand (AC-10) — 2026-11-15, rennwienix
+
+Dieselbe `apns-probe.mjs` per stdin, Einmal-Container `docker compose run --rm --no-deps -T` ohne Override, also mit
+`env_file: ./secrets/server.env` wie der laufende Dienst, Image `loose-ends-server:9bbb4cd`. Ausgabe wörtlich:
+
+     Container loose-ends-server-run-9d6e9e95bd84 Creating
+     Container loose-ends-server-run-9d6e9e95bd84 Created
+    OK    APNS_TEAM_ID vorhanden, Länge 10
+    OK    APNS_KEY_ID vorhanden, Länge 10
+    OK    APNS_PRIVATE_KEY vorhanden, Länge 262
+    OK    APNS_TOPIC vorhanden, Länge 21
+    OK    api.push.apple.com 400 BadDeviceToken (soll 400 BadDeviceToken)
+    OK    api.sandbox.push.apple.com 400 BadDeviceToken (soll 400 BadDeviceToken)
+    Stand: 2026-11-15T16:46:57.471Z, erwartet: production=400:BadDeviceToken,sandbox=400:BadDeviceToken
+    probe exit=0
+    ## /health nach der Probe: 200
+
+Gleiches Ergebnis wie probe-vorher.txt (beide Hosts 400 BadDeviceToken, Exit 0).
+
+## Monitor vorher/nachher
+
+`monitor-nachher.txt` (rohe Ausgabe von `monitor.sh --status`, 16:47Z): `✓ Loose-Ends (200)`.
+`diff` gegen `monitor-vorher.txt` (Farbcodes entfernt), Zustandswechsel anderer Dienste:
+- `n8n` und `loose-ends-db` von „! Update verfügbar“ auf „✓ aktuell“ — Folge von henemm-infra#459 (fremde Sitzung,
+  15:47Z, n8n 2.47.7 / postgres 18.7), nicht von diesem Schnitt, und eine Verbesserung.
+- `CPU` von ✗ 167 % auf ! 102 % (Last schwankt).
+Keine Verschlechterung: Die einzigen ✗-Zeilen nachher (`Reiseseite`/`Rückmeldedienst probelauf-alpha-2027 (404)`)
+standen vorher genauso da. Alle übrigen Unterschiede sind Zeit-, Zähler- oder Altersangaben.
