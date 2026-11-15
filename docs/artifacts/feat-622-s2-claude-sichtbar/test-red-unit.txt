@@ -1,0 +1,79 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/RevisionServiceClaudeTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftConstValuesFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.SwiftFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests.LinkFileList
+[[36mLooseEndsUITests[0m] [1mWrite Auxiliary File[0m LooseEndsUITests-OutputFileMap.json
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mCompiling[0m ClaudeChangeTests.swift
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:38:40: [31mtype 'RevisionService' has no member 'lastClaudeChange'[0m
+ 36 |         revision(on: task, .title, author: .ai, reason: "Names the job.", minutesAgo: 1)
+[36m 37 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:45:38: [31mtype 'RevisionService' has no member 'lastClaudeChange'[0m
+ 43 |         let task = try task(in: store)
+[36m 44 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:57:38: [31mtype 'RevisionService' has no member 'lastClaudeChange'[0m
+ 55 |         let user = revision(on: task, .duration, author: .user, reason: nil, minutesAgo: 1)
+[36m 56 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:58:40: [31mtype 'RevisionService' has no member 'isByClaude'[0m
+ 56 | 
+[36m 57 |         XCTAssertNil(RevisionService.lastClaudeChange(on: task))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:59:40: [31mtype 'RevisionService' has no member 'isByClaude'[0m
+ 57 |         XCTAssertNil(RevisionService.lastClaudeChange(on: task))
+[36m 58 |         XCTAssertFalse(RevisionService.isByClaude(ai))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:60:40: [31mtype 'RevisionService' has no member 'isByClaude'[0m
+ 58 |         XCTAssertFalse(RevisionService.isByClaude(ai))
+[36m 59 |         XCTAssertFalse(RevisionService.isByClaude(rule))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:69:40: [31mtype 'RevisionService' has no member 'isByClaude'[0m
+ 67 |         let aiNamedClaude = revision(on: task, .title, author: .ai, reason: OrderExecutor.reason, minutesAgo: 1)
+[36m 68 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:70:40: [31mtype 'RevisionService' has no member 'isByClaude'[0m
+ 68 | 
+[36m 69 |         XCTAssertFalse(RevisionService.isByClaude(siri))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:71:38: [31mtype 'RevisionService' has no member 'lastClaudeChange'[0m
+ 69 |         XCTAssertFalse(RevisionService.isByClaude(siri))
+[36m 70 |         XCTAssertFalse(RevisionService.isByClaude(aiNamedClaude))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:85:41: [31mtype 'RevisionService' has no member 'lastClaudeChange'[0m
+ 83 |         revision(on: task, .title, author: .ai, reason: "Names the job.", minutesAgo: 1)
+[36m 84 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:98:46: [31mextraneous argument label 'of:' in call[0m
+ 96 |         let ai = revision(on: task, .title, author: .ai, reason: "Names the job.", minutesAgo: 1)
+[36m 97 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:98:51: [31mcannot convert value of type 'Revision' to expected argument type 'FieldSource'[0m
+ 96 |         let ai = revision(on: task, .title, author: .ai, reason: "Names the job.", minutesAgo: 1)
+[36m 97 | [0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:99:46: [31mextraneous argument label 'of:' in call[0m
+ 97 | 
+[36m 98 |         XCTAssertEqual(FieldFormatting.author(of: claude), "Claude")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:99:51: [31mcannot convert value of type 'Revision' to expected argument type 'FieldSource'[0m
+ 97 | 
+[36m 98 |         XCTAssertEqual(FieldFormatting.author(of: claude), "Claude")[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:100:46: [31mextraneous argument label 'of:' in call[0m
+ 98 |         XCTAssertEqual(FieldFormatting.author(of: claude), "Claude")
+[36m 99 |         XCTAssertEqual(FieldFormatting.author(of: user), FieldFormatting.author(.user))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/RevisionServiceClaudeTests.swift:100:51: [31mcannot convert value of type 'Revision' to expected argument type 'FieldSource'[0m
+ 98 |         XCTAssertEqual(FieldFormatting.author(of: claude), "Claude")
+[36m 99 |         XCTAssertEqual(FieldFormatting.author(of: user), FieldFormatting.author(.user))[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m RevisionServiceClaudeTests.swift
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsUITests.swiftmodule
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsUITests.swiftdoc
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-rosy-sauteeing-volcano/Logs/Test/Test-LooseEnds-2026.11.15_09-04-50-+0100.xcresult
