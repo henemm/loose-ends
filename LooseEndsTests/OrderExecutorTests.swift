@@ -823,3 +823,381 @@ import XCTest
         }
     }
 }
+
+/// #932 Schnitt 1: Claude sets the title and the details of a task, at capture (`fields`) and afterwards (`update`). Every value
+/// is a user revision with the reason "Claude"; every check runs before the first write. The orders are built from JSON, the way
+/// they arrive, so the tests compile before `Order` knows `fields` and `update`. XCTest, so the QA gate counts it.
+@MainActor final class OrderExecutorFieldsTests: XCTestCase {
+    private typealias Suite = OrderExecutorTests
+
+    /// Both new examples, word for word in `docs/reference/claude-abschrift-vertrag.md` (`jsonc` blocks).
+    static let orderFieldsFixture = """
+    {
+      "fields": {
+        "contexts": ["Garten"],
+        "dueDate": "2026-03-14T08:00:00Z",
+        "dueHasTime": true,
+        "duration": "hour1",
+        "energy": -1,
+        "importance": "high",
+        "notes": "Heckenschere beim Nachbarn holen",
+        "project": "Haus",
+        "title": "Hecke schneiden",
+        "urgency": "low"
+      },
+      "id": "0B7D5E3C-0000-4000-8000-000000000020",
+      "kind": "capture",
+      "text": "Samstag früh die Hecke schneiden, Heckenschere beim Nachbarn holen",
+      "version": 1
+    }
+    """
+
+    static let orderUpdateFixture = """
+    {
+      "expectedContexts": ["Garten"],
+      "expectedStatus": "active",
+      "expectedTitle": "Hecke schneiden",
+      "fields": {
+        "contexts": ["Garten", "Haus"],
+        "duration": "minutes30",
+        "title": "Hecke und Rasen schneiden"
+      },
+      "id": "0B7D5E3C-0000-4000-8000-000000000021",
+      "kind": "update",
+      "taskID": "6F1C2B0A-0000-4000-8000-000000000001",
+      "version": 1
+    }
+    """
+
+    // MARK: Helpers
+
+    /// An order as it arrives: JSON through the codec.
+    private func order(_ json: [String: Any]) throws -> Order {
+        var json = json
+        json["version"] = json["version"] ?? 1
+        json["id"] = json["id"] ?? UUID().uuidString
+        let data = try JSONSerialization.data(withJSONObject: json, options: [.sortedKeys])
+        return try TranscriptCodec.decode(Order.self, from: data)
+    }
+
+    /// The catalogs: contexts Garten, Büro, Haus; projects Haus, Arbeit.
+    private struct Catalog {
+        let garden = TaskContext(name: "Garten", sortOrder: 0)
+        let office = TaskContext(name: "Büro", sortOrder: 1)
+        let home = TaskContext(name: "Haus", sortOrder: 2)
+        let house = Project(name: "Haus", sortOrder: 0)
+        let work = Project(name: "Arbeit", sortOrder: 1)
+
+        @MainActor init(in store: TestStore) throws {
+            for context in [garden, office, home] { store.context.insert(context) }
+            for project in [house, work] { store.context.insert(project) }
+            try store.context.save()
+        }
+    }
+
+    /// A task with every field set; `expected` gives the transcript's view of it.
+    private func fullTask(_ catalog: Catalog, in store: TestStore) throws -> TaskItem {
+        let task = TranscriptCodecTests.task("Hecke schneiden", due: Suite.day(1, hour: 9))
+        task.importance = .medium
+        task.urgency = .medium
+        task.duration = .minutes15
+        task.energy = .neither
+        task.contexts = [catalog.garden]
+        task.project = catalog.house
+        store.context.insert(task)
+        try store.context.save()
+        return task
+    }
+
+    private func expected(_ task: TaskItem) -> [String: Any] {
+        var json: [String: Any] = ["taskID": task.id.uuidString, "expectedStatus": task.status.rawValue]
+        json["expectedTitle"] = task.title
+        json["expectedDueDate"] = task.dueDate?.ISO8601Format()
+        let names = (task.contexts ?? []).map(\.name)
+        if !names.isEmpty { json["expectedContexts"] = names }
+        json["expectedProject"] = task.project?.name
+        return json
+    }
+
+    private func update(_ task: TaskItem, _ fields: [String: Any], extra: [String: Any] = [:]) throws -> Order {
+        var json = expected(task).merging(extra) { $1 }
+        json["kind"] = "update"
+        json["fields"] = fields
+        return try order(json)
+    }
+
+    fileprivate static let fieldsOnTask: [RevisedField] = [
+        .title, .notes, .dueDate, .importance, .urgency, .duration, .energy, .contexts, .project,
+    ]
+
+    /// Each field as `FieldCodec` encodes it, "-" for none.
+    private func values(of task: TaskItem) -> [RevisedField: String] {
+        Dictionary(uniqueKeysWithValues: Self.fieldsOnTask.map { ($0, FieldCodec.encode($0, of: task) ?? "-") })
+    }
+
+    /// Everything a refusal must leave as it was: tasks with every field, revisions, both catalogs.
+    private struct Store: Equatable {
+        let tasks: [String]
+        let revisions: Int
+        let contexts: [String]
+        let projects: [String]
+
+        @MainActor init(_ store: TestStore) throws {
+            tasks = try store.context.fetch(FetchDescriptor<TaskItem>()).map { task in
+                let fields = OrderExecutorFieldsTests.fieldsOnTask.map { FieldCodec.encode($0, of: task) ?? "-" }
+                return "\(task.id) \(task.status) \(task.dueHasTime) " + fields.joined(separator: " | ")
+            }.sorted()
+            revisions = try store.context.fetchCount(FetchDescriptor<Revision>())
+            contexts = try store.context.fetch(FetchDescriptor<TaskContext>()).map(\.name).sorted()
+            projects = try store.context.fetch(FetchDescriptor<Project>()).map(\.name).sorted()
+        }
+    }
+
+    private func revisions(_ field: RevisedField, of task: TaskItem) -> [Revision] {
+        (task.revisions ?? []).filter { $0.fieldRaw == field.rawValue }
+    }
+
+    // MARK: AC-1
+
+    func testContractExamplesDecodeEncodeAndStandInTheDocument() throws {
+        let document = try ContractDocument.text()
+        for fixture in [Self.orderFieldsFixture, Self.orderUpdateFixture] {
+            let decoded = try TranscriptCodec.decode(Order.self, from: Data(fixture.utf8))
+            XCTAssertTrue(try JSONEqual.same(try TranscriptCodec.encode(decoded), Data(fixture.utf8)),
+                          "the order must keep every key of the example:\n\(fixture)")
+            XCTAssertTrue(document.contains(fixture), "the contract must quote the example word for word")
+        }
+    }
+
+    // MARK: AC-2
+
+    func testCaptureWithEveryFieldSetsEachAsAClaudeRevision() throws {
+        let store = try TestStore()
+        let catalog = try Catalog(in: store)
+        let text = "Samstag früh die Hecke schneiden"
+        let fields: [String: Any] = [
+            "title": "Hecke schneiden", "notes": "Heckenschere beim Nachbarn holen",
+            "dueDate": Suite.day(2, hour: 8).ISO8601Format(), "dueHasTime": true,
+            "importance": "high", "urgency": "low", "duration": "hour1", "energy": -1,
+            "contexts": ["Garten", "Büro"], "project": "Haus",
+        ]
+
+        let result = try Suite.run(try order(["kind": "capture", "text": text, "fields": fields]), in: store)
+
+        XCTAssertEqual(result.outcome, .done)
+        let task = try XCTUnwrap(try store.context.fetch(FetchDescriptor<TaskItem>()).first { $0.id == result.taskID })
+        XCTAssertEqual(task.rawText, text, "the raw text stays the user's words (ADR-3)")
+        XCTAssertEqual(task.capturedVia, .claude)
+        XCTAssertEqual(task.title, "Hecke schneiden")
+        XCTAssertEqual(task.titleSourceRaw, FieldSource.user.rawValue)
+        XCTAssertEqual(task.notes, "Heckenschere beim Nachbarn holen")
+        XCTAssertEqual(task.dueDate, Suite.day(2, hour: 8))
+        XCTAssertTrue(task.dueHasTime)
+        XCTAssertEqual(task.importance, .high)
+        XCTAssertEqual(task.urgency, .low)
+        XCTAssertEqual(task.duration, .hour1)
+        XCTAssertEqual(task.energy, .takesLittle)
+        XCTAssertEqual(Set((task.contexts ?? []).map(\.name)), ["Garten", "Büro"])
+        XCTAssertEqual(task.project?.persistentModelID, catalog.house.persistentModelID)
+        for field in Self.fieldsOnTask {
+            let written = revisions(field, of: task)
+            XCTAssertEqual(written.count, 1, "\(field)")
+            written.forEach { XCTAssertTrue(RevisionService.isByClaude($0), "\(field)") }
+        }
+        XCTAssertNotNil(RevisionService.lastClaudeChange(on: task))
+    }
+
+    // MARK: AC-3
+
+    func testUpdateSetsOneFieldAsOneClaudeRevision() throws {
+        let cases: [(RevisedField, String, Any)] = [
+            (.title, "title", "Hecke und Rasen schneiden"),
+            (.dueDate, "dueDate", Suite.day(3, hour: 15).ISO8601Format()),
+            (.importance, "importance", "high"), (.urgency, "urgency", "low"), (.duration, "duration", "hour1"),
+            (.energy, "energy", 2), (.contexts, "contexts", ["Büro"]), (.project, "project", "Arbeit"),
+        ]
+        for (field, key, value) in cases {
+            let store = try TestStore()
+            let catalog = try Catalog(in: store)
+            let task = try fullTask(catalog, in: store)
+            let before = values(of: task)
+            var fields: [String: Any] = [key: value]
+            if field == .dueDate { fields["dueHasTime"] = true }
+
+            let result = try Suite.run(try update(task, fields), in: store)
+
+            XCTAssertEqual(result.outcome, .done, "\(field)")
+            XCTAssertEqual(result.taskID, task.id, "\(field)")
+            XCTAssertEqual(task.revisions?.count, 1, "\(field): exactly one revision")
+            let revision = try XCTUnwrap(revisions(field, of: task).first, "\(field)")
+            XCTAssertTrue(RevisionService.isByClaude(revision), "\(field)")
+            XCTAssertEqual(revision.oldValue ?? "-", before[field], "\(field)")
+            XCTAssertEqual(revision.newValue ?? "-", values(of: task)[field], "\(field)")
+            XCTAssertNotEqual(revision.oldValue, revision.newValue, "\(field)")
+            var after = values(of: task)
+            after[field] = before[field]
+            XCTAssertEqual(after, before, "\(field): every other field stays")
+        }
+    }
+
+    // MARK: AC-4
+
+    func testUnchangedOrMissingFieldWritesNothingAndEmptyTagsClear() throws {
+        let store = try TestStore()
+        let catalog = try Catalog(in: store)
+        let task = try fullTask(catalog, in: store)
+        let before = values(of: task)
+
+        let same = try Suite.run(try update(task, ["importance": "medium", "title": "Hecke schneiden"]), in: store)
+        XCTAssertEqual(same.outcome, .done)
+        XCTAssertTrue((task.revisions ?? []).isEmpty, "a value that already stands writes no revision")
+        XCTAssertEqual(values(of: task), before)
+
+        let clear = try Suite.run(try update(task, ["contexts": [String]()]), in: store)
+        XCTAssertEqual(clear.outcome, .done)
+        XCTAssertTrue((task.contexts ?? []).isEmpty)
+        XCTAssertEqual(task.revisions?.count, 1)
+        XCTAssertEqual(revisions(.contexts, of: task).count, 1)
+        var after = values(of: task)
+        after[.contexts] = before[.contexts]
+        XCTAssertEqual(after, before, "fields the order leaves out stay")
+    }
+
+    // MARK: AC-5
+
+    func testNamesResolveToTheCatalogAndNothingIsCreated() throws {
+        let store = try TestStore()
+        let catalog = try Catalog(in: store)
+        let task = try fullTask(catalog, in: store)
+
+        let result = try Suite.run(try update(task, ["contexts": ["buro", "GARTEN"], "project": "arbeit"]), in: store)
+
+        XCTAssertEqual(result.outcome, .done)
+        XCTAssertEqual(Set((task.contexts ?? []).map(\.persistentModelID)),
+                       [catalog.office.persistentModelID, catalog.garden.persistentModelID])
+        XCTAssertEqual(Set((task.contexts ?? []).map(\.name)), ["Büro", "Garten"], "the catalog's spelling")
+        XCTAssertEqual(task.project?.persistentModelID, catalog.work.persistentModelID)
+        XCTAssertEqual(try store.context.fetchCount(FetchDescriptor<TaskContext>()), 3)
+        XCTAssertEqual(try store.context.fetchCount(FetchDescriptor<Project>()), 2)
+    }
+
+    // MARK: AC-6
+
+    func testInvalidValuesAreRefusedWithoutAnyWrite() throws {
+        let store = try TestStore()
+        let catalog = try Catalog(in: store)
+        let task = try fullTask(catalog, in: store)
+        let before = try Store(store)
+        let invalid: [(String, [String: Any], [String: Any])] = [
+            ("unknown tag", ["contexts": ["Keller"]], [:]),
+            ("unknown project", ["project": "Urlaub"], [:]),
+            ("importance", ["importance": "huge"], [:]),
+            ("urgency", ["urgency": "now"], [:]),
+            ("duration", ["duration": "minutes45"], [:]),
+            ("energy", ["energy": 4], [:]),
+            ("blank title", ["title": "   "], [:]),
+            ("notes on update", ["notes": "Heckenschere"], [:]),
+            ("empty fields", [:], [:]),
+            ("date without time flag", ["dueDate": Suite.day(3).ISO8601Format()], [:]),
+            ("time flag without date", ["dueHasTime": true], [:]),
+            ("done expected", ["importance": "high"], ["expectedStatus": "done"]),
+            ("removed expected", ["importance": "high"], ["expectedStatus": "removed"]),
+        ]
+        for (name, fields, extra) in invalid {
+            let result = try Suite.run(try update(task, fields, extra: extra), in: store)
+            XCTAssertEqual(result.outcome, .rejected, name)
+            XCTAssertEqual(result.reason, .invalid, name)
+            XCTAssertEqual(result.taskID, task.id, name)
+        }
+        let noFields = try order(expected(task).merging(["kind": "update"]) { $1 })
+        XCTAssertEqual(try Suite.run(noFields, in: store).reason, .invalid, "update without fields")
+        XCTAssertEqual(try Store(store), before)
+
+        let captures: [[String: Any]] = [
+            ["contexts": ["Keller"]], ["project": "Urlaub"], ["importance": "huge"], ["energy": -4], ["title": ""],
+            ["dueHasTime": false],
+        ]
+        for fields in captures {
+            let result = try Suite.run(try order(["kind": "capture", "text": "Hecke schneiden", "fields": fields]), in: store)
+            XCTAssertEqual(result.outcome, .rejected, "capture \(fields)")
+            XCTAssertEqual(result.reason, .invalid, "capture \(fields)")
+        }
+        XCTAssertEqual(try Store(store), before, "a refused capture creates no task")
+    }
+
+    // MARK: AC-6 (#777)
+
+    func testSameInstantOnlyChangingTheTimeFlagIsInvalid() throws {
+        let store = try TestStore()
+        let catalog = try Catalog(in: store)
+        let task = try fullTask(catalog, in: store)
+        let midnight = Suite.calendar.startOfDay(for: Suite.day(4))
+        task.dueDate = midnight
+        task.dueHasTime = true
+        try store.context.save()
+        let before = try Store(store)
+
+        let result = try Suite.run(try update(task, ["dueDate": midnight.ISO8601Format(), "dueHasTime": false]), in: store)
+
+        XCTAssertEqual(result, OrderResult(orderID: result.orderID, outcome: .rejected, reason: .invalid, taskID: task.id))
+        XCTAssertEqual(try Store(store), before)
+    }
+
+    // MARK: AC-7
+
+    func testChangedTaskIsStale() throws {
+        let store = try TestStore()
+        let catalog = try Catalog(in: store)
+        let task = try fullTask(catalog, in: store)
+        let before = try Store(store)
+        let stale: [(String, [String: Any], [String: Any])] = [
+            ("old title", ["title": "Neu"], ["expectedTitle": "Hecke"]),
+            ("old tags", ["contexts": ["Büro"]], ["expectedContexts": ["Büro"]]),
+            ("old project", ["project": "Arbeit"], ["expectedProject": "Arbeit"]),
+            ("old date", ["dueDate": Suite.day(5).ISO8601Format(), "dueHasTime": true],
+             ["expectedDueDate": Suite.day(2).ISO8601Format()]),
+            ("old status", ["importance": "high"], ["expectedStatus": "unverified"]),
+            ("parked meanwhile", ["importance": "high"], ["expectedStatus": "parked"]),
+        ]
+        for (name, fields, extra) in stale {
+            let result = try Suite.run(try update(task, fields, extra: extra), in: store)
+            XCTAssertEqual(result.outcome, .rejected, name)
+            XCTAssertEqual(result.reason, .stale, name)
+            XCTAssertEqual(result.taskID, task.id, name)
+        }
+        // A missing expected value means "had none", and the task has a title, tags, a project and a date now.
+        let without: [(String, [String: Any])] = [
+            ("expectedTitle", ["title": "Neu"]), ("expectedContexts", ["contexts": ["Büro"]]),
+            ("expectedProject", ["project": "Arbeit"]),
+            ("expectedDueDate", ["dueDate": Suite.day(5).ISO8601Format(), "dueHasTime": true]),
+        ]
+        for (key, fields) in without {
+            var json = expected(task)
+            json.removeValue(forKey: key)
+            json["kind"] = "update"
+            json["fields"] = fields
+            XCTAssertEqual(try Suite.run(try order(json), in: store).reason, .stale, "without \(key)")
+        }
+        XCTAssertEqual(try Store(store), before)
+    }
+
+    // MARK: AC-7 (missing)
+
+    func testUnknownTaskIsMissingAndNoTaskIDInvalid() throws {
+        let store = try TestStore()
+        let catalog = try Catalog(in: store)
+        let task = try fullTask(catalog, in: store)
+        let before = try Store(store)
+
+        let missing = try Suite.run(try update(task, ["importance": "high"], extra: ["taskID": UUID().uuidString]), in: store)
+        XCTAssertEqual(missing, OrderResult(orderID: missing.orderID, outcome: .rejected, reason: .missing))
+
+        var json = expected(task)
+        json.removeValue(forKey: "taskID")
+        json["kind"] = "update"
+        json["fields"] = ["importance": "high"]
+        let noTask = try Suite.run(try order(json), in: store)
+        XCTAssertEqual(noTask, OrderResult(orderID: noTask.orderID, outcome: .rejected, reason: .invalid))
+        XCTAssertEqual(try Store(store), before)
+    }
+}

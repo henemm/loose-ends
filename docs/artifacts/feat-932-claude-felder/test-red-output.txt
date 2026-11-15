@@ -1,0 +1,58 @@
+# #932 Schnitt 1, TDD RED, 2026-11-15, Stand cc4fea5 + neue Tests
+## ./scripts/sim.sh sim-unit OrderExecutorFieldsTests
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("Optional("Früh die Hecke schneiden")") is not equal to ("Optional("Hecke schneiden")")
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("nil") is not equal to ("Optional("user")")
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("nil") is not equal to ("Optional("Heckenschere beim Nachbarn holen")")
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("nil") is not equal to ("Optional(2026-03-14 07:00:00 +0000)")
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertTrue failed
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("nil") is not equal to ("Optional(LooseEnds.Importance.high)")
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("nil") is not equal to ("Optional(LooseEnds.Urgency.low)")
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("nil") is not equal to ("Optional(LooseEnds.DurationBucket.hour1)")
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("nil") is not equal to ("Optional(LooseEnds.Energy.takesLittle)")
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("[]") is not equal to ("["Büro", "Garten"]")
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("nil") is not equal to ("Optional(SwiftData.PersistentIdentifier(id: SwiftData.PersistentIdentifier.ID(backing: SwiftData.PersistentIdentifier.PersistentIdentifierBacking.managedObjectID(0x9a029bf84cd84d61 <x-coredata://74D43790-1D6A-46F4-B619-CE0DDB411F74/Project/p2>))))")
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("0") is not equal to ("1") - title
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("0") is not equal to ("1") - notes
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("0") is not equal to ("1") - dueDate
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("0") is not equal to ("1") - importance
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("0") is not equal to ("1") - urgency
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("0") is not equal to ("1") - duration
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("0") is not equal to ("1") - energy
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("0") is not equal to ("1") - contexts
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertEqual failed: ("0") is not equal to ("1") - project
+    [31m✖[0m testCaptureWithEveryFieldSetsEachAsAClaudeRevision, XCTAssertNotNil failed
+    [31m✖[0m testChangedTaskIsStale, failed: caught error: "DecodingError.dataCorrupted: Data was corrupted. Path: kind. Debug description: Cannot initialize Kind from invalid String value update"
+    [31m✖[0m testContractExamplesDecodeEncodeAndStandInTheDocument, XCTAssertTrue failed - the order must keep every key of the example:
+    [31m✖[0m testContractExamplesDecodeEncodeAndStandInTheDocument, XCTAssertTrue failed - the contract must quote the example word for word
+    [31m✖[0m testContractExamplesDecodeEncodeAndStandInTheDocument, failed: caught error: "DecodingError.dataCorrupted: Data was corrupted. Path: kind. Debug description: Cannot initialize Kind from invalid String value update"
+    [31m✖[0m testInvalidValuesAreRefusedWithoutAnyWrite, failed: caught error: "DecodingError.dataCorrupted: Data was corrupted. Path: kind. Debug description: Cannot initialize Kind from invalid String value update"
+    [31m✖[0m testNamesResolveToTheCatalogAndNothingIsCreated, failed: caught error: "DecodingError.dataCorrupted: Data was corrupted. Path: kind. Debug description: Cannot initialize Kind from invalid String value update"
+    [31m✖[0m testSameInstantOnlyChangingTheTimeFlagIsInvalid, failed: caught error: "DecodingError.dataCorrupted: Data was corrupted. Path: kind. Debug description: Cannot initialize Kind from invalid String value update"
+    [31m✖[0m testUnchangedOrMissingFieldWritesNothingAndEmptyTagsClear, failed: caught error: "DecodingError.dataCorrupted: Data was corrupted. Path: kind. Debug description: Cannot initialize Kind from invalid String value update"
+    [31m✖[0m testUnknownTaskIsMissingAndNoTaskIDInvalid, failed: caught error: "DecodingError.dataCorrupted: Data was corrupted. Path: kind. Debug description: Cannot initialize Kind from invalid String value update"
+    [31m✖[0m testUpdateSetsOneFieldAsOneClaudeRevision, failed: caught error: "DecodingError.dataCorrupted: Data was corrupted. Path: kind. Debug description: Cannot initialize Kind from invalid String value update"
+Executed 9 tests, with 31 failures (8 unexpected) in 2.025 (2.028) seconds
+Executed 9 tests, with 31 failures (8 unexpected) in 2.025 (2.028) seconds
+Executed 9 tests, with 31 failures (8 unexpected) in 2.025 (2.031) seconds
+## ./scripts/sim.sh sim-unit EnrichmentTitleProtectionTests
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertEqual failed: ("Optional("Hecke schneiden 20 Minuten Garten Haus")") is not equal to ("Optional("Hecke beim Nachbarn schneiden")")
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertEqual failed: ("nil") is not equal to ("Optional("Arbeit")")
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertEqual failed: ("Optional("Hecke schneiden Garten")") is not equal to ("Optional("Hecke schneiden 20 Minuten Garten Haus")") - title stays Claude's
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertTrue failed - title: no automatic revision
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertEqual failed: ("Optional("2026-11-15T23:00:00Z")") is not equal to ("nil") - dueDate stays Claude's
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertTrue failed - dueDate: no automatic revision
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertEqual failed: ("Optional("high")") is not equal to ("nil") - importance stays Claude's
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertTrue failed - importance: no automatic revision
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertEqual failed: ("Optional("high")") is not equal to ("nil") - urgency stays Claude's
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertTrue failed - urgency: no automatic revision
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertEqual failed: ("Optional("minutes30")") is not equal to ("nil") - duration stays Claude's
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertTrue failed - duration: no automatic revision
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertEqual failed: ("Optional("[\"Garten\"]")") is not equal to ("Optional("[]")") - contexts stays Claude's
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertTrue failed - contexts: no automatic revision
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertEqual failed: ("Optional("Haus")") is not equal to ("nil") - project stays Claude's
+    [31m✖[0m testClaudesFieldsSurviveRulesModelAndReanalysis, XCTAssertTrue failed - project: no automatic revision
+    [31m✖[0m testModelTitleKeepsAUserTitleAndWritesWhereNoneHangs, XCTAssertEqual failed: ("Optional("Rasenmäher: Ölwechsel")") is not equal to ("Optional("Ölwechsel")") - the user's title stays
+    [31m✖[0m testModelTitleKeepsAUserTitleAndWritesWhereNoneHangs, XCTAssertEqual failed: ("Optional(2)") is not equal to ("Optional(1)") - no AI revision on top
+Executed 2 tests, with 18 failures (0 unexpected) in 0.245 (0.247) seconds
+Executed 2 tests, with 18 failures (0 unexpected) in 0.245 (0.247) seconds
+Executed 2 tests, with 18 failures (0 unexpected) in 0.245 (0.248) seconds

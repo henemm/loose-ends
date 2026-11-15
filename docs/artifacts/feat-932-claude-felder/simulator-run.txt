@@ -1,0 +1,21 @@
+# Simulator-Beleg
+erzeugt: 2026-11-15T19:38:32+0100
+befehl: scripts/sim.sh test-proof ClaudeChangeTests
+workflow: feat-932-claude-felder
+head: 49aa5a560482ce882654edd05dc57e6122d96771
+basis: 2429bf61b681c85970578351ac0cff73c548b102 (merge-base origin/main HEAD)
+testklasse: ClaudeChangeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794767865.301  ende: 1794767911.401
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-932-claude-felder/simulator-run/summary.json  sha256:e729f78578e74fbc60fb3506f9307622b76b84050667d3419c7b1b8dda6f7413
+xcresult: docs/artifacts/feat-932-claude-felder/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-932-claude-felder/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+- sha256:ed137c3b1459db72582a1965036be4c3a4c8e0366af87ad1f79cf20f4504ea5c  LooseEndsTests/EnrichmentTests.swift
+- sha256:adc11c6ab160394f9940de9e02459ae1570c0a43b4bb6817e093e58486500d50  LooseEndsTests/OrderExecutorTests.swift
+- sha256:7bedc1999098ea6bfa2eec4851502c0ae114454cb76f272614c6bf76aaa78d41  Shared/Enrichment/EnrichmentWriter.swift
+- sha256:cf1918925f83d9b8f21086b87a0643add4197abfaee541e8305295435e9ce156  Shared/Services/OrderExecutor.swift

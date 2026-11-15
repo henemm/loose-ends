@@ -5,7 +5,8 @@ zwei Dinge, die ein eigener Dienst nur weiterreicht: eine **Abschrift** und eine
 aussehen. Der Dienst übernimmt ihn unverändert; eine Änderung am Format ist eine neue Version, keine stille Anpassung.
 
 Die Beispiele unten stehen wörtlich auch in den Tests (`LooseEndsTests/TranscriptCodecTests.swift`,
-`LooseEndsTests/OrderExecutorTests.swift`), und `server/test/schema.test.ts` liest sie zur Laufzeit aus diesem Text; weicht eines ab, schlagen die Tests fehl.
+`LooseEndsTests/OrderExecutorTests.swift`), und `server/test/schema.test.ts` liest sie zur Laufzeit aus diesem Text
+(die drei ` ```json`-Blöcke; die ` ```jsonc`-Beispiele prüft der Swift-Test); weicht eines ab, schlagen die Tests fehl.
 
 ## Allgemein
 
@@ -86,9 +87,10 @@ Beispiel:
 ## Auftrag
 
 Ein Auftrag ist eine Änderung, die Claude auslöst. Die App führt ihn als Nutzeränderung aus (`OrderExecutor`): Autor Nutzer,
-Grund „Claude“, mit Revision wie jede Änderung in der App, auch für Status (abhaken, parken), Rang in „Als nächstes“ und Unteraufgaben (Revisionsfelder `status`, `nextRank`, `subtasks`, nicht per Zurücksetzen umkehrbar; Nebenrevisionen wie die Knäuel-Marke tragen ebenfalls den Grund „Claude“, #622 Schnitt 1). Version 1 kennt sechs Arten (`kind`); Verschieben auf einen anderen Tag ist `setDue`, Löschen und Massenänderungen gibt es nicht:
+Grund „Claude“, mit Revision wie jede Änderung in der App, auch für Status (abhaken, parken), Rang in „Als nächstes“ und Unteraufgaben (Revisionsfelder `status`, `nextRank`, `subtasks`, nicht per Zurücksetzen umkehrbar; Nebenrevisionen wie die Knäuel-Marke tragen ebenfalls den Grund „Claude“, #622 Schnitt 1). Version 1 kennt sieben Arten (`kind`); Verschieben auf einen anderen Tag ist `setDue`, Löschen und Massenänderungen gibt es nicht:
 
-- `capture`: `text` wird erfasst wie jede andere Eingabe (Kanal `claude`), samt der üblichen Anreicherung.
+- `capture`: `text` wird erfasst wie jede andere Eingabe (Kanal `claude`), samt der üblichen Anreicherung. Optional `fields`
+  (#932, unten): die Werte setzt die App nach dem Erfassen auf die neue Aufgabe; der Rohtext bleibt `text`, unverändert.
 - `complete`: `taskID`, `expectedStatus` (der Status aus der Abschrift, nur ein offener oder geparkter; `done` oder
   `removed` ist `invalid`) und `expectedDueDate`. Die Aufgabe wird abgehakt wie in der App; eine wiederkehrende rollt weiter
   und bekommt einen Abschlussvermerk.
@@ -101,6 +103,24 @@ Grund „Claude“, mit Revision wie jede Änderung in der App, auch für Status
   fällt). Eine schon geparkte, erledigte oder gelöschte ist `invalid`.
 - `addSubtask` (#622): `taskID`, `expectedStatus`, `text`. Fügt eine Zeile unter einer Aufgabe der obersten Ebene hinzu, getippt
   wie sie ist (die App kürzt Leerraum an den Enden). Leerer Text, eine Unteraufgabe oder eine geparkte Aufgabe als Elternteil ist `invalid`.
+- `update` (#932): `taskID`, `expectedStatus` (offen oder geparkt; `done` oder `removed` ist `invalid`), `fields` (nicht leer,
+  ohne `notes`) und der erwartete Stand jedes geänderten Felds, das die Abschrift trägt: `expectedTitle` zu `title`,
+  `expectedDueDate` zu `dueDate`, `expectedContexts` (Namen) zu `contexts`, `expectedProject` zu `project`; fehlt der Wert, hatte
+  die Aufgabe keinen. Titel exakt, Tags als Menge und Projekt ohne Rücksicht auf Groß-/Kleinschreibung und Akzente. Wichtigkeit,
+  Dringlichkeit, Dauer und Energie stehen nicht in der Abschrift: für sie gilt nur der Status, der letzte Schreiber gewinnt.
+
+`fields` (#932) an `capture` und `update`, jeder Schlüssel optional, ein fehlender lässt das Feld, wie es ist:
+`title` (nicht leer nach Kürzen), `notes` (nur `capture`), `dueDate` mit `dueHasTime` (nur beide zusammen; ohne Uhrzeit gilt der
+Tagesbeginn; entfernt wird eine Fälligkeit nur per `setDue`), `importance` und `urgency` (`low`, `medium`, `high`), `duration`
+(`minutes5`, `minutes15`, `minutes30`, `hour1`, `hours2plus`), `energy` (ganze Zahl −3 … 3), `contexts` (Namen vorhandener Tags;
+eine leere Liste leert die Tags) und `project` (Name eines vorhandenen Projekts). Tags und Projekt gleicht die App mit ihren
+Katalogen ab (groß-/kleinschreibungs- und akzentunabhängig) und schreibt die Schreibweise des Katalogs; einen unbekannten Namen
+lehnt sie ab und legt nie einen Tag oder ein Projekt an. Jeder Wert, der sich ändert, wird eine Nutzerrevision mit Grund
+„Claude“; ein Wert, der schon so steht, keine. Ein von Claude gesetzter Titel wird von der Anreicherung nicht mehr ersetzt.
+
+Die App prüft in dieser Reihenfolge und schreibt erst danach, in einem Zug: Form (`invalid`), Aufgabe (`missing`, nur `update`),
+Namen (`invalid`), erwarteter Stand (`stale`, nur `update`). Der Dienst nimmt `fields` erst ab #932 Schnitt 2 und `update` erst
+ab Schnitt 3 an; bis dahin verwirft er beides (weiterer Schlüssel, unbekannte Art).
 
 Weil eine Aufgabe keinen Änderungszeitpunkt führt, trägt jeder Auftrag den **erwarteten Stand** der Felder, die er ändert.
 Stimmt er nicht mehr mit dem Gerät überein, wird nichts geändert. `expectedDueDate` ist bei `complete` und `setDue` Pflicht
@@ -135,16 +155,60 @@ Beispiel:
 }
 ```
 
+Beispiel `capture` mit `fields` (#932):
+
+```jsonc
+{
+  "fields": {
+    "contexts": ["Garten"],
+    "dueDate": "2026-03-14T08:00:00Z",
+    "dueHasTime": true,
+    "duration": "hour1",
+    "energy": -1,
+    "importance": "high",
+    "notes": "Heckenschere beim Nachbarn holen",
+    "project": "Haus",
+    "title": "Hecke schneiden",
+    "urgency": "low"
+  },
+  "id": "0B7D5E3C-0000-4000-8000-000000000020",
+  "kind": "capture",
+  "text": "Samstag früh die Hecke schneiden, Heckenschere beim Nachbarn holen",
+  "version": 1
+}
+```
+
+Beispiel `update` (#932):
+
+```jsonc
+{
+  "expectedContexts": ["Garten"],
+  "expectedStatus": "active",
+  "expectedTitle": "Hecke schneiden",
+  "fields": {
+    "contexts": ["Garten", "Haus"],
+    "duration": "minutes30",
+    "title": "Hecke und Rasen schneiden"
+  },
+  "id": "0B7D5E3C-0000-4000-8000-000000000021",
+  "kind": "update",
+  "taskID": "6F1C2B0A-0000-4000-8000-000000000001",
+  "version": 1
+}
+```
+
 ## Ergebnis
 
 Jeder Auftrag bekommt ein Ergebnis: `orderID`, `outcome` (`done` oder `rejected`), bei Ablehnung `reason` und, wo eine Aufgabe
 betroffen ist, `taskID`.
 
 - `invalid`: falsche Version, ein Pflichtfeld fehlt, der Text einer Erfassung ist leer, oder ein `setDue` träfe denselben
-  Zeitpunkt und änderte nur `hasTime`. Version und Pflichtfelder weist
+  Zeitpunkt und änderte nur `hasTime` (ebenso `dueDate` in `update`); bei `fields` außerdem ein unbekannter Wert, ein unbekannter
+  Tag- oder Projektname, ein leerer Titel, `notes` bei `update` oder ein leeres `fields`. Version und Pflichtfelder weist
   schon der Dienst beim Annehmen ab; `invalid` der App bleibt die zweite Wand für Aufträge, die den Dienst nicht durchlaufen haben.
 - `missing`: Auf dem Gerät gibt es keine Aufgabe mit dieser Kennung.
-- `stale`: Der erwartete Stand stimmt nicht mehr; Claude liest die Abschrift neu und entscheidet erneut.
+- `stale`: Der erwartete Stand stimmt nicht mehr (bei `update` auch Titel, Tags oder Projekt); Claude liest die Abschrift neu
+  und entscheidet erneut.
 
 Bei jeder Ablehnung bleibt das Gerät unverändert: keine Aufgabe, keine Revision, kein Feld.
 

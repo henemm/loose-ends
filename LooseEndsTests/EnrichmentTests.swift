@@ -1,6 +1,7 @@
 import Foundation
 import SwiftData
 import Testing
+import XCTest
 @testable import LooseEnds
 
 /// Fake model (ADR-11): returns a fixed draft, or fails, and counts calls. For the cases only a real
@@ -1005,5 +1006,82 @@ struct RecognitionPoolReachabilityTests {
                 "drei Durchgänge, eine Revision")
         #expect((fresh.revisions ?? []).filter { $0.field == .contexts }.count == 1,
                 "drei Durchgänge, eine Revision")
+    }
+}
+
+/// #932 Schnitt 1: a title the user (or Claude, as a user revision) set before the first run stays; the model writes its title
+/// only where no user revision hangs. And the chain: what Claude set at capture survives rules, model and "Analyze again".
+@MainActor final class EnrichmentTitleProtectionTests: XCTestCase {
+    private static let fields: [RevisedField] = [
+        .title, .notes, .dueDate, .importance, .urgency, .duration, .energy, .contexts, .project,
+    ]
+
+    private func modelTitle(_ title: String) -> EnrichmentDraft {
+        var draft = EnrichmentDraft()
+        draft.title = EnrichmentDraft.Guess(title, confidence: 0.9, reason: "The note names the job.")
+        return draft
+    }
+
+    // MARK: AC-9
+
+    func testModelTitleKeepsAUserTitleAndWritesWhereNoneHangs() throws {
+        let store = try TestStore()
+        let touched = TaskItem(rawText: "Rasenmäher Ölwechsel machen")
+        touched.title = "Ölwechsel"
+        touched.titleSourceRaw = FieldSource.user.rawValue
+        touched.revisions = [Revision(task: touched, field: .title, oldValue: nil, newValue: "Ölwechsel", author: .user,
+                                      reason: OrderExecutor.reason)]
+        let untouched = TaskItem(rawText: "Rasenmäher Ölwechsel machen")
+        store.context.insert(touched)
+        store.context.insert(untouched)
+        try store.context.save()
+
+        EnrichmentWriter.apply(modelTitle("Rasenmäher: Ölwechsel"), to: touched, contexts: [], projects: [])
+        EnrichmentWriter.apply(modelTitle("Rasenmäher: Ölwechsel"), to: untouched, contexts: [], projects: [])
+
+        XCTAssertEqual(touched.title, "Ölwechsel", "the user's title stays")
+        XCTAssertEqual(touched.revisions?.count, 1, "no AI revision on top")
+        XCTAssertEqual(untouched.title, "Rasenmäher: Ölwechsel", "without a user revision the model writes as before")
+        XCTAssertEqual(untouched.titleSourceRaw, FieldSource.ai.rawValue)
+    }
+
+    // MARK: AC-10
+
+    func testClaudesFieldsSurviveRulesModelAndReanalysis() async throws {
+        let store = try TestStore()
+        for (index, name) in ["Garten", "Büro"].enumerated() { store.context.insert(TaskContext(name: name, sortOrder: index)) }
+        for (index, name) in ["Haus", "Arbeit"].enumerated() { store.context.insert(Project(name: name, sortOrder: index)) }
+        try store.context.save()
+        let json: [String: Any] = [
+            "version": 1, "id": UUID().uuidString, "kind": "capture",
+            "text": "Hecke schneiden morgen wichtig dringend 20 Minuten Garten Haus",
+            "fields": [
+                "title": "Hecke beim Nachbarn schneiden", "notes": "Leiter mitnehmen",
+                "dueDate": OrderExecutorTests.day(6, hour: 8).ISO8601Format(), "dueHasTime": true,
+                "importance": "low", "urgency": "low", "duration": "hour1", "energy": 1,
+                "contexts": ["Büro"], "project": "Arbeit",
+            ] as [String: Any],
+        ]
+        let order = try TranscriptCodec.decode(Order.self, from: JSONSerialization.data(withJSONObject: json))
+        let result = try OrderExecutorTests.run(order, in: store)
+        let task = try XCTUnwrap(try store.context.fetch(FetchDescriptor<TaskItem>()).first { $0.id == result.taskID })
+        let claude = Dictionary(uniqueKeysWithValues: Self.fields.map { ($0, FieldCodec.encode($0, of: task)) })
+        XCTAssertEqual(claude[.title] ?? nil, "Hecke beim Nachbarn schneiden")
+        XCTAssertEqual(claude[.project] ?? nil, "Arbeit")
+
+        var draft = modelTitle("Hecke schneiden")
+        draft.duration = EnrichmentDraft.Guess(.minutes5, confidence: 0.9, reason: "Short job.")
+        let stub = StubEnricher(draft: draft)
+        let coordinator = EnrichmentCoordinator(enricher: stub, container: store.container)
+        await coordinator.processPending()
+        XCTAssertEqual(stub.calls, 1, "the model ran")
+        stub.draft = modelTitle("Hecke schneiden Garten")
+        _ = await coordinator.reanalyze(task)
+
+        for field in Self.fields {
+            XCTAssertEqual(FieldCodec.encode(field, of: task), claude[field] ?? nil, "\(field) stays Claude's")
+            let automatic = (task.revisions ?? []).filter { $0.field == field && $0.author != .user }
+            XCTAssertTrue(automatic.isEmpty, "\(field): no automatic revision")
+        }
     }
 }
