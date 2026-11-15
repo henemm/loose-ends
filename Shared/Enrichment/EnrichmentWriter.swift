@@ -51,7 +51,7 @@ enum EnrichmentWriter {
             // The model may refine the rule title, but not bring back what the rules struck (#217):
             // its title goes through the same rule. Equal to the rule title means nothing to write.
             let value = TitleRule.title(from: title.value, reference: task.capturedAt) ?? title.value
-            if value != task.title, may(.title, firstRun: true, changes: true) {
+            if value != task.title, may(.title, firstRun: !userHasTouched(.title, on: task), changes: true) {
                 record(.title, old: task.title, new: value, reason: title.reason)
                 task.title = value
                 task.titleSourceRaw = ai
