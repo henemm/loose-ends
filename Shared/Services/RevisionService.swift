@@ -85,6 +85,16 @@ enum RevisionService {
             .min { $0.createdAt < $1.createdAt }
     }
 
+    /// A change by Claude (#622): a user revision with the reason of `OrderExecutor`, nothing else.
+    static func isByClaude(_ revision: Revision) -> Bool {
+        revision.author == .user && revision.reason == OrderExecutor.reason
+    }
+
+    /// The newest change by Claude on the task; nil when Claude never changed it.
+    static func lastClaudeChange(on task: TaskItem) -> Revision? {
+        (task.revisions ?? []).filter(isByClaude).max { $0.createdAt < $1.createdAt }
+    }
+
     /// Fields whose current value came from the AI or a rule, in display order.
     static func automaticFields(on task: TaskItem) -> [RevisedField] {
         RevisedField.allCases.filter { origin(of: $0, on: task)?.isAutomatic == true }

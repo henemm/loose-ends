@@ -1,0 +1,56 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "1A8D6AD9-960F-4346-9FA6-28B582589560.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "622-aenderungsblatt-claude-hell_0_F0B5A0D8-5F4C-4070-A04F-53E157521F7F.png",
+        "timestamp" : 1794731606.745
+      }
+    ],
+    "testIdentifier" : "ClaudeChangeTests/testChangeListShowsClaudeAsAuthor()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/ClaudeChangeTests/testChangeListShowsClaudeAsAuthor"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "B5E16698-4421-43A9-BBC6-8A407E12E6FD.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "622-aenderungsblatt-claude-dunkel_0_3353789D-2B66-4AD2-BB93-CB07ADDEFE85.png",
+        "timestamp" : 1794731619.021
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "3703678F-6F9C-4A31-9AB4-C7B3D99B263F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "622-detail-zuletzt-von-claude-dunkel_0_5132C346-8C5E-4BB6-BFB6-F7FE9BA31BF4.png",
+        "timestamp" : 1794731615.778
+      }
+    ],
+    "testIdentifier" : "ClaudeChangeTests/testDarkScreenshots()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/ClaudeChangeTests/testDarkScreenshots"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "D5668C64-1E8B-4A4D-B5F3-F0D291D0CCEA.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "622-detail-zuletzt-von-claude-hell_0_A90A0FB7-431D-4449-85CB-E9ABF2629862.png",
+        "timestamp" : 1794731630.375
+      }
+    ],
+    "testIdentifier" : "ClaudeChangeTests/testDetailLineNamesClaudeWithToday()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/ClaudeChangeTests/testDetailLineNamesClaudeWithToday"
+  }
+]

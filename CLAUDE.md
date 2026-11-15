@@ -399,7 +399,7 @@ not scope creep on the current one.
   it, `withPacks` in `LooseEndsTests/Language`); `LanguagePackConformanceTests` hold the tables clean, `RuleGoldenTests` hold the rule output
   of every corpus sentence equal (`LooseEndsTests/Fixtures/rule-golden.json`, refreshed with `LOOSEENDS_UPDATE_GOLDEN=1`). The way a
   third language gets in is the eight-point list in `docs/reference/neue-sprache.md`; it enters `shipped` last.
-- `Shared/Services` — `CaptureService`, `FieldCodec` (one encoding per field), `RevisionService` (reset = user revision),
+- `Shared/Services` — `CaptureService`, `FieldCodec` (one encoding per field), `RevisionService` (reset = user revision; `isByClaude`/`lastClaudeChange`: a user revision with the reason "Claude" is Claude's, the detail's line "Last by Claude · today 14:02" and the change list's author "Claude" without reset read it, the unseen badge never counts it, #622 S2),
   `TaskActions` (done, next up, park, move, restore), `DateExpressionParser`/`TimeExpressionParser` (rule-based
   date/time extraction DE/EN, moved from `Measurement/` in #95), `RawTextWords` (the one tokenizer for word-set
   equality, shared with `Measurement/`, moved from `TitleCheck` in #136), `TitleRule` (the title at capture: raw text

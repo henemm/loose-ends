@@ -37,6 +37,7 @@ struct LooseEndsApp: App {
         }
         LaunchTimings.mark(.containerEnd)
         Self.seedLeftoversIfAsked(in: container)
+        Self.seedClaudeChangeIfAsked(in: container)
         let enricher: any TaskEnricher = ModelContainerFactory.isUITesting ? ModelOffEnricher() : FoundationModelsEnricher()
         enrichment = EnrichmentCoordinator(enricher: enricher, container: container,
                                            savedPlaces: { SavedPlacesStore.shared.places })
@@ -136,6 +137,33 @@ struct LooseEndsApp: App {
         } catch {
             Logger(subsystem: "com.henning.looseends", category: "App")
                 .error("Seeding the leftover test tasks failed: \(error, privacy: .public)")
+        }
+    }
+
+    /// One task changed by a real order from Claude for `ClaudeChangeTests` (#622), only under
+    /// `--ui-testing-claude-change` and only in the in-memory store: the order sets the due date to today.
+    private static func seedClaudeChangeIfAsked(in container: ModelContainer) {
+        guard ModelContainerFactory.isUITesting,
+              ProcessInfo.processInfo.arguments.contains("--ui-testing-claude-change") else { return }
+        let logger = Logger(subsystem: "com.henning.looseends", category: "App")
+        let task = TaskItem(rawText: "Zahnarzt anrufen")
+        task.title = "Zahnarzt anrufen"
+        task.status = .active
+        let now = Date()
+        // Enriched already, so rules and model leave it alone and Claude's change stands alone.
+        task.processedAt = now
+        task.rulesAppliedAt = now
+        container.mainContext.insert(task)
+        let order = Order(id: UUID(), kind: .setDue, taskID: task.id, expectedStatus: .active,
+                          date: now, hasTime: false, expectedDueDate: nil)
+        do {
+            try container.mainContext.save()
+            let result = try OrderExecutor.execute(order, in: container.mainContext, now: now, calendar: .current)
+            if result.outcome != .done {
+                logger.error("The Claude test order was refused: \(result.reason?.rawValue ?? "-", privacy: .public)")
+            }
+        } catch {
+            logger.error("Seeding the Claude change failed: \(error, privacy: .public)")
         }
     }
 

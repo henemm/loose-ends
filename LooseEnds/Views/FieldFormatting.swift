@@ -142,6 +142,11 @@ enum FieldFormatting {
         bucket.shortText
     }
 
+    /// The author of one revision: "Claude" for an order from Claude (#622), else the source's word.
+    static func author(of revision: Revision) -> String {
+        RevisionService.isByClaude(revision) ? String(localized: "Claude") : author(revision.author)
+    }
+
     static func author(_ source: FieldSource) -> String {
         switch source {
         case .ai: String(localized: "AI")
