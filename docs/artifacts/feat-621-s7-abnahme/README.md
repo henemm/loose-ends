@@ -26,7 +26,8 @@ ihrer Reihenfolge zurück und ergänzt nur die Zeileninhalte aus `tasks`.
 
 ## Live-Prüfung
 
-`check-views.mjs` lief im Container `loose-ends-server` (Stand `63de3cc`) gegen die Live-Datenbank: der echte
+`check-views.mjs` lief im Container `loose-ends-server` (Stand `63de3cc`, nach dem Ausrollen von `9bbb4cd` am selben
+Tag wiederholt, gleiches Ergebnis) gegen die Live-Datenbank: der echte
 `mcpHandler` des Dienstes, Werkzeugaufrufe per JSON-RPC wie von claude.ai, das Konto in `authInfo` wie nach der
 OAuth-Prüfung. Nur lesende Werkzeuge (`get_now`, `get_view`), Ausgabe nur Zahlen und Wahrheitswerte, keine Titel oder
 Kennungen. Das Skript wurde danach aus Container und Server entfernt.
