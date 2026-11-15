@@ -138,3 +138,6 @@ Downstream: `ClaudeSync` (unlesbar → `invalid`), Detailzeile „Zuletzt von Cl
 
 ### Open Questions
 - [x] Keine PO-Frage offen: Felder, Ausschlüsse und „nur vorhandene Namen“ legt das Issue fest; Rest ist technisch.
+
+### Umfang (PO, 2026-11-15)
+Henning nahm in /30-write-spec den Umfang von etwa 420 LoC für Schnitt 1 an („Annehmen“); Überhang = Prüf- und Ablehnungstests, Produktcode + Vertrag ≈ 186. In /60-validate nicht erneut fragen, solange der Endstand nicht nennenswert über ≈ 470 liegt.
