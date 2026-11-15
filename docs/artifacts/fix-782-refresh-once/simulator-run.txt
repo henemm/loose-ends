@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-11-15T10:37:49+0100
+befehl: scripts/sim.sh test-proof DueNotificationTapTests
+workflow: fix-782-refresh-once
+head: 3c31341074b544ae5699611f34de4bf87ae59ba6
+basis: c82871d5383cbe225c827dae5768a9750e41166a (merge-base origin/main HEAD)
+testklasse: DueNotificationTapTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794735253.824  ende: 1794735468.563
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/fix-782-refresh-once/simulator-run/summary.json  sha256:6826ea715c75306d1d03d879bcd75f7aba96d6b3808d633ea131fd4703e4fd6f
+xcresult: docs/artifacts/fix-782-refresh-once/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-782-refresh-once/simulator-run/*.png (3 Stück)
+
+## Geprüfte Dateien
+- sha256:f50720021d0c87ea8849cf12d8a6228a0b4f672ae7a8a7626f71075980add861  LooseEnds/Notifications/BackgroundRefresh.swift
+- sha256:2073e16011d4b1eb7d8db41b6efedb15aab11e1ee9e9f06a436ed4b0b6328c00  LooseEndsTests/BackgroundRefreshTests.swift

@@ -20,11 +20,16 @@ final class BackgroundRefreshTests: XCTestCase {
         XCTAssertEqual(task.completions, [true])
     }
 
-    func testExpirationHandlerCalledFromBackgroundQueueCompletesWithoutSuccess() async {
+    /// #782: the work runs on after the expiration; the task still ends exactly once, without success.
+    func testExpirationHandlerCalledFromBackgroundQueueCompletesOnceWithoutSuccess() async {
         let task = FakeRefreshTask()
         let gate = Gate()
+        let worked = expectation(description: "work ran to its end")
         // The work hangs until the test lets go: the expiration ends the task first.
-        let handler = BackgroundRefresh.launchHandler(reschedule: { await gate.wait() })
+        let handler = BackgroundRefresh.launchHandler(reschedule: {
+            await gate.wait()
+            worked.fulfill()
+        })
         let installed = expectation(description: "handler installed")
         DispatchQueue.global().async {
             handler(task)
@@ -39,9 +44,15 @@ final class BackgroundRefreshTests: XCTestCase {
         DispatchQueue.global().async { expiration.run?() }
         await fulfillment(of: [expired], timeout: 5)
 
-        XCTAssertEqual(task.completions.first, false)
+        XCTAssertEqual(task.completions, [false])
         task.onComplete = nil
         gate.open()
+        await fulfillment(of: [worked], timeout: 5)
+        // The work's own end runs on the main actor right after it; let it finish before counting.
+        await MainActor.run {}
+        await Task.yield()
+
+        XCTAssertEqual(task.completions, [false])
     }
 }
 

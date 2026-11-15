@@ -515,7 +515,7 @@ not scope creep on the current one.
   `LOOSEENDS_PUSH=<file.apns> ./scripts/sim.sh test-proof <class>`; replans on a CloudKit import, #553),
   `BackgroundRefresh` (iOS only, #553: a daily `BGAppRefreshTask` rewrites the plan without an app start; identifier
   `com.henning.looseends.refresh` in `project.yml`; its system closures are `@Sendable` and never inherit a main-actor
-  binding, #780), `PlaceNotificationCenter` (iOS/iPadOS only, #240
+  binding, #780; expiry and work end the task exactly once, #782), `PlaceNotificationCenter` (iOS/iPadOS only, #240
   Schnitt 2: `UNLocationNotificationTrigger` with a 150 m region, permission „When in use“ only, never `CLMonitor` or
   „Always“; reconcile removes first, adds, then writes the handover list, errors are logged and never thrown; the
   simulator cannot fire the real trigger and rejects `add` with 2003, so arrival is proven on the device only)

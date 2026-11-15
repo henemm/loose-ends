@@ -1,0 +1,47 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "CB9DCC55-4513-4827-AD68-48BE3331E8B0.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "reminder-in-front_0_498F3869-2121-4669-B35E-28CCC960DB6E.png",
+        "timestamp" : 1794735342.077
+      }
+    ],
+    "testIdentifier" : "DueNotificationTapTests/testBannerWhileAppIsOpenKeepsAppAlive()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/DueNotificationTapTests/testBannerWhileAppIsOpenKeepsAppAlive"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "9150E6CF-4A29-4309-A2E9-AD536B82495C.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "due-buttons_0_005B8743-6330-4D1E-A7F8-45D6874DCEC0.png",
+        "timestamp" : 1794735401.128
+      }
+    ],
+    "testIdentifier" : "DueNotificationTapTests/testButtonsKeepTomorrow()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/DueNotificationTapTests/testButtonsKeepTomorrow"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "E4C7B61A-E6DB-4C57-A532-43B3F934ED26.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "opened-from-reminder_0_2D73B9D3-B7E2-4765-9201-C39201DDD861.png",
+        "timestamp" : 1794735467.653
+      }
+    ],
+    "testIdentifier" : "DueNotificationTapTests/testTapBannerFromHomeOpensApp()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/DueNotificationTapTests/testTapBannerFromHomeOpensApp"
+  }
+]
