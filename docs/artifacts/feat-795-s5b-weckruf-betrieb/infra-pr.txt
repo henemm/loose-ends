@@ -1,0 +1,29 @@
+# Infra-PR #795 S5b (AC-3) — 2026-11-15
+
+PR: https://github.com/henemm/henemm-infra/pull/460 (Zweig feat-795-s5b-app-device von main 37abb6b, Commits 4a17a27 und b8460d4),
+gemergt (squash) 2026-11-15T15:54:56Z → main de4216bbe81dcebd7fff070593c16e4305efbe8d
+
+$ gh api repos/henemm/henemm-infra/compare/main...feat-795-s5b-app-device (vor dem Merge)
+nginx/loose-ends.henemm.com.conf +15 -1
+security/expected-exposure.json +1 -0
+
+Genau diese zwei Dateien. Git nur über die GitHub-API (Zweig und Commits per REST), kein lokaler Klon im Worktree.
+expected-exposure.json: neu https://loose-ends.henemm.com/app/device [405]; alle anderen Einträge und Hosts unverändert.
+tests/test_external_scan.py liest die Soll-Liste allgemein (keine Zählung, kein /app/-Name), daher keine Teständerung;
+`grep -rn /app/ tests scripts` im Klon: 0 Treffer.
+
+CI: henemm-infra hat keine GitHub-Actions-Prüfung (`gh pr checks 460`: „no checks reported“, wie #431 in S1b).
+Ersatz: `python3 -m pytest tests -q` auf rennwienix im Wegwerfklon des PR-Zweigs unter /tmp (b8460d4,
+2026-11-15T15:50:27Z): `25 failed, 561 passed, 6 skipped in 63.17s`, Exit 1; Klon danach gelöscht.
+
+Die 25 Fehler sind vorbestehend und unabhängig von diesem PR (Tech-Lead-Entscheidung, Merge freigegeben):
+Gegenprobe main 37abb6b im Wegwerfklon: dieselben 25 FAILED-Zeilen (diff der FAILED-Zeilen main gegen PR-Zweig: leer).
+Sie stammen aus dem Frieda-RED-Commit 17f91e5 (henemm-infra PR #457 „Rote Tests: Bereitschaft des eigenen Kartendienstes
+von Frieda (#455)“, Arbeit einer anderen Sitzung) und betreffen nur Monitor-/Frieda-/Gregor-Tests:
+tests/test_monitor_frieda_kartendienst_bereit.py (14), tests/test_monitor_frieda_software.py (8),
+tests/test_monitor_frieda_speicher.py (2), tests/test_gregor_venv_permissions.py (1); häufigste Meldung
+`bash: line 34: check_frieda_kartendienst_bereit: command not found`. Kein nginx- oder Soll-Listen-Test ist darunter,
+der PR ändert keine der betroffenen Dateien. Davon abgesehen: 561 passed.
+
+Server: /home/hem/henemm-infra `git pull --ff-only` → de4216b (auto-deploy-infra hatte main schon nachgezogen:
+vorher ed1e921 bei der Vorprüfung, beim Pull bereits de4216b, also nichts mehr zu holen).

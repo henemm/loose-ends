@@ -200,8 +200,8 @@ führt es in Kleinschreibung) und `environment` (`sandbox` für Xcode-Läufe, `p
 Meldung desselben Geräts ersetzt Token und Umgebung. Ein Token gehört genau einem Konto und Gerät: meldet es ein anderes Gerät oder
 Konto, zieht es um, und der alte Eintrag fällt weg. Höchstens 10 Geräte je Konto: meldet sich ein elftes, fällt das am längsten
 nicht gemeldete (bei Gleichstand die kleinere Kennung), nie das eben gemeldete. Abmelden entfernt den Eintrag nicht (die Sitzung
-kennt kein Gerät, die App holt nur mit Konto), Konto löschen schon. Von außen ist der Weg erst ab S5b erreichbar (nginx), bis
-dahin 404; die App ruft ihn erst ab S5c.
+kennt kein Gerät, die App holt nur mit Konto), Konto löschen schon. Von außen ist der Weg seit S5b (2026-11-15) offen (nginx,
+Zone `loose_ends_app` wie die drei anderen Wege, Körper bis 16 KiB); die App ruft ihn erst ab S5c.
 
 **Rückholen.** Ein vergebener Auftrag ohne Ergebnis, dessen Vergabe älter als 10 Minuten ist, geht beim nächsten `claim` an das
 fragende Gerät (die Zeit rechnet die Datenbank). Folgen: (a) Ein Ergebnis des alten Geräts danach ist abgelehnt (409). (b) Ein
@@ -209,12 +209,12 @@ Auftrag mit Ergebnis wird nie zurückgeholt. (c) Zugestellt wird mindestens einm
 Auftrag schon ausgeführt, macht der erwartete Stand aus der zweiten Ausführung `stale`; nur ein `capture` ist nicht geschützt und
 kann doppelt erfasst werden. (d) Fragt dasselbe Gerät erneut, bekommt es seinen Auftrag zurück und darf das Ergebnis melden.
 
-**Mengengrenze (#795 S1b).** Vor dem Dienst begrenzt nginx die vier Wege gemeinsam (die Zone für `/app/device` legt S5b fest) je Adresse auf 10 Anfragen je Sekunde mit
+**Mengengrenze (#795 S1b).** Vor dem Dienst begrenzt nginx die vier Wege gemeinsam (seit S5b auch `/app/device`) je Adresse auf 10 Anfragen je Sekunde mit
 einem Stoß von bis zu 40 Anfragen (eigene Zone, getrennt von der Anmeldung); darüber antwortet nginx 429 ohne den Dienst zu
 fragen. Pflicht der App: Bekommt ein Gerät 429, bricht es den laufenden Abholdurchgang sofort ab und setzt ihn erst beim nächsten
 Anlass fort (Start, Vordergrund, Weckruf), nie in einer Schleife und ohne Wiederholung im selben Durchgang. So entsteht höchstens
 eine Ablehnung je Gerät und Anlass; zehn Ablehnungen in zehn Minuten sperren die Adresse sonst für eine Stunde für alle Dienste
-des Servers. Körper über 256 KiB weist nginx schon am `Content-Length` mit 413 ab, ebenfalls ohne den Dienst. Alle anderen Pfade
+des Servers. Körper über 256 KiB (bei `/app/device` über 16 KiB) weist nginx schon am `Content-Length` mit 413 ab, ebenfalls ohne den Dienst. Alle anderen Pfade
 unter `/app/` sind 404.
 
 **Weckruf (#795 S5a-2b).** Nach jedem neu abgelegten Auftrag (alle sechs Auftragswerkzeuge) schickt der Dienst an alle Geräte des
