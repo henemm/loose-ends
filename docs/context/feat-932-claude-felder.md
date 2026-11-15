@@ -62,3 +62,79 @@ Nicht: Knäuel, Perle, Anhänge, Kalender, Ort, Wiederholung. Tags/Projekt nur v
 - **Regeln danach:** Fälligkeit/Wichtigkeit/Dringlichkeit schützt nur „Feld nicht leer“; setzt Claude ein Feld leer
   (entfernen), darf die Regel es bei „Erneut analysieren“ wieder füllen? `mayWrite(.reanalysis)` prüft `userHasTouched` – passt.
 - Umfang: Dienst + Vertrag (S1) und App (S2) getrennt, je ≤ 250 LoC.
+
+## Analysis
+
+### Type
+Feature
+
+### Befund aus dem Code (2026-11-15)
+- Jedes Feld der Liste hat schon ein `RevisedField` und eine Kodierung in `FieldCodec` (Titel, Notiz, Fälligkeit,
+  Wichtigkeit, Dringlichkeit, Dauer, Energie, Tags als Namensliste, Projekt als Name). Die App braucht **kein neues
+  Modellfeld und keine CloudKit-Änderung**: `RevisionService.set(field, to:…)` schreibt jede Änderung als Nutzerrevision,
+  der Grund „Claude“ kommt wie in `setDue` dazu. Tags/Projekt löst `RevisionService` über die übergebenen Kataloge auf.
+- **Schutz vor Regeln und Modell:** Regeln für Tags, Projekt, Notiz, Dauer prüfen im Erstlauf `userHasTouched`; Fälligkeit,
+  Wichtigkeit, Dringlichkeit prüfen „Feld leer“ (ein von Claude gesetzter Wert ist nicht leer); „Erneut analysieren“ prüft
+  überall `userHasTouched`. **Einzige Lücke: der Titel.** `EnrichmentWriter` schreibt den Modelltitel im Erstlauf mit
+  `may(.title, firstRun: true, …)` ohne Nutzerschutz. Ein beim Erfassen gesetzter Claude-Titel würde sofort ersetzt.
+  Fix: `firstRun: !userHasTouched(.title, on: task)`. Kontexte und Projekt schreibt das Modell nie (#215/#469).
+- **Ältere App-Stände:** Swift-`Codable` ignoriert unbekannte Schlüssel. Ein `capture` mit Feldern an eine App ohne
+  Feldkenntnis würde als reiner Text erfasst und `done` gemeldet – Felder still weg. Eine **neue Art** (`update`) lehnt eine
+  alte App dagegen sauber ab (unlesbar → `rejected/invalid`). Aufträge führt heute nur Hennings Testbau aus (Konto-Gruppe
+  nur mit `konto` an), also genügt eine feste Reihenfolge: **erst App im Testbau, dann Dienst ausrollen.**
+- **Erwarteter Stand:** Die Abschrift trägt `title`, `status`, `dueDate`, `contexts`, `project`. Für diese Felder nimmt der
+  Dienst den erwarteten Wert aus der Abschrift (`expected()` wie bei `complete`), die App vergleicht vor dem ersten
+  Schreiben. Wichtigkeit, Dringlichkeit, Dauer, Energie stehen nicht in der Abschrift; für sie gilt nur der erwartete
+  Status (letzter Schreiber gewinnt, vorher Hennings Ja laut Anleitung). Sie in die Abschrift aufzunehmen wäre Vertrag
+  Version 2 und bräuchte die Freigabe im Datenschutztext (#625) – nicht in diesem Ticket.
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `Shared/Services/OrderExecutor.swift` | MODIFY | `Order.fields` (optional, ein Objekt), Art `update`; Prüfung aller Felder vor dem ersten Schreiben (Enum-Werte, Energie −3…3, Titel nicht leer, Tag-/Projektnamen vorhanden per `nameKey` → sonst `invalid`); Schreiben je Feld über `RevisionService.set` mit Grund „Claude“; `capture` setzt die Felder nach `CaptureService.save` |
+| `Shared/Enrichment/EnrichmentWriter.swift` | MODIFY | Modelltitel im Erstlauf nur ohne Nutzerrevision am Titel |
+| `LooseEndsTests/OrderExecutorTests.swift` | MODIFY | je Feld ein Test (Grund „Claude“, `lastClaudeChange`), unbekannter Name/Wert → `invalid` ohne Schreiben, `stale` für Titel/Tags/Projekt/Fälligkeit, Vertragsbeispiele wörtlich |
+| `LooseEndsTests/EnrichmentWriterTests.swift` (o. ä.) | MODIFY | Modell überschreibt Claudes Titel im Erstlauf nicht |
+| `server/src/orders.ts`, `server/src/transcripts.ts` | MODIFY | Form von `fields` (Prüfbausteine für Enums, Energie, Namensliste), Art `update` |
+| `server/migrations/009_update_kind.sql` | CREATE | CHECK auf `orders.kind` um `update` erweitern (Muster 007) |
+| `server/src/mcp.ts` | MODIFY | `capture_task` mit optionalen Feldern, neues `update_task` (Aufgabe, `generatedAt`, Felder; erwarteter Stand aus der Abschrift) |
+| `server/src/anleitung.ts` | MODIFY | „Titel und Angaben ändern nur nach Hennings Ja; Tags/Projekte nur aus list_contexts/list_projects“ (≤ 2048 Byte) |
+| `docs/reference/claude-abschrift-vertrag.md` | MODIFY | `fields`, Art `update`, Beispiele (von Swift- und Server-Tests gelesen) |
+| `server/test/*.test.ts` | MODIFY | Form, Werkzeuge, Namenstest der Anleitung |
+
+### Scope Assessment
+- Gesamt deutlich über einem Schnitt (geschätzt ~600 LoC mit Tests). Drei Schnitte, je ≤ 5 Dateien / ±250 LoC:
+  - **S1 App:** `OrderExecutor` (Felder + `update`), Titelschutz im `EnrichmentWriter`, Tests, Vertragsabschnitt mit
+    Beispielen. ~230 LoC. Unschädlich ohne Dienst (nichts schickt Felder).
+  - **S2 Dienst, Erfassen mit Feldern:** Form `fields` in `orders.ts`/`transcripts.ts`, `capture_task` mit Feldern, Tests. ~200 LoC.
+  - **S3 Dienst, `update_task`:** Migration, Werkzeug mit erwartetem Stand, Anleitung, Tests; danach Testbau (konto an),
+    Ausrollen, claude.ai-Durchlauf laut DoD. ~220 LoC.
+- Risk Level: MEDIUM — Aufträge ändern echte Daten; Schutz liegt in der Prüfung vor dem ersten Schreiben, dem erwarteten
+  Stand und der Reihenfolge App vor Dienst.
+- Geräteliste: `Shared/Persistence/`, Modell, `project.yml` unberührt; `EnrichmentWriter` ist nicht `FoundationModelsEnricher`/
+  `EnrichmentCoordinator`. Stufe 3 läuft trotzdem über den claude.ai-Durchlauf der DoD im Testbau.
+
+### Technical Approach (Empfehlung)
+Ein gemeinsames Objekt `fields` für `capture` und die neue Art `update` (Schlüssel: `title`, `notes` nur bei `capture`,
+`dueDate`+`dueHasTime`, `importance`, `urgency`, `duration`, `energy`, `contexts`, `project`). Der Dienst prüft nur die Form,
+die App die Bedeutung (Namen vorhanden, Titel nicht leer) – wie bei allen Arten. Ein Feld, das fehlt, bleibt unberührt;
+Leeren ist nicht Teil dieses Tickets (außer Tags per leerer Liste; Fälligkeit entfernen bleibt `set_due`). `update` erwartet
+Status sowie den Abschriftwert jedes geänderten Feldes, das die Abschrift trägt; sonst `stale`. Reihenfolge S1 → Testbau →
+S2/S3 → Ausrollen.
+
+### Alternativen
+1. **Regelweg statt Felder (Regeln vor Modell):** Claude schreibt die Angaben in den Erfassungstext („… 20 Minuten #Garten“),
+   die vorhandenen Regeln leiten sie ab. Kein neuer Vertrag. Verworfen, weil der Rohtext dann nicht mehr Hennings Wortlaut
+   ist (Anleitung #623: „mit seinem Wortlaut, unverändert“), Energie/Projekt keine sichere Regel haben und Umbenennen danach
+   gar nicht geht – genau der Anlass.
+2. **Je Feld ein eigenes Werkzeug** (`rename_task`, `set_tags`, …) wie `set_due`: einfachere Einzelprüfung, aber neun Arten,
+   neun Migrationseinträge und viele Aufrufe pro Aufgabe. Verworfen zugunsten eines `update` mit Feldobjekt.
+3. **Abschrift Version 2 mit allen Feldern** (volle Stand-Prüfung auch für Dauer/Energie/Wichtigkeit): kippt die Festlegung
+   des Vertrags „mehr Felder = Version 2 + Datenschutzfreigabe (#625)“; als Folgearbeit möglich, nicht hier.
+
+### Dependencies
+Upstream: `RevisionService`, `FieldCodec`, `CatalogService` (`nameKey`), `CaptureService`, `TitleRule`, zod (MCP-SDK).
+Downstream: `ClaudeSync` (unlesbar → `invalid`), Detailzeile „Zuletzt von Claude“ (#622 S2), `EnrichmentCoordinator` nach dem Erfassen.
+
+### Open Questions
+- [x] Keine PO-Frage offen: Felder, Ausschlüsse und „nur vorhandene Namen“ legt das Issue fest; Rest ist technisch.
