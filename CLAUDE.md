@@ -334,8 +334,12 @@ the board directly; it dispatches `.github/workflows/board.yml` (`list`, `set`) 
 Henning orders cards by dragging (view without sort): `gh project item-list` returns the manual order, top = most
 relevant. Pick the next ticket by Priority first, then by that order; his drag beats the milestone order inside a
 priority (2026-10-12: #355 moved to the top). Raw notes from him (no body yet) get Priority and Size at `/00-intake`.
-**One session, one Epic** (2026-10-26/27, #715): the herdr session name is the Epic. The Epic is the topmost parent of the leading `#N`
-(`#N` itself if it has no parent but sub-issues). `scripts/next-ticket.sh` proposes the next free lowest-level sub-issue of that Epic: it skips In
+**One session, one scope** (2026-10-26/27, #715; Henning 2026-11-15): the leading `#N` of the herdr session name is the session's scope:
+`#N` with its sub-issues, or `#N` alone if it has none (an Epic or a single issue cut out of one). Whatever another session carries as its
+leading `#N` is left out (the more specific number wins), and two sessions starting with the same `#N` get no proposal (`NEXT=unknown`);
+check `herdr workspace list` before naming a session. Shared things belong to the session holding the Epic: deploying the service and
+starting TestFlight builds (manual runs keep the account group, `konto` on, and carry over the previous build's open test points).
+`scripts/next-ticket.sh` proposes the next free lowest-level issue of that scope: it skips In
 progress/In review, an open PR (`Closes/Fixes/Refs #N` or branch name), a live session lock (phase below `phase8_complete`)
 and an open "blocked by"; order is Priority, then board order; it reports hotspot overlap (`project.yml`, schema,
 `*.xcstrings`, `CLAUDE.md`, start page) with open PRs and live branches. Its first line is `NEXT=#N`, `NEXT=none` or

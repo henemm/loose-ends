@@ -19,9 +19,9 @@ on:
         type: boolean
         default: false
       konto:
-        description: Konto-Bau – schaltet die Gruppe „Claude“ ein, nie für den App Store (#615)
+        description: Konto-Bau – schaltet die Gruppe „Claude“ ein, nie für den App Store (#615); Vorgabe an, damit kein Testbau sie abschaltet (2026-11-15)
         type: boolean
-        default: false
+        default: true
   push:
     tags: ['v*']
 

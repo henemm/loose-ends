@@ -296,12 +296,13 @@ class AccountBuildWorkflowTests(unittest.TestCase):
             self.fail(f"{member!r} fehlt{f' ({msg})' if msg else ''}")
 
     # AC-3
-    def test_workflow_has_konto_input_default_false(self):
+    # 2026-11-15: Vorgabe an, ein Testbau von Hand schaltet die Gruppe „Claude“ nicht mehr ab; ein v*-Tag bleibt ohne
+    def test_workflow_has_konto_input_default_true(self):
         inputs = self.workflow[self.workflow.index("    inputs:\n"):self.workflow.index("  push:\n")]
         found = re.search(r"\n      konto:\n((?:        .*\n)+)", inputs)
         self.assertIsNotNone(found, "Eingabe konto fehlt")
         self.assertIn("type: boolean", found.group(1))
-        self.assertIn("default: false", found.group(1))
+        self.assertIn("default: true", found.group(1))
         top_env = self.workflow[self.workflow.index("\nenv:\n"):self.workflow.index("\njobs:\n")]
         self.assertIn("ACCOUNT_BUILD: ${{ inputs.konto == true && 'true' || 'false' }}", top_env)
         self.assertEqual(self.workflow.count("inputs.konto"), 1)

@@ -1,5 +1,8 @@
 """Tests: scripts/next-ticket.sh schlägt das nächste Ticket des Epics vor (#715 Schnitt 1).
 
+Seit 2026-11-15 (Henning): zuständig ist die führende #N mit ihren Teil-Tickets, ohne Teil-Tickets #N allein; was eine
+andere Sitzung vorne im Namen trägt, fällt heraus, und zwei Sitzungen mit derselben #N bekommen keinen Vorschlag.
+
 Aufruf: python3 scripts/test_next_ticket.py
 
 `gh`, `herdr` und `git` sind Attrappen im PATH, die feste Antworten aus einer JSON-Datei geben. Das Skript
@@ -20,7 +23,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SCRIPT = ROOT / "scripts" / "next-ticket.sh"
 
 GH_STUB = r'''#!/usr/bin/env python3
-import json, os, sys
+import json, os, re, sys
 if os.environ.get("GH_FAIL"):
     sys.stderr.write("gh: simulated failure\n")
     sys.exit(1)
@@ -40,6 +43,11 @@ if a.endswith("/parent") or "/parent " in a + " ":
     n = num(r"issues/(\d+)/parent")
     if n in fx["parent"]:
         out({"number": fx["parent"][n]})
+    sys.stderr.write("gh: Not Found (HTTP 404)\n"); sys.exit(1)
+m = re.fullmatch(r"api repos/[^/]+/[^/]+/issues/(\d+)", a)
+if m:
+    if m.group(1) in fx.get("issues", {}):
+        out(fx["issues"][m.group(1)])
     sys.stderr.write("gh: Not Found (HTTP 404)\n"); sys.exit(1)
 if "/dependencies/blocked_by" in a:
     out(fx["blocked_by"].get(num(r"issues/(\d+)/dependencies"), []))
@@ -66,6 +74,11 @@ if a[:2] == ["workspace", "get"]:
     print(json.dumps({"id": "cli:workspace:get", "result": {"type": "workspace_info",
                       "workspace": {"label": os.environ.get("HERDR_LABEL", ""), "workspace_id": a[2]}}}))
     sys.exit(0)
+if a[:2] == ["workspace", "list"]:
+    own = {"workspace_id": os.environ.get("HERDR_WORKSPACE_ID", ""), "label": os.environ.get("HERDR_LABEL", "")}
+    others = [{"workspace_id": f"o{i}", "label": l} for i, l in enumerate(json.loads(os.environ.get("HERDR_OTHERS", "[]")))]
+    print(json.dumps({"id": "cli:workspace:list", "result": {"type": "workspace_list", "workspaces": [own] + others}}))
+    sys.exit(0)
 if a[:1] == ["notification"]:
     with open(os.environ["HERDR_LOG"], "a") as f:
         f.write(" ".join(a) + "\n")
@@ -91,6 +104,7 @@ def epic_fixture(**over):
         "sub_issues": {"371": [{"number": n, "title": f"Ticket {n}", "state": "open"} for n in (342, 176, 40)]},
         "parent": {"176": 371, "342": 371, "40": 371},
         "blocked_by": {},
+        "issues": {},
         "board": [{"number": 342, "priority": "P1"}, {"number": 176, "priority": "P1"}, {"number": 40, "priority": "P1"}],
         "prs": [],
         "git": {},
@@ -116,7 +130,7 @@ class NextTicket(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
-    def run_script(self, fixture, label="#371 Texte", fail=False, workspace="w3", cwd=None, hang=False):
+    def run_script(self, fixture, label="#371 Texte", fail=False, workspace="w3", cwd=None, hang=False, others=()):
         fx = self.dir / "fixture.json"
         fx.write_text(json.dumps(fixture))
         env = {
@@ -125,6 +139,7 @@ class NextTicket(unittest.TestCase):
             "FIXTURE": str(fx),
             "HERDR_LABEL": label,
             "HERDR_LOG": str(self.herdr_log),
+            "HERDR_OTHERS": json.dumps(list(others)),
             "LOOSEENDS_LOCKS_DIR": str(self.locks),
             "LOOSEENDS_REPO": "henemm/loose-ends",
             "CLAUDE_SESSION_ID": "own-session",
@@ -154,12 +169,19 @@ class NextTicket(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertEqual(self.first_line(r), "NEXT=#342", r.stdout + r.stderr)
 
-    # AC-2
-    def test_epic_from_label_with_ticket_number(self):
-        r = self.run_script(epic_fixture(), label="#176 Abnahme")
-        self.assertEqual(self.first_line(r), "NEXT=#342", r.stdout + r.stderr)
+    # AC-2 (seit 2026-11-15): ein Ticket ohne Teil-Tickets vorne im Namen ist allein zuständig
+    def test_single_ticket_label_proposes_only_that_ticket(self):
+        fx = epic_fixture(issues={"176": {"number": 176, "title": "Ticket 176", "state": "open"}})
+        r = self.run_script(fx, label="#176 Abnahme")
+        self.assertEqual(self.first_line(r), "NEXT=#176", r.stdout + r.stderr)
+        self.assertIn("nur #176", r.stdout)
 
-    # AC-2, echte Lage 2026-10-27: #176 hat selbst Teil-Tickets und hängt unter #371
+    def test_closed_single_ticket_gives_none(self):
+        fx = epic_fixture(issues={"176": {"number": 176, "title": "Ticket 176", "state": "closed"}})
+        r = self.run_script(fx, label="#176 Abnahme")
+        self.assertEqual(self.first_line(r), "NEXT=none", r.stdout + r.stderr)
+
+    # echte Lage 2026-10-27: #176 hat selbst Teil-Tickets und hängt unter #371
     def nested_fixture(self, **over):
         fx = epic_fixture(
             sub_issues={
@@ -168,25 +190,43 @@ class NextTicket(unittest.TestCase):
             board=[{"number": 342, "priority": "P1"}, {"number": 176, "priority": "P1"},
                    {"number": 601, "status": "In review", "priority": "P1"},
                    {"number": 605, "status": "In progress", "priority": "P1"},
-                   {"number": 607, "status": "In review", "priority": "P1"}, {"number": 40, "priority": "P1"}])
+                   {"number": 607, "priority": "P1"}, {"number": 40, "priority": "P1"}])
         fx.update(over)
         return fx
 
-    def test_epic_is_topmost_parent_when_ticket_has_sub_issues(self):
+    def test_ticket_with_sub_issues_is_its_own_scope(self):
         r = self.run_script(self.nested_fixture(), label="#176 Abnahme")
-        self.assertEqual(self.first_line(r), "NEXT=#342", r.stdout + r.stderr)
-        self.assertIn("Epic #371", r.stdout)
+        self.assertEqual(self.first_line(r), "NEXT=#607", r.stdout + r.stderr)
+        self.assertIn("#176 mit seinen Teil-Tickets", r.stdout)
 
     # AC-12
     def test_only_lowest_level_tickets_are_candidates(self):
         fx = self.nested_fixture(blocked_by={"342": [{"number": 999, "state": "open"}]})
-        r = self.run_script(fx, label="#176 Abnahme")
-        self.assertEqual(self.first_line(r), "NEXT=#40", r.stdout + r.stderr)
+        r = self.run_script(fx)
+        self.assertEqual(self.first_line(r), "NEXT=#607", r.stdout + r.stderr)
         fx["board"][2] = {"number": 601, "priority": "P1"}
-        fx["board"][5] = {"number": 40, "status": "In progress", "priority": "P1"}
-        r = self.run_script(fx, label="#176 Abnahme")
+        r = self.run_script(fx)
         self.assertEqual(self.first_line(r), "NEXT=#601", r.stdout + r.stderr)
         self.assertNotEqual(self.first_line(r), "NEXT=#176")
+
+    # Henning 2026-11-15: die genauere Nummer gewinnt
+    def test_subtree_named_by_other_session_is_left_out(self):
+        r = self.run_script(self.nested_fixture(), others=["#176 Abnahme"])
+        self.assertEqual(self.first_line(r), "NEXT=#342", r.stdout + r.stderr)
+        fx = self.nested_fixture(board=[{"number": 342, "status": "In progress", "priority": "P1"},
+                                        {"number": 601, "priority": "P1"}, {"number": 40, "priority": "P1"}])
+        r = self.run_script(fx, others=["#176 Abnahme", "Restock"])
+        self.assertEqual(self.first_line(r), "NEXT=#40", r.stdout + r.stderr)
+        self.assertIn("Gehört anderen Sitzungen: #176", r.stdout)
+
+    def test_single_ticket_named_by_other_session_is_left_out(self):
+        r = self.run_script(epic_fixture(), others=["#342 Texte"])
+        self.assertEqual(self.first_line(r), "NEXT=#176", r.stdout + r.stderr)
+
+    def test_two_sessions_with_same_number_give_no_proposal(self):
+        r = self.run_script(epic_fixture(), others=["#371 Noch eine"])
+        self.assertEqual(self.first_line(r), "NEXT=unknown", r.stdout + r.stderr)
+        self.assertIn("Zwei Sitzungen beginnen mit #371", r.stdout)
 
     # AC-8
     def test_no_epic_gives_none(self):
@@ -196,7 +236,7 @@ class NextTicket(unittest.TestCase):
         self.assertIn("kein Epic", r.stdout)
         r = self.run_script(epic_fixture(), label="#715 Nächstes Ticket")
         self.assertEqual(self.first_line(r), "NEXT=none")
-        self.assertIn("kein Epic", r.stdout)
+        self.assertIn("#715 ist nicht abrufbar", r.stdout)
 
     # AC-3
     def test_in_progress_and_pr_are_skipped(self):
