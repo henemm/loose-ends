@@ -410,7 +410,7 @@ struct TaskDetailView: View {
         case .contexts: FieldFormatting.value(FieldCodec.encode(.contexts, of: task), for: .contexts)
         case .project: task.project?.name
         case .repeatRule: FieldFormatting.value(FieldCodec.encode(.repeatRule, of: task), for: .repeatRule)
-        case .title, .people, .blockedBy, .place, .notes, .knaeuel, .counts: nil
+        case .title, .people, .blockedBy, .place, .notes, .knaeuel, .counts, .status, .nextRank, .subtasks: nil
         }
     }
 

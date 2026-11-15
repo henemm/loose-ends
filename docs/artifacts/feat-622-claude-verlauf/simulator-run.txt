@@ -1,0 +1,26 @@
+# Simulator-Beleg
+erzeugt: 2026-11-15T02:45:06+0100
+befehl: scripts/sim.sh test-proof FieldsSmokeTests
+workflow: feat-622-claude-verlauf
+head: 50b6aa84ff1a1dd321bbfd2d60f5077661394092
+basis: ecfd2228ddd94c16edbaa96bc8acea859fe87a6d (merge-base origin/main HEAD)
+testklasse: FieldsSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 5 gesamt, 5 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794706930.505  ende: 1794707105.202
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-622-claude-verlauf/simulator-run/summary.json  sha256:118778c2591311ede309cf5195d1512a538c29e0aa9f89b53e718ffd88cfd145
+xcresult: docs/artifacts/feat-622-claude-verlauf/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-622-claude-verlauf/simulator-run/*.png (10 Stück)
+
+## Geprüfte Dateien
+- sha256:4925b64c780f7a83467dda78711f2311c369a9e5acb67022bbd431f16607494e  LooseEnds/Views/FieldFormatting.swift
+- sha256:a0c0342e8edb441f9a70882d75b1cd9291f1a0bf3cdadb9dab998e11c3b907d4  LooseEnds/Views/TaskDetailView.swift
+- sha256:6b539892d4189c483f7a748e47a352489675dd659ee52ca36a338ce5e5a1802c  LooseEndsTests/OrderExecutorTests.swift
+- sha256:bbaa318e5f044d4ed05c23165641f298f81b71bd2d1407cafccd9c7d188a164a  Shared/Models/DetailFields.swift
+- sha256:2ac0feda5db6515a259c9d9ba738a78af65ce7c0633c733093e71e55cbc1390f  Shared/Models/Enums.swift
+- sha256:e6a1cc77ffd72bcf0100d11981ff3415a23cacf400df49fca3224a31ebee8881  Shared/Services/FieldCodec.swift
+- sha256:522950bd0c9967a621bde930acae4e9736c586128d5bb00ca9e6c5c3a1e2af91  Shared/Services/OrderExecutor.swift
+- sha256:c54f0ebcb5d89d87860444d4830898b8b7362b335d98e68f5af7d169dd26d5d0  Shared/Services/RevisionService.swift
+- sha256:f7e640c594123e8a63cb2a96d46c1e1d81b6e7ada505a39d9f47cab34b884272  Shared/Services/Subtasks.swift

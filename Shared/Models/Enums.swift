@@ -68,6 +68,8 @@ enum RevisedField: String, Codable, CaseIterable, Sendable {
     case notes
     /// "Das Knäuel" and "Zählt" (#643, #645): the mark's date or nil, set by hand only.
     case knaeuel, counts
+    /// Written only by orders from Claude (#622): the status, the "Next up" rank and an added line, never applied.
+    case status, nextRank, subtasks
 }
 
 /// System and user views. Rules live in ViewRules.

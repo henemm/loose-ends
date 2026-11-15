@@ -105,7 +105,7 @@ enum RevisionService {
         case .people: nil
         case .place: task.placeSourceRaw
         case .notes: task.notesSourceRaw
-        case .project, .blockedBy, .repeatRule, .knaeuel, .counts: nil
+        case .project, .blockedBy, .repeatRule, .knaeuel, .counts, .status, .nextRank, .subtasks: nil
         }
         return raw.flatMap(FieldSource.init(rawValue:))
     }
