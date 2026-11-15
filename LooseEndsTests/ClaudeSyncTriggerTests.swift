@@ -13,12 +13,17 @@ import AppKit
 /// notifications are the system's own names, posted by hand. Only AC-11 builds a real `ClaudeSync`, without a session.
 @MainActor final class ClaudeSyncTriggerTests: XCTestCase {
     /// Every call of the handed-in actions in order: `send` when a send begins, `sent` when it ends, `pull` when a
-    /// pull begins. A send is held open for `sendDelay`.
+    /// pull begins. A send is held open for `sendDelay`, a pull for `pullDelay`.
     @MainActor final class Calls {
         var entries: [String] = []
+        /// Like `entries`, plus `pulled` when a pull ends and the tests' own `wake`/`woke` marks (#795 S5c-1).
+        var trace: [String] = []
         var sendDelay: Duration = .zero
+        var pullDelay: Duration = .zero
         private(set) var running = 0
         private(set) var overlapped = false
+        private(set) var pulling = 0
+        private(set) var pullsOverlapped = false
 
         var sends: Int { entries.filter { $0 == "send" }.count }
         var pulls: Int { entries.filter { $0 == "pull" }.count }
@@ -27,6 +32,7 @@ import AppKit
             running += 1
             if running > 1 { overlapped = true }
             entries.append("send")
+            trace.append("send")
             if sendDelay > .zero {
                 do {
                     try await Task.sleep(for: sendDelay)
@@ -35,11 +41,24 @@ import AppKit
                 }
             }
             entries.append("sent")
+            trace.append("sent")
             running -= 1
         }
 
         func pull() async {
+            pulling += 1
+            if pulling > 1 { pullsOverlapped = true }
             entries.append("pull")
+            trace.append("pull")
+            if pullDelay > .zero {
+                do {
+                    try await Task.sleep(for: pullDelay)
+                } catch {
+                    trace.append("cancelled")
+                }
+            }
+            trace.append("pulled")
+            pulling -= 1
         }
     }
 
@@ -288,5 +307,151 @@ import AppKit
             let requests = await wire.requests
             XCTAssertTrue(requests.isEmpty, "silent: \(silent) sent \(requests.count) requests without a session")
         }
+    }
+
+    // MARK: wake (#795 S5c-1, AC-11 bis AC-15)
+
+    /// Calls `wake()` in its own task, marking in the trace right before the call and right after it returned.
+    @discardableResult
+    private func wake(_ trigger: ClaudeSyncTrigger, _ calls: Calls, _ name: String) -> Task<Void, Never> {
+        Task {
+            calls.trace.append("wake \(name)")
+            await trigger.wake()
+            calls.trace.append("woke \(name)")
+        }
+    }
+
+    /// Every named wake returned exactly once, and only after a pull ended that began after its call.
+    private func assertWokenAfterALaterPull(_ calls: Calls, _ names: [String],
+                                            file: StaticString = #filePath, line: UInt = #line) {
+        let trace = calls.trace
+        for name in names {
+            XCTAssertEqual(trace.filter { $0 == "woke \(name)" }.count, 1, "\(name) not woken exactly once",
+                           file: file, line: line)
+            guard let called = trace.firstIndex(of: "wake \(name)"),
+                  let woken = trace.firstIndex(of: "woke \(name)"), called < woken else {
+                XCTFail("\(name) missing in \(trace)", file: file, line: line)
+                continue
+            }
+            let pullBegan = trace[(called + 1)..<woken].firstIndex(of: "pull")
+            let covered = pullBegan.map { trace[($0 + 1)..<woken].contains("pulled") } ?? false
+            XCTAssertTrue(covered, "\(name) returned without a pull that began after it: \(trace)",
+                          file: file, line: line)
+        }
+        XCTAssertFalse(calls.overlapped, "two sends ran at the same time", file: file, line: line)
+        XCTAssertFalse(calls.pullsOverlapped, "two pulls ran at the same time", file: file, line: line)
+    }
+
+    private func waitWoken(_ calls: Calls, _ names: [String]) async throws {
+        try await waitUntil("woken: \(names)") { names.allSatisfy { calls.trace.contains("woke \($0)") } }
+    }
+
+    // MARK: AC-11
+
+    func testWakeReturnsAfterSendAndPull() async throws {
+        let calls = Calls()
+        calls.pullDelay = .milliseconds(150)
+        let trigger = make(calls)
+        wake(trigger, calls, "a")
+        try await waitWoken(calls, ["a"])
+        XCTAssertEqual(calls.trace, ["wake a", "send", "sent", "pull", "pulled", "woke a"])
+        assertWokenAfterALaterPull(calls, ["a"])
+    }
+
+    // MARK: AC-12
+
+    func testWakeDuringASendWaitsForTheFollowingPull() async throws {
+        let calls = Calls()
+        let store = try TestStore()
+        let trigger = try await started(calls)
+        calls.sendDelay = .milliseconds(200)
+        calls.pullDelay = .milliseconds(50)
+        try save(store)
+        try await waitUntil("slow send running") { calls.running == 1 }
+        try save(store, "Während")
+        try await Task.sleep(for: .milliseconds(80))
+        wake(trigger, calls, "a")
+        try await waitWoken(calls, ["a"])
+        assertWokenAfterALaterPull(calls, ["a"])
+        let woken = try XCTUnwrap(calls.trace.firstIndex(of: "woke a"))
+        let lastSent = try XCTUnwrap(calls.trace[..<woken].lastIndex(of: "sent"))
+        let pull = try XCTUnwrap(calls.trace[..<woken].lastIndex(of: "pull"))
+        XCTAssertGreaterThan(pull, lastSent, "the pull began before the send and its queued resend had ended")
+
+        let cold = Calls()
+        cold.sendDelay = .milliseconds(150)
+        cold.pullDelay = .milliseconds(100)
+        let coldTrigger = make(cold)
+        coldTrigger.start()
+        wake(coldTrigger, cold, "cold")
+        try await waitWoken(cold, ["cold"])
+        assertWokenAfterALaterPull(cold, ["cold"])
+    }
+
+    // MARK: AC-13
+
+    func testWakeDuringAPullWaitsForAnotherPull() async throws {
+        let calls = Calls()
+        calls.pullDelay = .milliseconds(300)
+        let trigger = make(calls)
+        trigger.start()
+        try await waitUntil("start pull running") { calls.pulling == 1 }
+        wake(trigger, calls, "a")
+        try await waitWoken(calls, ["a"])
+        XCTAssertEqual(calls.pulls, 2)
+        assertWokenAfterALaterPull(calls, ["a"])
+    }
+
+    // MARK: AC-14
+
+    func testSeveralWakesAreAllWokenOnce() async throws {
+        let calls = Calls()
+        calls.sendDelay = .milliseconds(100)
+        calls.pullDelay = .milliseconds(100)
+        let trigger = make(calls)
+        for name in ["a", "b", "c"] { wake(trigger, calls, name) }
+        try await waitWoken(calls, ["a", "b", "c"])
+        try await settle()
+        assertWokenAfterALaterPull(calls, ["a", "b", "c"])
+
+        let pullsBefore = calls.pulls
+        calls.pullDelay = .milliseconds(300)
+        wake(trigger, calls, "d")
+        try await waitUntil("pull for d running") { calls.pulling == 1 && calls.pulls == pullsBefore + 1 }
+        wake(trigger, calls, "e")
+        try await waitWoken(calls, ["d", "e"])
+        try await settle()
+        assertWokenAfterALaterPull(calls, ["a", "b", "c", "d", "e"])
+        XCTAssertEqual(calls.pulls, pullsBefore + 2, "the wake during a pull got no pull of its own")
+    }
+
+    // MARK: AC-15
+
+    func testWakeKeepsTheTriggerRules() async throws {
+        let calls = Calls()
+        let store = try TestStore()
+        let trigger = try await started(calls)
+        calls.pullDelay = .milliseconds(100)
+        wake(trigger, calls, "a")
+        try save(store)
+        try await waitWoken(calls, ["a"])
+        try await waitUntil("debounced send after the save") { calls.sends >= 3 }
+        try await settle()
+        XCTAssertEqual(calls.pulls, 2, "a pull followed the save")
+        assertWokenAfterALaterPull(calls, ["a"])
+
+        let unstarted = Calls()
+        let quiet = make(unstarted)
+        wake(quiet, unstarted, "b")
+        try await waitWoken(unstarted, ["b"])
+        becomeActive()
+        try save(store, "Ohne Start")
+        try await settle()
+        XCTAssertEqual(unstarted.entries, Self.startPass, "wake() left observers behind")
+
+        let empty = ClaudeSyncTrigger(debounce: Self.debounce)
+        let marks = Calls()
+        wake(empty, marks, "empty")
+        try await waitWoken(marks, ["empty"])
     }
 }
