@@ -1,16 +1,16 @@
 # Simulator-Beleg
-erzeugt: 2026-11-15T09:14:04+0100
+erzeugt: 2026-11-15T09:33:51+0100
 befehl: scripts/sim.sh test-proof ClaudeChangeTests
 workflow: feat-622-s2-claude-sichtbar
-head: cd12fa9b4e15afb4a6410a610748e91dd119e77b
+head: 4a6998de8d35f8df1d7311f181af180adb7793c4
 basis: c82871d5383cbe225c827dae5768a9750e41166a (merge-base origin/main HEAD)
 testklasse: ClaudeChangeTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1794730367.7  ende: 1794730443.186
+start: 1794731587.58  ende: 1794731630.989
 geraet: iPhone 17, iOS 27.2
-summary: docs/artifacts/feat-622-s2-claude-sichtbar/simulator-run/summary.json  sha256:5f302d5ac38d56c03b0fca760d333f66d6a18d2fd6da4cd848faec3660c70cb8
+summary: docs/artifacts/feat-622-s2-claude-sichtbar/simulator-run/summary.json  sha256:d44de8aaa72ae639c6f4efe7b65056f641a4bc9f69df3b1b220653e7d03c53d0
 xcresult: docs/artifacts/feat-622-s2-claude-sichtbar/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/feat-622-s2-claude-sichtbar/simulator-run/*.png (4 Stück)
 
