@@ -431,3 +431,62 @@ test("AC-11 (C4b-2): neither new tool writes to console or stdout", async (t) =>
   assert.equal(logs, 0, "console.log");
   assert.equal(writes, 0, "process.stdout.write");
 });
+
+// #932 Schnitt 2: capture_task with fields.
+const FIELD_KEYS = ["contexts", "dueDate", "dueHasTime", "duration", "energy", "importance", "notes", "project", "title", "urgency"];
+const fullFields = {
+  contexts: ["Garten"], dueDate: "2026-03-14T08:00:00Z", dueHasTime: true, duration: "hour1", energy: -1,
+  importance: "high", notes: "Heckenschere beim Nachbarn holen", project: "Haus", title: "Hecke schneiden", urgency: "low",
+};
+const storedDoc = async (pool: pg.Pool, orderID: string) => (await pool.query("SELECT doc FROM orders WHERE id = $1", [orderID])).rows[0].doc;
+
+test("AC-5 (#932 S2): capture_task stores fields unchanged; without fields the order has exactly its four keys", async (t) => {
+  const pool = await migrated(t);
+  const client = await connect(t, pool, "henning");
+  const text = "Samstag früh die Hecke schneiden, Heckenschere beim Nachbarn holen";
+  const answer = await call(client, "capture_task", { text, fields: fullFields });
+  assert.equal(answer.isError, false, answer.text);
+  const doc = await storedDoc(pool, JSON.parse(answer.text).orderID);
+  assert.deepEqual(doc.fields, fullFields);
+  assert.equal(doc.text, text);
+  checkOrder(doc);
+  const empty = await call(client, "capture_task", { text, fields: {} });
+  assert.equal(empty.isError, false, empty.text);
+  assert.deepEqual((await storedDoc(pool, JSON.parse(empty.text).orderID)).fields, {});
+  const plainDoc = await storedDoc(pool, JSON.parse((await capture(client, "Milch kaufen")).text).orderID);
+  assert.deepEqual(Object.keys(plainDoc).sort(), ["id", "kind", "text", "version"]);
+});
+
+test("AC-6 (#932 S2): capture_task with a foreign key or a wrong value in fields is refused, no order is stored", async (t) => {
+  const pool = await migrated(t);
+  const client = await connect(t, pool, "henning");
+  for (const fields of [
+    { titel: "Hecke" }, { energy: 4 }, { energy: 1.5 }, { importance: "urgent" }, { duration: "hour3" },
+    { dueDate: "2026-03-14T08:00:00Z" }, { dueHasTime: true }, { contexts: ["Garten", 5] }, { project: 5 }, "Hecke",
+  ]) {
+    const answer = await call(client, "capture_task", { text: "Hecke schneiden", fields });
+    assert.equal(answer.isError, true, JSON.stringify(fields));
+  }
+  assert.equal(await orderCount(pool), 0);
+});
+
+test("AC-7 (#932 S2): the zod schema of capture_task is strict with exactly the keys checkOrder takes", async (t) => {
+  const client = await connect(t, await migrated(t), "henning");
+  const { tools } = await client.listTools();
+  const schema: Doc = tools.find((tool) => tool.name === "capture_task")!.inputSchema;
+  const fields = schema.properties.fields;
+  assert.ok(fields, "capture_task kennt fields");
+  assert.equal(fields.additionalProperties, false, "fields ist strict");
+  assert.deepEqual(Object.keys(fields.properties).sort(), FIELD_KEYS);
+  assert.ok(!(schema.required ?? []).includes("fields"), "fields ist optional");
+  const unknownKey = (key: string) => {
+    try {
+      checkOrder({ version: 1, id: fakeID(1), kind: "capture", text: "x", fields: { [key]: Symbol("bogus") } });
+      return false;
+    } catch (e) {
+      return (e as Error).message.startsWith(`Auftrag ungültig: fields.${key}: unbekannter Schlüssel`);
+    }
+  };
+  for (const key of FIELD_KEYS) assert.equal(unknownKey(key), false, key);
+  assert.equal(unknownKey("titel"), true);
+});

@@ -296,3 +296,56 @@ test("AC-2 (C4b-1): getResult goes waiting, claimed, result and reads the id in 
     });
   }
 });
+
+// #932 Schnitt 2: fields at capture. The capture example is the ```jsonc block of the contract, read, never copied.
+function captureExample(): Doc {
+  const found = [...readFileSync(contractPath, "utf8").matchAll(/```jsonc\n([\s\S]*?)\n```/g)].map((b) => JSON.parse(b[1]));
+  const doc = found.find((d) => d.kind === "capture");
+  assert.ok(doc, "der Vertrag muss ein ```jsonc-Beispiel capture enthalten");
+  return doc;
+}
+const withFields = (fields: unknown): Doc => ({ ...capture(60), fields });
+
+test("AC-1 (#932 S2): capture with fields of every key, single keys and empty fields is accepted", () => {
+  checkOrder(withFields(captureExample().fields));
+  checkOrder(withFields({}));
+  for (const fields of [
+    { title: "Hecke schneiden" }, { title: "" }, { notes: "beim Nachbarn" }, { dueDate: "2026-03-14T08:00:00Z", dueHasTime: false },
+    { importance: "low" }, { urgency: "medium" }, { duration: "minutes5" }, { duration: "hours2plus" },
+    { energy: -3 }, { energy: 0 }, { energy: 3 }, { contexts: [] }, { contexts: ["Garten", "Haus"] }, { project: "Haus" },
+  ]) checkOrder(withFields(fields));
+});
+
+// Each wrong value is refused with its path under fields, nothing is stored.
+const fieldsTable: Array<[unknown, string]> = [
+  [{ importance: "urgent" }, "fields.importance"], [{ urgency: 1 }, "fields.urgency"], [{ duration: "hour3" }, "fields.duration"],
+  [{ energy: 4 }, "fields.energy"], [{ energy: -4 }, "fields.energy"], [{ energy: 1.5 }, "fields.energy"], [{ energy: "1" }, "fields.energy"],
+  [{ dueDate: "2026-03-14T08:00:00Z" }, "fields.dueHasTime"], [{ dueHasTime: true }, "fields.dueDate"],
+  [{ dueDate: "morgen", dueHasTime: true }, "fields.dueDate"], [{ dueDate: "2026-03-14T08:00:00Z", dueHasTime: "ja" }, "fields.dueHasTime"],
+  [{ contexts: "Garten" }, "fields.contexts"], [{ contexts: ["Garten", 5] }, "fields.contexts"],
+  [{ project: 5 }, "fields.project"], [{ title: 5 }, "fields.title"], [{ notes: 5 }, "fields.notes"],
+  [{ titel: "Hecke" }, "fields.titel"],
+  [5, "fields"], ["Hecke", "fields"], [[], "fields"], [null, "fields"],
+];
+
+test("AC-2/AC-3 (#932 S2): wrong values, a foreign key and fields that is no object are refused with the path", async (t) => {
+  const pool = await migrated(t);
+  for (const [fields, path] of fieldsTable) {
+    const doc = withFields(fields);
+    assert.throws(() => checkOrder(doc), (e: Error) => e.message.startsWith(`Auftrag ungültig: ${path}: `), `${JSON.stringify(fields)} → ${path}`);
+    await assert.rejects(putOrder(pool, "henning", doc), (e: Error) => e.message.startsWith(`Auftrag ungültig: ${path}: `));
+  }
+  assert.equal(await count(pool), 0);
+});
+
+test("AC-4 (#932 S2): the contract's capture example passes checkOrder, the three ```json blocks stay", () => {
+  checkOrder(captureExample());
+  assert.equal(blocks().length, 3);
+});
+
+test("AC-5 (#932 S2): fields are stored as given", async (t) => {
+  const pool = await migrated(t);
+  const doc = captureExample();
+  assert.equal(await putOrder(pool, "henning", doc), "stored");
+  assert.deepEqual((await order(pool, doc.id.toLowerCase())).doc, doc);
+});
