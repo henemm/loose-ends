@@ -1,0 +1,9 @@
+FEHLT 404 POST /app/device ohne Bearer (soll 401)
+FEHLT 404 GET /app/device (soll 405)
+FEHLT 404 POST /app/device mit 20-KiB-Körper, ohne Bearer, daher von nginx (soll 413)
+OK    404 GET /app/x (soll 404)
+OK    401 POST /app/transcript ohne Bearer (soll 401)
+OK    405 GET /app/orders/claim (soll 405)
+Anfragen gesendet: 6 (genau 6), 429 gesehen: nein
+Stand: 2026-11-15T15:45:24Z gegen https://loose-ends.henemm.com
+exit=1

@@ -1,0 +1,179 @@
+Stand: 2026-11-15T15:46:12Z
+## uptime
+ 15:46:12 up 29 days, 21:32,  3 users,  load average: 6.68, 4.88, 4.26
+## docker ps
+loose-ends-server	Up 2 hours	2026-11-15 13:46:16 +0000 UTC
+loose-ends-db	Up 11 days (healthy)	2026-11-03 16:57:47 +0000 UTC
+## monitor.sh --status
+
+[1mHTTP-Endpoints[0m
+  [32m✓[0m Website (200)
+  [32m✓[0m n8n (200)
+  [32m✓[0m Mailserver-Web (200)
+  [32m✓[0m Gregor20 (200)
+  [32m✓[0m Kotoba (200)
+  [32m✓[0m Loose-Ends (200)
+
+[1mSystemd-Services[0m
+  [32m✓[0m claude-mq
+  [32m✓[0m gregor-api
+  [32m✓[0m gregor-frontend
+  [32m✓[0m gregor-python
+  [32m✓[0m gregor-api-staging
+  [32m✓[0m gregor-frontend-staging
+  [32m✓[0m gregor-python-staging
+  [32m✓[0m claude-control-bot
+
+[1mInfra-Deploy[0m
+  [32m✓[0m auto-deploy-infra (Haupt-Checkout ist aktuell (ed1e9217))
+
+[1mDocker-Container[0m
+  [32m✓[0m stalwart-mail (seit 2026-11-15)
+  [32m✓[0m n8n (n8n)
+
+[1mDocker-Image-Updates[0m
+  [33m![0m n8n: Update verfügbar (2.45.7 → 2.47.7)
+  [33m![0m loose-ends-db: Update verfügbar (18.6 → 18.7)
+
+[1mSystem-Updates (apt)[0m
+  [33m![0m Reboot erforderlich!
+rm: cannot remove '/var/lib/server-monitor/apt-security-pending-since': Permission denied
+/home/hem/henemm-infra/scripts/monitor.sh: line 898: /var/lib/server-monitor/apt-pending-since: Permission denied
+cat: /var/lib/server-monitor/apt-pending-since: Permission denied
+  [33m![0m 9 Paket-Update(s) verfügbar (seit 20772 Tag(en))
+  [32m✓[0m Letzter Auto-Update-Lauf: vor 0 Tagen
+
+[1mSystemressourcen[0m
+  [31m✗[0m CPU: 167% (Load: 6.68/4.88, 4 Cores)
+  [32m✓[0m RAM: 73% (5619MB / 7745MB)
+  [33m![0m Disk: 73% (39G frei)
+
+[1mSSL-Zertifikate[0m
+  [32m✓[0m henemm.com: 42 Tage
+  [32m✓[0m n8n.henemm.com: 42 Tage
+  [32m✓[0m mail.henemm.com: 43 Tage
+  [32m✓[0m mail.henemm.com:993: 44 Tage
+  [32m✓[0m gregor20.henemm.com: 43 Tage
+  [32m✓[0m staging.gregor20.henemm.com: 69 Tage
+  [32m✓[0m mta-sts.henemm.com: 63 Tage
+
+[1mn8n-Workflows[0m
+  [32m✓[0m Gmail: Auto-Reply auf Typeform-Anfragen (letzter: 2026-11-15 15:45)
+  [32m✓[0m Google Kalender Sync (henemm.gmbh → goodgrow) (letzter: 2026-11-15 15:35)
+  [32m✓[0m Wöchentliche Pre-Screening Erinnerung → Slack (letzter: 2026-11-09 07:00)
+  [32m✓[0m ⚠️ Workflow-Fehler → Telegram Alert (letzter: 2026-11-14 17:55)
+  [32m✓[0m New Oppts via TypeForm → Notion + Slack (letzter: 2026-11-12 16:07)
+  [32m✓[0m Google Sheet: Auto-Zeilenergänzung (projects) (letzter: 2026-11-15 15:44)
+  [32m✓[0m Notion → Slack: Neue Investments (letzter: 2026-11-15 15:45)
+
+[1mBetterStack-Incidents[0m
+  [32m✓[0m keine offenen Incidents
+
+[1mTelegram-Bot[0m
+  [32m✓[0m Bot erreichbar
+
+[1mWireGuard VPN[0m
+  [33m![0m wg0: Keine Konfiguration gefunden
+
+[1mDNS[0m
+  [32m✓[0m MX: 10 mail.henemm.com.
+
+[1mResend-Versand[0m
+  [32m✓[0m Heute: 11 Mails
+  [32m✓[0m Monat: 438/3000 (14%)
+
+[1mMail-Umschaltung (Resend-Tageskontingent)[0m
+  [32m✓[0m Normalbetrieb über Resend: 11 von 100 Mails heute
+
+[1mMail-Notweg (Direktzustellung ohne Resend)[0m
+  [32m✓[0m Heute keine Direktzustellung
+
+[1mTmp-Secrets (henemm-security#199)[0m
+  [32m✓[0m gehaertet: 0, entfernt (>1 Tag): 0
+
+[1mkotoba_line: Ton-Generator (kotoba_line#183)[0m
+  [32m✓[0m letzter Erfolg vor 12 h
+
+[1mkotoba_line: Tagesbericht (kotoba_line#318)[0m
+  [32m✓[0m letzter Bericht vor 0 h
+
+[1mAußensicht-Scan (henemm-infra#281)[0m
+  [32m✓[0m letzter sauberer Lauf vor 3 Tagen
+
+[1mPlatten-Aufraeumen (henemm-infra#400)[0m
+  [32m✓[0m letzter sauberer Lauf vor 11 h
+
+[1mIntegritätswächter (henemm-infra#282)[0m
+  [33m![0m noch keine Baseline (wird beim nächsten Lauf angelegt)
+
+[1mkotoba_line: Benachrichtigungen (kotoba_line#248)[0m
+  [32m✓[0m letzter fehlerfreier Lauf vor 0 min
+
+[1mkotoba_line: Auto-Deploy[0m
+  [32m✓[0m letzter sauberer Lauf vor 1 min
+
+[1moebb-nightjet-monitor: Erfolgsstempel[0m
+  [32m✓[0m letzter Erfolg vor 31 min
+
+[1mFrieda: automatisches Veröffentlichen (henemm-infra#313)[0m
+  [32m✓[0m letzter Erfolg vor 0 min
+
+[1mFrieda: Software-Stand nachgezogen (frieda-reist#161)[0m
+  [32m✓[0m auf Stand bb18797
+
+[1mFrieda: Software-Aktualisierung ohne GitHub (frieda-reist#350)[0m
+  [32m✓[0m Software-Aktualisierung läuft
+
+[1mFrieda: Reisespeicher (frieda-reist#348)[0m
+  [32m✓[0m Sicherung 8 h alt
+  [32m✓[0m gr221: gebaut mit Stand bb18797
+  [32m✓[0m japan-2027: gebaut mit Stand bb18797
+  [32m✓[0m oldenburg-daenemark-november-2026: gebaut mit Stand bb18797
+  [32m✓[0m skiurlaub-zillertal-2027: gebaut mit Stand bb18797
+  [32m✓[0m test-135: gebaut mit Stand bb18797
+  [32m✓[0m test-14: gebaut mit Stand bb18797
+  [32m✓[0m testreise-ablage-349-erfunden-2027: gebaut mit Stand bb18797
+  [32m✓[0m testreise-abnahme-223-erfunden-2027: gebaut mit Stand bb18797
+  [32m✓[0m testreise-karten-225-erfunden-2027: gebaut mit Stand bb18797
+
+[1mFrieda: Schreibweg der Claude-App[0m
+  [32m✓[0m gesund
+
+[1mFrieda: Wächter und Erinnerer[0m
+  [32m✓[0m letzter Erfolg vor 8 h
+
+[1mFrieda: Reiseseiten und Rückmeldedienst[0m
+  [32m✓[0m Reiseseite gr221 (200)
+  [32m✓[0m Rückmeldedienst gr221 (200)
+  [32m✓[0m Reiseseite japan-2027 (200)
+  [32m✓[0m Rückmeldedienst japan-2027 (200)
+  [32m✓[0m Reiseseite oldenburg-daenemark-november-2026 (200)
+  [32m✓[0m Rückmeldedienst oldenburg-daenemark-november-2026 (200)
+  [31m✗[0m Reiseseite probelauf-alpha-2027 (404)
+  [31m✗[0m Rückmeldedienst probelauf-alpha-2027 (404)
+  [32m✓[0m Reiseseite skiurlaub-zillertal-2027 (200)
+  [32m✓[0m Rückmeldedienst skiurlaub-zillertal-2027 (200)
+  [32m✓[0m Reiseseite test-135 (200)
+  [32m✓[0m Rückmeldedienst test-135 (200)
+  [32m✓[0m Reiseseite test-14 (200)
+  [32m✓[0m Rückmeldedienst test-14 (200)
+  [32m✓[0m Reiseseite testreise-ablage-349-erfunden-2027 (200)
+  [32m✓[0m Rückmeldedienst testreise-ablage-349-erfunden-2027 (200)
+  [32m✓[0m Reiseseite testreise-abnahme-223-erfunden-2027 (200)
+  [32m✓[0m Rückmeldedienst testreise-abnahme-223-erfunden-2027 (200)
+  [32m✓[0m Reiseseite testreise-karten-225-erfunden-2027 (200)
+  [32m✓[0m Rückmeldedienst testreise-karten-225-erfunden-2027 (200)
+
+[1mFrieda: Reiseseiten im Browser[0m
+  noch kein Lauf
+
+[1mFrieda: Karten des eigenen Kartendienstes[0m
+  [32m✓[0m Karten 5 Tage alt
+
+[1mFrieda: Konnektor-Pfade in nginx[0m
+  [32m✓[0m alle Pfade erreichen den Konnektor
+
+[1mHetzner-Kapazität (henemm-infra#336)[0m
+  [33m![0m cx43 in nbg1 derzeit nicht bestellbar
+  [32m✓[0m Swap: 1833/2047 MB belegt, RAM verfuegbar: 2901 MB
+
