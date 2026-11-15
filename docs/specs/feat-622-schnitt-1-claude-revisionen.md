@@ -184,3 +184,9 @@ Stufe 1: neue Tests rot vor, grün nach der Umsetzung, alle Unit-Tests und `scri
 ## Changelog
 
 - 2026-11-15: Erste Fassung (Schnitt 1, Logik); Schnitt 2 (Sichtbarkeit) bekommt eigene Teil-Spec.
+- 2026-11-15 (Validierung): Die deutschen Wörter kommen nach der Regel „vorhandene Katalogschlüssel werden wiederverwendet“ aus dem Katalog: „Als nächstes“ (Next up), „Unteraufgabe“ (Subtask), „Fertig“ (Done). Die Klammerwörter in „Anzeige“ („Als Nächstes“, „Teilaufgabe“, „Erledigt“) waren Platzhalter; der Katalog wird nicht umbenannt, damit Verlauf und übrige App dieselben Wörter zeigen. Der Typ heißt im Code `CaptureChannel` statt `CaptureSource`.
+
+## Known Limitations
+
+- `TaskActions.complete` löscht bei einer einmaligen Aufgabe den Rang „Als nächstes“ ohne eigene `nextRank`-Revision; die `status`-Revision „→ done“ deckt den Vorgang ab (unverändertes Verhalten, außerhalb dieses Schnitts).
+- `setNext` mit unbekannter Aufgabe (`missing`) hat keinen eigenen Test; die Ablehnung läuft über denselben Pfad wie bei den anderen Aufträgen.

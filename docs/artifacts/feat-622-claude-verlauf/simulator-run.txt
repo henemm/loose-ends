@@ -1,16 +1,16 @@
 # Simulator-Beleg
-erzeugt: 2026-11-15T02:45:06+0100
+erzeugt: 2026-11-15T03:00:14+0100
 befehl: scripts/sim.sh test-proof FieldsSmokeTests
 workflow: feat-622-claude-verlauf
-head: 50b6aa84ff1a1dd321bbfd2d60f5077661394092
+head: 3a369e77beb174b285b1f06be54e26f33881ebf2
 basis: ecfd2228ddd94c16edbaa96bc8acea859fe87a6d (merge-base origin/main HEAD)
 testklasse: FieldsSmokeTests
 ergebnis: Passed
 xcodebuild: ** TEST SUCCEEDED **
 tests: 5 gesamt, 5 bestanden, 0 fehlgeschlagen, 0 übersprungen
-start: 1794706930.505  ende: 1794707105.202
+start: 1794707796.364  ende: 1794708012.755
 geraet: iPhone 17, iOS 27.2
-summary: docs/artifacts/feat-622-claude-verlauf/simulator-run/summary.json  sha256:118778c2591311ede309cf5195d1512a538c29e0aa9f89b53e718ffd88cfd145
+summary: docs/artifacts/feat-622-claude-verlauf/simulator-run/summary.json  sha256:44ccaad9c37d5916d6a188cb51bd8aa9e676e89e6956600db7e4df5e7c7d59fc
 xcresult: docs/artifacts/feat-622-claude-verlauf/simulator-run/run.xcresult  (gitignored)
 screenshots: docs/artifacts/feat-622-claude-verlauf/simulator-run/*.png (10 Stück)
 

@@ -86,7 +86,7 @@ Beispiel:
 ## Auftrag
 
 Ein Auftrag ist eine Änderung, die Claude auslöst. Die App führt ihn als Nutzeränderung aus (`OrderExecutor`): Autor Nutzer,
-Grund „Claude“, mit Revision wie jede Änderung in der App, soweit das Feld ein Revisionsfeld ist (Status, Rang in „Als nächstes“ und Unteraufgaben sind es nicht; wie beim Abhaken entsteht dort keine Revision, #622). Version 1 kennt sechs Arten (`kind`); Verschieben auf einen anderen Tag ist `setDue`, Löschen und Massenänderungen gibt es nicht:
+Grund „Claude“, mit Revision wie jede Änderung in der App, auch für Status (abhaken, parken), Rang in „Als nächstes“ und Unteraufgaben (Revisionsfelder `status`, `nextRank`, `subtasks`, nicht per Zurücksetzen umkehrbar; Nebenrevisionen wie die Knäuel-Marke tragen ebenfalls den Grund „Claude“, #622 Schnitt 1). Version 1 kennt sechs Arten (`kind`); Verschieben auf einen anderen Tag ist `setDue`, Löschen und Massenänderungen gibt es nicht:
 
 - `capture`: `text` wird erfasst wie jede andere Eingabe (Kanal `claude`), samt der üblichen Anreicherung.
 - `complete`: `taskID`, `expectedStatus` (der Status aus der Abschrift, nur ein offener oder geparkter; `done` oder
