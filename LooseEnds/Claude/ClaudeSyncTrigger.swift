@@ -37,6 +37,9 @@ import AppKit
     private var sending = false
     private var sendAgain = false
     private var pullAfterSend = false
+    private var pulling = false
+    /// Callers of `wake()` waiting for a pull that begins after their call.
+    private var waiters: [CheckedContinuation<Void, Never>] = []
 
     /// A missing action is an empty one: unit and UI tests never reach a real pass unless they hand in their own,
     /// and the app builds the trigger only through `forApp`, which hands in both outside tests.
@@ -99,6 +102,15 @@ import AppKit
         sendSoon()
     }
 
+    /// The wake-up (#795 S5c-1): send, then pull, and return only once a pull ended that began after this call.
+    /// Needs no `start()` and adds no observers.
+    func wake() async {
+        await withCheckedContinuation { waiter in
+            waiters.append(waiter)
+            sendThenPull()
+        }
+    }
+
     /// Start and becoming active: send, then pull once the send and any queued resend have ended.
     private func sendThenPull() {
         pullAfterSend = true
@@ -134,9 +146,22 @@ import AppKit
             await send()
         } while sendAgain
         sending = false
-        guard pullAfterSend else { return }
-        pullAfterSend = false
-        await pull()
+        await pullIfAsked()
+    }
+
+    /// Never two pulls at a time: a running pull looks again once it ended. Each pull takes the waiters present at its
+    /// beginning and wakes them after its end; a pull asked for while a send runs is left to that send's drain.
+    private func pullIfAsked() async {
+        guard !pulling else { return }
+        pulling = true
+        while pullAfterSend, !sending {
+            pullAfterSend = false
+            let group = waiters
+            waiters = []
+            await pull()
+            for waiter in group { waiter.resume() }
+        }
+        pulling = false
     }
 
     /// Only the case name of the ending reaches the log.

@@ -116,3 +116,7 @@ Upstream: `AccountState.withSession`, `DeviceIdentity.current()`, `ServiceClient
 - [ ] Mac-Entitlement-Schlüssel im Archiv (in S5c-2b am CI-Lauf klären)
 - [ ] CloudKit-Koexistenz nur auf dem Gerät belegbar (S5c-2a, Stufe 3)
 Keine offene PO-Frage.
+
+## Umfang nach RED (2026-11-15)
+
+Nach RED: Tests 470 Zeilen (DeviceRegistrationTests 304, ClaudeSyncTriggerTests +166), mit Code ≈ 120 gesamt ≈ 590, über der Meldeschwelle 520 der Spec. Henning per AskUserQuestion: „So weiterbauen“. In /60-validate nicht erneut fragen, solange der Endstand nicht nennenswert über ≈ 620 liegt. (Commit dieser Notiz kommt mit der Umsetzung; in phase6 sperrt bash_gate Commits bis zum Adversary-Urteil.)
