@@ -10,6 +10,10 @@ export type Order = { version: 1; id: string } & (
   | { kind: "setNext"; taskID: string; expectedStatus: Status; on: boolean; expectedNextRank?: number }
   | { kind: "park"; taskID: string; expectedStatus: Status }
   | { kind: "addSubtask"; taskID: string; expectedStatus: Status; text: string }
+  | {
+    kind: "update"; taskID: string; expectedStatus: Status; fields: Fields;
+    expectedTitle?: string; expectedDueDate?: string; expectedContexts?: string[]; expectedProject?: string;
+  }
 );
 
 type Level = "low" | "medium" | "high";
@@ -54,6 +58,11 @@ export const fieldsCheck = (withNotes: boolean): Check => (v, p) => {
   if (has("dueHasTime") && !has("dueDate")) fail(`${p}.dueDate`, "fehlt, nur mit dueHasTime zusammen");
 };
 export const captureFields = fieldsCheck(true);
+// update changes something or it is no order: empty fields is a form error there (contract), never at capture.
+const updateFields: Check = (v, p) => {
+  if (typeof v === "object" && v !== null && !Array.isArray(v) && Object.keys(v).length === 0) fail(p, "leer, mindestens ein Feld");
+  fieldsCheck(false)(v, p);
+};
 
 // Per kind: required and optional keys beside version, id and kind.
 const forms: Record<string, [Record<string, Check>, Record<string, Check>]> = {
@@ -63,6 +72,10 @@ const forms: Record<string, [Record<string, Check>, Record<string, Check>]> = {
   setNext: [{ taskID: id, expectedStatus: orderStatus, on: flag }, { expectedNextRank: rank }],
   park: [{ taskID: id, expectedStatus: orderStatus }, {}],
   addSubtask: [{ taskID: id, expectedStatus: orderStatus, text }, {}],
+  update: [
+    { taskID: id, expectedStatus: orderStatus, fields: updateFields },
+    { expectedTitle: text, expectedDueDate: time, expectedContexts: names, expectedProject: text },
+  ],
 };
 const kind: Check = (v, p) => { if (typeof v !== "string" || !Object.hasOwn(forms, v)) fail(p, "unbekannte Art"); };
 // With an unknown kind every key of some kind is let through, so the message names kind and not a key.

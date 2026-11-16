@@ -275,5 +275,5 @@ test("update_task: a write tool whose fields are strict and hold exactly capture
   const capture = (tools.find((one) => one.name === "capture_task")!.inputSchema as Doc).properties.fields;
   const captureKeys = Object.keys(capture.properties).filter((key) => key !== "notes").sort();
   assert.deepEqual(Object.keys(fields.properties).sort(), captureKeys);
-  assert.ok(captureKeys.length >= 10);
+  assert.equal(captureKeys.length, 9);
 });

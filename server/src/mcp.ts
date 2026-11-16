@@ -85,7 +85,11 @@ function capturing(pool: pg.Pool, wake?: Wake) {
   };
 }
 
-type Target = { owner: string; taskID: string; expectedStatus: string; expectedDueDate?: string; expectedNextRank?: number };
+// title, contexts and project are the row's own values; only update_task reads them.
+type Target = {
+  owner: string; taskID: string; expectedStatus: string; expectedDueDate?: string; expectedNextRank?: number;
+  title: string; contexts: string[]; project?: string;
+};
 
 // The expected state comes from the latest transcript, and only if Claude read that one; the id is the transcript's.
 // A string is the refusal, before anything is written.
@@ -97,9 +101,9 @@ async function expected(pool: pg.Pool, ctx: ServerContext, taskID: string, gener
   if (doc.generatedAt !== generatedAt) return "Abschrift hat sich geändert, bitte neu lesen";
   const task = doc.tasks.find((x) => x.id.toUpperCase() === taskID.toUpperCase());
   if (task === undefined) return "Aufgabe nicht in der Abschrift";
-  const { id, status, dueDate, nextRank } = task;
+  const { id, status, dueDate, nextRank, title, contexts, project } = task;
   return {
-    owner, taskID: id, expectedStatus: status,
+    owner, taskID: id, expectedStatus: status, title, contexts, ...(project === undefined ? {} : { project }),
     ...(dueDate === undefined ? {} : { expectedDueDate: dueDate }), ...(nextRank === undefined ? {} : { expectedNextRank: nextRank }),
   };
 }
@@ -181,6 +185,25 @@ function setting(pool: pg.Pool, wake?: Wake) {
   };
 }
 
+// The expected state names only the fields that change, from the transcript's row; a value the row lacks stays out
+// ("had none"). Importance, urgency, duration and energy are not in the transcript: for them only the status is expected.
+function updating(pool: pg.Pool, wake?: Wake) {
+  return async (args: { taskID: string; generatedAt: string; fields: Fields }, ctx: ServerContext): Promise<CallToolResult> => {
+    const target = await expected(pool, ctx, args.taskID, args.generatedAt);
+    if (typeof target === "string") return { ...reply(target), isError: true };
+    const { owner, taskID, expectedStatus, expectedDueDate, title, contexts, project } = target;
+    const { fields } = args;
+    const has = (key: string) => Object.hasOwn(fields, key);
+    return storeOrder(pool, owner, {
+      version: 1, id: randomUUID().toUpperCase(), kind: "update", taskID, expectedStatus, fields,
+      ...(has("title") ? { expectedTitle: title } : {}),
+      ...(has("dueDate") && expectedDueDate !== undefined ? { expectedDueDate } : {}),
+      ...(has("contexts") && contexts.length > 0 ? { expectedContexts: contexts } : {}),
+      ...(has("project") && project !== undefined ? { expectedProject: project } : {}),
+    }, wake);
+  };
+}
+
 // Only the state and the result document go out, never the order's text.
 function resulting(pool: pg.Pool) {
   return async ({ orderID }: { orderID: string }, ctx: ServerContext): Promise<CallToolResult> => {
@@ -198,6 +221,7 @@ export function mcpHandler(pool: pg.Pool, { wake }: { wake?: Wake } = {}): McpHt
     registerViews(server, pool);
     registerLookups(server, pool);
     registerOrders(server, pool, wake);
+    registerUpdate(server, pool, wake);
     return server;
   });
 }
@@ -269,6 +293,8 @@ const captureFieldsSchema = z.object({
   importance: z.enum(LEVELS), urgency: z.enum(LEVELS), duration: z.enum(DURATIONS), energy: z.number().int().min(-3).max(3),
   contexts: z.array(z.string()), project: z.string(),
 }).partial().strict();
+// update_task's fields: capture's keys without notes (the contract allows no notes at update), strict as well.
+const updateFieldsSchema = captureFieldsSchema.omit({ notes: true }).strict();
 
 // The order tools and get_order_result; with wake every newly stored order wakes the caller's devices.
 function registerOrders(server: McpServer, pool: pg.Pool, wake: Wake | undefined): void {
@@ -318,4 +344,17 @@ function registerOrders(server: McpServer, pool: pg.Pool, wake: Wake | undefined
     inputSchema: z.object({ taskID: z.string(), generatedAt: z.string(), text: z.string() }),
     annotations: write,
   }, subtasking(pool, wake));
+}
+
+// Changing title and details of a task; only after the user's yes (instructions).
+function registerUpdate(server: McpServer, pool: pg.Pool, wake: Wake | undefined): void {
+  server.registerTool("update_task", {
+    description: "Legt einen Auftrag an, Titel und Angaben einer Aufgabe zu ändern, erst nach dem Ja des Nutzers. fields enthält "
+      + "mindestens eines: Titel, Fälligkeit (dueDate in UTC mit Z, nur zusammen mit dueHasTime), Wichtigkeit, Dringlichkeit, "
+      + "Dauer, Energie (−3 bis 3), Tags und Projekt; Tags und Projekt nur mit Namen, die es schon gibt. Die Fälligkeit entfernt "
+      + "set_due ohne date. Zuerst list_tasks oder get_now lesen und deren generatedAt mitgeben; ausgeführt wird auf einem Gerät, "
+      + "den Stand liefert get_order_result mit der zurückgegebenen orderID",
+    inputSchema: z.object({ taskID: z.string(), generatedAt: z.string(), fields: updateFieldsSchema }),
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
+  }, updating(pool, wake));
 }

@@ -7,7 +7,7 @@ aussehen. Der Dienst übernimmt ihn unverändert; eine Änderung am Format ist e
 Die Beispiele unten stehen wörtlich auch in den Tests (`LooseEndsTests/TranscriptCodecTests.swift`,
 `LooseEndsTests/OrderExecutorTests.swift`), und `server/test/schema.test.ts` liest sie zur Laufzeit aus diesem Text
 (die drei ` ```json`-Blöcke; die ` ```jsonc`-Beispiele prüft der Swift-Test, das Beispiel `capture` liest auch
-`server/test/orders.test.ts`, das Beispiel `update` prüft der Server ab #932 Schnitt 3); weicht eines ab, schlagen die Tests fehl.
+`server/test/orders.test.ts`, das Beispiel `update` ebenfalls); weicht eines ab, schlagen die Tests fehl.
 
 ## Allgemein
 
@@ -120,8 +120,8 @@ lehnt sie ab und legt nie einen Tag oder ein Projekt an. Jeder Wert, der sich ä
 „Claude“; ein Wert, der schon so steht, keine. Ein von Claude gesetzter Titel wird von der Anreicherung nicht mehr ersetzt.
 
 Die App prüft in dieser Reihenfolge und schreibt erst danach, in einem Zug: Form (`invalid`), Aufgabe (`missing`, nur `update`),
-Namen (`invalid`), erwarteter Stand (`stale`, nur `update`). Der Dienst nimmt `fields` an `capture` ab #932 Schnitt 2 an und prüft
-nur die Form, `update` erst ab Schnitt 3; bis dahin verwirft er `update` (unbekannte Art).
+Namen (`invalid`), erwarteter Stand (`stale`, nur `update`). Der Dienst nimmt `fields` an `capture` und `update` an und prüft
+nur die Form (#932 Schnitt 2 und 3).
 
 Weil eine Aufgabe keinen Änderungszeitpunkt führt, trägt jeder Auftrag den **erwarteten Stand** der Felder, die er ändert.
 Stimmt er nicht mehr mit dem Gerät überein, wird nichts geändert. `expectedDueDate` ist bei `complete` und `setDue` Pflicht
