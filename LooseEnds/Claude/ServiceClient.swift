@@ -103,6 +103,15 @@ struct ServiceClient: Sendable {
         _ = try await send(request, success: [204])
     }
 
+    /// `POST /app/device` with exactly `token` (hex) and `environment`: the address for the wake-up (#795 S5c-1).
+    func putDevice(token: String, environment: PushEnvironment, sessionToken: String, device: UUID) async throws {
+        var request = bearer(path: "app/device", sessionToken)
+        request.setValue(device.uuidString.lowercased(), forHTTPHeaderField: "X-Device")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONSerialization.data(withJSONObject: ["token": token, "environment": environment.rawValue])
+        _ = try await send(request, success: [204])
+    }
+
     /// A readable order, else the id rescued from a JSON object so the order can be refused, else `invalidResponse`.
     /// Nothing of the body is logged or put into an error.
     private static func claim(from body: Data) throws -> Claim {
