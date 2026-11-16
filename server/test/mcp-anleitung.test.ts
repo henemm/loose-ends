@@ -49,6 +49,15 @@ test("AC-3: the instructions name only existing tools", async (t) => {
   for (const must of ["get_view", "capture_task", "add_subtask", "get_order_result"]) assert.ok(named.includes(must), `${must} fehlt`);
 });
 
+test("AC-9 (#932 S3): the instructions name update_task, only after the user's yes", async (t) => {
+  const client = await connect(t, await migrated(t));
+  assert.ok((await client.listTools()).tools.some((tool) => tool.name === "update_task"), "update_task fehlt");
+  assert.ok(anleitung.includes("update_task"), "update_task fehlt in der Anleitung");
+  assert.ok(anleitung.includes("Ja des Nutzers"));
+  const sentence = anleitung.split(/(?<=\.)\s/).find((part) => part.includes("update_task")) ?? "";
+  assert.match(sentence, /Ja des Nutzers/, "der Satz zu update_task nennt das Ja des Nutzers");
+});
+
 test("AC-4: the instructions hold the rules and no review", () => {
   for (const word of ["Jetzt", "Fällig", "löschen", "Knäuel", "Perle"]) assert.ok(anleitung.includes(word), `${word} fehlt`);
   assert.ok(!anleitung.includes("Rückblick"));

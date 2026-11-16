@@ -23,11 +23,12 @@ const [MUELL, ANGEBOT, STEUER] = [ID(1), ID(2), ID(3)];
 const example = (): Doc => JSON.parse([...readFileSync(contractPath, "utf8").matchAll(/```json\n([\s\S]*?)\n```/g)][0][1]);
 const orderRows = async (pool: pg.Pool) => (await pool.query("SELECT kind, doc, account_id FROM orders ORDER BY created_at")).rows;
 
-async function setup(t: T, account: string | null = "henning") {
+type Options = { transcript?: Doc | null; wake?: (account: string) => Promise<void> };
+async function setup(t: T, account: string | null = "henning", { transcript = example(), wake }: Options = {}) {
   const pool = await freshPool(t);
   await migrate(pool, migrations);
-  await putTranscript(pool, "henning", example());
-  const handler = mcpHandler(pool);
+  if (transcript !== null) await putTranscript(pool, "henning", transcript);
+  const handler = mcpHandler(pool, { wake });
   const authInfo = account === null ? undefined : { token: "t", clientId: "c", scopes: [], extra: { account } };
   const transport = new StreamableHTTPClientTransport(new URL("http://mcp.test/mcp"), {
     fetch: (url, init) => handler.fetch(new Request(url, init), { authInfo }),
@@ -151,4 +152,128 @@ test("the service takes the three new kinds in their form and refuses every othe
   assert.equal((await pool.query("SELECT count(*)::int AS n FROM orders")).rows[0].n, 4);
   await assert.rejects(pool.query("INSERT INTO orders (doc, account_id) VALUES ($1::jsonb, 'x')",
     [JSON.stringify({ version: 1, id: "0B7D5E3C-0000-4000-8000-000000000099", kind: "delete" })]), /orders_kind_known/);
+});
+
+// #932 Schnitt 3: update_task. The expected state names only the fields that change, from the transcript's row.
+// ANGEBOT gets a due date here, so one task carries title, tags, project and due date; MUELL has no tags and no project.
+const DUE = "2026-03-13T10:00:00Z";
+const full = (): Doc => {
+  const doc = example();
+  Object.assign(doc.tasks.find((task: Doc) => task.id === ANGEBOT), { dueDate: DUE, dueHasTime: true });
+  return doc;
+};
+const bare = (): Doc => {
+  const doc = example();
+  const task = doc.tasks.find((t: Doc) => t.id === ANGEBOT);
+  delete task.project;
+  task.contexts = [];
+  return doc;
+};
+const storedDoc = async (pool: pg.Pool) => {
+  const rows = await orderRows(pool);
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].kind, "update");
+  const { id, ...doc } = rows[0].doc;
+  assert.match(id, /^[0-9A-F-]{36}$/);
+  assert.doesNotThrow(() => checkOrder(rows[0].doc));
+  return doc;
+};
+
+test("update_task: a new title carries only expectedStatus and expectedTitle", async (t) => {
+  const { pool, client } = await setup(t, "henning", { transcript: full() });
+  const answer = await call(client, "update_task", { taskID: ANGEBOT, generatedAt: GEN, fields: { title: "Angebot an Müller" } });
+  assert.equal(answer.isError, false, answer.text);
+  assert.equal(JSON.parse(answer.text).state, "waiting");
+  assert.deepEqual(await storedDoc(pool), {
+    version: 1, kind: "update", taskID: ANGEBOT, expectedStatus: "active", expectedTitle: "Angebot schreiben",
+    fields: { title: "Angebot an Müller" },
+  });
+});
+
+test("update_task: tags, project and due date carry the row's values; a row without them leaves the keys out", async (t) => {
+  const fields = { contexts: ["Computer", "Telefon"], project: "Büro", dueDate: "2026-03-14T08:00:00Z", dueHasTime: true };
+  const { pool, client } = await setup(t, "henning", { transcript: full() });
+  const answer = await call(client, "update_task", { taskID: ANGEBOT, generatedAt: GEN, fields });
+  assert.equal(answer.isError, false, answer.text);
+  assert.deepEqual(await storedDoc(pool), {
+    version: 1, kind: "update", taskID: ANGEBOT, expectedStatus: "active", fields,
+    expectedContexts: ["Computer"], expectedProject: "Haus", expectedDueDate: DUE,
+  });
+  const empty = await setup(t, "henning", { transcript: bare() });
+  const again = await call(empty.client, "update_task", { taskID: ANGEBOT, generatedAt: GEN, fields });
+  assert.equal(again.isError, false, again.text);
+  assert.deepEqual(await storedDoc(empty.pool), { version: 1, kind: "update", taskID: ANGEBOT, expectedStatus: "active", fields });
+  // Importance, urgency, duration and energy are not in the transcript: only the status is expected.
+  const levels = await setup(t, "henning", { transcript: full() });
+  const quiet = { importance: "high", urgency: "low", duration: "minutes30", energy: -1 };
+  assert.equal((await call(levels.client, "update_task", { taskID: ANGEBOT, generatedAt: GEN, fields: quiet })).isError, false);
+  assert.deepEqual(await storedDoc(levels.pool), { version: 1, kind: "update", taskID: ANGEBOT, expectedStatus: "active", fields: quiet });
+});
+
+test("update_task: a foreign key, notes, empty fields and wrong values are refused, no order exists", async (t) => {
+  const { pool, client } = await setup(t, "henning", { transcript: full() });
+  for (const fields of [
+    { titel: "Hecke" }, { notes: "x" }, {}, { importance: "urgent" }, { energy: 4 }, { dueDate: "2026-03-14T08:00:00Z" },
+  ]) {
+    const answer = await call(client, "update_task", { taskID: ANGEBOT, generatedAt: GEN, fields });
+    assert.equal(answer.isError, true, JSON.stringify(fields));
+  }
+  assert.equal((await call(client, "update_task", { taskID: ANGEBOT, generatedAt: GEN })).isError, true, "ohne fields");
+  assert.equal((await orderRows(pool)).length, 0);
+});
+
+test("update_task: refuses like the other write tools, and stores nothing", async (t) => {
+  const fields = { title: "Neu" };
+  const { pool, client } = await setup(t);
+  for (const [args, reason] of [
+    [{ taskID: ID(99), generatedAt: GEN, fields }, /Aufgabe nicht in der Abschrift/],
+    [{ taskID: MUELL, generatedAt: "2026-03-11T09:00:00Z", fields }, /Abschrift hat sich geändert, bitte neu lesen/],
+  ] as const) {
+    const answer = await call(client, "update_task", args);
+    assert.equal(answer.isError, true);
+    assert.match(answer.text, reason);
+  }
+  assert.equal((await orderRows(pool)).length, 0);
+  const blank = await setup(t, "henning", { transcript: null });
+  const first = await call(blank.client, "update_task", { taskID: MUELL, generatedAt: GEN, fields });
+  assert.equal(first.isError, true);
+  assert.match(first.text, /noch keine Abschrift/);
+  assert.equal((await orderRows(blank.pool)).length, 0);
+  const none = await setup(t, null);
+  const nobody = await call(none.client, "update_task", { taskID: MUELL, generatedAt: GEN, fields });
+  assert.equal(nobody.isError, true);
+  assert.match(nobody.text, /kein Konto/);
+  assert.equal((await orderRows(none.pool)).length, 0);
+});
+
+test("update_task: a stored order wakes the account once, a refusal never", async (t) => {
+  const calls: string[] = [];
+  const wake = async (account: string) => { calls.push(account); };
+  const { pool, client } = await setup(t, "henning", { wake });
+  assert.equal((await call(client, "update_task", { taskID: MUELL, generatedAt: GEN, fields: { title: "Tonne raus" } })).isError, false);
+  await new Promise((done) => setTimeout(done, 50));
+  assert.deepEqual(calls, ["henning"]);
+  assert.equal((await call(client, "update_task", { taskID: MUELL, generatedAt: GEN, fields: {} })).isError, true);
+  assert.equal((await call(client, "update_task", { taskID: ID(99), generatedAt: GEN, fields: { title: "x" } })).isError, true);
+  await new Promise((done) => setTimeout(done, 50));
+  assert.deepEqual(calls, ["henning"]);
+  assert.equal((await orderRows(pool)).length, 1);
+});
+
+test("update_task: a write tool whose fields are strict and hold exactly capture's keys without notes", async (t) => {
+  const { client } = await setup(t);
+  const tools = (await client.listTools()).tools;
+  const tool = tools.find((one) => one.name === "update_task");
+  assert.ok(tool, "update_task fehlt");
+  assert.equal(tool.annotations?.readOnlyHint, false);
+  assert.equal(tool.annotations?.destructiveHint, false);
+  assert.equal(tool.annotations?.idempotentHint, false);
+  const schema = tool.inputSchema as Doc;
+  assert.deepEqual([...(schema.required ?? [])].sort(), ["fields", "generatedAt", "taskID"]);
+  const fields = schema.properties.fields;
+  assert.equal(fields.additionalProperties, false, "fields muss .strict() sein");
+  const capture = (tools.find((one) => one.name === "capture_task")!.inputSchema as Doc).properties.fields;
+  const captureKeys = Object.keys(capture.properties).filter((key) => key !== "notes").sort();
+  assert.deepEqual(Object.keys(fields.properties).sort(), captureKeys);
+  assert.ok(captureKeys.length >= 10);
 });
