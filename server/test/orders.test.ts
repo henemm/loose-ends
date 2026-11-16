@@ -349,3 +349,61 @@ test("AC-5 (#932 S2): fields are stored as given", async (t) => {
   assert.equal(await putOrder(pool, "henning", doc), "stored");
   assert.deepEqual((await order(pool, doc.id.toLowerCase())).doc, doc);
 });
+
+// #932 Schnitt 3: the update order. The example is the ```jsonc block of the contract with kind update, read, never copied.
+function updateExample(): Doc {
+  const found = [...readFileSync(contractPath, "utf8").matchAll(/```jsonc\n([\s\S]*?)\n```/g)].map((b) => JSON.parse(b[1]));
+  const doc = found.find((d) => d.kind === "update");
+  assert.ok(doc, "der Vertrag muss ein ```jsonc-Beispiel update enthalten");
+  return doc;
+}
+const update = (fields: unknown, extra: Doc = {}): Doc =>
+  ({ version: 1, id: uuid(70), kind: "update", taskID: TASK, expectedStatus: "active", fields, ...extra });
+const without = (doc: Doc, key: string): Doc => changed((d) => { delete d[key]; }, doc);
+
+test("AC-1 (#932 S3): migration 009 lets update into orders, an unknown kind still breaks orders_kind_known", async (t) => {
+  const pool = await migrated(t);
+  assert.equal((await pool.query("SELECT 1 FROM schema_migrations WHERE name = '009_order_update.sql'")).rowCount, 1);
+  await pool.query("INSERT INTO orders (doc, account_id) VALUES ($1::jsonb, 'henning')", [JSON.stringify(updateExample())]);
+  assert.equal(await count(pool), 1);
+  await assert.rejects(pool.query("INSERT INTO orders (doc, account_id) VALUES ($1::jsonb, 'henning')",
+    [JSON.stringify({ ...update({ title: "x" }), id: uuid(71), kind: "rename" })]), /orders_kind_known/);
+});
+
+test("AC-2 (#932 S3): the contract's update example passes checkOrder and is stored as given", async (t) => {
+  checkOrder(updateExample());
+  for (const fields of [{ title: "Hecke" }, { dueDate: "2026-03-14T08:00:00Z", dueHasTime: false }, { energy: 0 }, { contexts: [] }]) {
+    checkOrder(update(fields));
+  }
+  checkOrder(update({ project: "Haus" }, {
+    expectedTitle: "Hecke", expectedDueDate: "2026-03-12T17:00:00Z", expectedContexts: ["Garten"], expectedProject: "Haus",
+  }));
+  const pool = await migrated(t);
+  const doc = updateExample();
+  assert.equal(await putOrder(pool, "henning", doc), "stored");
+  assert.deepEqual((await order(pool, doc.id.toLowerCase())).doc, doc);
+});
+
+const updateTable: Array<[string, Doc, string]> = [
+  ["leeres fields", update({}), "fields"],
+  ["notes in fields", update({ notes: "x" }), "fields.notes"],
+  ["ohne expectedStatus", without(update({ title: "x" }), "expectedStatus"), "expectedStatus"],
+  ["ohne taskID", without(update({ title: "x" }), "taskID"), "taskID"],
+  ["dueDate ohne dueHasTime", update({ dueDate: "2026-03-14T08:00:00Z" }), "fields.dueHasTime"],
+  ["ohne fields", without(update({ title: "x" }), "fields"), "fields"],
+  ["fields kein Objekt", update("Hecke"), "fields"],
+  ["expectedTitle keine Zeichenkette", update({ title: "x" }, { expectedTitle: 5 }), "expectedTitle"],
+  ["expectedContexts kein Feld", update({ contexts: [] }, { expectedContexts: "Garten" }), "expectedContexts"],
+  ["expectedDueDate ohne Z", update({ title: "x" }, { expectedDueDate: "2026-03-12T17:00:00" }), "expectedDueDate"],
+  ["text gehört zu capture", update({ title: "x" }, { text: "x" }), "text"],
+];
+
+test("AC-3 (#932 S3): an update off its form is refused with the path, nothing is stored; capture keeps empty fields", async (t) => {
+  const pool = await migrated(t);
+  for (const [name, doc, path] of updateTable) {
+    assert.throws(() => checkOrder(doc), (e: Error) => e.message.startsWith(`Auftrag ungültig: ${path}: `), `${name} → ${path}`);
+    await assert.rejects(putOrder(pool, "henning", doc), (e: Error) => e.message.startsWith(`Auftrag ungültig: ${path}: `), name);
+  }
+  assert.equal(await count(pool), 0);
+  checkOrder(withFields({}));
+});

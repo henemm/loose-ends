@@ -1,0 +1,4 @@
+Stufe 2 (lokaler Dienst) nicht ausgefuehrt.
+Grund: local-service.sh startet den Dienst ohne OAuth (APPLE_*, OAUTH_* ungesetzt); /mcp steht dann hinter bearerGate mit rejectAll und
+weist jedes Token ab, ein update_task ueber /mcp ist dort nicht ausloesbar. Beleg stattdessen: server/test/mcp-write.test.ts, echter mcpHandler
+(MCP-Client), echte Wegwerf-Datenbank, gespeicherte Auftragszeile gelesen (orderRows). Volllauf: adversary-test-output.txt, 458 pass, 0 fail.

@@ -9,6 +9,9 @@ export const anleitung: string = [
   "Text oder Mail zerlegen: zeige dem Nutzer erst die geplante Liste und warte auf sein Ja. Dann je Aufgabe ein capture_task "
     + "mit seinem Wortlaut, unverändert, ein Rohtext je Aufgabe. Teilschritte nur mit add_subtask.",
   "",
+  "Titel und Angaben ändern: erst nach dem Ja des Nutzers, dann mit update_task. Ohne fields bleibt der Text, wie der Nutzer "
+    + "spricht.",
+  "",
   "Grundregeln:",
   "- Nie löschen; es gibt kein Werkzeug dafür.",
   "- Nie das Knäuel oder eine Perle vorschlagen oder setzen; beides setzt nur der Nutzer.",
