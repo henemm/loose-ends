@@ -104,3 +104,7 @@ Upstream `getTranscript` (Zeile mit `title`, `contexts`, `project?`, `dueDate?`,
 
 ### Open Questions
 - keine (Produktentscheidungen in #932 und S1-Spec getroffen)
+
+## Umfang (Freigabe in /60-validate, 2026-11-16)
+
+Endstand 282 LoC im Zählbereich (Produkt 74, Tests 206, CLAUDE.md 2), Schätzung ≈200. Überhang aus den Formfall- und Ende-zu-Ende-Tests von `update_task`. Henning: „So übernehmen“.
