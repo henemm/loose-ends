@@ -5,6 +5,7 @@ import { randomUUID } from "node:crypto";
 import { checkOrder, DURATIONS, type Fields, getResult, LEVELS, putOrder } from "./orders.ts";
 import { getTranscript, type Transcript, type TranscriptTask } from "./transcripts.ts";
 import { anleitung } from "./anleitung.ts";
+import { UI_MIME, UI_URI, viewHtml } from "./app-ui.ts";
 
 type Group = "knaeuel" | "today" | "lined" | "waiting";
 
@@ -222,6 +223,7 @@ export function mcpHandler(pool: pg.Pool, { wake }: { wake?: Wake } = {}): McpHt
     registerLookups(server, pool);
     registerOrders(server, pool, wake);
     registerUpdate(server, pool, wake);
+    registerUi(server);
     return server;
   });
 }
@@ -241,10 +243,18 @@ function registerViews(server: McpServer, pool: pg.Pool): void {
       + "überfällig), next (Als nächstes) oder open (Lose Enden: alles Offene, Geparktes am Ende). Mit generatedAt der Abschrift",
     inputSchema: z.object({ view: z.enum(VIEWS) }),
     annotations: { readOnlyHint: true },
+    _meta: { ui: { resourceUri: UI_URI } },
   }, reading<{ view: View }>(pool, (doc, { view }) => {
     const rows = viewRows(doc, view);
     if (rows === undefined) return "Die Abschrift enthält diese Ansicht noch nicht, bitte die App öffnen und aktualisieren";
     return { view, generatedAt: doc.generatedAt, ...(view === "now" ? { nowCount: doc.nowCount } : {}), count: rows.length, rows };
+  }));
+}
+
+// The window for get_view (#624): a host with MCP Apps reads it, others ignore the pointer. It holds no data, so no account.
+function registerUi(server: McpServer): void {
+  server.registerResource("view", UI_URI, { title: "Loose Ends", mimeType: UI_MIME }, async () => ({
+    contents: [{ uri: UI_URI, mimeType: UI_MIME, text: viewHtml }],
   }));
 }
 

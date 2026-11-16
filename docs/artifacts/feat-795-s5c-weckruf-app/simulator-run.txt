@@ -1,0 +1,22 @@
+# Simulator-Beleg
+erzeugt: 2026-11-16T06:46:18+0100
+befehl: scripts/sim.sh test-proof AccountSettingsTests
+workflow: feat-795-s5c-weckruf-app
+head: 53ecd90a804c16f4ab1bb295e61287e7cc0ff7bc
+basis: 965f4e992f806cb86c1e0871d6b7476f883155ee (merge-base origin/main HEAD)
+testklasse: AccountSettingsTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 8 gesamt, 8 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794807733.418  ende: 1794807976.099
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-795-s5c-weckruf-app/simulator-run/summary.json  sha256:054de6476cb3cd507554f1dca543bce8738d94643c20e3b940e0ee10ab7980d7
+xcresult: docs/artifacts/feat-795-s5c-weckruf-app/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-795-s5c-weckruf-app/simulator-run/*.png (7 Stück)
+
+## Geprüfte Dateien
+- sha256:b28321a29d422c38be6f8e48155787693a63902a58f67eb0343d844fcee1cafd  LooseEnds/Claude/ClaudeSyncTrigger.swift
+- sha256:37af4660ff91e645c71a474d3501577d12e7eb3eb206bad30321bd38d1cd5f6c  LooseEnds/Claude/DeviceRegistration.swift
+- sha256:2e1921d069d8ab5d7b79a78bfe036fccdce3ba56297dda0e344a2dd22e0a0148  LooseEnds/Claude/ServiceClient.swift
+- sha256:244874a650fa29f1577ad892556e770364742e739aca134fe51ec0ac059a5a00  LooseEndsTests/ClaudeSyncTriggerTests.swift
+- sha256:a32026fa16cb8798f80f793a98d27cbdb6ab4e62d2068e4e74523243892c3449  LooseEndsTests/DeviceRegistrationTests.swift
