@@ -1,3 +1,40 @@
+# AC-13: Live-Seiten nach Merge von henemm/henemm-website#81 (gemergt 2026-11-17T14:24:01Z, live seit 14:25:12Z)
+# Abruf 2026-11-17T14:27Z
+
+curl https://www.henemm.com/legal/loose-ends/privacy-policy/    -> HTTP 200
+curl https://www.henemm.com/legal/loose-ends/privacy-policy-en/ -> HTTP 200
+
+## Treffer im HTML
+de  1 x  Außerdem steht darin, wann die Abschrift erstellt wurde.   (im HTML mit Zeilenumbruch nach "wann die", Leerraum normalisiert)
+en  1 x  It also states when the transcript was created.
+de  1 x  Deine offenen Aufgaben für Claude.
+de  2 x  Kennung dieser Installation.
+de  1 x  darunter die Abschrift deiner Aufgaben
+de  1 x  Stand: 17. November 2026
+en  1 x  Your open tasks for Claude.
+en  1 x  Identifier of this installation.
+en  1 x  including the transcript of your tasks
+en  1 x  Last updated: November 17, 2026
+Interne Abschnitte: de 'Beleg im Code' 0, 'Offen, nicht belegt' 0; en 'Beleg im Code' 0, 'Offen, nicht belegt' 0
+
+## DATENSCHUTZ_LIVE=1 python3 -m unittest discover -s scripts -p test_datenschutz_text.py
+..................
+----------------------------------------------------------------------
+Ran 18 tests in 0.625s
+
+OK
+
+(0 übersprungen; LiveTests.test_live_pages lief mit)
+
+## Sichtprüfung: Headless Chrome 1280x4000, live-de.png und live-en.png, mit dem Read-Werkzeug geöffnet
+live-de.png: Seite "Datenschutz — Loose Ends", Stand 17. November 2026. In Abschnitt 4 steht der Absatz "Deine offenen
+Aufgaben für Claude." mit dem neuen Satz "Außerdem steht darin, wann die Abschrift erstellt wurde." nach "…Lose Enden
+zeigen, nur als Kennungen." und vor "Der Titel entsteht aus deinem Text…"; lesbar, keine Darstellungsfehler.
+live-en.png: Seite "Privacy — Loose Ends", Last updated November 17, 2026. In Abschnitt 4 steht "Your open tasks for
+Claude." mit "It also states when the transcript was created." nach "…as identifiers only." und vor "The title is derived
+from your text…"; lesbar, keine Darstellungsfehler.
+
+----- frühere Fassung (henemm/henemm-website#80) -----
 # AC-13: Live-Seiten nach Merge von henemm/henemm-website#80 (gemergt 2026-11-17T08:39:06Z, live erkannt 08:40:11Z)
 # Abruf 2026-11-17T08:40:26Z
 
