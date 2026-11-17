@@ -176,6 +176,8 @@ unter https://www.henemm.com/legal/loose-ends/privacy-policy/ (Website-Repo `hen
 bei Apple gesetzt über die Repo-Variable `ASC_PRIVACY_POLICY_URL` (en-US: Konstante `PRIVACY_URL_EN` im Skript, englische Seite `…/privacy-policy-en/`, #763) und `asc-beta.yml` `aktion=einrichten` (#705; `aktion=einreichen` reicht zum Beta-Review ein, nur nach Hennings Wort). Eine Änderung
 am Text gilt erst, wenn auch die Website-Seite angepasst ist. Seit 2026-11-10 enthält der Text den Konto-Teil (Verbindung zu Claude,
 `docs/specs/feat-615-schnitt-4e-datenschutz.md`); der Store-Schalter `LEAccountEnabled` bleibt bis #625 aus, die Sicherungsfrist des Dienstes beträgt 30 Tage.
+Seit 2026-11-17 beschreibt der Text auch die Abschrift der offenen Aufgaben und die Kennung dieser Installation
+(`docs/specs/feat-625-schnitt-1-datenschutztext.md`); der Weckruf-Absatz (Push-Token) folgt mit #795 S5c-2.
 
 `DEVELOPMENT_TEAM` steht in `project.yml` (`XK87E2B3VR`) und darf dort nicht geleert werden: Xcode
 legt das Team in der erzeugten Projektdatei ab, die bei jedem `generate` neu geschrieben wird — ein

@@ -1,0 +1,37 @@
+# AC-15: Dateilisten beider Änderungen und der Store-Schalter, 2026-11-17T08:40:07Z
+
+## loose-ends: committet seit 8176d6c (git diff --name-status 8176d6c HEAD)
+A	docs/artifacts/feat-625-store-datenschutz/schnitt-1/red.txt
+A	docs/briefings/feat-625-store-datenschutz.md
+A	docs/context/feat-625-store-datenschutz.md
+A	docs/specs/feat-625-schnitt-1-datenschutztext.md
+M	scripts/test_datenschutz_text.py
+
+## loose-ends: uncommittet (git status --short, ohne .claude/)
+M  CLAUDE.md
+A  docs/artifacts/feat-625-store-datenschutz/schnitt-1/aussagen.txt
+A  docs/artifacts/feat-625-store-datenschutz/schnitt-1/belege-pfade.txt
+A  docs/artifacts/feat-625-store-datenschutz/schnitt-1/green.txt
+A  docs/artifacts/feat-625-store-datenschutz/test-green-output.txt
+M  docs/briefings/feat-625-store-datenschutz.md
+M  docs/reference/datenschutz-entwurf.md
+M  docs/specs/feat-625-schnitt-1-datenschutztext.md
+?? docs/artifacts/feat-625-store-datenschutz/adversary-dialog.md
+?? docs/artifacts/feat-625-store-datenschutz/schnitt-1/schalter.txt
+
+## henemm/henemm-website PR #80 (gh pr view 80 --json files)
+content/legal/loose-ends/privacy-policy-en/_index.md +20 -3
+content/legal/loose-ends/privacy-policy/_index.md +21 -3
+
+## Verbotene Pfade im loose-ends-Diff (project.yml, LooseEnds/, Shared/, server/, scripts/test_asc_what_to_test.py)
+keine
+
+## project.yml, Zeile LEAccountEnabled
+72:        # LEAccountEnabled is off; the App ID has had the capability since #621 S6b.
+84:        LEAccountEnabled: false
+
+## Datenschutz-URLs bei Apple unverändert
+git diff origin/main -- scripts/asc_*: 0 Zeilen
+Repo-Variable ASC_PRIVACY_POLICY_URL: https://www.henemm.com/legal/loose-ends/privacy-policy/
+Repo-Variable ASC_PRIVACY_POLICY_URL_EN: nicht gesetzt (gh variable get: not found), es gilt die Vorgabe im Skript
+24:PRIVACY_URL_EN = "https://www.henemm.com/legal/loose-ends/privacy-policy-en/"

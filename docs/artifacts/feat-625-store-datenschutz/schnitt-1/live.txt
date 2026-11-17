@@ -1,0 +1,55 @@
+# AC-13: Live-Seiten nach Merge von henemm/henemm-website#80 (gemergt 2026-11-17T08:39:06Z, live erkannt 08:40:11Z)
+# Abruf 2026-11-17T08:40:26Z
+
+curl https://www.henemm.com/legal/loose-ends/privacy-policy/    -> HTTP 200
+curl https://www.henemm.com/legal/loose-ends/privacy-policy-en/ -> HTTP 200
+
+## Treffer der neuen Absätze im HTML
+de  1 x  Deine offenen Aufgaben für Claude.
+de  2 x  Kennung dieser Installation.
+de  1 x  darunter die Abschrift deiner Aufgaben
+de  1 x  Stand: 17. November 2026
+en  1 x  Your open tasks for Claude.
+en  1 x  Identifier of this installation.
+en  1 x  including the transcript of your tasks
+en  1 x  Last updated: November 17, 2026
+en  1 x  &ldquo;All open&rdquo;\|"All open"\|“All open”
+Interne Abschnitte: de 'Beleg im Code' 0, 'Offen, nicht belegt' 0; en 'Beleg im Code' 0, 'Offen, nicht belegt' 0
+
+## DATENSCHUTZ_LIVE=1 python3 -m unittest scripts/test_datenschutz_text.py -v
+test_account_without_transcript_is_caught (scripts.test_datenschutz_text.CheckerTests.test_account_without_transcript_is_caught) ... ok
+test_account_without_us_is_allowed (scripts.test_datenschutz_text.CheckerTests.test_account_without_us_is_allowed) ... ok
+test_german_quotes_still_meet_anchor (scripts.test_datenschutz_text.CheckerTests.test_german_quotes_still_meet_anchor) ... ok
+test_missing_number_is_caught (scripts.test_datenschutz_text.CheckerTests.test_missing_number_is_caught) ... ok
+test_not_built_sentence_is_caught (scripts.test_datenschutz_text.CheckerTests.test_not_built_sentence_is_caught) ... ok
+test_other_wording_with_typographic_quotes_is_caught (scripts.test_datenschutz_text.CheckerTests.test_other_wording_with_typographic_quotes_is_caught) ... ok
+test_stale_sentence_is_caught (scripts.test_datenschutz_text.CheckerTests.test_stale_sentence_is_caught) ... ok
+test_transcript_found_in_section (scripts.test_datenschutz_text.CheckerTests.test_transcript_found_in_section) ... ok
+test_transcript_with_negatives_passes (scripts.test_datenschutz_text.CheckerTests.test_transcript_with_negatives_passes) ... ok
+test_transcript_without_raw_text_is_caught (scripts.test_datenschutz_text.CheckerTests.test_transcript_without_raw_text_is_caught) ... ok
+test_typographic_quotes_meet_anchor (scripts.test_datenschutz_text.CheckerTests.test_typographic_quotes_meet_anchor) ... ok
+test_wrapped_stale_sentence_is_caught (scripts.test_datenschutz_text.CheckerTests.test_wrapped_stale_sentence_is_caught) ... ok
+test_account_section_exists_in_order (scripts.test_datenschutz_text.DraftTests.test_account_section_exists_in_order) ... ok
+test_core_statements_per_language (scripts.test_datenschutz_text.DraftTests.test_core_statements_per_language) ... ok
+test_no_stale_phrases (scripts.test_datenschutz_text.DraftTests.test_no_stale_phrases) ... ok
+test_released_sentences_per_language (scripts.test_datenschutz_text.DraftTests.test_released_sentences_per_language) ... ok
+test_transcript_in_account_section (scripts.test_datenschutz_text.DraftTests.test_transcript_in_account_section) ... ok
+test_live_pages (scripts.test_datenschutz_text.LiveTests.test_live_pages) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.509s
+
+OK
+
+## Sichtprüfung (AC-16): Headless Chrome 1280x4000, live-de.png und live-en.png, mit dem Read-Werkzeug geöffnet
+live-de.png: Kopf „Datenschutz — Loose Ends“, darunter „Stand: 17. November 2026“. Abschnitte 1 bis 4 vollständig,
+Abschnitt 5 (Rechte-Tabelle) beginnt am unteren Bildrand. In Abschnitt 4 stehen in dieser Reihenfolge: Anmeldung,
+Was unser Dienst speichert, der neue Absatz „Deine offenen Aufgaben für Claude.“ (fett, mit „Als nächstes“, „Jetzt“,
+„Fällig“, „Lose Enden“ in deutschen Anführungszeichen), Aufträge aus Claude, der neue Absatz „Kennung dieser
+Installation.“, Wo, Server-Protokolle, Sicherungen, Löschen (mit „darunter die Abschrift deiner Aufgaben, Aufträge und
+Ergebnisse“), Apple und Claude. Kein Abschnitt „Beleg im Code“ oder „Offen, nicht belegt“ im sichtbaren Teil. Satz
+lesbar, keine Darstellungsfehler, keine rohen Markdown-Zeichen.
+live-en.png: Kopf „Privacy — Loose Ends“, „Last updated: November 17, 2026“. Abschnitt 4 in derselben Reihenfolge mit
+„Your open tasks for Claude.“ (mit “Next up”, “Now”, “Due”, “All open”, typografische Anführungszeichen), „Orders from
+Claude.“, „Identifier of this installation.“, und „Deleting.“ mit „including the transcript of your tasks, orders and
+results“. Abschnitt 5 (Permissions-Tabelle) bis „It does not read contacts.“ sichtbar. Keine Darstellungsfehler.

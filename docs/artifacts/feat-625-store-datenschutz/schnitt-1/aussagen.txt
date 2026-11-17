@@ -1,0 +1,200 @@
+# AC-2: Aussagen der Absätze „Deine offenen Aufgaben für Claude.“ und „Kennung dieser Installation.“ gegen den Code
+# Stand: Basis 8554498 plus Arbeitsstand, 2026-11-17T08:08:31Z. Zeilen = Datei:Zeile aus grep -n.
+
+## A1 Felder je Aufgabe (Titel, Status, Fälligkeit, Tags, Projekt, Stellung unter „Als nächstes“, Knäuel)
+App, Shared/Services/TranscriptCodec.swift, struct Entry (vollständig):
+        31	    struct Entry: Codable, Equatable, Sendable {
+        32	        var id: UUID
+        33	        var title: String
+        34	        var status: TaskStatus
+        35	        var dueDate: Date?
+        36	        var dueHasTime: Bool
+        37	        var contexts: [String]
+        38	        var project: String?
+        39	        var nextRank: Double?
+        40	        var isKnaeuel: Bool
+        41	    }
+Zuordnung: title=Titel, status=Status, dueDate+dueHasTime=Fälligkeit, contexts=Tags, project=Projekt, nextRank=Stellung unter „Als nächstes“, isKnaeuel=Knäuel, id=Kennung der Aufgabe (im Text unter „nur als Kennungen“ enthalten).
+Dienst, server/src/transcripts.ts, task-shape (nimmt genau diese Schlüssel):
+  $ grep -n -E 'shape\(v, p, \{ id, title' server/src/transcripts.ts
+    112:  shape(v, p, { id, title: text, status, dueHasTime: flag, isKnaeuel: flag, contexts: names }, { dueDate: time, project: text, nextRank: rank });
+Ergebnis: kein Feld im Absatz, das im Code fehlt; kein Aufgabenfeld im Code, das der Absatz verschweigt.
+
+## A2 „Jetzt“ und die Reihenfolge von „Fällig“, „Als nächstes“, „Lose Enden“, nur als Kennungen
+  $ grep -n -E 'var (knaeuel|today|lined|waiting|due|next|open): ' Shared/Services/TranscriptCodec.swift
+    17:        var due: [UUID]
+    18:        var next: [UUID]
+    19:        var open: [UUID]
+    24:        var knaeuel: UUID?
+    25:        var today: [UUID]
+    26:        var lined: [UUID]
+    27:        var waiting: [UUID]
+  $ grep -n -E 'const (now|views): Check' server/src/transcripts.ts
+    109:const now: Check = (v, p) => shape(v, p, { today: list(id), lined: list(id), waiting: list(id) }, { knaeuel: id });
+    110:const views: Check = (v, p) => shape(v, p, { due: list(id), next: list(id), open: list(id) });
+  $ grep -n -E '"All open"' Shared/Models/Enums.swift
+    91:        case .open: "All open"
+  Localizable.xcstrings: "All open" -> de "Lose Enden"; views.open = Liste .open
+
+## A3 Kopf der Abschrift (Transcript)
+         6	struct Transcript: Codable, Equatable, Sendable {
+         7	    var version: Int
+         8	    var generatedAt: Date
+         9	    var nowCount: Int
+        10	    var now: Now
+        11	    var tasks: [Entry]
+        12	    /// "Due", "Next up" and "Loose ends" as task ids in the app's order (#621): Claude shows what the app shows.
+        13	    /// Optional in the contract; nil leaves the key out, so the fixed example of version 1 stays as it is.
+        14	    var views: Views?
+  $ grep -n -E 'shape\(doc, "", \{ version' server/src/transcripts.ts
+    119:    shape(doc, "", { version, generatedAt: time, nowCount: rank, now, tasks: list(task) }, { views });
+Hinweis: version, generatedAt (Zeitpunkt der Abschrift) und nowCount (Zahl über „Jetzt“) stehen im Code, der Absatz nennt sie nicht ausdrücklich (siehe Abweichungen unten).
+
+## A4 Offen = nicht erledigt, auch geparkt und Unterpunkte
+  $ grep -n -E 'status != \.done && \$0\.status != \.removed' Shared/Services/TranscriptCodec.swift
+    61:            tasks: all.filter { $0.status != .done && $0.status != .removed }.map(entry),
+  $ grep -n -E 'const statuses' server/src/transcripts.ts
+    29:const statuses = new Set(["unprocessed", "unverified", "active", "parked"]);
+  $ grep -n -E 'parent' Shared/Services/TranscriptCodec.swift
+  (kein Treffer für parent = der Codec filtert Unterpunkte nicht heraus)
+
+## A5 Nicht dabei: Rohtext, Notizen, Anhänge, Orte, erledigte Aufgaben, Verlauf
+  $ grep -n -E 'rawText|note|attachment|place|location|revision' Shared/Services/TranscriptCodec.swift
+    5:/// `docs/reference/claude-abschrift-vertrag.md`. No raw text, note, attachment or revision leaves the device.
+  (Treffer oben nur in Kommentaren, falls vorhanden; Entry enthält keines dieser Felder, siehe A1)
+  $ grep -n -E 'rawText|note' server/src/transcripts.ts
+    96:// The privacy line (#625, F005): raw text and note are refused wherever they appear, with their full path.
+    103:      if (key === "rawText" || key === "note") fail(at, "Rohtext und Notiz gehören nicht in die Abschrift");
+  $ grep -n -E 'keinen Rohtext, keine Notiz' docs/reference/claude-abschrift-vertrag.md
+    40:Die Abschrift trägt **keinen Rohtext, keine Notiz, keine Anhänge und keine Revisionen**. Mehr Felder sind eine Version 2 und
+  Erledigte: Filter in A4 (status != .done). Orte und Anhänge: kein Schlüssel in Entry und shape; shape weist jeden unbekannten Schlüssel ab:
+  $ grep -n -E 'for \(const key of Object.keys\(value\)\)' server/src/transcripts.ts
+    84:  for (const key of Object.keys(value)) {
+
+## A6 Titel entsteht aus dem Text
+  $ grep -n -E 'title' Shared/Services/TitleRule.swift
+    3:/// The title a task gets at capture, without the model (#202): the raw text, cleaned and cut to at
+    6:/// Words a rule reads into a field leave the title (#217): the due date with its time and the small
+    10:/// a field ("Rechnung", "Frist") stay. If nothing is left, the title keeps every word.
+    18:    private static var leadIns: Set<String> { Set(LanguagePacks.titleLeadIns) }
+    21:    private static var connectors: Set<String> { Set(LanguagePacks.titleConnectors) }
+    28:    static func title(from rawText: String, reference: Date = Date(), calendar: Calendar = .current) -> String? {
+    29:        // A phone number goes to the note (#439): it leaves the title whole, "+" and "/" included.
+    35:    /// Whether a model title comes from the note (#460): at least one of its content words (four
+    38:    /// ("Das ist jetzt nur ein Test …" became "Eløb Frühbucher anmelden"). A title without content
+    40:    static func isFromNote(_ title: String, rawText: String) -> Bool {
+    42:        let content = RawTextWords.words(in: title).map(RawTextWords.normalized).filter { $0.count >= 4 }
+    47:    /// Whether a model title takes a word from a past task's note (#607): a content word (four letters or
+    52:    static func borrows(_ title: String, rawText: String, pastNotes: [String]) -> Bool {
+    57:        return contentWords(in: title).contains { word in
+    66:    /// Month and weekday names the model may not bring into a title on its own (#507): it was handed the
+    68:    private static var dateWords: Set<String> { Set(LanguagePacks.titleDateWords.map(RawTextWords.normalized)) }
+    70:    /// Whether a model title names a date the note does not: a month or weekday name, or a number, that
+    71:    /// does not stand in the note (#507). The due date is the rules' job (#95); a date in the title is the
+    73:    static func addsDate(_ title: String, rawText: String) -> Bool {
+    75:        return RawTextWords.words(in: title).map(RawTextWords.normalized).contains { word in
+
+## A7 Senden nur mit Anmeldung, auch ohne verbundenes Claude; Auslöser Start, Rückkehr, Änderungen
+  $ grep -n -E 'func sendTranscript|withSession|notSignedIn' LooseEnds/Claude/ClaudeSync.swift
+    6:/// change with the reason "Claude" and report its result. Every request goes through `AccountState.withSession`;
+    11:        case notSignedIn, busy, done, limitReached
+    57:    func sendTranscript() async -> Ending {
+    69:            let sent = try await account.withSession { client, token in
+    72:            return sent == nil ? .notSignedIn : .done
+    88:                claim = try await account.withSession { client, token in
+    96:            guard let claim, let id = deviceID else { return .notSignedIn }
+    123:            let sent = try await account.withSession { client, token in
+    126:            return sent == nil ? .notSignedIn : nil
+  $ grep -n -E 'didBecomeActive|didSave|debounce: Duration|func start|func forApp|func wake' LooseEnds/Claude/ClaudeSyncTrigger.swift
+    25:        UIApplication.didBecomeActiveNotification
+    27:        NSApplication.didBecomeActiveNotification
+    33:    private let debounce: Duration
+    46:    init(send: Action? = nil, pull: Action? = nil, debounce: Duration = .seconds(2)) {
+    54:    static func forApp(
+    70:    func start() {
+    77:        observers.append(center.addObserver(forName: ModelContext.didSave, object: nil, queue: .main) { [weak self] _ in
+    107:    func wake() async {
+  $ grep -n -E 'ClaudeSyncTrigger' LooseEnds/App/LooseEndsApp.swift
+    21:    let claudeSync: ClaudeSyncTrigger?
+    64:        claudeSync = ClaudeSyncTrigger.forApp(account: account, container: container)
+
+## A8 Dienst behält nur die neueste Abschrift
+  $ grep -n -E 'CREATE TABLE transcripts|account_id text PRIMARY KEY|received_at' server/migrations/001_claude_schema.sql
+    7:CREATE TABLE transcripts (
+    8:  account_id text PRIMARY KEY,
+    11:  received_at timestamptz NOT NULL DEFAULT now(),
+  $ grep -n -E 'ON CONFLICT \(account_id\)|WHERE transcripts.generated_at' server/src/transcripts.ts
+    128:     ON CONFLICT (account_id) DO UPDATE SET doc = excluded.doc, generated_at = excluded.generated_at, received_at = now()
+    129:     WHERE transcripts.generated_at < excluded.generated_at
+
+## A9 Zweck: Claude liest die Abschrift
+  $ grep -n -E 'getTranscript' server/src/mcp.ts
+    6:import { getTranscript, type Transcript, type TranscriptTask } from "./transcripts.ts";
+    69:    const doc = await getTranscript(pool, owner);
+    100:  const doc = await getTranscript(pool, owner);
+
+## A10 Abmelden lässt die Abschrift stehen
+  $ grep -n -E 'async function logout|endSession' server/src/auth.ts
+    2:import { admit, createSession, type Deletion, deleteAccount, endSession, resolveSession } from "./accounts.ts";
+    96:async function logout(deps: AuthDeps, request: Request): Promise<Response> {
+    100:  await endSession(deps.pool, token);
+  $ grep -n -E 'export async function endSession|DELETE FROM sessions' server/src/accounts.ts
+    90:export async function endSession(pool: pg.Pool, token: string): Promise<boolean> {
+    92:  const result = await pool.query("DELETE FROM sessions WHERE token_hash = $1", [hash(token)]);
+
+## A11 Konto löschen entfernt Abschrift, Aufträge, Ergebnisse
+  $ grep -n -E 'export async function deleteAccount|DELETE FROM (order_results|orders|transcripts|accounts)' server/src/accounts.ts
+    101:export async function deleteAccount(pool: pg.Pool, accountId: string): Promise<Deletion> {
+    116:    await client.query("DELETE FROM order_results WHERE order_id IN (SELECT id FROM orders WHERE account_id = $1)", [accountId]);
+    117:    await client.query("DELETE FROM orders WHERE account_id = $1", [accountId]);
+    118:    await client.query("DELETE FROM transcripts WHERE account_id = $1", [accountId]);
+    124:    await client.query("DELETE FROM accounts WHERE id = $1", [accountId]);
+
+## K1 Kennung: zufällig, einmal erzeugt, Schlüsselbund, nicht über iCloud, kein Hardware-Merkmal
+  $ grep -n -E 'UUID\(\)|kSecAttrAccessible|com.henning.looseends.device|Synchronizable|identifierForVendor|advertisingIdentifier' LooseEnds/Claude/DeviceIdentity.swift
+    26:        let fresh = UUID()
+    35:    private static let service = "com.henning.looseends.device"
+    55:            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
+  (kein Treffer für Synchronizable, identifierForVendor, advertisingIdentifier)
+
+## K2 Kennung nur beim Abholen und Melden, nicht an der Abschrift
+  $ grep -n -E 'func (putTranscript|claimOrder|putResult|putDevice)|X-Device' LooseEnds/Claude/ServiceClient.swift
+    81:    func putTranscript(_ transcript: Transcript, sessionToken: String) async throws {
+    90:    func claimOrder(sessionToken: String, device: UUID) async throws -> Claim {
+    92:        request.setValue(device.uuidString.lowercased(), forHTTPHeaderField: "X-Device")
+    98:    func putResult(_ result: OrderResult, sessionToken: String, device: UUID) async throws {
+    100:        request.setValue(device.uuidString.lowercased(), forHTTPHeaderField: "X-Device")
+    107:    func putDevice(token: String, environment: PushEnvironment, sessionToken: String, device: UUID) async throws {
+    109:        request.setValue(device.uuidString.lowercased(), forHTTPHeaderField: "X-Device")
+  $ grep -n -E 'braucht kein Gerät' docs/reference/claude-abschrift-vertrag.md
+    235:Kleinschreibung. `transcript` braucht kein Gerät: die Abschrift gehört dem Konto.
+Hinweis: putDevice (Z. 107/109) setzt X-Device ebenfalls; putDevice gehört zum Weckruf und wird in der App noch nicht aufgerufen:
+  $ grep -rn 'putDevice\|DeviceRegistration' LooseEnds Shared (ohne ServiceClient.swift und DeviceRegistration.swift)
+    (Ende der Treffer)
+
+## K3 Dienst vermerkt die Kennung an Auftrag und Ergebnis; nur das haltende Gerät meldet
+  $ grep -n -E 'claimed_by|reported_by' server/src/orders.ts
+    122:  const open = `(claimed_by IS NULL OR (claimed_at < now() - make_interval(mins => $3)
+    125:    `UPDATE orders SET claimed_by = $2, claimed_at = now()
+    139:    `INSERT INTO order_results (doc, reported_by) SELECT $1::jsonb, $3
+    140:     WHERE EXISTS (SELECT 1 FROM orders WHERE id = ($1::jsonb->>'orderID')::uuid AND account_id = $2 AND claimed_by = $3)
+    147:     WHERE r.order_id = $1::uuid AND o.account_id = $2 AND r.reported_by = $3`,
+    166:    `SELECT o.claimed_by, r.doc AS result FROM orders o LEFT JOIN order_results r ON r.order_id = o.id
+    173:  return row.claimed_by === null ? { state: "waiting" } : { state: "claimed" };
+  $ grep -n -E 'claimed_by|reported_by' server/migrations/001_claude_schema.sql
+    35:  claimed_by text,
+    38:  CHECK ((claimed_by IS NULL) = (claimed_at IS NULL))
+    49:  reported_by text NOT NULL,
+
+## K4 bleibt bis zur Kontolöschung: siehe A11 (order_results, orders)
+
+## Abweichungen Code <-> Absatz
+1. Kopf der Abschrift: version, generatedAt (Zeitpunkt) und nowCount (Zahl über „Jetzt“) stehen im Code, der Absatz nennt sie nicht einzeln.
+   Einordnung: technische Metadaten ohne Inhalt der Aufgaben; „welche Aufgaben in „Jetzt“ stehen“ deckt nowCount inhaltlich ab. Kein Aufgabenfeld fehlt.
+2. Der Dienst speichert zusätzlich received_at (Empfangszeit, server/migrations/001_claude_schema.sql). Nicht im Absatz genannt.
+3. Englische Fassung nennt die Liste „Loose ends“; die englische Oberfläche heißt diese Liste „All open“ (Enums.swift .open, keine en-Lokalisierung).
+   „Loose ends“ ist in der englischen Oberfläche der Name einer Einstellungsgruppe. Wortlaut der Spec freigegeben, nicht geändert; zur Klärung gemeldet.
+   BEHOBEN (Spec-Korrektur 2026-11-17): der englische Absatz sagt jetzt „"Due", "Next up" and "All open" show them“;
+   im Entwurf an derselben Stelle übernommen, der deutsche Text („Lose Enden“) bleibt. Die Punkte 1, 2 und 4 bleiben als
+   Hinweise stehen und werden nicht behoben.
+4. X-Device auch in ServiceClient.putDevice (Weckruf, noch ungerufen); steht als Offen-Punkt „Weckruf (Push-Token)“ im Entwurf.

@@ -1,4 +1,5 @@
-"""Datenschutztext mit Konto-Teil (#615 Schnitt 4e): Kernaussagen da, veraltete Sätze weg.
+"""Datenschutztext mit Konto-Teil (#615 Schnitt 4e) und Abschrift samt Kennung der Installation (#625 Schnitt 1):
+Kernaussagen da, veraltete Sätze weg.
 
 Das Skript belegt nur, dass der Text die freigegebenen Kernsätze enthält und die veralteten nicht; ob die Aussagen
 wahr sind, belegt die Beleg-Tabelle im Entwurf (Code und Betrieb). Die Live-Seiten auf henemm.com prüft es nur mit
@@ -27,8 +28,11 @@ CORE = {
     "en": [r"14 days", r"30 days", r"90 days", r"Hetzner", r"Germany", r"Delete account", r"Art\. 6\(1\)\(f\)"],
 }
 # Wendungen des Textes vor dem Konto-Teil; „kein Konto bei uns“ ist erlaubt, der neue Abschnitt sagt es absichtlich.
-STALE = ["keinen eigenen Server", "Kein eigenes Backend", "no server of our own", "No backend of our own"]
-# Kernsätze der Punkte 1 bis 4, wörtlich aus der freigegebenen Spec.
+# „weil sie nicht gebaut ist“ war der Offen-Punkt zur Aufgabenübertragung vor #625 Schnitt 1; er darf nicht zurückkehren.
+STALE = ["keinen eigenen Server", "Kein eigenes Backend", "no server of our own", "No backend of our own",
+         "weil sie nicht gebaut ist"]
+# Kernsätze der Punkte 1 bis 4 (#615 4e) und der Absätze zu Abschrift, Kennung und Löschen (#625 Schnitt 1),
+# wörtlich aus der jeweils freigegebenen Spec.
 ANCHORS = {
     "de": [
         "Nur wenn du die freiwillige Verbindung zu Claude nutzt",
@@ -39,6 +43,18 @@ ANCHORS = {
         "Die Protokolle werden nach 14 Tagen gelöscht.",
         "Sicherungen werden höchstens 30 Tage aufbewahrt.",
         "ein Konto bei unserem Dienst mit „Konto löschen“ in den Einstellungen der App.",
+        "Solange du angemeldet bist, schickt die App eine Abschrift deiner offenen Aufgaben an den Dienst, auch wenn du "
+        "Claude noch nicht verbunden hast.",
+        "Außerdem steht darin, wann die Abschrift erstellt wurde.",
+        "Der Titel entsteht aus deinem Text und kann dessen Anfang enthalten.",
+        "Nicht dabei sind der Text, den du gesagt oder getippt hast (der Rohtext), deine Notizen, Anhänge, Orte, "
+        "erledigte Aufgaben und der Verlauf der Änderungen.",
+        "„Abmelden“ hält das Senden von diesem Gerät an; die zuletzt gesendete Abschrift bleibt beim Dienst, bis du "
+        "dein Konto löschst.",
+        "Wenn die App Aufträge von Claude abholt und deren Ergebnis meldet, schickt sie eine zufällige Kennung dieser "
+        "Installation mit.",
+        "sie wird nicht über iCloud abgeglichen und ist kein Merkmal des Geräts wie Seriennummer oder Werbekennung.",
+        "darunter die Abschrift deiner Aufgaben, Aufträge und Ergebnisse, und widerruft die Anmeldung bei Apple.",
     ],
     "en": [
         "Only if you use the voluntary connection to Claude",
@@ -49,9 +65,23 @@ ANCHORS = {
         "The logs are deleted after 14 days.",
         "Backups are kept for 30 days at most.",
         "an account with our service with \"Delete account\" in the app's settings.",
+        "As long as you are signed in, the app sends a transcript of your open tasks to the service, even if you have "
+        "not connected Claude yet.",
+        "It also states when the transcript was created.",
+        "The title is derived from your text and can contain its beginning.",
+        "Not included are the text you said or typed (the raw text), your notes, attachments, places, completed tasks "
+        "and the history of changes.",
+        "\"Sign out\" stops sending from this device; the transcript last sent stays with the service until you "
+        "delete your account.",
+        "When the app collects orders from Claude and reports their result, it sends a random identifier of this "
+        "installation.",
+        "it is not synced through iCloud and is not a feature of the device such as a serial number or an advertising "
+        "identifier.",
+        "including the transcript of your tasks, orders and results, and revokes the sign-in with Apple.",
     ],
 }
-TRANSCRIPT = {"de": "Abschrift", "en": "transcript"}
+# Was der Konto-Abschnitt je Sprache nennen muss: die Abschrift und, was nicht in ihr steht (#625 Schnitt 1).
+TRANSCRIPT = {"de": ["Abschrift", "Rohtext", "Notizen"], "en": ["transcript", "raw text", "notes"]}
 
 
 # Hugo setzt gerade Anführungszeichen typografisch; der Wortlaut zählt, nicht die Form der Anführungszeichen.
@@ -91,6 +121,12 @@ def missing_anchors(text: str, lang: str):
     return [a for a in ANCHORS[lang] if normalize(a) not in flat]
 
 
+def missing_transcript(body: str, lang: str):
+    """Die Wörter aus TRANSCRIPT, die dem Konto-Abschnitt fehlen, ohne Rücksicht auf Groß- und Kleinschreibung."""
+    flat = normalize(body).lower()
+    return [w for w in TRANSCRIPT[lang] if w.lower() not in flat]
+
+
 def stale_phrases(text: str):
     flat = normalize(text)
     return [s for s in STALE if normalize(s) in flat]
@@ -112,6 +148,8 @@ def page_text(url: str) -> str:
 
 
 class DraftTests(unittest.TestCase):
+    maxDiff = None
+
     def setUp(self):
         self.text = draft_text()
         self.parts = split_draft(self.text)
@@ -139,12 +177,12 @@ class DraftTests(unittest.TestCase):
         self.assertIn(f"### 4. {SECTION_TITLE['en']}", self.parts["en"], "englischer Abschnitt 4 fehlt")
         self.assertIn("### 7. Your rights, deletion and changes", self.parts["en"], "englischer Abschnitt 7 fehlt")
 
-    def test_no_transcript_in_account_section(self):
+    def test_transcript_in_account_section(self):
         for lang, part in self.parts.items():
             with self.subTest(lang=lang):
                 body = section(part, lang)
                 self.assertTrue(body, f"Konto-Abschnitt fehlt ({lang})")
-                self.assertNotIn(TRANSCRIPT[lang].lower(), body.lower())
+                self.assertEqual(missing_transcript(body, lang), [], f"Abschrift im Konto-Abschnitt unvollständig ({lang})")
 
 
 class CheckerTests(unittest.TestCase):
@@ -179,6 +217,19 @@ class CheckerTests(unittest.TestCase):
     def test_transcript_found_in_section(self):
         text = "## Wenn du die Verbindung zu Claude nutzt\nDie Abschrift geht hoch.\n## Welche Rechte und warum\n"
         self.assertIn("Abschrift", section(text, "de"))
+
+    def test_account_without_transcript_is_caught(self):
+        self.assertIn("Abschrift", missing_transcript("Aufträge aus Claude bleiben gespeichert.", "de"))
+
+    def test_transcript_without_raw_text_is_caught(self):
+        self.assertIn("Rohtext", missing_transcript("Die App schickt eine Abschrift, ohne Notizen.", "de"))
+
+    def test_transcript_with_negatives_passes(self):
+        text = "Die Abschrift enthält nicht den Rohtext und nicht deine Notizen."
+        self.assertEqual(missing_transcript(text, "de"), [])
+
+    def test_not_built_sentence_is_caught(self):
+        self.assertEqual(stale_phrases("Offen: nicht beschrieben, weil sie nicht gebaut ist."), ["weil sie nicht gebaut ist"])
 
 
 @unittest.skipUnless(os.environ.get("DATENSCHUTZ_LIVE") == "1", "Live-Seiten nur mit DATENSCHUTZ_LIVE=1")

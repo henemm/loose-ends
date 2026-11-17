@@ -1,0 +1,60 @@
+# #625 Schnitt 1 RED (Nachbesserung AC-2): Anker für den Abschrift-Zeitpunkt gegen den unveränderten Entwurf (Stand 0851698, 2026-11-17T09:17Z)
+# Befehl: python3 -m unittest discover -s scripts -p 'test_datenschutz_text.py' -v
+# Übersprungen: LiveTests.test_live_pages (nur mit DATENSCHUTZ_LIVE=1; Seiten erst nach dem Website-PR)
+test_account_without_transcript_is_caught (test_datenschutz_text.CheckerTests.test_account_without_transcript_is_caught) ... ok
+test_account_without_us_is_allowed (test_datenschutz_text.CheckerTests.test_account_without_us_is_allowed) ... ok
+test_german_quotes_still_meet_anchor (test_datenschutz_text.CheckerTests.test_german_quotes_still_meet_anchor) ... ok
+test_missing_number_is_caught (test_datenschutz_text.CheckerTests.test_missing_number_is_caught) ... ok
+test_not_built_sentence_is_caught (test_datenschutz_text.CheckerTests.test_not_built_sentence_is_caught) ... ok
+test_other_wording_with_typographic_quotes_is_caught (test_datenschutz_text.CheckerTests.test_other_wording_with_typographic_quotes_is_caught) ... ok
+test_stale_sentence_is_caught (test_datenschutz_text.CheckerTests.test_stale_sentence_is_caught) ... ok
+test_transcript_found_in_section (test_datenschutz_text.CheckerTests.test_transcript_found_in_section) ... ok
+test_transcript_with_negatives_passes (test_datenschutz_text.CheckerTests.test_transcript_with_negatives_passes) ... ok
+test_transcript_without_raw_text_is_caught (test_datenschutz_text.CheckerTests.test_transcript_without_raw_text_is_caught) ... ok
+test_typographic_quotes_meet_anchor (test_datenschutz_text.CheckerTests.test_typographic_quotes_meet_anchor) ... ok
+test_wrapped_stale_sentence_is_caught (test_datenschutz_text.CheckerTests.test_wrapped_stale_sentence_is_caught) ... ok
+test_account_section_exists_in_order (test_datenschutz_text.DraftTests.test_account_section_exists_in_order) ... ok
+test_core_statements_per_language (test_datenschutz_text.DraftTests.test_core_statements_per_language) ... ok
+test_no_stale_phrases (test_datenschutz_text.DraftTests.test_no_stale_phrases) ... ok
+test_released_sentences_per_language (test_datenschutz_text.DraftTests.test_released_sentences_per_language) ... 
+  test_released_sentences_per_language (test_datenschutz_text.DraftTests.test_released_sentences_per_language) (lang='de') ... FAIL
+  test_released_sentences_per_language (test_datenschutz_text.DraftTests.test_released_sentences_per_language) (lang='en') ... FAIL
+test_transcript_in_account_section (test_datenschutz_text.DraftTests.test_transcript_in_account_section) ... ok
+test_live_pages (test_datenschutz_text.LiveTests.test_live_pages) ... skipped 'Live-Seiten nur mit DATENSCHUTZ_LIVE=1'
+
+======================================================================
+FAIL: test_released_sentences_per_language (test_datenschutz_text.DraftTests.test_released_sentences_per_language) (lang='de')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_datenschutz_text.py", line 165, in test_released_sentences_per_language
+    self.assertEqual(missing_anchors(part, lang), [], f"freigegebene Sätze fehlen ({lang})")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['Außerdem steht darin, wann die Abschrift erstellt wurde.'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'Außerdem steht darin, wann die Abschrift erstellt wurde.'
+
+- ['Außerdem steht darin, wann die Abschrift erstellt wurde.']
++ [] : freigegebene Sätze fehlen (de)
+
+======================================================================
+FAIL: test_released_sentences_per_language (test_datenschutz_text.DraftTests.test_released_sentences_per_language) (lang='en')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_datenschutz_text.py", line 165, in test_released_sentences_per_language
+    self.assertEqual(missing_anchors(part, lang), [], f"freigegebene Sätze fehlen ({lang})")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['It also states when the transcript was created.'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'It also states when the transcript was created.'
+
+- ['It also states when the transcript was created.']
++ [] : freigegebene Sätze fehlen (en)
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.007s
+
+FAILED (failures=2, skipped=1)

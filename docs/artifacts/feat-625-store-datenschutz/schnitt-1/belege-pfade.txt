@@ -1,0 +1,24 @@
+# AC-6: Dateiangaben der dreizehn neuen Beleg-Zeilen (docs/reference/datenschutz-entwurf.md, Abschnitt Beleg im Code), Existenzprüfung mit test -e
+# Stand: Basis 8554498 plus Arbeitsstand, 2026-11-17T08:08:01Z
+# Kurzangaben im Tabellentext aufgelöst: 006_transcript_views.sql -> server/migrations/, TranscriptCodec.transcript -> Shared/Services/TranscriptCodec.swift
+OK    Shared/Services/TranscriptCodec.swift
+OK    docs/reference/claude-abschrift-vertrag.md
+OK    server/src/transcripts.ts
+OK    server/migrations/001_claude_schema.sql
+OK    server/migrations/006_transcript_views.sql
+OK    Shared/Services/TitleRule.swift
+OK    LooseEnds/Claude/ClaudeSync.swift
+OK    LooseEnds/Claude/ClaudeSyncTrigger.swift
+OK    LooseEnds/App/LooseEndsApp.swift
+OK    server/src/mcp.ts
+OK    server/src/anleitung.ts
+OK    server/src/auth.ts
+OK    server/src/accounts.ts
+OK    LooseEnds/Claude/AccountState.swift
+OK    LooseEnds/Claude/DeviceIdentity.swift
+OK    LooseEnds/Claude/ServiceClient.swift
+OK    server/src/orders.ts
+# Zusätzlich im neuen Offen-Punkt (Weckruf) genannt:
+OK    server/migrations/008_device_tokens.sql
+OK    server/src/devices.ts
+OK    LooseEnds/Claude/DeviceRegistration.swift
