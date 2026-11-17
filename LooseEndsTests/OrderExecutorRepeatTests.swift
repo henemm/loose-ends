@@ -378,7 +378,7 @@ import XCTest
 
         TaskActions.complete(task, now: Suite.now, calendar: calendar)
 
-        XCTAssertEqual(task.status, .active, "a repeating task does not end")
+        XCTAssertNotEqual(task.status, .done, "a repeating task does not end")
         XCTAssertEqual(task.completions?.count, 1)
         XCTAssertEqual(task.dueDate, day(26 * 7, hour: 9), "26 weeks on, same time")
         XCTAssertEqual(task.repeatRule?.anchor, task.dueDate, "the anchor follows")

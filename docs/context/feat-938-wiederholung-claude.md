@@ -91,3 +91,7 @@ Wiederholung als weiteres `fields`-Feld nach dem Muster #932 (Form im Dienst, Be
 - [x] Quelle der Liste: Henning 2026-11-17 → Claude liest „Family“ einmal nur lesend aus Erinnerungen auf dem Mac, zeigt die geplante Liste, überträgt erst nach seinem Ja (S3).
 - [x] Link: eigenes Feld `link` → `sourceURL`, nur beim Erfassen.
 - [x] Zuordnungen zu Personen gehen verloren — Henning wird es gesagt.
+
+## Umfangsfreigabe (2026-11-17)
+
+Nach RED: Tests 409 Zeilen, Produktcode ≈105, Vertrag ≈30, gesamt ≈515 statt 250. Henning (AskUserQuestion, vor /50-implement): „So weiterbauen“. In /60-validate nicht erneut fragen, solange der Endstand nicht nennenswert über ≈560 liegt.

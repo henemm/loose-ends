@@ -50,8 +50,25 @@ struct OrderFields: Codable, Equatable, Sendable {
     /// Names of existing tags; an empty list clears them.
     var contexts: [String]?
     var project: String?
+    /// #938: the rule the task repeats by; a replaced rule keeps its anchor and time unless `dueDate` comes along.
+    var `repeat`: OrderRepeat?
+    /// #938, `capture` only: the source the task came from, an http or https URL with a host.
+    var link: String?
 
     var isEmpty: Bool { self == OrderFields() }
+}
+
+/// A repetition as Claude sends it (#938). The values arrive as text and numbers and are checked by the executor,
+/// so a wrong one is `invalid` for the task, not an unreadable order.
+struct OrderRepeat: Codable, Equatable, Sendable {
+    /// `daily`, `weekly`, `monthly`, `yearly`.
+    var frequency: String
+    /// 1 … 52, standard 1.
+    var interval: Int?
+    /// 1 = Sunday … 7 = Saturday, `weekly` only.
+    var weekdays: [Int]?
+    /// `fromDueDate` (standard) or `fromCompletion`.
+    var basis: String?
 }
 
 struct OrderResult: Codable, Equatable, Sendable {
@@ -96,6 +113,8 @@ enum OrderExecutor {
         }
         if let fields = order.fields, !fields.isEmpty {
             write(fields, names: names, on: task, now: now, calendar: calendar, markTitle: true)
+            // The source like a share or a mail (#938): no revision, the raw text stays.
+            if let link = fields.link { task.sourceURL = linkURL(link) }
             try commit(context)
         }
         return OrderResult(orderID: order.id, outcome: .done, taskID: task.id)
@@ -105,7 +124,7 @@ enum OrderExecutor {
     /// Importance, urgency, duration and energy are not in the transcript: for them only the status is the expected state.
     private static func update(_ order: Order, in context: ModelContext, now: Date, calendar: Calendar) throws -> OrderResult {
         guard let id = order.taskID else { return refuse(order, .invalid) }
-        guard let fields = order.fields, !fields.isEmpty, fields.notes == nil, isWellFormed(fields),
+        guard let fields = order.fields, !fields.isEmpty, fields.notes == nil, fields.link == nil, isWellFormed(fields),
               let expected = order.expectedStatus, completable.contains(expected) else {
             return refuse(order, .invalid, task: id)
         }
@@ -129,7 +148,27 @@ enum OrderExecutor {
         if let value = fields.urgency, Urgency(rawValue: value) == nil { return false }
         if let value = fields.duration, DurationBucket(rawValue: value) == nil { return false }
         if let value = fields.energy, Energy(rawValue: value) == nil { return false }
+        if let value = fields.repeat, !isWellFormed(value) { return false }
+        if let link = fields.link, linkURL(link) == nil { return false }
         return (fields.dueDate == nil) == (fields.dueHasTime == nil)
+    }
+
+    /// Known frequency and basis, interval 1 … 52, weekdays only for `weekly`, not empty and each 1 … 7 (#938).
+    private static func isWellFormed(_ value: OrderRepeat) -> Bool {
+        guard let frequency = RepeatRule.Frequency(rawValue: value.frequency) else { return false }
+        if let basis = value.basis, RepeatRule.Basis(rawValue: basis) == nil { return false }
+        if let interval = value.interval, !(1...52).contains(interval) { return false }
+        if let days = value.weekdays {
+            guard frequency == .weekly, !days.isEmpty, days.allSatisfy({ (1...7).contains($0) }) else { return false }
+        }
+        return true
+    }
+
+    /// The link as a URL, nil unless it is http or https with a host (#938).
+    private static func linkURL(_ link: String) -> URL? {
+        guard let url = URL(string: link), let scheme = url.scheme?.lowercased(), ["http", "https"].contains(scheme),
+              let host = url.host, !host.isEmpty else { return nil }
+        return url
     }
 
     /// Tags and project from the app's catalogs, in the catalog's spelling.
@@ -198,6 +237,16 @@ enum OrderExecutor {
             set(.dueDate, stored.ISO8601Format())
             task.dueHasTime = hasTime
         }
+        if let value = fields.repeat,
+           let made = makeRule(value, existing: task.repeatRule, fields: fields, calendar: calendar) {
+            let (rule, firstDue) = anchoredRule(made, on: task, orderDue: storedDue(fields, calendar: calendar),
+                                                now: now, calendar: calendar)
+            if let firstDue {
+                set(.dueDate, firstDue.ISO8601Format())
+                task.dueHasTime = rule.hour != nil
+            }
+            set(.repeatRule, FieldCodec.encode(rule))
+        }
         if let value = fields.importance { set(.importance, value) }
         if let value = fields.urgency { set(.urgency, value) }
         if let value = fields.duration { set(.duration, value) }
@@ -207,6 +256,45 @@ enum OrderExecutor {
             set(.contexts, FieldCodec.encode(contexts.map(\.name)), contexts: contexts)
         }
         if let project = names.project { set(.project, project.name, projects: [project]) }
+    }
+
+    /// The rule as sent, weekdays sorted and once each (#938). The time comes from a date in the order with its time;
+    /// without a date in the order a replaced rule keeps its own, a new one has none.
+    private static func makeRule(_ value: OrderRepeat, existing: RepeatRule?, fields: OrderFields,
+                                 calendar: Calendar) -> RepeatRule? {
+        guard let frequency = RepeatRule.Frequency(rawValue: value.frequency),
+              let basis = RepeatRule.Basis(rawValue: value.basis ?? RepeatRule.Basis.fromDueDate.rawValue) else { return nil }
+        var rule = RepeatRule(frequency: frequency, interval: value.interval ?? 1,
+                              weekdays: value.weekdays.map { Array(Set($0)).sorted() }, basis: basis)
+        if let due = storedDue(fields, calendar: calendar) {
+            if fields.dueHasTime == true {
+                let parts = calendar.dateComponents([.hour, .minute], from: due)
+                rule.hour = parts.hour
+                rule.minute = parts.minute
+            }
+        } else {
+            rule.hour = existing?.hour
+            rule.minute = existing?.minute
+        }
+        return rule
+    }
+
+    /// The anchor as the editor sets it (`applyRepeat`, #552): a replaced rule keeps its anchor unless the order brings a
+    /// date; a new one stands on the due date, or on its first date, which is returned to be set as the due date too.
+    private static func anchoredRule(_ rule: RepeatRule, on task: TaskItem, orderDue: Date?, now: Date,
+                                     calendar: Calendar) -> (RepeatRule, Date?) {
+        var rule = rule
+        if let existing = task.repeatRule {
+            rule.anchor = orderDue ?? existing.anchor
+            return (rule, nil)
+        }
+        if let due = task.dueDate {
+            rule.anchor = due
+            return (rule, nil)
+        }
+        let first = rule.firstDueDate(now: now, calendar: calendar)
+        rule.anchor = first
+        return (rule, first)
     }
 
     private static func complete(_ order: Order, in context: ModelContext, now: Date, calendar: Calendar) throws -> OrderResult {

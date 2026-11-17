@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-11-17T21:48:36+0100
+befehl: scripts/sim.sh test-proof ClaudeChangeTests
+workflow: feat-938-wiederholung-claude
+head: ad5d8c80cb7c151e62daa08c863a4b4d48f9a158
+basis: 262eba9ba42e639daf7265eca942b41b2fd5d941 (merge-base origin/main HEAD)
+testklasse: ClaudeChangeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1794948433.549  ende: 1794948514.184
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-938-wiederholung-claude/simulator-run/summary.json  sha256:2cc654667afe5f1eb8ae21dd76220847d89fd462dfc50d9b3119e070321e4b35
+xcresult: docs/artifacts/feat-938-wiederholung-claude/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-938-wiederholung-claude/simulator-run/*.png (4 Stück)
+
+## Geprüfte Dateien
+- sha256:998e170afd03c0fc8f63beb844d4f771265b6873bd4b6a7789640c92d836fbda  LooseEndsTests/OrderExecutorRepeatTests.swift
+- sha256:b1e5615a871f8dc9a360661688a5098c24494376dfc4ba15ffa44b99e7d016c3  Shared/Services/OrderExecutor.swift
