@@ -1144,7 +1144,8 @@ final class CaptureSmokeTests: XCTestCase {
         let cancel = app.buttons["Cancel"].firstMatch
         XCTAssertFalse(cancel.exists, "Nothing to cancel before the tap")
         file.tap()
-        XCTAssertTrue(cancel.waitForExistence(timeout: 20), "File should open the document picker")
+        // #939: on a CI runner the picker's first start took 17 s (green) and about 23 s (red, blank sheet until then).
+        XCTAssertTrue(cancel.waitForExistence(timeout: 60), "File should open the document picker")
         attachScreenshot(app, "544-datei-auswahl")
         cancel.tap()
         XCTAssertTrue(cancel.waitForNonExistence(timeout: 10), "Cancel should close the document picker")
