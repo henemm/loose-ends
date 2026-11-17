@@ -133,7 +133,7 @@ header .s { font-size: 11px; }
 ul { list-style: none; margin: 0; padding: 0; }
 .row { display: grid; grid-template-columns: 62px 1fr; align-items: baseline; border-top: 1px solid var(--rule); padding: 10px 10px 10px 0; }
 .row > span:first-child { text-align: right; padding-right: 10px; font-size: 11.5px; font-weight: 600; color: var(--quiet); }
-.row .red { color: var(--red); }
+.row .red, .row > span.red { color: var(--red); }
 .row .t { font-family: var(--serif); font-size: 17px; line-height: 1.3; min-width: 0; overflow-wrap: anywhere; }
 .row.waiting .t { color: var(--quiet); }
 .quiet { margin: 0; padding: 10px 10px 12px 72px; border-top: 1px solid var(--rule); font-family: var(--serif); font-style: italic; font-size: 14px; color: var(--quiet); }

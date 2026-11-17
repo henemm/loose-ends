@@ -24,6 +24,15 @@ Datum: 2026-11-16 21:13
 **Adversary:** Randfaelle ohne Defekt: (a) tool-result vor der Antwort auf ui/initialize wird verworfen (reduce: !state.ready), ein fruher resource-teardown bleibt unbeantwortet; laut Spec sendet der Host das Ergebnis erst nach initialized, also kein Defekt, am echten Host in AC-10 zu beobachten. (b) Fehlendes count/title ergaebe den Text "undefined" (escaped, Server liefert beides immer). (c) Ungueltiges dueDate oder ungueltige timeZone wirft in Intl, paint faengt es und zeigt die ruhige Zeile statt der Liste, defensiv gewollt. Kein Befund mit Schweregrad. AC-10 in dieser Phase nicht belegbar: offen, wird nach dem Ausrollen belegt.
 **Implementierer:** (nicht anwesend)
 
+### Runde 3
+**Adversary:** AC-10 gegen die Bilder claude-ai-hell.jpg und claude-ai-dunkel.jpg geprueft (beide geoeffnet). Gesehen: claude.ai-Chat, Tool-Karte "Loose Ends - get_view" mit Fenster. Kopf: "Jetzt 2" (Zahl fett) links, "Stand 08:36" rechts (AC-4 erfuellt). Zeilen: Randmarke "Heute" neben "Jan wegen Symphoniekonzert fragen" (Titel gross, Serif), Randmarke "Wartet" neben "Stromverbrauch uebertragen" (Titel grau, AC-2 Wartet-Teil erfuellt); Trennlinien. Hell: warmes Beige-Papier, dunkle Schrift; Dunkel: fast schwarzes Papier, helle Schrift, klar unterscheidbar (AC-7 erfuellt); Textantwort darunter stimmt mit dem Fenster ueberein (2 Aufgaben, gleiche Titel, 17.11. / 16.11.). Knaeuel-Zeichen und "Naechstes" kommen in den Daten nicht vor (nicht belegt, nur durch Unit-Test).
+**Befund F001 (HIGH, spec_violation):** Die Randmarke "Heute" ist in BEIDEN Bildern grau, nicht rot (Pixelprobe: keine roten Pixel im Zeilenbereich, Marke (94,93,88) hell). AC-2 verlangt "Heute" in Rot. Ursache im Code: server/src/app-ui.ts:135 `.row > span:first-child { color: var(--quiet) }` (Spezifitaet 0,2,1) schlaegt Zeile 136 `.row .red { color: var(--red) }` (0,2,0); die Marke ist das erste span der Zeile. Das gilt auch fuer AC-3 (heute/ueberfaellig rot). Die Unit-Tests pruefen nur die Klasse `red`, nie die wirksame Farbe, und haben das nicht gefangen. Remediation: Regel `.row > span.red { color: var(--red); }` bzw. `.row > span:first-child.red`, danach neu ausrollen und beide Bilder neu aufnehmen (am besten mit einer Zeile "Heute" und einer ueberfaelligen Zeile).
+**Implementierer:** (nicht anwesend)
+
+### Runde 4
+**Adversary:** F001-Fix geprueft. Code: server/src/app-ui.ts:136 `.row .red, .row > span.red` hat Spezifitaet (0,2,1) wie die graue Regel Z.135 (0,2,1) und steht spaeter, gewinnt also nach Reihenfolge; Dunkel/Hell setzen nur `--red` (Z.114, 123), keine weitere Regel faerbt die Marke (grep: `.mark` ohne CSS, `.row.waiting .t` trifft nur den Titel). Randfaelle: "Naechstes", "Wartet", Knaeuel-Zeichen tragen nur `class="mark"`, bleiben grau (Z.27, 26); Datum in der Zukunft `mark` ohne red, grau (Z.34); ueberfaellig `mark red`, rot (Z.34); ohne Datum `<span></span>` ohne Klasse, grau, leer (Z.31). Die Selektor-Regel trifft nur Spans direkt unter `.row`, der Titel `.t` hat kein red. Test server/test/app-client.test.ts:50-68 rechnet die Spezifitaet und die Reihenfolge; er ist nicht trivial (rot vor Fix laut test-red-f001-output.txt). Schwaeche: der Test prueft das Stylesheet, nicht die Rendering-Farbe; das ersetzt die Chrome-Messung (f001-chrome-farbprobe.md: hell rgb(229,50,45), dunkel rgb(255,90,82), Wartet grau) ausreichend. Tests selbst gelaufen: app-client 9/9; ./server/scripts/test-local.sh 472 pass, 0 fail, 0 skipped (adversary-test-output.txt). F001 behoben. AC-10 bleibt offen: Bilder nach dem erneuten Ausrollen stehen aus.
+**Implementierer:** (nicht anwesend)
+
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
@@ -90,8 +99,12 @@ Doku: Code reference: CLAUDE.md:547 ; Tests: Code reference: server/test/app-cli
 AC-10: offen, wird nach dem Ausrollen belegt (Sichtpruefung in claude.ai).
 
 VERDICT: AMBIGUOUS
-Grund: AC-1..9 belegt; AC-10 (Sichtpruefung am echten Host nach Ausrollen) in dieser Phase nicht belegbar. Hinweis: 5-7 Prozess-Start-Tests (main/migrate, nicht beruehrt) schlugen unter Rechner-Load 500-900 per Timeout fehl; Implementierer-Lauf 461/461 gruen. Vor dem Merge bei normaler Last wiederholen.
-Tests: 454-456 passed, 5-7 failed (Umgebungs-Timeouts), 0 uebersprungen
+F001 (HIGH) behoben und bestaetigt: Randmarke "Heute"/ueberfaellig wirksam rot, "Naechstes"/"Wartet"/Datum grau.
+  Code reference: server/src/app-ui.ts:136
+  Code reference: server/test/app-client.test.ts:50
+Offen: AC-10 (Sichtpruefung in claude.ai nach dem erneuten Ausrollen) bleibt [ ] bis die neuen Bilder vorliegen.
+Tests: 472 passed, 0 failed, 0 uebersprungen (adversary-test-output.txt)
+Proven points: AC-1 bis AC-9 von 10; AC-10 aussteht.
 
 ## Geprüfte Dateien
 
@@ -110,3 +123,14 @@ Tests: 454-456 passed, 5-7 failed (Umgebungs-Timeouts), 0 uebersprungen
 
 - base: 84d5f0cad434a9bfa6f27d08c3b2f3193cd543e8
 - blob:1c295018ea9f8aaa698b27a99e094c1da3b75667  server/src/app-ui.ts
+
+## Geprüfte Dateien
+
+- sha256:0fa4631e34e8146209162bf1a368ea2a40b78eee6faa399d6be77be58e8ecf86  server/src/app-ui.ts
+- sha256:8b269899ac468ddd3bbd3833c91e0c0187e150057b8cbdb47afd74679cc93ab8  server/test/app-client.test.ts
+
+## Prüfbasis
+
+- base: 822a2957f48e69bf2a57d72ba1ec205db9e5c808
+- blob:b6339a8239b03ae7e5c125bbce40d68a92586f6c  server/src/app-ui.ts
+- blob:a2ef4018eeb26f69cafae46252c2bf154fa47090  server/test/app-client.test.ts

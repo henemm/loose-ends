@@ -47,6 +47,26 @@ test("AC-3: in due, next and open the mark comes from dueDate, day against day i
   assert.ok(red.test(utcTomorrow), "UTC: 13. nicht als heute erkannt");
 });
 
+// F001: the mark is the row's first span, so the grey :first-child rule must not beat the red one. Specificity as
+// [ids, classes/attributes/pseudo-classes, elements], enough for the simple selectors of this stylesheet.
+function specificity(selector: string): number[] {
+  const ids = (selector.match(/#[\w-]+/g) ?? []).length;
+  const classes = (selector.match(/\.[\w-]+|:[\w-]+|\[[^\]]*\]/g) ?? []).length;
+  const elements = (selector.replace(/[.#:][\w-]+|\[[^\]]*\]/g, "").match(/[a-z][\w-]*/gi) ?? []).length;
+  return [ids, classes, elements];
+}
+const notLess = (a: number[], b: number[]) => (a[0] - b[0] || a[1] - b[1] || a[2] - b[2]) >= 0;
+
+test("AC-2, AC-3 (F001): a red mark is red in effect, not overruled by the grey first-child rule", () => {
+  const css = ui.viewHtml.slice(ui.viewHtml.indexOf("<style>"), ui.viewHtml.indexOf("</style>"));
+  const rules = [...css.matchAll(/^([^{}\n]+)\{([^}]*)\}/gm)].map((m) => ({ selector: m[1].trim(), body: m[2], at: m.index! }));
+  const grey = rules.find((r) => r.selector === ".row > span:first-child" && r.body.includes("color: var(--quiet)"));
+  assert.ok(grey, "graue Regel der Randmarke fehlt");
+  const reds = rules.filter((r) => r.body.includes("color: var(--red)") && /\.red\b/.test(r.selector) && /span/.test(r.selector));
+  assert.ok(reds.some((r) => notLess(specificity(r.selector), specificity(grey.selector)) && r.at > grey.at),
+    `keine rote Regel für die Marke schlägt ${grey.selector} ${JSON.stringify(specificity(grey.selector))}`);
+});
+
 test("AC-5: an empty list is one quiet line, no rows", () => {
   const html: string = pure.rowsHtml("due", [], BERLIN);
   assert.equal(segments(html).length, 0);
