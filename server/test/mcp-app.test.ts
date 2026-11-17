@@ -70,12 +70,15 @@ test("AC-2: reading the resource gives one whole German HTML document under its 
   assert.ok(content.text.includes('lang="de"'));
 });
 
-test("AC-3: the HTML carries no script and no outside source, and brings light and dark", async (t) => {
+// #624 S2a (AC-9): one inline script replaces S1's "no script"; still no outside source.
+test("AC-3: the HTML carries exactly one inline script and no outside source, and brings light and dark", async (t) => {
   const text = await html(await connect(t));
-  for (const banned of ["<script", "http://", "https://", "@import"]) {
+  assert.equal(text.toLowerCase().split("<script").length - 1, 1, "nicht genau ein Skript");
+  for (const banned of ["src=", "http://", "https://", "@import", "xmlns"]) {
     assert.ok(!text.toLowerCase().includes(banned), `${banned} steht im HTML`);
   }
   assert.ok(text.includes("prefers-color-scheme: dark"));
+  assert.ok(text.includes("data-theme"));
 });
 
 test("AC-4: only get_view points to the view; no other tool carries _meta.ui", async (t) => {
