@@ -6,7 +6,7 @@ aussehen. Der Dienst übernimmt ihn unverändert; eine Änderung am Format ist e
 
 Die Beispiele unten stehen wörtlich auch in den Tests (`LooseEndsTests/TranscriptCodecTests.swift`,
 `LooseEndsTests/OrderExecutorTests.swift`), und `server/test/schema.test.ts` liest sie zur Laufzeit aus diesem Text
-(die drei ` ```json`-Blöcke; die ` ```jsonc`-Beispiele prüft der Swift-Test, das Beispiel `capture` liest auch
+(die drei ` ```json`-Blöcke; die ` ```jsonc`-Beispiele prüft der Swift-Test, das erste Beispiel `capture` liest auch
 `server/test/orders.test.ts`, das Beispiel `update` ebenfalls); weicht eines ab, schlagen die Tests fehl.
 
 ## Allgemein
@@ -119,6 +119,19 @@ Katalogen ab (groß-/kleinschreibungs- und akzentunabhängig) und schreibt die S
 lehnt sie ab und legt nie einen Tag oder ein Projekt an. Jeder Wert, der sich ändert, wird eine Nutzerrevision mit Grund
 „Claude“; ein Wert, der schon so steht, keine. Ein von Claude gesetzter Titel wird von der Anreicherung nicht mehr ersetzt.
 
+Dazu (#938) `repeat` an `capture` und `update`: `frequency` (`daily`, `weekly`, `monthly`, `yearly`), `interval` (ganze Zahl
+1 … 52, fehlt = 1), `weekdays` (nur bei `weekly`, nicht leer, je 1 … 7, 1 = Sonntag; die App sortiert und fasst Doppelte
+zusammen) und `basis` (`fromDueDate` oder `fromCompletion`, fehlt = `fromDueDate`). Die Uhrzeit der Regel kommt nur aus einem
+`dueDate` mit `dueHasTime` im selben Auftrag; ohne ein solches Datum behält eine ersetzte Regel ihre Uhrzeit, eine neue hat
+keine. Anker (der Tag, auf dem die Reihe steht): eine neue Regel steht auf der Fälligkeit (aus dem Auftrag oder der vorhandenen);
+fehlt beides, setzt die App die erste Fälligkeit der Regel und ankert darauf. Eine ersetzte Regel behält ihren Anker, außer der
+Auftrag bringt `dueDate`. Die Wiederholung ist eine Nutzerrevision mit Grund „Claude“, dieselbe Regel noch einmal keine. Bei
+`update` gilt für `repeat` nur der Status als erwarteter Stand (die Abschrift trägt keine Wiederholung). Eine Wiederholung
+entfernen gibt es in Version 1 nicht. `link` nur an `capture`: eine `http`- oder `https`-Adresse mit Host, die App legt sie als
+Quelle der Aufgabe ab, ohne Revision und ohne den Rohtext zu ändern. Unbekannte Werte, ein `interval` außerhalb 1 … 52, falsche
+`weekdays`, ein ungültiger `link` und `link` bei `update` sind `invalid`. Der Dienst nimmt `repeat` und `link` ab #938 Schnitt 2
+an; bis dahin weist er sie als unbekannte Schlüssel ab.
+
 Die App prüft in dieser Reihenfolge und schreibt erst danach, in einem Zug: Form (`invalid`), Aufgabe (`missing`, nur `update`),
 Namen (`invalid`), erwarteter Stand (`stale`, nur `update`). Der Dienst nimmt `fields` an `capture` und `update` an und prüft
 nur die Form (#932 Schnitt 2 und 3).
@@ -194,6 +207,28 @@ Beispiel `update` (#932):
   "id": "0B7D5E3C-0000-4000-8000-000000000021",
   "kind": "update",
   "taskID": "6F1C2B0A-0000-4000-8000-000000000001",
+  "version": 1
+}
+```
+
+Beispiel `capture` mit `repeat` und `link` (#938):
+
+```jsonc
+{
+  "fields": {
+    "dueDate": "2026-03-14T06:30:00Z",
+    "dueHasTime": true,
+    "link": "https://www.example.org/praxis/termine",
+    "repeat": {
+      "basis": "fromDueDate",
+      "frequency": "weekly",
+      "interval": 26
+    },
+    "title": "Zahnarzt Kontrolle"
+  },
+  "id": "0B7D5E3C-0000-4000-8000-000000000022",
+  "kind": "capture",
+  "text": "Alle 26 Wochen Zahnarzt Kontrolle",
   "version": 1
 }
 ```
