@@ -56,3 +56,62 @@ wenn #795, #796 und #624 geschlossen sind (Kommentar im Issue).
 - Zwei Repos (loose-ends, henemm-website), beide per PR.
 - Was Henning tun muss: Wortlaut freigeben, bei Hetzner anmelden (AVV), bei App Store Connect anmelden (Privacy-Fragebogen),
   sofern nicht fastlane mit seiner Apple-ID – das wäre eine neue Abhängigkeit und Hennings Anmeldung in einem Skript.
+
+## Analysis
+
+### Type
+Feature (Vorbereitung; Store-Schalter und Einreichung sind ein späterer Teil von #625)
+
+### Befund
+- Der Datenschutztext ist für Konto-Bauten heute schon unvollständig: die App sendet die **Abschrift** (je offener
+  Aufgabe id, abgeleiteter Titel, Status, Fälligkeit/`dueHasTime`, Tag-Namen, Projektname, `nextRank`, `isKnaeuel`;
+  dazu `nowCount` und Listen als IDs; kein Rohtext, keine Notiz, keine Anhänge, `Shared/Services/TranscriptCodec.swift`)
+  und bei Aufträgen die **Geräte-Kennung** `X-Device` (`LooseEnds/Claude/DeviceIdentity.swift`). Server: `transcripts`
+  eine Zeile je Konto, überschrieben, Kaskade beim Löschen (Migration 001/006).
+- Der **Push-Token** (Migration 008, Klartext + Geräte-UUID, Abmelden behält die Zeile, max. 10) wird von der App noch
+  nicht gesendet; Aufruf kommt mit #795 S5c-2 (andere Sitzung).
+- Entwurf „Offen, nicht belegt“: „Aufgabenübertragung … nicht gebaut“ ist überholt.
+- `scripts/test_datenschutz_text.py::test_no_transcript_in_account_section` **verbietet** heute „Abschrift“/„transcript“
+  im Konto-Abschnitt (Sperre aus #615 S4e) → umdrehen.
+- Fünf `PrivacyInfo.xcprivacy`, alle `NSPrivacyCollectedDataTypes` leer; nur das App-Target (`LooseEnds/`, iOS+macOS)
+  enthält Konto-Code. Kein Test prüft Manifeste. `LooseEnds/PrivacyInfo.xcprivacy` steht nicht auf der Geräteliste
+  (Stufe 3) → Abnahme endet nach Stufe 2.
+- App-Store-Datenschutzangaben: keine offizielle API → Eintrag im ASC-Web; Claude öffnet die Seite in Hennings Chrome,
+  Henning meldet sich nur an, Claude füllt aus (Muster CloudKit-Console). Dasselbe für den Hetzner-AVV.
+
+### Affected Files (with changes)
+| File | Change Type | Schnitt | Description |
+|------|-------------|---------|-------------|
+| `docs/reference/datenschutz-entwurf.md` | MODIFY | 1 | Absatz Abschrift + Geräte-Kennung (DE/EN wortgetreu), Beleg-Zeilen, „Offen“-Punkt ersetzt durch „Weckruf-Token folgt mit #795 S5c-2“, Status-Kopf „freizugeben“ |
+| `scripts/test_datenschutz_text.py` | MODIFY | 1 | Verbot umdrehen (Abschnitt muss Abschrift nennen), neue Anker DE/EN |
+| henemm-website `content/legal/loose-ends/privacy-policy{,-en}/_index.md` | MODIFY | 1 (nach Freigabe) | öffentliche Fassung |
+| `LooseEnds/PrivacyInfo.xcprivacy` | MODIFY | 2 | User ID, Device ID, Other User Content; linked, kein Tracking, App Functionality |
+| `scripts/test_privacy_manifest.py` | CREATE | 2 | alle fünf Manifeste: App-Target genau drei Typen, übrige leer |
+| `docs/reference/app-store-datenschutzangaben.md` | CREATE | 3 | Antworten zum ASC-Fragebogen mit Belegen; Test: gleiche Typen wie Manifest |
+| `docs/artifacts/feat-625-*/avv-hetzner.*` | CREATE | 4 | Beleg AVV (Datum, ohne Zugangsdaten), Beleg-Zeile im Entwurf |
+
+### Scope Assessment
+- S1: 2 Dateien (+ Website 2), ~100–130 LoC; S2: 2–3 Dateien, ~60–90 LoC; S3: 1–2 Dateien, ~60–80 LoC; S4: Beleg.
+- Risk Level: LOW–MEDIUM (kein Verhalten der App ändert sich; Risiko liegt in Rechtsaussagen und Unterdeklaration).
+
+### Technical Approach
+Wortlaut-Prinzip wie bisher: nur, was gebaut und im Code belegt ist. Reihenfolge: S1 Text → Hennings datierte Freigabe →
+Website-PR (schließt die heutige Lücke, unabhängig vom Schalter). S2 Manifest + Test, S3 Label-Vorlage. S4 AVV parallel.
+Das ASC-Label wird erst zusammen mit der Version eingetragen, die den Schalter an hat (vorher Überdeklaration für 1.0.x
+und Widerspruch zum Text „ohne Konto kein Datenverkehr“). Push-Token: eigener kleiner Nachzug nach #795 S5c-2, bis dahin
+Punkt unter „Offen, nicht belegt“ und Prüfpunkt im Schalter-Gate. Optional-Disclosure-Ausnahme greift nicht (Abschrift
+läuft nach Anmeldung automatisch, Kernfunktion des Features) → deklarieren.
+
+### Alternativen
+- A: Manifest erst mit dem Schalter (keine Bundle-Änderung in 1.0.x; dafür Text und Manifest auseinander).
+- B: Label sofort setzen (Überdeklaration für die Live-Version, Widerspruch zum Text) – verworfen.
+- C: Kein AVV („nur Infrastruktur“) – trägt nicht, Hetzner betreibt den Server mit Personendaten (Art. 28 DSGVO).
+- D: Push-Token schon jetzt in den Text (spart eine Freigaberunde, bricht die Beleg-Regel).
+Keine ADR fällt; ADR-21 bleibt (Daten in iCloud, Dienst hält nur Abschrift/Aufträge).
+
+### Dependencies
+#795 S5c-2 (Push-Token, andere Sitzung) für den Nachzug; henemm-website-PR; Hennings Anmeldung bei Hetzner und ASC.
+
+### Open Questions
+- [ ] Henning gibt den neuen Wortlaut (Abschrift, Geräte-Kennung) frei – in Phase Spec/Freigabe.
+- [ ] Server-Protokoll-IPs (14 Tage, Missbrauchsabwehr) im ASC-Fragebogen: beim Ausfüllen gegen Apples Definition prüfen.
