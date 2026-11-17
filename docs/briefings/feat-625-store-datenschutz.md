@@ -1,7 +1,7 @@
 ---
 spec_file: docs/specs/feat-625-schnitt-1-datenschutztext.md
-spec_sha256: 269316bc9a2ebc2c3fdde85a1e535efa69988055f0dd242ffba0eaabf88dda46
-spec_frozen_sha256: 2cb95f9e95277f18b99fcd824f9ac6377ff9f4d7fa63c7f2dd7fa760a80ce188
+spec_sha256: b0bed67a21251bd6540848cc2fed35302f575af6c11f86dc5b2312398c90e7af
+spec_frozen_sha256: a936a0f6f278a011d0c8db2bd614985aba15ac89d0fa28249e86df7e9a68bc68
 ---
 
 # PO-Briefing: feat-625-store-datenschutz
@@ -12,21 +12,21 @@ spec_frozen_sha256: 2cb95f9e95277f18b99fcd824f9ac6377ff9f4d7fa63c7f2dd7fa760a80c
 
 ## Was gebaut wird
 
-Der Datenschutztext nennt künftig ehrlich, dass die App eine Abschrift deiner offenen Aufgaben und eine Installations-Kennung an den Dienst schickt.
+Der Datenschutztext nennt auf Deutsch und Englisch die an den Dienst gesendete Aufgabenliste und die Installations-Kennung, und die Webseite zeigt ihn.
 
 ## Definition of Done
 
-Beide Datenschutzseiten auf henemm.com (deutsch, englisch) nennen Abschrift, Kennung und Löschung im freigegebenen Wortlaut; der Store-Schalter bleibt aus.
+Beide Datenschutzseiten auf henemm.com sind erreichbar und enthalten die neuen Absätze wortgleich zum freigegebenen Entwurf; der Store-Schalter bleibt aus.
 
 ## Wie geprüft wird
 
-Ein Prüfskript belegt, dass die Kernsätze auf beiden Live-Seiten stehen; ob die Aussagen stimmen, prüft nur der Abgleich mit dem Code.
+Ein Textprüfskript fordert die neuen Sätze, auch live auf den Seiten; ob die Aussagen stimmen, belegt nur der Abgleich mit dem Code.
 
 ## Kritische Anmerkungen
 
-- Nur Schnitt 1 von 4 aus Ticket 625: Manifest, Store-Fragebogen und Hetzner-Vertrag fehlen noch; Ticket bleibt offen.
-- Der Text sagt „Tags“, die App heißt sie „Etiketten“; Wortlaut bleibt bewusst so.
-- Weckruf-Absatz fehlt bewusst, kommt später; Live-Seiten sind nur per Sichtprüfung abgenommen.
+- Der Text sagt offen: Abmelden lässt die zuletzt gesendete Aufgabenliste beim Dienst, bis das Konto gelöscht wird.
+- Der Titel kann den Anfang deines Textes enthalten; der Text benennt das ausdrücklich.
+- Der Weckruf (Push) fehlt bewusst im Text; er kommt mit einem späteren Schnitt.
 
 ## Freigabe-Frage
 

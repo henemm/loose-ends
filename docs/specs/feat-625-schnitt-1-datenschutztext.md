@@ -93,7 +93,7 @@ Die Änderungen stehen im englischen Abschnitt „### 4. If you use the connecti
 
 **New paragraph**, after “What our service stores.” and before “Orders from Claude.”:
 
-> **Your open tasks for Claude.** As long as you are signed in, the app sends a transcript of your open tasks to the service, even if you have not connected Claude yet. Open means: every task that is not completed, including parked tasks and subtasks. For each task this is the title, the status, the due date, your tags, the project, its position under "Next up" and whether it is the Tangle. In addition it says which tasks are in "Now" and in which order "Due", "Next up" and "Loose ends" show them, as identifiers only. The title is derived from your text and can contain its beginning. Not included are the text you said or typed (the raw text), your notes, attachments, places, completed tasks and the history of changes. The app sends at start, when you return to the app, and shortly after changes to your tasks. The service keeps only the newest transcript; each newer one overwrites the previous one. It exists so that Claude can read your tasks if you connect Claude. "Sign out" stops sending from this device; the transcript last sent stays with the service until you delete your account.
+> **Your open tasks for Claude.** As long as you are signed in, the app sends a transcript of your open tasks to the service, even if you have not connected Claude yet. Open means: every task that is not completed, including parked tasks and subtasks. For each task this is the title, the status, the due date, your tags, the project, its position under "Next up" and whether it is the Tangle. In addition it says which tasks are in "Now" and in which order "Due", "Next up" and "All open" show them, as identifiers only. The title is derived from your text and can contain its beginning. Not included are the text you said or typed (the raw text), your notes, attachments, places, completed tasks and the history of changes. The app sends at start, when you return to the app, and shortly after changes to your tasks. The service keeps only the newest transcript; each newer one overwrites the previous one. It exists so that Claude can read your tasks if you connect Claude. "Sign out" stops sending from this device; the transcript last sent stays with the service until you delete your account.
 
 **New paragraph**, after “Orders from Claude.”:
 
@@ -103,7 +103,7 @@ Die Änderungen stehen im englischen Abschnitt „### 4. If you use the connecti
 
 > This removes your account and all data the service has stored for that account, including the transcript of your tasks, orders and results, and revokes the sign-in with Apple.
 
-Die Bezeichnungen „Next up“, „Now“, „Due“, „Loose ends“, „Tangle“ (en) und „Als nächstes“, „Jetzt“, „Fällig“, „Lose Enden“, „Knäuel“ (de) sind gegen `LooseEnds/Resources/Localizable.xcstrings` und `CLAUDE.md` („Knäuel“ = „the Tangle“ in der englischen Oberfläche, #758) gelesen.
+Die Bezeichnungen „Next up“, „Now“, „Due“, „All open“, „Tangle“ (en) und „Als nächstes“, „Jetzt“, „Fällig“, „Lose Enden“, „Knäuel“ (de) sind gegen `LooseEnds/Resources/Localizable.xcstrings` und `CLAUDE.md` („Knäuel“ = „the Tangle“ in der englischen Oberfläche, #758) gelesen.
 
 ### Beleg-Tabelle (kommt in den Entwurf unter „Beleg im Code“, nach der Zeile „Aufträge aus Claude …“)
 
@@ -240,3 +240,4 @@ Keine Gerätepunkte (Stufe 3 greift nicht).
 ## Changelog
 
 - 2026-11-17: Initial spec created (Schnitt 1 von #625, Datenschutztext: Abschrift und Kennung der Installation)
+- 2026-11-17: Englischer Wortlaut korrigiert: die Liste heißt in der englischen Oberfläche „All open“ (`Shared/Models/Enums.swift`, `.open`; „Lose Enden“ nur de), nicht „Loose ends“ (dort eine Einstellungsgruppe). Befund aus Phase 6, Sachkorrektur ohne Änderung der Aussage.
