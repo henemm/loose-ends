@@ -13,7 +13,7 @@ veröffentlicht auf der Website-Seite am 2026-11-10 (henemm/henemm-website#79), 
 Nachtrag Abschrift und Kennung dieser Installation (Absätze „Deine offenen Aufgaben für Claude.“ und „Kennung dieser
 Installation.“, Löschsatz) von Henning freigegeben am 2026-11-17 (#625 Schnitt 1,
 `docs/specs/feat-625-schnitt-1-datenschutztext.md`); veröffentlicht auf der Website-Seite am 2026-11-17
-(henemm/henemm-website#80).
+(henemm/henemm-website#80); der Satz zum Zeitpunkt der Abschrift am 2026-11-17 (henemm/henemm-website#81).
 
 Geschrieben aus dem, was der Code am 2026-10-26 belegt (#342, Teil 2). Jede Aussage hat unten einen Beleg im
 Code; was der Code nicht beweist, steht unter „Offen, nicht belegt“.
@@ -225,7 +225,8 @@ am 2026-11-10 (henemm/henemm-website#79), nachdem die Sicherungsfrist von 30 Tag
 Nachtrag Abschrift und Kennung dieser Installation (in Abschnitt 4 die Absätze „Your open tasks for Claude.“ und
 „Identifier of this installation.“ und der Löschsatz) wortgetreu aus der Spec übernommen, von Henning freigegeben am
 2026-11-17 (#625 Schnitt 1, `docs/specs/feat-625-schnitt-1-datenschutztext.md`); veröffentlicht auf
-https://www.henemm.com/legal/loose-ends/privacy-policy-en/ am 2026-11-17 (henemm/henemm-website#80).
+https://www.henemm.com/legal/loose-ends/privacy-policy-en/ am 2026-11-17 (henemm/henemm-website#80); der Satz zum Zeitpunkt
+der Abschrift am 2026-11-17 (henemm/henemm-website#81).
 
 *Last updated: November 17, 2026*
 
