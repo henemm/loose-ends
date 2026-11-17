@@ -115,3 +115,13 @@ Keine ADR fällt; ADR-21 bleibt (Daten in iCloud, Dienst hält nur Abschrift/Auf
 ### Open Questions
 - [ ] Henning gibt den neuen Wortlaut (Abschrift, Geräte-Kennung) frei – in Phase Spec/Freigabe.
 - [ ] Server-Protokoll-IPs (14 Tage, Missbrauchsabwehr) im ASC-Fragebogen: beim Ausfüllen gegen Apples Definition prüfen.
+
+## Nachbesserung 2026-11-17 (aus /60-validate)
+
+- Befund AC-2: `generatedAt` (Zeitpunkt der Abschrift) stand nicht im Absatz. Henning hat den Wortlaut am 2026-11-17 per
+  AskUserQuestion freigegeben und die Ergänzung gewählt: DE „Außerdem steht darin, wann die Abschrift erstellt wurde.“,
+  EN “It also states when the transcript was created.” (direkt nach dem Satz „… nur als Kennungen.“ / “… as identifiers only.”).
+- Befund Ablauf: henemm-website#80 ging vor seiner ausdrücklichen Freigabe live; die Freigabe ist jetzt nachgeholt.
+- Nächste Schritte: RED – beide Sätze als Anker in `ANCHORS` von `scripts/test_datenschutz_text.py` (Beleg `red.txt` neu);
+  GREEN – Entwurf DE/EN ergänzen; Website-PR mit beiden Seiten, danach `live.txt`, `vergleich.txt`, `live-de.png`,
+  `live-en.png` neu; voller CI-Lauf auf dem Endstand in `green.txt`; Abschlussbericht mit dem AC-16-Satz.

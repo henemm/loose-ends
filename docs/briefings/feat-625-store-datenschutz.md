@@ -1,7 +1,7 @@
 ---
 spec_file: docs/specs/feat-625-schnitt-1-datenschutztext.md
-spec_sha256: b0bed67a21251bd6540848cc2fed35302f575af6c11f86dc5b2312398c90e7af
-spec_frozen_sha256: a936a0f6f278a011d0c8db2bd614985aba15ac89d0fa28249e86df7e9a68bc68
+spec_sha256: 2a98604e793af279fbf16723fe42cb52766fa94a5729e70f48c6c2b278d231b3
+spec_frozen_sha256: 7923fa36c903e1824b18ce6021fa2065fb05e98c3483c26ca238d8257a74ff00
 ---
 
 # PO-Briefing: feat-625-store-datenschutz
@@ -12,21 +12,20 @@ spec_frozen_sha256: a936a0f6f278a011d0c8db2bd614985aba15ac89d0fa28249e86df7e9a68
 
 ## Was gebaut wird
 
-Der Datenschutztext nennt auf Deutsch und Englisch die an den Dienst gesendete Aufgabenliste und die Installations-Kennung, und die Webseite zeigt ihn.
+Der Datenschutztext nennt künftig die Abschrift deiner offenen Aufgaben und die Installationskennung, deutsch und englisch, auf henemm.com.
 
 ## Definition of Done
 
-Beide Datenschutzseiten auf henemm.com sind erreichbar und enthalten die neuen Absätze wortgleich zum freigegebenen Entwurf; der Store-Schalter bleibt aus.
+Beide öffentlichen Seiten sind erreichbar, enthalten den freigegebenen Wortlaut samt Abschrift-Zeitpunkt, und der Store-Schalter für das Konto bleibt aus.
 
 ## Wie geprüft wird
 
-Ein Textprüfskript fordert die neuen Sätze, auch live auf den Seiten; ob die Aussagen stimmen, belegt nur der Abgleich mit dem Code.
+Ein Textprüfskript belegt Kernsätze lokal und live; ob die Aussagen stimmen, belegt nur ein Abgleich gegen den Code, keine Rechtsprüfung.
 
 ## Kritische Anmerkungen
 
-- Der Text sagt offen: Abmelden lässt die zuletzt gesendete Aufgabenliste beim Dienst, bis das Konto gelöscht wird.
-- Der Titel kann den Anfang deines Textes enthalten; der Text benennt das ausdrücklich.
-- Der Weckruf (Push) fehlt bewusst im Text; er kommt mit einem späteren Schnitt.
+- Weckruf (Push-Token) fehlt bewusst im Text; mit dem späteren Schnitt muss der Text erneut geändert und freigegeben werden.
+- Abmelden lässt die zuletzt gesendete Abschrift beim Dienst stehen; der Text sagt das offen.
 
 ## Freigabe-Frage
 

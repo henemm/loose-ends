@@ -1,6 +1,6 @@
-# #625 Schnitt 1 RED: umgebautes Prüfskript gegen den unveränderten Entwurf (Stand 1626172, 2026-11-17T08:00Z)
+# #625 Schnitt 1 RED (Nachbesserung AC-2): Anker für den Abschrift-Zeitpunkt gegen den unveränderten Entwurf (Stand 0851698, 2026-11-17T09:17Z)
 # Befehl: python3 -m unittest discover -s scripts -p 'test_datenschutz_text.py' -v
-# Übersprungen: LiveTests.test_live_pages (nur mit DATENSCHUTZ_LIVE=1, Seiten erst nach dem Website-PR)
+# Übersprungen: LiveTests.test_live_pages (nur mit DATENSCHUTZ_LIVE=1; Seiten erst nach dem Website-PR)
 test_account_without_transcript_is_caught (test_datenschutz_text.CheckerTests.test_account_without_transcript_is_caught) ... ok
 test_account_without_us_is_allowed (test_datenschutz_text.CheckerTests.test_account_without_us_is_allowed) ... ok
 test_german_quotes_still_meet_anchor (test_datenschutz_text.CheckerTests.test_german_quotes_still_meet_anchor) ... ok
@@ -15,121 +15,46 @@ test_typographic_quotes_meet_anchor (test_datenschutz_text.CheckerTests.test_typ
 test_wrapped_stale_sentence_is_caught (test_datenschutz_text.CheckerTests.test_wrapped_stale_sentence_is_caught) ... ok
 test_account_section_exists_in_order (test_datenschutz_text.DraftTests.test_account_section_exists_in_order) ... ok
 test_core_statements_per_language (test_datenschutz_text.DraftTests.test_core_statements_per_language) ... ok
-test_no_stale_phrases (test_datenschutz_text.DraftTests.test_no_stale_phrases) ... FAIL
+test_no_stale_phrases (test_datenschutz_text.DraftTests.test_no_stale_phrases) ... ok
 test_released_sentences_per_language (test_datenschutz_text.DraftTests.test_released_sentences_per_language) ... 
   test_released_sentences_per_language (test_datenschutz_text.DraftTests.test_released_sentences_per_language) (lang='de') ... FAIL
   test_released_sentences_per_language (test_datenschutz_text.DraftTests.test_released_sentences_per_language) (lang='en') ... FAIL
-test_transcript_in_account_section (test_datenschutz_text.DraftTests.test_transcript_in_account_section) ... 
-  test_transcript_in_account_section (test_datenschutz_text.DraftTests.test_transcript_in_account_section) (lang='de') ... FAIL
-  test_transcript_in_account_section (test_datenschutz_text.DraftTests.test_transcript_in_account_section) (lang='en') ... FAIL
+test_transcript_in_account_section (test_datenschutz_text.DraftTests.test_transcript_in_account_section) ... ok
 test_live_pages (test_datenschutz_text.LiveTests.test_live_pages) ... skipped 'Live-Seiten nur mit DATENSCHUTZ_LIVE=1'
-
-======================================================================
-FAIL: test_no_stale_phrases (test_datenschutz_text.DraftTests.test_no_stale_phrases)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_datenschutz_text.py", line 166, in test_no_stale_phrases
-    self.assertEqual(stale_phrases(self.text), [], "veraltete Sätze im Entwurf")
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: Lists differ: ['weil sie nicht gebaut ist'] != []
-
-First list contains 1 additional elements.
-First extra element 0:
-'weil sie nicht gebaut ist'
-
-- ['weil sie nicht gebaut ist']
-+ [] : veraltete Sätze im Entwurf
 
 ======================================================================
 FAIL: test_released_sentences_per_language (test_datenschutz_text.DraftTests.test_released_sentences_per_language) (lang='de')
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_datenschutz_text.py", line 163, in test_released_sentences_per_language
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_datenschutz_text.py", line 165, in test_released_sentences_per_language
     self.assertEqual(missing_anchors(part, lang), [], f"freigegebene Sätze fehlen ({lang})")
     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: Lists differ: ['Solange du angemeldet bist, schickt die [808 chars]le.'] != []
+AssertionError: Lists differ: ['Außerdem steht darin, wann die Abschrift erstellt wurde.'] != []
 
-First list contains 7 additional elements.
+First list contains 1 additional elements.
 First extra element 0:
-'Solange du angemeldet bist, schickt die App eine Abschrift deiner offenen Aufgaben an den Dienst, auch wenn du Claude noch nicht verbunden hast.'
+'Außerdem steht darin, wann die Abschrift erstellt wurde.'
 
-+ []
-- ['Solange du angemeldet bist, schickt die App eine Abschrift deiner offenen '
--  'Aufgaben an den Dienst, auch wenn du Claude noch nicht verbunden hast.',
--  'Der Titel entsteht aus deinem Text und kann dessen Anfang enthalten.',
--  'Nicht dabei sind der Text, den du gesagt oder getippt hast (der Rohtext), '
--  'deine Notizen, Anhänge, Orte, erledigte Aufgaben und der Verlauf der '
--  'Änderungen.',
--  '„Abmelden“ hält das Senden von diesem Gerät an; die zuletzt gesendete '
--  'Abschrift bleibt beim Dienst, bis du dein Konto löschst.',
--  'Wenn die App Aufträge von Claude abholt und deren Ergebnis meldet, schickt '
--  'sie eine zufällige Kennung dieser Installation mit.',
--  'sie wird nicht über iCloud abgeglichen und ist kein Merkmal des Geräts wie '
--  'Seriennummer oder Werbekennung.',
--  'darunter die Abschrift deiner Aufgaben, Aufträge und Ergebnisse, und '
--  'widerruft die Anmeldung bei Apple.'] : freigegebene Sätze fehlen (de)
+- ['Außerdem steht darin, wann die Abschrift erstellt wurde.']
++ [] : freigegebene Sätze fehlen (de)
 
 ======================================================================
 FAIL: test_released_sentences_per_language (test_datenschutz_text.DraftTests.test_released_sentences_per_language) (lang='en')
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_datenschutz_text.py", line 163, in test_released_sentences_per_language
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_datenschutz_text.py", line 165, in test_released_sentences_per_language
     self.assertEqual(missing_anchors(part, lang), [], f"freigegebene Sätze fehlen ({lang})")
     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: Lists differ: ['As long as you are signed in, the app se[770 chars]le.'] != []
+AssertionError: Lists differ: ['It also states when the transcript was created.'] != []
 
-First list contains 7 additional elements.
+First list contains 1 additional elements.
 First extra element 0:
-'As long as you are signed in, the app sends a transcript of your open tasks to the service, even if you have not connected Claude yet.'
+'It also states when the transcript was created.'
 
-+ []
-- ['As long as you are signed in, the app sends a transcript of your open tasks '
--  'to the service, even if you have not connected Claude yet.',
--  'The title is derived from your text and can contain its beginning.',
--  'Not included are the text you said or typed (the raw text), your notes, '
--  'attachments, places, completed tasks and the history of changes.',
--  '"Sign out" stops sending from this device; the transcript last sent stays '
--  'with the service until you delete your account.',
--  'When the app collects orders from Claude and reports their result, it sends '
--  'a random identifier of this installation.',
--  'it is not synced through iCloud and is not a feature of the device such as a '
--  'serial number or an advertising identifier.',
--  'including the transcript of your tasks, orders and results, and revokes the '
--  'sign-in with Apple.'] : freigegebene Sätze fehlen (en)
-
-======================================================================
-FAIL: test_transcript_in_account_section (test_datenschutz_text.DraftTests.test_transcript_in_account_section) (lang='de')
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_datenschutz_text.py", line 183, in test_transcript_in_account_section
-    self.assertEqual(missing_transcript(body, lang), [], f"Abschrift im Konto-Abschnitt unvollständig ({lang})")
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: Lists differ: ['Abschrift', 'Rohtext', 'Notizen'] != []
-
-First list contains 3 additional elements.
-First extra element 0:
-'Abschrift'
-
-- ['Abschrift', 'Rohtext', 'Notizen']
-+ [] : Abschrift im Konto-Abschnitt unvollständig (de)
-
-======================================================================
-FAIL: test_transcript_in_account_section (test_datenschutz_text.DraftTests.test_transcript_in_account_section) (lang='en')
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_datenschutz_text.py", line 183, in test_transcript_in_account_section
-    self.assertEqual(missing_transcript(body, lang), [], f"Abschrift im Konto-Abschnitt unvollständig ({lang})")
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: Lists differ: ['transcript', 'raw text', 'notes'] != []
-
-First list contains 3 additional elements.
-First extra element 0:
-'transcript'
-
-- ['transcript', 'raw text', 'notes']
-+ [] : Abschrift im Konto-Abschnitt unvollständig (en)
+- ['It also states when the transcript was created.']
++ [] : freigegebene Sätze fehlen (en)
 
 ----------------------------------------------------------------------
-Ran 18 tests in 0.008s
+Ran 18 tests in 0.007s
 
-FAILED (failures=5, skipped=1)
+FAILED (failures=2, skipped=1)

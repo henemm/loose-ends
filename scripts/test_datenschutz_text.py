@@ -45,6 +45,7 @@ ANCHORS = {
         "ein Konto bei unserem Dienst mit „Konto löschen“ in den Einstellungen der App.",
         "Solange du angemeldet bist, schickt die App eine Abschrift deiner offenen Aufgaben an den Dienst, auch wenn du "
         "Claude noch nicht verbunden hast.",
+        "Außerdem steht darin, wann die Abschrift erstellt wurde.",
         "Der Titel entsteht aus deinem Text und kann dessen Anfang enthalten.",
         "Nicht dabei sind der Text, den du gesagt oder getippt hast (der Rohtext), deine Notizen, Anhänge, Orte, "
         "erledigte Aufgaben und der Verlauf der Änderungen.",
@@ -66,6 +67,7 @@ ANCHORS = {
         "an account with our service with \"Delete account\" in the app's settings.",
         "As long as you are signed in, the app sends a transcript of your open tasks to the service, even if you have "
         "not connected Claude yet.",
+        "It also states when the transcript was created.",
         "The title is derived from your text and can contain its beginning.",
         "Not included are the text you said or typed (the raw text), your notes, attachments, places, completed tasks "
         "and the history of changes.",
