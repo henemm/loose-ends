@@ -12,7 +12,7 @@ Datum: 2026-11-16 21:13
 - [x] **AC-7:** `theme` aus dem Host-Kontext setzt `data-theme`, `host-context-changed` wird zusammengeführt, ohne `theme` greift `prefers-color-scheme`; nach dem Zeichnen geht `ui/notifications/size-changed` hinaus (Test 6, Test 8).
 - [x] **AC-8:** `ui/resource-teardown` wird mit `{}` beantwortet; unbekannte Mitteilungen werden ignoriert; das Fenster sendet in diesem Schnitt kein `tools/call` und bietet keinen Knopf an (Test 7).
 - [x] **AC-9:** Die Ressource enthält genau ein inline-Skript und keine Fremdquelle (kein `src=`, `http://`, `https://`, `@import`, `xmlns`); `server/src/mcp.ts`, `server/package.json` und die Textantwort von `get_view` bleiben unverändert (Tests 8, 9; Prüfung im Review).
-- [ ] **AC-10:** (offen, wird nach dem Ausrollen belegt) Nach dem Ausrollen zeigt claude.ai zu `get_view` mit `now` das Fenster mit Kopf und Zeilen, in Hell und Dunkel; Belege liegen unter `docs/artifacts/feat-624-s2a-anzeige/` (Abnahme Stufe 2, Bilder geöffnet und beschrieben).
+- [x] **AC-10:** Nach dem Ausrollen zeigt claude.ai zu `get_view` mit `now` das Fenster mit Kopf und Zeilen, in Hell und Dunkel; Belege liegen unter `docs/artifacts/feat-624-s2a-anzeige/` (Abnahme Stufe 2, Bilder geöffnet und beschrieben).
 
 ## Dialog
 
@@ -31,6 +31,16 @@ Datum: 2026-11-16 21:13
 
 ### Runde 4
 **Adversary:** F001-Fix geprueft. Code: server/src/app-ui.ts:136 `.row .red, .row > span.red` hat Spezifitaet (0,2,1) wie die graue Regel Z.135 (0,2,1) und steht spaeter, gewinnt also nach Reihenfolge; Dunkel/Hell setzen nur `--red` (Z.114, 123), keine weitere Regel faerbt die Marke (grep: `.mark` ohne CSS, `.row.waiting .t` trifft nur den Titel). Randfaelle: "Naechstes", "Wartet", Knaeuel-Zeichen tragen nur `class="mark"`, bleiben grau (Z.27, 26); Datum in der Zukunft `mark` ohne red, grau (Z.34); ueberfaellig `mark red`, rot (Z.34); ohne Datum `<span></span>` ohne Klasse, grau, leer (Z.31). Die Selektor-Regel trifft nur Spans direkt unter `.row`, der Titel `.t` hat kein red. Test server/test/app-client.test.ts:50-68 rechnet die Spezifitaet und die Reihenfolge; er ist nicht trivial (rot vor Fix laut test-red-f001-output.txt). Schwaeche: der Test prueft das Stylesheet, nicht die Rendering-Farbe; das ersetzt die Chrome-Messung (f001-chrome-farbprobe.md: hell rgb(229,50,45), dunkel rgb(255,90,82), Wartet grau) ausreichend. Tests selbst gelaufen: app-client 9/9; ./server/scripts/test-local.sh 472 pass, 0 fail, 0 skipped (adversary-test-output.txt). F001 behoben. AC-10 bleibt offen: Bilder nach dem erneuten Ausrollen stehen aus.
+**Implementierer:** (nicht anwesend)
+
+### Runde 5
+**Adversary:** AC-10 und rote Marke am echten Host geprueft, alle vier neuen Bilder selbst geoeffnet (Stand 9f84e59 ausgerollt). Code: server/src/app-ui.ts:136 `.row .red, .row > span.red` (Fix F001), Test server/test/app-client.test.ts:50.
+Bild claude-ai-hell-jetzt.png: claude.ai-Tool-Karte "Loose Ends - get_view" mit Badge "Unverifiziert", Fenster auf beigem Papier. Kopf: "Jetzt 2" (Zahl fett) links, "Stand 08:36" rechts. Zeile 1: Randmarke "Heute" jetzt ROT, Titel "Jan wegen Symphoniekonzert fragen" gross, dunkel, Serif. Zeile 2: Randmarke "Wartet" GRAU, Titel "Stromverbrauch uebertragen" grau. Trennlinien dazwischen.
+Bild claude-ai-dunkel-jetzt.png: gleicher Inhalt auf fast schwarzem Papier, helle Schrift; "Heute" helles Rot/Koralle, "Wartet" und Titel 2 grau; Kopf "Jetzt 2" / "Stand 08:36".
+Bild claude-ai-hell-faellig.png: Chat-Zeile "Loose Ends geladen", Karte, Kopf "Faellig 2" und "Stand 08:36"; Zeile 1 Randmarke "16.11." ROT (ueberfaellig) mit "Stromverbrauch uebertragen", Zeile 2 "Heute" ROT mit "Jan wegen Symphoniekonzert fragen"; beiger Grund, dunkle Schrift.
+Bild claude-ai-dunkel-faellig.png: gleiche Inhalte auf dunklem Grund; "16.11." und "Heute" in hellem Rot, Titel weiss, Kopf "Faellig 2" / "Stand 08:36".
+Bohrung: Hell (beige, dunkle Schrift) und Dunkel (fast schwarz, helle Schrift) klar unterscheidbar; Rot in beiden Themes sichtbar rot und deutlich vom Grau von "Wartet" getrennt; Kopf in allen vier Bildern mit Name (Jetzt/Faellig), fetter Zahl und Stand vollstaendig. AC-2, AC-3, AC-4, AC-7 und AC-10 am echten Host belegt; F001 am Host behoben. Nicht am Host belegt: Knaeuel-Zeichen und "Naechstes" (nicht in den Daten, nur Unit-Test). Server-Tests: 472 pass, 0 fail, 0 skipped (adversary-test-output.txt).
+Code reference: server/src/app-ui.ts:136
 **Implementierer:** (nicht anwesend)
 
 ## Herkunft der Vorbedingungen
@@ -96,15 +106,15 @@ Confirmation:
 
 Doku: Code reference: CLAUDE.md:547 ; Tests: Code reference: server/test/app-client.test.ts:16 ; Code reference: server/test/mcp-app.test.ts:74
 
-AC-10: offen, wird nach dem Ausrollen belegt (Sichtpruefung in claude.ai).
+AC-10: belegt (Runde 5, vier Bilder in claude.ai geoeffnet und beschrieben, Hell und Dunkel, Kopf und Zeilen, Marke rot).
 
-VERDICT: AMBIGUOUS
+VERDICT: VERIFIED
 F001 (HIGH) behoben und bestaetigt: Randmarke "Heute"/ueberfaellig wirksam rot, "Naechstes"/"Wartet"/Datum grau.
   Code reference: server/src/app-ui.ts:136
   Code reference: server/test/app-client.test.ts:50
-Offen: AC-10 (Sichtpruefung in claude.ai nach dem erneuten Ausrollen) bleibt [ ] bis die neuen Bilder vorliegen.
+AC-10 belegt: Sichtpruefung in claude.ai nach dem Ausrollen von 9f84e59, Hell und Dunkel, Kopf mit Name, Zahl, Stand, rote Marke heute/ueberfaellig, Wartet grau.
 Tests: 472 passed, 0 failed, 0 uebersprungen (adversary-test-output.txt)
-Proven points: AC-1 bis AC-9 von 10; AC-10 aussteht.
+Proven points: 10 von 10.
 
 ## Geprüfte Dateien
 
@@ -132,5 +142,16 @@ Proven points: AC-1 bis AC-9 von 10; AC-10 aussteht.
 ## Prüfbasis
 
 - base: 822a2957f48e69bf2a57d72ba1ec205db9e5c808
+- blob:b6339a8239b03ae7e5c125bbce40d68a92586f6c  server/src/app-ui.ts
+- blob:a2ef4018eeb26f69cafae46252c2bf154fa47090  server/test/app-client.test.ts
+
+## Geprüfte Dateien
+
+- sha256:0fa4631e34e8146209162bf1a368ea2a40b78eee6faa399d6be77be58e8ecf86  server/src/app-ui.ts
+- sha256:8b269899ac468ddd3bbd3833c91e0c0187e150057b8cbdb47afd74679cc93ab8  server/test/app-client.test.ts
+
+## Prüfbasis
+
+- base: 9f84e594a781da2eb102a3330ff083d84244ac1b
 - blob:b6339a8239b03ae7e5c125bbce40d68a92586f6c  server/src/app-ui.ts
 - blob:a2ef4018eeb26f69cafae46252c2bf154fa47090  server/test/app-client.test.ts
