@@ -1,0 +1,37 @@
+✔ AC-1: a title is only shown escaped (1.326875ms)
+✔ AC-2: rows of now carry the margin mark of their group (0.563833ms)
+✔ AC-3: in due, next and open the mark comes from dueDate, day against day in the host's time zone (84.047167ms)
+✖ AC-2, AC-3 (F001): a red mark is red in effect, not overruled by the grey first-child rule (3.891ms)
+✔ AC-5: an empty list is one quiet line, no rows (0.265083ms)
+✔ AC-6: the window opens with ui/initialize and sends initialized only after the answer (4.214083ms)
+✔ AC-4, AC-7: a tool result draws head and rows in the host's theme, then reports its size (5.46225ms)
+✔ AC-5: an error result or unreadable JSON shows one quiet line, never the raw text (3.063958ms)
+✔ AC-8: teardown is answered with {}, unknown and foreign messages are ignored, no tools/call ever (1.661875ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 8
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 519.962417
+
+✖ failing tests:
+
+test at test/app-client.test.ts:60:1
+✖ AC-2, AC-3 (F001): a red mark is red in effect, not overruled by the grey first-child rule (3.891ms)
+  AssertionError [ERR_ASSERTION]: keine rote Regel für die Marke schlägt .row > span:first-child [0,2,1]
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/app-client.test.ts:66:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

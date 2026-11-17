@@ -42,6 +42,9 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
   Schritt mit Datum im Issue festgehalten und von Claude selbst nachgeholt.
 - **Präferenzen landen im Repo:** äußert Henning eine dauerhafte Vorgabe, steht sie in derselben Antwort hier oder in
   der Doku, nicht nur im lokalen Gedächtnis (Cloud-Sitzungen sehen nur das Repo).
+- **Jede Übergabe löst herdr aus** (Henning, 2026-11-17): Stand auf der Platte, dann `workflow.py autoclear` (setzt die
+  Grenze auch mitten in einer Phase), der Positiv-Block mit „`/clear` ist jetzt gefahrlos“ (nie der Negativ-Block) und als
+  Du-Zeile genau `❗ Du: `/<befehl> #N` — …` mit dem Pflicht-Befehl, nie „`/clear`, dann …“.
 
 ## Ground rules (from docs/project/00-entscheidungen.md)
 
