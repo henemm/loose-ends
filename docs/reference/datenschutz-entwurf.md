@@ -87,7 +87,8 @@ Claude (den Konnektor in claude.ai), speichern wir dessen Zugangsdaten ebenfalls
 Aufgaben an den Dienst, auch wenn du Claude noch nicht verbunden hast. Offen heißt: alle Aufgaben, die nicht erledigt
 sind, auch geparkte und Unterpunkte. Je Aufgabe sind das der Titel, der Status, die Fälligkeit, deine Tags, das
 Projekt, ihre Stellung unter „Als nächstes“ und ob sie das Knäuel ist. Dazu kommt, welche Aufgaben in „Jetzt“ stehen
-und in welcher Reihenfolge „Fällig“, „Als nächstes“ und „Lose Enden“ sie zeigen, nur als Kennungen. Der Titel entsteht
+und in welcher Reihenfolge „Fällig“, „Als nächstes“ und „Lose Enden“ sie zeigen, nur als Kennungen. Außerdem steht
+darin, wann die Abschrift erstellt wurde. Der Titel entsteht
 aus deinem Text und kann dessen Anfang enthalten. Nicht dabei sind der Text, den du gesagt oder getippt hast (der
 Rohtext), deine Notizen, Anhänge, Orte, erledigte Aufgaben und der Verlauf der Änderungen. Die App sendet beim Start,
 wenn du zur App zurückkehrst und kurz nach Änderungen an deinen Aufgaben. Der Dienst behält nur die jeweils neueste
@@ -279,7 +280,7 @@ its access credentials only as a checksum.
 service, even if you have not connected Claude yet. Open means: every task that is not completed, including parked tasks
 and subtasks. For each task this is the title, the status, the due date, your tags, the project, its position under
 "Next up" and whether it is the Tangle. In addition it says which tasks are in "Now" and in which order "Due", "Next up"
-and "All open" show them, as identifiers only. The title is derived from your text and can contain its beginning. Not
+and "All open" show them, as identifiers only. It also states when the transcript was created. The title is derived from your text and can contain its beginning. Not
 included are the text you said or typed (the raw text), your notes, attachments, places, completed tasks and the history
 of changes. The app sends at start, when you return to the app, and shortly after changes to your tasks. The service
 keeps only the newest transcript; each newer one overwrites the previous one. It exists so that Claude can read your
