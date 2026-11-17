@@ -1,3 +1,68 @@
+# AC-14: Entwurf gegen Live-Seiten, Satz für Satz, Anführungszeichen normalisiert (2026-11-17T14:27Z)
+# Live-Text = HTML ohne Tags (curl, henemm/henemm-website#81); Entwurf = docs/reference/datenschutz-entwurf.md
+
+## de
+### Deine offenen Aufgaben für Claude.
+OK    Deine offenen Aufgaben für Claude.
+OK    Solange du angemeldet bist, schickt die App eine Abschrift deiner offenen Aufgaben an den Dienst, auch wenn du Claude noch nicht verbunden hast.
+OK    Offen heißt: alle Aufgaben, die nicht erledigt sind, auch geparkte und Unterpunkte.
+OK    Je Aufgabe sind das der Titel, der Status, die Fälligkeit, deine Tags, das Projekt, ihre Stellung unter "Als nächstes" und ob sie das Knäuel ist.
+OK    Dazu kommt, welche Aufgaben in "Jetzt" stehen und in welcher Reihenfolge "Fällig", "Als nächstes" und "Lose Enden" sie zeigen, nur als Kennungen.
+OK    Außerdem steht darin, wann die Abschrift erstellt wurde.
+OK    Der Titel entsteht aus deinem Text und kann dessen Anfang enthalten.
+OK    Nicht dabei sind der Text, den du gesagt oder getippt hast (der Rohtext), deine Notizen, Anhänge, Orte, erledigte Aufgaben und der Verlauf der Änderungen.
+OK    Die App sendet beim Start, wenn du zur App zurückkehrst und kurz nach Änderungen an deinen Aufgaben.
+OK    Der Dienst behält nur die jeweils neueste Abschrift; jede neuere überschreibt die vorige.
+OK    Sie dient dazu, dass Claude deine Aufgaben lesen kann, wenn du Claude verbindest.
+OK    "Abmelden" hält das Senden von diesem Gerät an; die zuletzt gesendete Abschrift bleibt beim Dienst, bis du dein Konto löschst.
+### Kennung dieser Installation.
+OK    Kennung dieser Installation.
+OK    Wenn die App Aufträge von Claude abholt und deren Ergebnis meldet, schickt sie eine zufällige Kennung dieser Installation mit.
+OK    Die App erzeugt sie einmal selbst und legt sie im Schlüsselbund dieses Geräts ab; sie wird nicht über iCloud abgeglichen und ist kein Merkmal des Geräts wie Seriennummer oder Werbekennung.
+OK    Der Dienst vermerkt sie an dem Auftrag, den dieses Gerät übernimmt, und am Ergebnis, damit ein Auftrag jeweils an ein Gerät geht und nur dieses das Ergebnis melden kann.
+OK    Sie bleibt mit dem Auftrag gespeichert, bis du dein Konto löschst.
+### Löschen.
+OK    Löschen.
+OK    In den Einstellungen unter "Claude" löschst du mit "Konto löschen" dein Konto.
+OK    Das entfernt dein Konto und alle Daten, die der Dienst zu diesem Konto gespeichert hat, darunter die Abschrift deiner Aufgaben, Aufträge und Ergebnisse, und widerruft die Anmeldung bei Apple.
+OK    Vorhandene Sicherungen laufen innerhalb von 30 Tagen aus.
+OK    "Abmelden" beendet nur die Sitzung auf diesem Gerät.
+Ergebnis de: 22/22 OK
+Interner Abschnitt „Beleg im Code“ auf der Live-Seite: nicht vorhanden
+Interner Abschnitt „Offen, nicht belegt“ auf der Live-Seite: nicht vorhanden
+
+## en
+### Your open tasks for Claude.
+OK    Your open tasks for Claude.
+OK    As long as you are signed in, the app sends a transcript of your open tasks to the service, even if you have not connected Claude yet.
+OK    Open means: every task that is not completed, including parked tasks and subtasks.
+OK    For each task this is the title, the status, the due date, your tags, the project, its position under "Next up" and whether it is the Tangle.
+OK    In addition it says which tasks are in "Now" and in which order "Due", "Next up" and "All open" show them, as identifiers only.
+OK    It also states when the transcript was created.
+OK    The title is derived from your text and can contain its beginning.
+OK    Not included are the text you said or typed (the raw text), your notes, attachments, places, completed tasks and the history of changes.
+OK    The app sends at start, when you return to the app, and shortly after changes to your tasks.
+OK    The service keeps only the newest transcript; each newer one overwrites the previous one.
+OK    It exists so that Claude can read your tasks if you connect Claude.
+OK    "Sign out" stops sending from this device; the transcript last sent stays with the service until you delete your account.
+### Identifier of this installation.
+OK    Identifier of this installation.
+OK    When the app collects orders from Claude and reports their result, it sends a random identifier of this installation.
+OK    The app creates it once itself and keeps it in this device's keychain; it is not synced through iCloud and is not a feature of the device such as a serial number or an advertising identifier.
+OK    The service notes it on the order this device takes over and on the result, so that an order goes to one device at a time and only that device can report the result.
+OK    It stays stored with the order until you delete your account.
+### Deleting.
+OK    Deleting.
+OK    In Settings under "Claude" you delete your account with "Delete account".
+OK    This removes your account and all data the service has stored for that account, including the transcript of your tasks, orders and results, and revokes the sign-in with Apple.
+OK    Existing backups expire within 30 days.
+OK    "Sign out" only ends the session on this device.
+Ergebnis en: 22/22 OK
+Interner Abschnitt „Beleg im Code“ auf der Live-Seite: nicht vorhanden
+Interner Abschnitt „Offen, nicht belegt“ auf der Live-Seite: nicht vorhanden
+
+
+----- frühere Fassung (henemm/henemm-website#80) -----
 # AC-14: Entwurf gegen Live-Seiten, Satz für Satz, Anführungszeichen normalisiert (2026-11-17T08:40:46Z)
 # Live-Text = HTML ohne Tags (curl, henemm/henemm-website#80); Entwurf = docs/reference/datenschutz-entwurf.md
 
