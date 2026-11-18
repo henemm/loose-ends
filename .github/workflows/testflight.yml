@@ -115,7 +115,10 @@ jobs:
 
       - name: Set the account switch
         if: env.ACCOUNT_BUILD == 'true'
-        run: plutil -replace LEAccountEnabled -bool YES LooseEnds/Info.plist   # generate schrieb die Datei eben neu
+        run: |
+          plutil -replace LEAccountEnabled -bool YES LooseEnds/Info.plist   # generate schrieb die Datei eben neu
+          # Konto-Bauten erheben Apple-Kennung, Abschrift und Installationskennung: Manifest mit drei Typen (#625 S2)
+          python3 scripts/privacy_manifest.py apply LooseEnds/PrivacyInfo.xcprivacy
 
       - name: Store the App Store Connect API key
         run: |
@@ -242,6 +245,13 @@ jobs:
           row "| Schlüssel | Wert | Ergebnis |"
           row "|-----------|------|----------|"
           account_switch "$app_info"
+          # Datenschutz-Manifest der App folgt dem Schalter (#625 S2): leer ohne konto, drei Typen mit konto.
+          : "${ACCOUNT_BUILD:=false}"
+          manifest="${app_info%/Info.plist}/PrivacyInfo.xcprivacy"
+          res=OK
+          [ -n "$app_info" ] && python3 scripts/privacy_manifest.py check "$manifest" --account "$ACCOUNT_BUILD" || { res=FEHLER; fail=1; }
+          row "| NSPrivacyCollectedDataTypes | konto $ACCOUNT_BUILD | $res |"
+          [ "$res" = OK ] || echo "::error::PrivacyInfo.xcprivacy of com.henning.looseends does not match konto=$ACCOUNT_BUILD (#625)"
           # Deutsche Texte in jedem iOS-Bundle mit eigenem String Catalog (#323): Widget und Kontrollzentrum
           # blieben auf einem deutschen iPhone englisch, ohne dass ein Schritt es bemerkte.
           row ""
@@ -422,7 +432,10 @@ jobs:
 
       - name: Set the account switch
         if: env.ACCOUNT_BUILD == 'true'
-        run: plutil -replace LEAccountEnabled -bool YES LooseEnds/Info.plist   # generate schrieb die Datei eben neu
+        run: |
+          plutil -replace LEAccountEnabled -bool YES LooseEnds/Info.plist   # generate schrieb die Datei eben neu
+          # Konto-Bauten erheben Apple-Kennung, Abschrift und Installationskennung: Manifest mit drei Typen (#625 S2)
+          python3 scripts/privacy_manifest.py apply LooseEnds/PrivacyInfo.xcprivacy
 
       - name: Store the App Store Connect API key
         run: |
@@ -512,6 +525,12 @@ jobs:
           }
           # account-switch-check:end
           account_switch "$P"
+          # Datenschutz-Manifest der App folgt dem Schalter (#625 S2), wie in der iOS-Prüfung.
+          : "${ACCOUNT_BUILD:=false}"
+          res=OK
+          python3 scripts/privacy_manifest.py check "$APP/Contents/Resources/PrivacyInfo.xcprivacy" --account "$ACCOUNT_BUILD" || { res=FEHLER; fail=1; }
+          row "| NSPrivacyCollectedDataTypes | konto $ACCOUNT_BUILD | $res |"
+          [ "$res" = OK ] || echo "::error::macOS PrivacyInfo.xcprivacy does not match konto=$ACCOUNT_BUILD (#625)"
           [ "$fail" = 0 ]
 
       - name: Write export options

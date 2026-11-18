@@ -1,0 +1,13 @@
+# AC-12 Simulator-Nachweis, account=true (2026-11-18T18:09:49Z)
+Commit: f60a842
+Bau: ./scripts/sim.sh build (iOS-Simulator, Debug)
+Bundle-Kennung: com.henning.looseends
+Pfad: ~/Library/Developer/Xcode/DerivedData/LooseEnds-session-elegant-growing-ritchie/Build/Products/Debug-iphonesimulator/LooseEnds.app/PrivacyInfo.xcprivacy
+Bauzeit Manifest: 2026-11-18T19:09:38
+Befehl: python3 scripts/privacy_manifest.py check <Pfad> --account true
+~/Library/Developer/Xcode/DerivedData/LooseEnds-session-elegant-growing-ritchie/Build/Products/Debug-iphonesimulator/LooseEnds.app/PrivacyInfo.xcprivacy: matches account=true
+Ausgang: 0
+Erfasste Typen im gebauten Manifest:
+  - NSPrivacyCollectedDataTypeUserID
+  - NSPrivacyCollectedDataTypeDeviceID
+  - NSPrivacyCollectedDataTypeOtherUserContent
