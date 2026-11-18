@@ -1,0 +1,34 @@
+# AC-14 Schalter und Dateiliste (2026-11-18, Arbeitsstand vor dem Implementierungs-Commit)
+
+## git diff --stat main...HEAD (bereits committete Commits des Zweigs: Kontext, Spec, RED)
+ .../artifacts/feat-625-s2-privacy-manifest/red.txt | 198 +++++++++++++++++++
+ docs/briefings/feat-625-s2-privacy-manifest.md     |  36 ++++
+ docs/context/feat-625-s2-privacy-manifest.md       |  95 ++++++++++
+ docs/specs/feat-625-schnitt-2-privacy-manifest.md  | 174 +++++++++++++++++
+ scripts/test_privacy_manifest.py                   | 211 +++++++++++++++++++++
+ 5 files changed, 714 insertions(+)
+
+## git status --short (Arbeitsstand, noch nicht committet; .claude/ ist der Sitzungsordner, nicht Teil des PR)
+ M .github/workflows/testflight.yml
+ M docs/reference/datenschutz-entwurf.md
+ M docs/reference/testflight.md
+?? .claude/
+?? docs/artifacts/feat-625-s2-privacy-manifest/green.txt
+?? docs/artifacts/feat-625-s2-privacy-manifest/schalter.txt
+?? docs/artifacts/feat-625-s2-privacy-manifest/simulator-false.txt
+?? docs/artifacts/feat-625-s2-privacy-manifest/simulator-true.txt
+?? scripts/privacy_manifest.py
+
+Befund: Produktpfade nur scripts/privacy_manifest.py, scripts/test_privacy_manifest.py, .github/workflows/testflight.yml,
+docs/reference/datenschutz-entwurf.md, docs/reference/testflight.md, dazu der Belegordner und die Workflow-Dokumente
+(docs/briefings, docs/context, docs/specs). Kein LooseEnds/PrivacyInfo.xcprivacy, kein project.yml, keine Info.plist,
+nichts unter LooseEnds/, Shared/, server/.
+
+## grep -n LEAccountEnabled -A2 project.yml
+72:        # LEAccountEnabled is off; the App ID has had the capability since #621 S6b.
+73-        com.apple.developer.applesignin: [Default]
+74-    info:
+--
+84:        LEAccountEnabled: false
+85-        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+86-        UILaunchScreen: {}

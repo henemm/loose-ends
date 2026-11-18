@@ -1,0 +1,14 @@
+# AC-12 Simulator-Nachweis, account=false (2026-11-18T18:23:41Z)
+Commit: e37a080 (Arbeitsbaum Quelle vor dem Bau: 0 geänderte Datei)
+$ ./scripts/sim.sh build
+Bau-Ausgang: 0 ([0;32m[sim][0m Build erfolgreich.)
+Bundle-Kennung: com.henning.looseends
+Bauzeit Manifest: 2026-11-18T19:23:43
+$ python3 scripts/privacy_manifest.py check <DerivedData>/LooseEnds.app/PrivacyInfo.xcprivacy --account false
+~/Library/Developer/Xcode/DerivedData/LooseEnds-session-elegant-growing-ritchie/Build/Products/Debug-iphonesimulator/LooseEnds.app/PrivacyInfo.xcprivacy: matches account=false
+Ausgang: 0
+Erfasste Typen im gebauten Manifest:
+  (keine)
+
+$ git diff --stat -- LooseEnds/PrivacyInfo.xcprivacy   (leer = Quelle unverändert)
+<Ende der Ausgabe>

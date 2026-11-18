@@ -142,7 +142,8 @@ Die App fragt **nicht** nach Kontakten. Sie liest keine Kontakte.
 
 | Aussage | Beleg |
 |---|---|
-| Kein Tracking, keine erfassten Datentypen deklariert | `PrivacyInfo.xcprivacy` in `LooseEnds/`, `LooseEndsWatch/`, `LooseEndsShare/`, `LooseEndsWidgets/`, `LooseEndsWatchWidgets/`: `NSPrivacyTracking` = false, `NSPrivacyCollectedDataTypes` leer; einzige deklarierte API-Kategorie `UserDefaults` (außer Watch-Komplikation: keine) |
+| Kein Tracking, keine erfassten Datentypen deklariert | `PrivacyInfo.xcprivacy` in `LooseEnds/`, `LooseEndsWatch/`, `LooseEndsShare/`, `LooseEndsWidgets/`, `LooseEndsWatchWidgets/`: `NSPrivacyTracking` = false, `NSPrivacyCollectedDataTypes` leer (Store-Bauten); einzige deklarierte API-Kategorie `UserDefaults` (außer Watch-Komplikation: keine) |
+| Manifest folgt dem Konto-Schalter: Store-Bauten leer, Konto-Bauten drei Typen aus `scripts/privacy_manifest.py` | `scripts/privacy_manifest.py` (`ACCOUNT_TYPES`: UserID, DeviceID, OtherUserContent, je verknüpft, kein Tracking, Zweck App-Funktion); `.github/workflows/testflight.yml` (`apply` im Schritt „Set the account switch“ nur bei `konto`, `check --account` in beiden Archivprüfungen, ein Befund stoppt den Upload; #625 S2) |
 | Freiwillig; ohne Konto kein Verkehr zum Dienst | `LooseEnds/Claude/AccountWiring.swift` (`forApp`, nichts wird vor einem Tipp gesendet), `LooseEnds/Views/AccountSection.swift` (Gruppe „Claude“ in den Einstellungen) |
 | Keine Fremd-SDKs, keine Analyse | `project.yml` ohne `packages`-Abschnitt; `URLSession` nur im Konto-Teil (`LooseEnds/Claude/`) |
 | Nur Apple; kein Name, keine E-Mail | `LooseEnds/Views/AccountSection.swift:177` `requestedScopes = []`; `server/migrations/002_accounts.sql` (`apple_sub`, Anlagezeit) |

@@ -368,6 +368,12 @@ Store-Version zu. Regel: ein Konto-Bau wird nie einem Store-Bau zugeordnet und n
 Datenschutztextes nicht online steht. Die Kennzeichnung ist in App Store Connect von Hand überschreibbar; der Beleg am Archiv
 bleibt deshalb die eigentliche Prüfung.
 
+**Datenschutz-Manifest folgt dem Schalter (#625 S2).** Store-Bauten leer, Konto-Bauten drei Typen aus
+`scripts/privacy_manifest.py` (UserID, DeviceID, OtherUserContent). `LooseEnds/PrivacyInfo.xcprivacy` bleibt im Repo leer;
+nur bei `konto` schreibt „Set the account switch“ in beiden Jobs mit `privacy_manifest.py apply` die drei Typen hinein.
+Beide Archivprüfungen rufen für das App-Bundle `com.henning.looseends` `privacy_manifest.py check <Manifest> --account
+"$ACCOUNT_BUILD"` auf (Watch, Share und Widgets bleiben leer und unberührt); ein Befund oder ein fehlendes Bundle stoppt den Upload.
+
 Nach dem Upload läuft der Job `confirm` („Confirm Apple processed the build") auf `ubuntu-latest`.
 Er ruft `scripts/asc_wait_build.py` mit der Lauf-Nummer auf: Das Skript ermittelt über die App
 Store Connect API die App zur Bundle-Kennung, fragt alle 30 Sekunden den Build mit dieser Nummer ab
