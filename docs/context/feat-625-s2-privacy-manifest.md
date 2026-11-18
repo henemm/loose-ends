@@ -48,3 +48,48 @@ Installationskennung), samt Test. PO-Entscheidung 2026-11-17: Schalter `LEAccoun
 - Keine ADR fällt. Kein Pfad der Geräteliste betroffen (Manifest, Skript, Workflow-Datei sind nicht gelistet); Abnahme endet
   nach Stufe 2 bzw. mit dem Archivbeleg eines Konto-TestFlight-Laufs (Workflow-Run, kein Gerät).
 - `testflight.yml` ist CI-Code → Adversary-Risiko hoch (2 Runden).
+
+## Analysis
+
+### Type
+Feature (Store-Vorbereitung, kein sichtbarer UI-Anteil → kein Entwurf nötig)
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `scripts/privacy_manifest.py` | CREATE | Eine Quelle der Wahrheit: die drei Konto-Einträge (UserID, DeviceID, OtherUserContent; je linked=true, tracking=false, Zweck AppFunctionality). `apply <manifest>` fügt sie idempotent ein; `check <manifest> --account true|false` prüft: bei `true` genau diese drei, bei `false` keine erfassten Datentypen. Nur `plistlib`, keine Abhängigkeit |
+| `scripts/test_privacy_manifest.py` | CREATE | unittest: apply auf Kopie der echten Quelldatei → check true grün; Quelldatei unverändert → check false grün; apply zweimal = einmal; check true auf leerem Manifest rot, check false auf befülltem rot; fremder Eintrag → rot; Quelldatei im Repo hält `NSPrivacyCollectedDataTypes` leer (Store-Bauten) |
+| `.github/workflows/testflight.yml` | MODIFY | iOS- und Mac-Job: Schritt „Set the account switch“ ruft zusätzlich `python3 scripts/privacy_manifest.py apply LooseEnds/PrivacyInfo.xcprivacy`; Archivprüfung (iOS `:187`, Mac `:493`) ruft `check` gegen das Manifest im Archiv mit `--account "$ACCOUNT_BUILD"` |
+| `docs/reference/datenschutz-entwurf.md` | MODIFY | Beleg-Zeile (`:145`, nicht öffentlich) nennt die Regel: Store-Bauten leer, Konto-Bauten drei Typen aus `scripts/privacy_manifest.py` |
+| `docs/reference/testflight.md` | MODIFY (klein) | Abschnitt Konto-Schalter: Manifest folgt `konto` |
+
+### Scope Assessment
+- Files: 5 (Limit eingehalten)
+- Estimated LoC: +~170 / -~2 (Skript ~60, Test ~90, Workflow ~8, Doku ~6)
+- Risk Level: MEDIUM — CI-Code im Auslieferungsweg (ein Fehler hält jeden TestFlight-Lauf an), aber Store-Bauten ändern
+  sich inhaltlich nicht; die Gegenprobe im Archiv macht jeden Fehler laut statt still
+
+### Technical Approach
+Empfehlung: **Manifest folgt dem Schalter** wie `LEAccountEnabled` (#615 S4c-2a-Muster): Quelle bleibt leer, Konto-Bauten
+bekommen die drei Einträge im CI nach `generate`, die Archivprüfung hält beides fest (Konto ↔ drei Einträge, sonst keine).
+`xcodegen generate` schreibt `PrivacyInfo.xcprivacy` nicht neu (Ressource, kein `info.properties`), Reihenfolge zu
+`generate` daher unkritisch; Xcode kopiert die Datei unverändert ins Bundle (iOS `<App>.app/PrivacyInfo.xcprivacy`, Mac
+`Contents/Resources/`). Beim späteren Umlegen des Schalters (eigener Schnitt) wandert `apply` in die Quelldatei und `check`
+wird auf `true` fest – eine Zeile.
+Alternativen: (A) nichts jetzt, Manifest erst mit dem Schalter-Schnitt — Konto-TestFlight-Bauten blieben falsch deklariert;
+(B) sofort in die Quelldatei — einfachste Änderung, aber jeder Store-Bau 1.0.x (erhebt nichts) widerspräche dem Label
+„Keine Daten erfasst“ und dem Text „ohne Konto kein Verkehr“. Keine ADR fällt bei keiner Variante.
+Geräteliste: kein Pfad berührt (`PrivacyInfo.xcprivacy` wird im Repo nicht geändert; Skript, Workflow, Doku nicht gelistet).
+Nachweis über einen Konto-TestFlight-Lauf (Archivprüfung grün mit `konto` an) und einen ohne `konto` – Workflow-Runs, kein Gerät.
+Achtung: ein TestFlight-Lauf lädt einen Bau hoch; Läufe startet laut Zuständigkeit die Sitzung des Epics (#612) – Nachweis
+alternativ per `workflow_dispatch` nur bis zur Archivprüfung prüfen (in der Spec klären, ob der Workflow einen Trockenlauf kennt).
+
+### Dependencies
+- Upstream: Python `plistlib` (Runner hat python3), `ACCOUNT_BUILD` aus `testflight.yml:38`.
+- Downstream: ASC-Datenschutzangaben (Schnitt 3, Fragebogen im Web), Schalter-Schnitt nach #795/#796/#624.
+- CI: `ci.yml:34` führt `scripts/test_*.py` automatisch aus.
+
+### Open Questions
+- [ ] Keine PO-Frage: Entscheidung „Schalter erst nach #795/#796/#624“ liegt vor (2026-11-17); die Wahl „Manifest folgt
+      Schalter“ ist technisch und folgt dem bestehenden Muster.
+- [ ] Technisch für die Spec: Nachweisweg ohne echten Upload (Trockenlauf-Eingabe vorhanden?).
