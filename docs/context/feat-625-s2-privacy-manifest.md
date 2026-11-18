@@ -66,6 +66,8 @@ Feature (Store-Vorbereitung, kein sichtbarer UI-Anteil → kein Entwurf nötig)
 ### Scope Assessment
 - Files: 5 (Limit eingehalten)
 - Estimated LoC: +~170 / -~2 (Skript ~60, Test ~90, Workflow ~8, Doku ~6)
+- Endstand (2026-11-18, /60-validate): +365 / −3 (Skript 125, Test 211, Workflow 21/−2, Doku 8/−1); Überhang aus den
+  Fehlerfall-Tests (AC-5, AC-6). Henning per Rückfrage in /60-validate: „So übernehmen“.
 - Risk Level: MEDIUM — CI-Code im Auslieferungsweg (ein Fehler hält jeden TestFlight-Lauf an), aber Store-Bauten ändern
   sich inhaltlich nicht; die Gegenprobe im Archiv macht jeden Fehler laut statt still
 

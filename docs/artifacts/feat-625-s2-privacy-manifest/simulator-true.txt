@@ -1,13 +1,17 @@
-# AC-12 Simulator-Nachweis, account=true (2026-11-18T18:09:49Z)
-Commit: f60a842
-Bau: ./scripts/sim.sh build (iOS-Simulator, Debug)
+# AC-12 Simulator-Nachweis, account=true (2026-11-18T18:23:37Z)
+Commit: e37a080 (Arbeitsbaum Quelle vor dem Bau: 0 geänderte Datei)
+$ python3 scripts/privacy_manifest.py apply LooseEnds/PrivacyInfo.xcprivacy
+LooseEnds/PrivacyInfo.xcprivacy: 3 collected data types set
+Ausgang: 0
+$ ./scripts/sim.sh build
+Bau-Ausgang: 0 ([0;32m[sim][0m Build erfolgreich.)
 Bundle-Kennung: com.henning.looseends
-Pfad: ~/Library/Developer/Xcode/DerivedData/LooseEnds-session-elegant-growing-ritchie/Build/Products/Debug-iphonesimulator/LooseEnds.app/PrivacyInfo.xcprivacy
-Bauzeit Manifest: 2026-11-18T19:09:38
-Befehl: python3 scripts/privacy_manifest.py check <Pfad> --account true
+Bauzeit Manifest: 2026-11-18T19:23:41
+$ python3 scripts/privacy_manifest.py check <DerivedData>/LooseEnds.app/PrivacyInfo.xcprivacy --account true
 ~/Library/Developer/Xcode/DerivedData/LooseEnds-session-elegant-growing-ritchie/Build/Products/Debug-iphonesimulator/LooseEnds.app/PrivacyInfo.xcprivacy: matches account=true
 Ausgang: 0
 Erfasste Typen im gebauten Manifest:
   - NSPrivacyCollectedDataTypeUserID
   - NSPrivacyCollectedDataTypeDeviceID
   - NSPrivacyCollectedDataTypeOtherUserContent
+$ git checkout -- LooseEnds/PrivacyInfo.xcprivacy
