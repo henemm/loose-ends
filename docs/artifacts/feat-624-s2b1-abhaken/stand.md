@@ -17,3 +17,20 @@
    („Prüfaufgabe Fenster #624 – darf abgehakt werden“), `get_view now`; erster Prüfpunkt: erscheint der Kreisknopf (serverTools)?
    Knopf + Wartezeile hell und dunkel, Haken oder „Noch nicht übernommen …“; Farben per getComputedStyle. Nur die Prüfaufgabe abhaken.
 4. Adversary-Runde für AC-10, stamp, add-artifact, qa_gate --infra → VERIFIED, `phase phase7_validate`, `/60-validate`.
+
+## Stand 2026-11-18 (nach Auslieferung)
+
+- Roter UI-Test (#939) war zu knappe Wartezeit der Dateiauswahl; Fix PR #948 (4121651).
+- #947 gemergt als beda7d3; henemm-infra#468; Dienst läuft auf beda7d3 seit 2026-11-18T00:19Z (/health 200).
+- Henning hat in claude.ai für Loose Ends „Immer erlauben“ gesetzt. Erste Prüfaufgabe hat er gelöscht.
+- claude.ai, Chat „Prüfaufgabe Fenster #624“, get_view now, dunkel: Kreisknopf auf jeder Zeile (serverTools da) → `claude-ai-now-dunkel-knopf.png`.
+- Neue Prüfaufgabe per capture_task, orderID D1B65D04-A73D-4C0F-A010-F69905A38411, wartet, bis ein Gerät die App öffnet (Weckruf erst mit #795 S5c-2).
+
+Weiter: get_order_result für diese orderID → done; dann im selben Chat get_view now, NUR bei der Prüfaufgabe den Knopf drücken,
+Wartezeile/Haken ansehen, hell + dunkel (Farben per getComputedStyle), Bilder hier ablegen; dann Schritt 4 oben.
+
+- 2026-11-18 (neue Sitzung): orderID D1B65D04… weiter `waiting` — kein Gerät hat die App seither geöffnet. Wartet darauf, dass Henning die App einmal öffnet; dann weiter wie oben.
+- 2026-11-18 ~18:50Z: Gerät hat die Prüfaufgabe übernommen (Ergebnis done). In claude.ai get_view open: Tipp nur bei „Prüfaufgabe Fenster #624“ → „Abgehakt, wartet …“, nach ~70 s „Noch nicht übernommen …“; dunkel und hell (Darstellung danach zurück auf System). Bilder `claude-ai-open-*.png`. Adversary Runde 3: VERIFIED 10/10.
+- Testausgabe fürs QA-Gate: lokal 482/483, rot nur #869 (migrate-Sperrtest, nur lokal); deshalb server.yml-Lauf 44206668992 auf beda7d3 neu gestartet, 483/483, dessen Log als `adversary-test-output.txt`.
+- 2026-11-18 ~17:55Z (/60-validate): Lücke aus der Spec-Prüfung geschlossen — Wartezeile in Hell fehlte als Bild. claude.ai auf Hell gestellt, im Chat „Prüfaufgabe Fenster #624“ get_view open, nur bei der Prüfaufgabe getippt: Knopf weg, kursiv grau „Abgehakt, wartet auf dein Gerät …“, übrige Zeilen mit Knopf → `claude-ai-open-hell-wartet.png`. Darstellung danach zurück auf System (geprüft). Damit sind Knopf und Wartezeile in Hell und Dunkel belegt (AC-10 wörtlich).
+- Validierung: Server-Suite 483/483 grün, 0 übersprungen; CI von #947 15/15 grün, main grün; AC-1..10 erfüllt; Code-Dateien 2, Produktcode +128/−15, Tests +247/−2 (Überhang über ±250 nur im Testcode, vor dem Merge vermerkt).

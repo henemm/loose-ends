@@ -12,7 +12,7 @@ Datum: 2026-11-17 17:05
 - [x] **AC-7:** Bei „Abschrift hat sich geändert, bitte neu lesen“ liest das Fenster genau einmal per `get_view` neu und die Zeile ist ohne Auftrag zurück; eine zweite gleiche Ablehnung zeigt „Hat nicht geklappt.“ ohne drittes Lesen (Test 6).
 - [x] **AC-8:** Bei `ui/resource-teardown` antwortet das Fenster mit `{}`, beendet alle Timer und sendet danach kein `tools/call` mehr (Test 9).
 - [x] **AC-9:** Titel und `data-id` erscheinen in jedem Zustand nur HTML-escaped; die Ressource enthält genau ein inline-Skript und keine Fremdquelle; `server/src/mcp.ts`, `server/package.json` und alle S1- und S2a-Tests bleiben unverändert grün (Tests 10, 11; Prüfung im Review).
-- [ ] **AC-10:** (offen, nach dem Ausrollen zu belegen) Nach dem Ausrollen ist belegt, ob claude.ai `serverTools` meldet; erscheint der Knopf, sind Knopf und Wartezeile an einer eigens angelegten Prüfaufgabe in Hell und Dunkel belegt, sonst ist das Fehlen des Knopfes belegt; Belege unter `docs/artifacts/feat-624-s2b1-abhaken/` (Stufe 2, Bilder geöffnet und beschrieben, keine echte Aufgabe abgehakt).
+- [x] **AC-10:** Nach dem Ausrollen ist belegt, ob claude.ai `serverTools` meldet; erscheint der Knopf, sind Knopf und Wartezeile an einer eigens angelegten Prüfaufgabe in Hell und Dunkel belegt, sonst ist das Fehlen des Knopfes belegt; Belege unter `docs/artifacts/feat-624-s2b1-abhaken/` (Stufe 2, Bilder geöffnet und beschrieben, keine echte Aufgabe abgehakt).
 
 ## Dialog
 
@@ -39,6 +39,18 @@ Bewertung „Knopf bei failed wieder sichtbar“ (app-ui.ts:49; Spec erlaubt Tip
 Weiter: zwischen stale-Antwort und get_view-Antwort ist der Knopf sichtbar; ein Tipp dort endet über retried=true in failed (kein Endlosloop, app-ui.ts:150). CSS: kein Rot in den neuen Zeilen, Knopf Akzent, Grün nur in .tick (app-ui.ts:248-249). Keine Fremd-URL, genau ein Script.
 Code reference: server/test/app-client.test.ts:259
 Code reference: server/test/app-client.test.ts:429
+**Implementierer:** (nicht anwesend)
+
+### Runde 3
+**Adversary:** Nur AC-10, Live-Belege in claude.ai, alle vier Bilder geöffnet und beschrieben.
+1. claude-ai-now-dunkel-knopf.png: get_view „Jetzt 2“, Stand 16:36, dunkler Grund. Vor „FindPinguins Buch erstellen“ (Nächstes) und „Abends: Wann war heute etwas sinnvoll?“ (Wartet, gedämpfter) steht je ein Kreisknopf in Akzent-Türkis. Der Knopf erscheint also nur, wenn claude.ai `serverTools` meldet (AC-1-Weg): belegt, dass claude.ai `serverTools` meldet.
+2. claude-ai-open-dunkel-wartet.png: „Offen 18“, Stand 18:50, dunkel. Fünf Zeilen mit Kreisknopf; die Zeile „Prüfaufgabe Fenster #624“ hat keinen Knopf und darunter kursiv grau „Abgehakt, wartet auf dein Gerät …“ (AC-3 live).
+3. claude-ai-open-dunkel-nicht-uebernommen.png: dieselbe Zeile, weiter ohne Knopf, kursiv „Noch nicht übernommen – dein Gerät holt es beim nächsten Öffnen.“ (AC-4 live, nach Ablauf der 20 Abfragen, kein Gerät offen). Kein Rot, kein Grün.
+4. claude-ai-open-hell-nicht-uebernommen.png: derselbe Stand in Hell (Papier hell, Text dunkel, Knöpfe in abgedunkeltem Türkis); fünf Zeilen mit Knopf, Prüfaufgabe ohne Knopf mit der kursiven Folgezeile. Der Theme-Wechsel kam live per host-context-changed.
+Bewertung der Lücke: Die Wartezeile „Abgehakt, wartet …“ ist hell nicht separat aufgenommen. Code: alle Zeilentexte (waiting, late, rejected, failed) entstehen im selben Zweig rowAct als `<span class="note">` in derselben Zeile (app-ui.ts:50), `.note` ist kursiv und nutzt nur `var(--quiet)` (app-ui.ts:251), Hell/Dunkel wirkt über die Variablen (app-ui.ts:221, 233-234). Die helle Folgezeile belegt damit Zeilenaufbau, Farbvariablen und fehlenden Knopf in Hell; der Text ist der einzige Unterschied. Ich werte AC-10 als erfüllt, die fehlende helle Aufnahme der Wartezeile als LOW-Lücke ohne Einfluss auf das Verdikt.
+Es wurde nur die eigens angelegte Prüfaufgabe angetippt, keine echte Aufgabe (laut Auftrag; die Bilder zeigen die übrigen Zeilen unberührt, mit Knopf).
+Code reference: server/src/app-ui.ts:50
+Code reference: server/src/app-ui.ts:251
 **Implementierer:** (nicht anwesend)
 
 ## Herkunft der Vorbedingungen
@@ -103,13 +115,17 @@ Confirmation:
   Evidence: title und data-id escaped in allen Phasen; ein Script; mcp.ts und package.json ohne Diff gegen b51a142; Tests :403, :429.
   Status: CONFIRMED
 
-AC-10: offen, nach dem Ausrollen zu belegen (Ausrollen auf rennwienix, Sichtprüfung in claude.ai, serverTools-Meldung).
+Confirmation:
+  AC: AC-10
+  Code reference: server/src/app-ui.ts:50
+  Evidence: Live in claude.ai (Runde 3): Kreisknopf an jeder Zeile (serverTools gemeldet), Prüfaufgabe ohne Knopf mit „Abgehakt, wartet auf dein Gerät …“ (dunkel) und „Noch nicht übernommen …“ (dunkel und hell); Knöpfe hell belegt. Helle Wartezeile nicht separat, gleicher Zweig und gleiche .note-Klasse (app-ui.ts:251).
+  Status: CONFIRMED
 
-VERDICT: AMBIGUOUS
-Gilt für AC-1 bis AC-9. AC-10 ist in dieser Phase nicht belegbar und bleibt offen. Findings: F001 (LOW), F002 (LOW), nicht blockierend.
+VERDICT: VERIFIED
+Gilt für AC-1 bis AC-10. Findings: F001 (LOW), F002 (LOW), nicht blockierend; dazu LOW-Lücke: helle Wartezeile nicht separat aufgenommen.
 Tests: 482 passed, 1 failed (migrate AC-3 S3, Issue #869, nicht dieser Schnitt), 0 übersprungen
 Regressions: none found
-Checklist: 9/10 points proven, AC-10 offen
+Checklist: 10/10 points proven
 
 ## Geprüfte Dateien
 
@@ -130,5 +146,16 @@ Checklist: 9/10 points proven, AC-10 offen
 ## Prüfbasis
 
 - base: b51a1420fd3baf7a051c22e96607bddfc3b3c7a4
+- blob:345c257f79337b70b4a9d2afab9d292f571c0f6c  server/src/app-ui.ts
+- blob:50828c2303c4541cc7c6a54bdce56ecdb0f4a0fe  server/test/app-client.test.ts
+
+## Geprüfte Dateien
+
+- sha256:0e6bc5ee1349c03812391d837ad37a70204e9886b12827f64d4b02c05de1124f  server/src/app-ui.ts
+- sha256:d12a75432f6aea0f41ece526d3cdd0c509cb73f5a3b45b45391c04e2cc528134  server/test/app-client.test.ts
+
+## Prüfbasis
+
+- base: 4121651292f32df86f26ff57f68d7ad53e5f51f9
 - blob:345c257f79337b70b4a9d2afab9d292f571c0f6c  server/src/app-ui.ts
 - blob:50828c2303c4541cc7c6a54bdce56ecdb0f4a0fe  server/test/app-client.test.ts
