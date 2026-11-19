@@ -66,9 +66,10 @@ targets:
         # iCloud key-value store: DueNotificationCenter syncs the reminder time across devices (#311).
         com.apple.developer.ubiquity-kvstore-identifier: $(TeamIdentifierPrefix)$(CFBundleIdentifier)
         # CloudKit mirroring pushes silently; without this the device never hears about a change
-        # made elsewhere. Xcode swaps the value for "production" on an App Store export. iOS only: macOS
-        # drops this key when signing and would need com.apple.developer.aps-environment (S5c-2b2, #795).
+        # made elsewhere. Xcode swaps the value for "production" on an App Store export. macOS needs the key
+        # com.apple.developer.aps-environment; Xcode silently drops the iOS key there (#795 S5c-2b2).
         aps-environment: development
+        com.apple.developer.aps-environment: development
         # Sign in with Apple for the account group "Claude" (#615 S4c-2a). In every build, without effect while
         # LEAccountEnabled is off; the App ID has had the capability since #621 S6b.
         com.apple.developer.applesignin: [Default]
