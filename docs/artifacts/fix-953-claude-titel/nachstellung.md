@@ -23,3 +23,26 @@ Suite "Repro 953" failed after 0.665 seconds with 2 issue(s)
 Befund: Fehler in beiden Wegen gezeigt (Erstlauf und „Erneut analysieren“). Der Titel eines Claude-Auftrags hat keine
 Nutzer-Revision, also gibt `EnrichmentWriter` ihn dem Modell frei (`may(.title, firstRun: !userHasTouched(.title, …))`).
 Mit `fields.title` (#932) besteht die Nutzer-Revision und der Titel bleibt; das deckt den Normalfall nicht.
+
+## Nach dem Fix (Validierung, 2026-11-19 08:25)
+
+Derselbe Weg (`OrderExecutor.execute` mit `capture` ohne `fields`, dann `processPending` bzw. `reanalyze`, Stub mit dem
+verkürzten Titel, Konfidenz 0,9), jetzt als eingecheckte Klasse `ClaudeTitleTests` im vollen Lauf `./scripts/sim.sh unit`,
+iPhone-17-Simulator:
+
+```
+Test Suite 'ClaudeTitleTests' started at 2026-11-19 08:25:50.469.
+    ✔ testAnalyzeAgainKeepsTheTitleOfAClaudeTask (0.238 seconds)
+    ✔ testClaudeTaskEndsActiveEvenWithoutAModelTitle (0.125 seconds)
+    ✔ testFirstRunKeepsTheTitleOfAClaudeTask (0.171 seconds)
+    ✔ testModelStillSetsTheDurationOfAClaudeTask (0.237 seconds)
+    ✔ testTaskFromTheAppIsStillRefinedByTheModel (0.107 seconds)
+    ✔ testTitleClaudeSetKeepsAgainstTheModel (0.186 seconds)
+Executed 6 tests, with 0 failures (0 unexpected) in 1.063 (1.066) seconds
+```
+
+Befund: Der Titel bleibt „Angebot für die Gartenhütte bei Müller einholen“, im Erstlauf und bei „Erneut analysieren“; der
+Fehler aus dem Lauf oben ist weg. Ein UI-Test kann den Unterschied nicht zeigen: unter `--ui-testing` ist das Modell aus
+(`ModelOffEnricher`), und der Simulator hat kein Apple Intelligence. Der Simulatorbeleg `simulator-run.txt`
+(`test-proof CaptureSmokeTests`) belegt deshalb den Erfassungsablauf der App über den geänderten `EnrichmentWriter`
+(keine Verschlechterung für App-Aufgaben), nicht die Modellstelle.
