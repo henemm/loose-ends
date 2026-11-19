@@ -44,7 +44,9 @@ enum EnrichmentWriter {
         // A title with no word of the note is a copy from elsewhere, not a refinement (#460); one with a date
         // the note never names is the capture day leaking in (#507); one with a word of an example's note
         // (`pastNotes`, the raw texts the model was handed) is a copy tacked on (#607).
-        if let title = draft.title, title.confidence >= threshold, !title.value.isEmpty,
+        // A task Claude captured is already worded: its title is never the model's, on no run (#953).
+        let fromClaude = task.capturedVia == .claude
+        if !fromClaude, let title = draft.title, title.confidence >= threshold, !title.value.isEmpty,
            TitleRule.isFromNote(title.value, rawText: task.rawText),
            !TitleRule.addsDate(title.value, rawText: task.rawText),
            !TitleRule.borrows(title.value, rawText: task.rawText, pastNotes: pastNotes) {
@@ -59,6 +61,8 @@ enum EnrichmentWriter {
             }
             // Unverified means the first run found no title; a re-analysis that finds one lifts it.
             if task.status == .unprocessed || task.status == .unverified, task.title != nil { task.status = .active }
+        } else if fromClaude, task.status == .unprocessed || task.status == .unverified, task.title != nil {
+            task.status = .active
         } else if task.status == .unprocessed {
             task.status = .unverified
         }
