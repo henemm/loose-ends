@@ -380,8 +380,9 @@ Echtbetrieb ansprechen soll (`PushEnvironment.current` liest die Info-Marke `LEA
 im Schritt „Set the APNs environment“ in beiden Jobs, ohne Bedingung und auch bei `v*`-Tags, nach „Generate project“ und vor
 dem Archiv `production`. Beide Archivprüfungen verlangen den String `production` (Zeile `LEApsEnvironment | string production
 | OK`, sonst Stopp vor dem Upload); iOS prüft zusätzlich, dass die App `aps-environment` trägt, nur das Vorhandensein: das
-Archiv ist mit dem Entwicklungsprofil signiert (`development`), `production` setzt erst der Export. Das Mac-Archiv trägt bis
-S5c-2b2 kein Push-Entitlement (macOS-Schlüssel `com.apple.developer.aps-environment`).
+Archiv ist mit dem Entwicklungsprofil signiert (`development`), `production` setzt erst der Export. Das Mac-Archiv muss
+seit S5c-2b2 den macOS-Schlüssel `com.apple.developer.aps-environment` tragen (Xcode lässt dort `aps-environment` still weg),
+ebenfalls nur auf Vorhandensein geprüft.
 
 Nach dem Upload läuft der Job `confirm` („Confirm Apple processed the build") auf `ubuntu-latest`.
 Er ruft `scripts/asc_wait_build.py` mit der Lauf-Nummer auf: Das Skript ermittelt über die App

@@ -1,4 +1,4 @@
-"""Tests für die Info-Marke LEApsEnvironment (#795 Schnitt 5c-2b).
+"""Tests für die Info-Marke LEApsEnvironment (#795 Schnitt 5c-2b) und den Push-Schlüssel des Macs (S5c-2b2).
 
 Aufruf: python3 scripts/test_aps_environment.py
 Quelle und Abbild tragen `sandbox`; nur der TestFlight-Lauf setzt `production` und prüft es im Archiv.
@@ -18,6 +18,8 @@ import yaml
 ROOT = Path(__file__).resolve().parent.parent
 PROJECT = ROOT / "project.yml"
 APP_INFO = ROOT / "LooseEnds" / "Info.plist"
+APP_ENTITLEMENTS = ROOT / "LooseEnds" / "LooseEnds.entitlements"
+MAC_PUSH = "com.apple.developer.aps-environment"
 WORKFLOW = ROOT / ".github" / "workflows" / "testflight.yml"
 KEY = "LEApsEnvironment"
 SET_LINE = "plutil -replace LEApsEnvironment -string production"
@@ -45,7 +47,7 @@ class SourceTests(unittest.TestCase):
         self.assertEqual(info.get(KEY), "sandbox")
 
 
-class WorkflowTests(unittest.TestCase):
+class WorkflowBase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.text = WORKFLOW.read_text(encoding="utf-8")
@@ -65,6 +67,9 @@ class WorkflowTests(unittest.TestCase):
 
     def outside_account_blocks(self, body):
         return re.sub(re.escape(ACCOUNT_BEGIN) + r".*?" + re.escape(ACCOUNT_END), "", body, flags=re.S)
+
+
+class WorkflowTests(WorkflowBase):
 
     # AC-3
     def test_step_is_unconditional_in_both_jobs(self):
@@ -91,9 +96,6 @@ class WorkflowTests(unittest.TestCase):
         for needle in (APS_BEGIN, APS_END, KEY, "plutil -type", "production"):
             self.assertIn(needle, body)
         self.assertIn('aps_environment "$P"', body)
-        keys = re.search(r"for key in ([^;]+); do", body[body.index("ents=$(codesign"):])
-        self.assertIsNotNone(keys)
-        self.assertNotIn("com.apple.developer.aps-environment", keys.group(1).split())
 
     # AC-6: der Prüfausschnitt selbst, gegen Beispiel-Plists ausgeführt
     def test_verify_snippet_accepts_only_production_string(self):
@@ -127,6 +129,48 @@ class WorkflowTests(unittest.TestCase):
         for job, _, _ in JOBS:
             self.assertEqual(self.step(job, "Set the account switch")["if"], "env.ACCOUNT_BUILD == 'true'")
         self.assertEqual(self.text.count("plutil -replace LEAccountEnabled"), 2)
+
+
+def app_entitlement_properties():
+    project = yaml.safe_load(PROJECT.read_text(encoding="utf-8"))
+    found = [t for t in project["targets"].values()
+             if (t.get("entitlements") or {}).get("path") == "LooseEnds/LooseEnds.entitlements"]
+    assert len(found) == 1, "kein eindeutiges App-Ziel mit entitlements.path LooseEnds/LooseEnds.entitlements"
+    return found[0]["entitlements"].get("properties", {})
+
+
+class EntitlementTests(WorkflowBase):
+    """S5c-2b2: macOS braucht com.apple.developer.aps-environment, der iOS-Schlüssel fällt dort still weg."""
+
+    # AC-1
+    def test_source_carries_mac_push_key(self):
+        properties = app_entitlement_properties()
+        self.assertEqual(properties.get(MAC_PUSH), "development")
+        self.assertEqual(properties.get("aps-environment"), "development")
+
+    # AC-2
+    def test_image_carries_mac_push_key(self):
+        image = plistlib.loads(APP_ENTITLEMENTS.read_bytes())
+        self.assertEqual(image.get(MAC_PUSH), "development")
+        self.assertEqual(image.get("aps-environment"), "development")
+
+    # AC-3: nur Vorhandensein, vor den Konto-Blöcken, Fehlen setzt fail=1
+    def test_mac_verify_requires_push_key(self):
+        body = self.step("upload-mac", JOBS[1][2])["run"]
+        start = body.index("ents=$(codesign")
+        loop = re.search(r"for key in ([^;]+); do\n(.*?)\n\s*done", body[start:], re.S)
+        self.assertIsNotNone(loop)
+        self.assertIn(MAC_PUSH, loop.group(1).split())
+        self.assertLess(start + loop.start(), body.index(ACCOUNT_BEGIN))
+        self.assertIn('grep -qF "<key>$key</key>"', loop.group(2))
+        self.assertIn("fail=1", loop.group(2))
+        self.assertEqual(self.outside_account_blocks(body).count(MAC_PUSH), 1, "Mac-Schlüssel nur in der Schleife")
+
+    # AC-4
+    def test_ios_verify_keeps_aps_environment(self):
+        body = self.step("upload", JOBS[0][2])["run"]
+        self.assertIn("entitled com.henning.looseends aps-environment", body)
+        self.assertNotIn(MAC_PUSH, body)
 
 
 if __name__ == "__main__":
