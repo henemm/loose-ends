@@ -64,6 +64,8 @@
 	<false/>
 	<key>LEAppGroup</key>
 	<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
+	<key>LEApsEnvironment</key>
+	<string>sandbox</string>
 	<key>LECloudContainer</key>
 	<string>iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
 	<key>LSApplicationCategoryType</key>

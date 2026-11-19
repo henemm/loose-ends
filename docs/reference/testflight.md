@@ -374,6 +374,15 @@ nur bei `konto` schreibt „Set the account switch“ in beiden Jobs mit `privac
 Beide Archivprüfungen rufen für das App-Bundle `com.henning.looseends` `privacy_manifest.py check <Manifest> --account
 "$ACCOUNT_BUILD"` auf (Watch, Share und Widgets bleiben leer und unberührt); ein Befund oder ein fehlendes Bundle stoppt den Upload.
 
+**APNs-Umgebung als Marke (#795 S5c-2b).** Die App meldet dem Dienst mit dem Geräte-Token, ob er Apples Test- oder
+Echtbetrieb ansprechen soll (`PushEnvironment.current` liest die Info-Marke `LEApsEnvironment`). `project.yml` setzt
+`sandbox` für jeden Bau (Xcode, „LE Prüfbau“, `launch-measure`: alle mit Entwicklungsprofil). Nur der TestFlight-Lauf setzt
+im Schritt „Set the APNs environment“ in beiden Jobs, ohne Bedingung und auch bei `v*`-Tags, nach „Generate project“ und vor
+dem Archiv `production`. Beide Archivprüfungen verlangen den String `production` (Zeile `LEApsEnvironment | string production
+| OK`, sonst Stopp vor dem Upload); iOS prüft zusätzlich, dass die App `aps-environment` trägt, nur das Vorhandensein: das
+Archiv ist mit dem Entwicklungsprofil signiert (`development`), `production` setzt erst der Export. Das Mac-Archiv trägt bis
+S5c-2b2 kein Push-Entitlement (macOS-Schlüssel `com.apple.developer.aps-environment`).
+
 Nach dem Upload läuft der Job `confirm` („Confirm Apple processed the build") auf `ubuntu-latest`.
 Er ruft `scripts/asc_wait_build.py` mit der Lauf-Nummer auf: Das Skript ermittelt über die App
 Store Connect API die App zur Bundle-Kennung, fragt alle 30 Sekunden den Build mit dieser Nummer ab
