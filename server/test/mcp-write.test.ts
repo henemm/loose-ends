@@ -260,7 +260,7 @@ test("update_task: a stored order wakes the account once, a refusal never", asyn
   assert.equal((await orderRows(pool)).length, 1);
 });
 
-test("update_task: a write tool whose fields are strict and hold exactly capture's keys without notes", async (t) => {
+test("update_task: a write tool whose fields are strict and hold exactly capture's keys without notes and link", async (t) => {
   const { client } = await setup(t);
   const tools = (await client.listTools()).tools;
   const tool = tools.find((one) => one.name === "update_task");
@@ -273,7 +273,77 @@ test("update_task: a write tool whose fields are strict and hold exactly capture
   const fields = schema.properties.fields;
   assert.equal(fields.additionalProperties, false, "fields muss .strict() sein");
   const capture = (tools.find((one) => one.name === "capture_task")!.inputSchema as Doc).properties.fields;
-  const captureKeys = Object.keys(capture.properties).filter((key) => key !== "notes").sort();
+  const captureKeys = Object.keys(capture.properties).filter((key) => key !== "notes" && key !== "link").sort();
   assert.deepEqual(Object.keys(fields.properties).sort(), captureKeys);
-  assert.equal(captureKeys.length, 9);
+  assert.equal(captureKeys.length, 10);
+  assert.equal(Object.keys(capture.properties).length, 12);
+  // repeat is one strict object in both, frequency required, so a typo in it is refused instead of dropped.
+  for (const repeat of [capture.properties.repeat, fields.properties.repeat]) {
+    assert.equal(repeat?.type, "object");
+    assert.equal(repeat.additionalProperties, false, "repeat muss .strict() sein");
+    assert.deepEqual(repeat.required, ["frequency"]);
+    assert.deepEqual(Object.keys(repeat.properties).sort(), ["basis", "frequency", "interval", "weekdays"]);
+  }
+});
+
+// #938 Schnitt 2: repeat at capture_task and update_task, link at capture_task only. The service checks form, the app meaning.
+const REPEAT = { frequency: "weekly", interval: 26, basis: "fromDueDate" };
+const LINK = "https://www.example.org/praxis/termine";
+
+test("capture_task: repeat and link go into the order unchanged", async (t) => {
+  const { pool, client } = await setup(t);
+  const fields = { title: "Zahnarzt Kontrolle", dueDate: "2026-03-14T06:30:00Z", dueHasTime: true, repeat: REPEAT, link: LINK };
+  const answer = await call(client, "capture_task", { text: "Alle 26 Wochen Zahnarzt Kontrolle", fields });
+  assert.equal(answer.isError, false, answer.text);
+  const [row] = await orderRows(pool);
+  assert.equal(row.kind, "capture");
+  assert.deepEqual(row.doc.fields, fields);
+  assert.doesNotThrow(() => checkOrder(row.doc));
+  const weekly = { frequency: "weekly", weekdays: [2, 4] };
+  assert.equal((await call(client, "capture_task", { text: "Laufen", fields: { repeat: weekly } })).isError, false);
+  assert.deepEqual((await orderRows(pool))[1].doc.fields, { repeat: weekly });
+});
+
+test("update_task: repeat carries only expectedStatus, no other expected value", async (t) => {
+  const { pool, client } = await setup(t, "henning", { transcript: full() });
+  const answer = await call(client, "update_task", { taskID: ANGEBOT, generatedAt: GEN, fields: { repeat: REPEAT } });
+  assert.equal(answer.isError, false, answer.text);
+  assert.deepEqual(await storedDoc(pool), {
+    version: 1, kind: "update", taskID: ANGEBOT, expectedStatus: "active", fields: { repeat: REPEAT },
+  });
+});
+
+test("link at update_task, a typo in repeat and values off its form are refused: no order, no wake-up", async (t) => {
+  const calls: string[] = [];
+  const wake = async (account: string) => { calls.push(account); };
+  const { pool, client } = await setup(t, "henning", { transcript: full(), wake });
+  const wrong: Doc[] = [
+    { frequenz: "weekly" }, { frequency: "weekly", intervall: 2 }, { frequency: "weekly", interval: 0 },
+    { frequency: "weekly", interval: 53 }, { frequency: "weekly", weekdays: [] }, { frequency: "hourly" },
+  ];
+  for (const repeat of wrong) {
+    assert.equal((await call(client, "capture_task", { text: "Zahnarzt", fields: { repeat } })).isError, true, JSON.stringify(repeat));
+    assert.equal((await call(client, "update_task", { taskID: ANGEBOT, generatedAt: GEN, fields: { repeat } })).isError, true,
+      JSON.stringify(repeat));
+  }
+  assert.equal((await call(client, "update_task", { taskID: ANGEBOT, generatedAt: GEN, fields: { link: LINK } })).isError, true);
+  assert.equal((await call(client, "capture_task", { text: "Zahnarzt", fields: { link: "ftp://example.org" } })).isError, true);
+  await new Promise((done) => setTimeout(done, 50));
+  assert.equal((await orderRows(pool)).length, 0);
+  assert.deepEqual(calls, []);
+});
+
+test("the descriptions name the nth-weekday gap and, at capture_task, the link", async (t) => {
+  const { client } = await setup(t);
+  const tools = (await client.listTools()).tools;
+  const description = (name: string) => tools.find((one) => one.name === name)?.description ?? "";
+  for (const name of ["capture_task", "update_task"]) {
+    const text = description(name);
+    assert.match(text, /Wochentag/, `${name}: n-ter Wochentag`);
+    assert.match(text, /jährlich zum Datum/, `${name}: Ausweg`);
+    assert.match(text, /Abweichung/, `${name}: dem Nutzer nennen`);
+    assert.match(text, /repeat/, `${name}: repeat`);
+  }
+  assert.match(description("capture_task"), /link/);
+  assert.match(description("update_task"), /nicht entfernen/);
 });
