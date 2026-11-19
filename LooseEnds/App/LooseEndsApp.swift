@@ -6,6 +6,9 @@ import SwiftUI
 struct LooseEndsApp: App {
     #if os(macOS)
     @NSApplicationDelegateAdaptor(MacAppDelegate.self) private var macDelegate
+    #elseif os(iOS)
+    /// Device token and silent wake-up (#795 S5c-2a).
+    @UIApplicationDelegateAdaptor(IOSAppDelegate.self) private var iosDelegate
     #endif
     let container: ModelContainer
     let enrichment: EnrichmentCoordinator
@@ -63,6 +66,11 @@ struct LooseEndsApp: App {
         // Only with an account; silent under tests (#795 S3b-1).
         claudeSync = ClaudeSyncTrigger.forApp(account: account, container: container)
         claudeSync?.start()
+        // The silent wake-up (#795 S5c-2a): only with an account, silent under tests like the trigger.
+        let push = PushWakeUp.forApp(account: account, trigger: claudeSync,
+                                     silent: ModelContainerFactory.isRunningTests || ModelContainerFactory.isUITesting)
+        PushWakeUp.current = push
+        push?.observeSignIn()
         if ModelContainerFactory.isUITesting { MainThreadWatchdog.start() }
         LaunchTimings.mark(.initEnd)
     }
