@@ -1,0 +1,249 @@
+Postgres on 127.0.0.1:49317, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.0QapVGacMi
+✔ apns: config alles oder nichts (75.203916ms)
+✔ apns: anbieter-jwt (295.381917ms)
+✔ apns: jwt cache und erneuerung (191.484541ms)
+✖ apns: expiredprovidertoken genau ein wiederholversuch (237.136375ms)
+✔ apns: anfrage kopfzeilen und koerper (243.429292ms)
+✖ apns: ungueltige tokens loeschen (229.15625ms)
+✖ apns: andere fehler loeschen nichts (181.805459ms)
+✖ apns: sendeergebnis im log (169.667125ms)
+✖ apns: ids nur als kanonische uuid (0.314917ms)
+✖ apns: wake wirft nie (192.268625ms)
+✖ apns: log nur feste namen (640.470625ms)
+✖ apns: http2 rahmung (35.8125ms)
+✔ apns: listtokens und droptoken (308.654833ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 5
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3610.114458
+
+✖ failing tests:
+
+test at test/red-probe.tmp.ts:94:1
+✖ apns: expiredprovidertoken genau ein wiederholversuch (237.136375ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      2,
+      1794644700,
+  +   []
+  -   [
+  -     'apns wake devices=1',
+  -     'apns sent 200 production'
+  -   ]
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/red-probe.tmp.ts:109:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 2, 1794644700, [] ],
+    expected: [ 2, 1794644700, [ 'apns wake devices=1', 'apns sent 200 production' ] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/red-probe.tmp.ts:129:1
+✖ apns: ungueltige tokens loeschen (229.15625ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      [
+        'abcdef0000000000000000000000000000000000000000000000000000000004',
+        'abcdef0000000000000000000000000000000000000000000000000000000063'
+      ],
+  +   'apns token dropped',
+  -   'apns wake devices=4',
+      [
+  +     'apns token dropped',
+  +     'apns token dropped',
+  +     'apns token dropped'
+  -     'apns sent 200 production',
+  -     'apns token dropped 400 production',
+  -     'apns token dropped 400 sandbox',
+  -     'apns token dropped 410 production',
+  -     'apns wake devices=4'
+      ]
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/red-probe.tmp.ts:134:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ [ 'abcdef0000000000000000000000000000000000000000000000000000000004', 'abcdef0000000000000000000000000000000000000000000000000000000063' ], 'apns token dropped', [ 'apns token dropped', 'apns token dropped', 'apns token dropped' ] ],
+    expected: [ [ 'abcdef0000000000000000000000000000000000000000000000000000000004', 'abcdef0000000000000000000000000000000000000000000000000000000063' ], 'apns wake devices=4', [ 'apns sent 200 production', 'apns token dropped 400 production', 'apns token dropped 400 sandbox', 'apns token dropped 410 production', 'apns wake devices=4' ] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/red-probe.tmp.ts:147:1
+✖ apns: andere fehler loeschen nichts (181.805459ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    [
+      5,
+      [
+        'abcdef0000000000000000000000000000000000000000000000000000000001',
+        'abcdef0000000000000000000000000000000000000000000000000000000002',
+  ...
+      ],
+  +   'apns send failed',
+  -   'apns wake devices=5',
+      [
+  +     'apns send failed',
+  +     'apns send failed',
+  +     'apns send failed',
+  +     'apns send failed',
+  +     'apns send failed'
+  -     'apns send failed 403 production',
+  -     'apns send failed 403 production',
+  -     'apns send failed 429 production',
+  -     'apns send failed 500 production',
+  -     'apns send failed 503 production',
+  -     'apns wake devices=5'
+      ]
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/red-probe.tmp.ts:153:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 5, [ 'abcdef0000000000000000000000000000000000000000000000000000000001', 'abcdef0000000000000000000000000000000000000000000000000000000002', 'abcdef0000000000000000000000000000000000000000000000000000000003', 'abcdef0000000000000000000000000000000000000000000000000000000004', 'abcdef0000000000000000000000000000000000000000000000000000000005', 'abcdef0000000000000000000000000000000000000000000000000000000063' ], 'apns send failed', [ 'apns send failed', 'apns send failed', 'apns send failed', 'apns send failed', 'apns send failed' ] ],
+    expected: [ 5, [ 'abcdef0000000000000000000000000000000000000000000000000000000001', 'abcdef0000000000000000000000000000000000000000000000000000000002', 'abcdef0000000000000000000000000000000000000000000000000000000003', 'abcdef0000000000000000000000000000000000000000000000000000000004', 'abcdef0000000000000000000000000000000000000000000000000000000005', 'abcdef0000000000000000000000000000000000000000000000000000000063' ], 'apns wake devices=5', [ 'apns send failed 403 production', 'apns send failed 403 production', 'apns send failed 429 production', 'apns send failed 500 production', 'apns send failed 503 production', 'apns wake devices=5' ] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/red-probe.tmp.ts:158:1
+✖ apns: sendeergebnis im log (169.667125ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   1,
+  +   'apns send failed',
+  -   6,
+  -   'apns wake devices=5',
+      [
+  +     'apns send failed'
+  -     'apns send failed 500 sandbox id=4D3E1B2C-1111-4222-8333-444455556666',
+  -     'apns sent 200 production id=4D3E1B2C-1111-4222-8333-444455556666',
+  -     'apns sent 200 production id=4D3E1B2C-1111-4222-8333-444455556666 unique=0a9b8c7d-5555-4666-8777-888899990000',
+  -     'apns sent 200 production unique=0a9b8c7d-5555-4666-8777-888899990000',
+  -     'apns sent 200 sandbox',
+  -     'apns wake devices=5'
+      ]
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/red-probe.tmp.ts:164:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 1, 'apns send failed', [ 'apns send failed' ] ],
+    expected: [ 6, 'apns wake devices=5', [ 'apns send failed 500 sandbox id=4D3E1B2C-1111-4222-8333-444455556666', 'apns sent 200 production id=4D3E1B2C-1111-4222-8333-444455556666', 'apns sent 200 production id=4D3E1B2C-1111-4222-8333-444455556666 unique=0a9b8c7d-5555-4666-8777-888899990000', 'apns sent 200 production unique=0a9b8c7d-5555-4666-8777-888899990000', 'apns sent 200 sandbox', 'apns wake devices=5' ] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/red-probe.tmp.ts:169:1
+✖ apns: ids nur als kanonische uuid (0.314917ms)
+  Error: apnsIds fehlt (RED-Platzhalter)
+      at apnsIds (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/red-probe.tmp.ts:13:50)
+      at read (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/red-probe.tmp.ts:170:48)
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/red-probe.tmp.ts:171:20)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at test/red-probe.tmp.ts:179:1
+✖ apns: wake wirft nie (192.268625ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      0,
+      0,
+      [
+  -     'apns wake devices=1',
+        'apns jwt failed'
+      ],
+  +   [],
+      [
+  +     'apns send failed'
+  -     'apns wake devices=0'
+      ],
+  -   [
+  -     'apns send failed list'
+  -   ]
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/red-probe.tmp.ts:196:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 0, 0, [ 'apns jwt failed' ], [], [ 'apns send failed' ] ],
+    expected: [ 0, 0, [ 'apns wake devices=1', 'apns jwt failed' ], [ 'apns wake devices=0' ], [ 'apns send failed list' ] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/red-probe.tmp.ts:201:1
+✖ apns: log nur feste namen (640.470625ms)
+  AssertionError [ERR_ASSERTION]: apns wake devices=0
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/red-probe.tmp.ts:231:103)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test/red-probe.tmp.ts:238:1
+✖ apns: http2 rahmung (35.8125ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  -   apnsId: '4D3E1B2C-1111-4222-8333-444455556666',
+      status: 200,
+  -   uniqueId: '0a9b8c7d-5555-4666-8777-888899990000'
+    }
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/server/test/red-probe.tmp.ts:266:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 200 },
+    expected: { status: 200, apnsId: '4D3E1B2C-1111-4222-8333-444455556666', uniqueId: '0a9b8c7d-5555-4666-8777-888899990000' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+TEST_EXIT=1
