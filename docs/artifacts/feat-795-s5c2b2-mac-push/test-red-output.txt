@@ -1,0 +1,45 @@
+test_image_carries_mac_push_key (__main__.EntitlementTests.test_image_carries_mac_push_key) ... FAIL
+test_ios_verify_keeps_aps_environment (__main__.EntitlementTests.test_ios_verify_keeps_aps_environment) ... ok
+test_mac_verify_requires_push_key (__main__.EntitlementTests.test_mac_verify_requires_push_key) ... FAIL
+test_source_carries_mac_push_key (__main__.EntitlementTests.test_source_carries_mac_push_key) ... FAIL
+test_source_and_image_default_to_sandbox (__main__.SourceTests.test_source_and_image_default_to_sandbox) ... ok
+test_account_switch_blocks_untouched (__main__.WorkflowTests.test_account_switch_blocks_untouched) ... ok
+test_ios_verify_checks_mark_and_entitlement (__main__.WorkflowTests.test_ios_verify_checks_mark_and_entitlement) ... ok
+test_mac_verify_checks_mark (__main__.WorkflowTests.test_mac_verify_checks_mark) ... ok
+test_step_is_unconditional_in_both_jobs (__main__.WorkflowTests.test_step_is_unconditional_in_both_jobs) ... ok
+test_verify_snippet_accepts_only_production_string (__main__.WorkflowTests.test_verify_snippet_accepts_only_production_string) ... ok
+
+======================================================================
+FAIL: test_image_carries_mac_push_key (__main__.EntitlementTests.test_image_carries_mac_push_key)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_aps_environment.py", line 154, in test_image_carries_mac_push_key
+    self.assertEqual(image.get(MAC_PUSH), "development")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != 'development'
+
+======================================================================
+FAIL: test_mac_verify_requires_push_key (__main__.EntitlementTests.test_mac_verify_requires_push_key)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_aps_environment.py", line 163, in test_mac_verify_requires_push_key
+    self.assertIn(MAC_PUSH, loop.group(1).split())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_aps_environment.py", line 58, in assertIn
+    self.fail(f"{member!r} fehlt{f' ({msg})' if msg else ''}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'com.apple.developer.aps-environment' fehlt
+
+======================================================================
+FAIL: test_source_carries_mac_push_key (__main__.EntitlementTests.test_source_carries_mac_push_key)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_aps_environment.py", line 148, in test_source_carries_mac_push_key
+    self.assertEqual(properties.get(MAC_PUSH), "development")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != 'development'
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.600s
+
+FAILED (failures=3)
