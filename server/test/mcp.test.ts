@@ -433,7 +433,10 @@ test("AC-11 (C4b-2): neither new tool writes to console or stdout", async (t) =>
 });
 
 // #932 Schnitt 2: capture_task with fields.
-const FIELD_KEYS = ["contexts", "dueDate", "dueHasTime", "duration", "energy", "importance", "notes", "project", "title", "urgency"];
+// #938 Schnitt 2 adds link and repeat.
+const FIELD_KEYS = [
+  "contexts", "dueDate", "dueHasTime", "duration", "energy", "importance", "link", "notes", "project", "repeat", "title", "urgency",
+];
 const fullFields = {
   contexts: ["Garten"], dueDate: "2026-03-14T08:00:00Z", dueHasTime: true, duration: "hour1", energy: -1,
   importance: "high", notes: "Heckenschere beim Nachbarn holen", project: "Haus", title: "Hecke schneiden", urgency: "low",

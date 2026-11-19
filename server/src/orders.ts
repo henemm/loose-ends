@@ -1,5 +1,5 @@
 import type pg from "pg";
-import { type Check, fail, flag, id, names, rank, reporting, shape, text, time } from "./transcripts.ts";
+import { type Check, fail, flag, id, list, names, rank, reporting, shape, text, time } from "./transcripts.ts";
 
 type Status = "unprocessed" | "unverified" | "active" | "parked" | "done" | "removed";
 
@@ -20,6 +20,10 @@ type Level = "low" | "medium" | "high";
 export type Fields = {
   title?: string; notes?: string; dueDate?: string; dueHasTime?: boolean; importance?: Level; urgency?: Level;
   duration?: "minutes5" | "minutes15" | "minutes30" | "hour1" | "hours2plus"; energy?: number; contexts?: string[]; project?: string;
+  repeat?: Repeat; link?: string;
+};
+type Repeat = {
+  frequency: "daily" | "weekly" | "monthly" | "yearly"; interval?: number; weekdays?: number[]; basis?: "fromDueDate" | "fromCompletion";
 };
 
 export type OrderResult = {
@@ -46,12 +50,33 @@ const level = oneOf([...LEVELS], "unbekannte Stufe");
 const duration = oneOf([...DURATIONS], "unbekannte Dauer");
 const energy: Check = (v, p) => { if (!Number.isInteger(v) || Math.abs(v as number) > 3) fail(p, "keine ganze Zahl von −3 bis 3"); };
 
+const whole = (low: number, high: number): Check => (v, p) => {
+  if (!Number.isInteger(v) || (v as number) < low || (v as number) > high) fail(p, `keine ganze Zahl von ${low} bis ${high}`);
+};
+const weekdays: Check = (v, p) => {
+  list(whole(1, 7))(v, p);
+  if ((v as unknown[]).length === 0) fail(p, "leer, mindestens ein Wochentag");
+};
+// The form of a rule, never its meaning (anchor, order and duplicates of weekdays are the app's); weekdays only with weekly.
+const repeat: Check = (v, p) => {
+  shape(v, p, { frequency: oneOf(["daily", "weekly", "monthly", "yearly"], "unbekannte Häufigkeit") }, {
+    interval: whole(1, 52), weekdays, basis: oneOf(["fromDueDate", "fromCompletion"], "unbekannte Basis"),
+  });
+  if (Object.hasOwn(v as object, "weekdays") && (v as Repeat).frequency !== "weekly") fail(`${p}.weekdays`, "nur mit weekly");
+};
+// http or https with a host; where WHATWG and Swift's URL(string:) part at the edges, the app answers invalid.
+const link: Check = (v, p) => {
+  text(v, p);
+  const url = URL.parse(v as string);
+  if (url === null || !["http:", "https:"].includes(url.protocol) || url.hostname === "") fail(p, "keine http- oder https-Adresse");
+};
+
 // The form of fields, never its meaning: names against the catalogs and an empty title are the app's (invalid).
-// dueDate and dueHasTime only together; notes only where a task is captured (withNotes).
+// dueDate and dueHasTime only together; notes and link only where a task is captured (withNotes).
 export const fieldsCheck = (withNotes: boolean): Check => (v, p) => {
   shape(v, p, {}, {
-    title: text, ...(withNotes ? { notes: text } : {}), dueDate: time, dueHasTime: flag,
-    importance: level, urgency: level, duration, energy, contexts: names, project: text,
+    title: text, ...(withNotes ? { notes: text, link } : {}), dueDate: time, dueHasTime: flag,
+    importance: level, urgency: level, duration, energy, contexts: names, project: text, repeat,
   });
   const has = (key: string) => Object.hasOwn(v as object, key);
   if (has("dueDate") && !has("dueHasTime")) fail(`${p}.dueHasTime`, "fehlt, nur mit dueDate zusammen");

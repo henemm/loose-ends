@@ -407,3 +407,79 @@ test("AC-3 (#932 S3): an update off its form is refused with the path, nothing i
   assert.equal(await count(pool), 0);
   checkOrder(withFields({}));
 });
+
+// #938 Schnitt 2: repeat (capture and update) and link (capture only). The example is the ```jsonc capture with
+// fields.repeat from the contract, read, never copied; captureExample() stays with the first one.
+function repeatExample(): Doc {
+  const found = [...readFileSync(contractPath, "utf8").matchAll(/```jsonc\n([\s\S]*?)\n```/g)].map((b) => JSON.parse(b[1]));
+  const doc = found.find((d) => d.kind === "capture" && d.fields?.repeat !== undefined);
+  assert.ok(doc, "der Vertrag muss ein ```jsonc-Beispiel capture mit fields.repeat enthalten");
+  return doc;
+}
+// The path itself or one element of the list under it, then the reason.
+const refusedAt = (path: string) => (e: Error) =>
+  new RegExp(`^Auftrag ungültig: ${path.replaceAll(".", "\\.")}(\\[\\d+\\])?: `).test(e.message);
+
+test("AC-1 (#938 S2): the contract's capture with repeat and link passes checkOrder and is stored as given", async (t) => {
+  const doc = repeatExample();
+  assert.ok(doc.fields.link, "das Beispiel trägt link");
+  checkOrder(doc);
+  const pool = await migrated(t);
+  assert.equal(await putOrder(pool, "henning", doc), "stored");
+  assert.deepEqual((await order(pool, doc.id.toLowerCase())).doc, doc);
+});
+
+const goodRepeats: unknown[] = [
+  { frequency: "daily" }, { frequency: "weekly" }, { frequency: "monthly" }, { frequency: "yearly" },
+  { frequency: "weekly", weekdays: [2, 4], interval: 1 }, { frequency: "weekly", weekdays: [1, 7], interval: 52 },
+  { frequency: "monthly", interval: 3, basis: "fromCompletion" }, { frequency: "yearly", basis: "fromDueDate" },
+  { frequency: "daily", interval: 2, basis: "fromCompletion" },
+];
+
+test("AC-2 (#938 S2): repeat with frequency alone and with interval, weekdays and basis is accepted at capture and update", () => {
+  for (const repeat of goodRepeats) {
+    checkOrder(withFields({ repeat }));
+    checkOrder(update({ repeat }));
+  }
+});
+
+const repeatTable: Array<[unknown, string]> = [
+  [{ frequency: "weekly", interval: 0 }, "fields.repeat.interval"], [{ frequency: "weekly", interval: 53 }, "fields.repeat.interval"],
+  [{ frequency: "weekly", interval: 1.5 }, "fields.repeat.interval"], [{ frequency: "weekly", interval: "2" }, "fields.repeat.interval"],
+  [{ frequency: "hourly" }, "fields.repeat.frequency"], [{ frequency: "weekly", basis: "fromStart" }, "fields.repeat.basis"],
+  [{ frequency: "weekly", weekdays: [] }, "fields.repeat.weekdays"], [{ frequency: "weekly", weekdays: [0] }, "fields.repeat.weekdays"],
+  [{ frequency: "weekly", weekdays: [8] }, "fields.repeat.weekdays"], [{ frequency: "weekly", weekdays: [1.5] }, "fields.repeat.weekdays"],
+  [{ frequency: "weekly", weekdays: 2 }, "fields.repeat.weekdays"], [{ frequency: "monthly", weekdays: [2] }, "fields.repeat.weekdays"],
+  [{ frequency: "weekly", intervall: 2 }, "fields.repeat.intervall"], [{ interval: 2 }, "fields.repeat.frequency"],
+  ["weekly", "fields.repeat"], [null, "fields.repeat"], [[], "fields.repeat"],
+];
+
+test("AC-3 (#938 S2): a repeat off its form is refused with the path, nothing is stored", async (t) => {
+  const pool = await migrated(t);
+  for (const [repeat, path] of repeatTable) {
+    for (const doc of [withFields({ repeat }), update({ repeat })]) {
+      assert.throws(() => checkOrder(doc), refusedAt(path), `${JSON.stringify(repeat)} → ${path}`);
+      await assert.rejects(putOrder(pool, "henning", doc), refusedAt(path));
+    }
+  }
+  assert.equal(await count(pool), 0);
+});
+
+test("AC-4 (#938 S2): link with http or https and a host is accepted at capture, everything else refused at fields.link", () => {
+  for (const link of ["https://www.example.org/praxis/termine", "http://example.org", "https://example.org/a?b=c#d"]) {
+    checkOrder(withFields({ link }));
+  }
+  for (const link of ["ftp://example.org/datei", "https://", "example.org", "mailto:a@example.org", "", 5, null]) {
+    assert.throws(() => checkOrder(withFields({ link })), refusedAt("fields.link"), JSON.stringify(link));
+  }
+});
+
+test("AC-5 (#938 S2): link at update is refused even when valid; update with repeat alone is accepted", async (t) => {
+  for (const fields of [{ link: "https://www.example.org/praxis/termine" }, { link: "x", repeat: { frequency: "daily" } }]) {
+    assert.throws(() => checkOrder(update(fields)), refusedAt("fields.link"), JSON.stringify(fields));
+  }
+  checkOrder(update({ repeat: { frequency: "weekly", interval: 26 } }));
+  const pool = await migrated(t);
+  await assert.rejects(putOrder(pool, "henning", update({ link: "https://example.org" })), refusedAt("fields.link"));
+  assert.equal(await count(pool), 0);
+});
