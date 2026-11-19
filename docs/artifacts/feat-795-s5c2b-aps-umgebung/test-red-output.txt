@@ -1,0 +1,64 @@
+test_source_and_image_default_to_sandbox (__main__.SourceTests.test_source_and_image_default_to_sandbox) ... FAIL
+test_account_switch_blocks_untouched (__main__.WorkflowTests.test_account_switch_blocks_untouched) ... ok
+test_ios_verify_checks_mark_and_entitlement (__main__.WorkflowTests.test_ios_verify_checks_mark_and_entitlement) ... FAIL
+test_mac_verify_checks_mark (__main__.WorkflowTests.test_mac_verify_checks_mark) ... FAIL
+test_step_is_unconditional_in_both_jobs (__main__.WorkflowTests.test_step_is_unconditional_in_both_jobs) ... FAIL
+test_verify_snippet_accepts_only_production_string (__main__.WorkflowTests.test_verify_snippet_accepts_only_production_string) ... FAIL
+
+======================================================================
+FAIL: test_source_and_image_default_to_sandbox (__main__.SourceTests.test_source_and_image_default_to_sandbox)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_aps_environment.py", line 43, in test_source_and_image_default_to_sandbox
+    self.assertEqual(app_info_properties().get(KEY), "sandbox")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != 'sandbox'
+
+======================================================================
+FAIL: test_ios_verify_checks_mark_and_entitlement (__main__.WorkflowTests.test_ios_verify_checks_mark_and_entitlement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_aps_environment.py", line 84, in test_ios_verify_checks_mark_and_entitlement
+    self.assertIn(needle, body)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_aps_environment.py", line 56, in assertIn
+    self.fail(f"{member!r} fehlt{f' ({msg})' if msg else ''}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '# aps-environment-check:begin' fehlt
+
+======================================================================
+FAIL: test_mac_verify_checks_mark (__main__.WorkflowTests.test_mac_verify_checks_mark)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_aps_environment.py", line 92, in test_mac_verify_checks_mark
+    self.assertIn(needle, body)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_aps_environment.py", line 56, in assertIn
+    self.fail(f"{member!r} fehlt{f' ({msg})' if msg else ''}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '# aps-environment-check:begin' fehlt
+
+======================================================================
+FAIL: test_step_is_unconditional_in_both_jobs (__main__.WorkflowTests.test_step_is_unconditional_in_both_jobs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_aps_environment.py", line 72, in test_step_is_unconditional_in_both_jobs
+    step = self.step(job, STEP)
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_aps_environment.py", line 63, in step
+    self.assertEqual(len(found), 1, f"{job}: Schritt '{name}' fehlt oder doppelt")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : upload: Schritt 'Set the APNs environment' fehlt oder doppelt
+
+======================================================================
+FAIL: test_verify_snippet_accepts_only_production_string (__main__.WorkflowTests.test_verify_snippet_accepts_only_production_string)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_aps_environment.py", line 101, in test_verify_snippet_accepts_only_production_string
+    self.assertEqual(len(snippets), 2, "Prüfausschnitt fehlt in der iOS- oder Mac-Prüfung")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : Prüfausschnitt fehlt in der iOS- oder Mac-Prüfung
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.036s
+
+FAILED (failures=5)
