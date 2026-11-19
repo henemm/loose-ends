@@ -1,11 +1,11 @@
 import { createPrivateKey, sign, type KeyObject } from "node:crypto";
-import http2 from "node:http2";
+import http2, { type IncomingHttpHeaders } from "node:http2";
 import type pg from "pg";
 import { dropToken, listTokens, type DeviceDoc } from "./devices.ts";
 
 export type ApnsConfig = { teamId: string; keyId: string; privateKey: KeyObject; topic: string };
 export type ApnsRequest = { origin: string; token: string; jwt: string; topic: string; body: string };
-export type ApnsResponse = { status: number; reason?: string };
+export type ApnsResponse = { status: number; reason?: string; apnsId?: string; uniqueId?: string };
 type Origins = Record<DeviceDoc["environment"], string>;
 
 const NAMES = ["APNS_TEAM_ID", "APNS_KEY_ID", "APNS_PRIVATE_KEY", "APNS_TOPIC"] as const;
@@ -16,6 +16,7 @@ const RENEW_AFTER = 50 * MIN;
 const MIN_AGE = 20 * MIN;
 // Apple's reasons that mean the token is no good for this app; everything else keeps the row.
 const DROP = new Set(["410 Unregistered", "400 BadDeviceToken", "400 DeviceTokenNotForTopic"]);
+const UUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
 // None set → undefined (no wake-up); some or an unreadable key → an error naming only the variable.
 export function apnsConfigFromEnv(env: NodeJS.ProcessEnv = process.env): ApnsConfig | undefined {
@@ -56,10 +57,11 @@ export async function sendHttp2(request: ApnsRequest, opts: { timeoutMs?: number
       });
       const chunks: Buffer[] = [];
       let status = 0;
-      stream.on("response", (headers) => { status = Number(headers[":status"]); });
+      let ids: ReturnType<typeof apnsIds> = {};
+      stream.on("response", (headers) => { status = Number(headers[":status"]); ids = apnsIds(headers); });
       stream.on("data", (chunk: Buffer) => chunks.push(chunk));
       // Without a response header (status 0) the stream ended unanswered, which the close handler rejects.
-      stream.on("end", () => { if (status) resolve({ status, ...reasonOf(Buffer.concat(chunks).toString("utf8")) }); });
+      stream.on("end", () => { if (status) resolve({ status, ...ids, ...reasonOf(Buffer.concat(chunks).toString("utf8")) }); });
       stream.on("error", reject);
       stream.on("close", () => reject(new Error("apns stream closed")));
       stream.end(request.body);
@@ -68,6 +70,19 @@ export async function sendHttp2(request: ApnsRequest, opts: { timeoutMs?: number
     clearTimeout(timer);
     session.destroy();
   }
+}
+
+// Apple's ids only as one canonical UUID string each; anything else is left out and never logged.
+export function apnsIds(headers: IncomingHttpHeaders): { apnsId?: string; uniqueId?: string } {
+  const valid = (value: unknown) => (typeof value === "string" && UUID.test(value) ? value : undefined);
+  const [apnsId, uniqueId] = [valid(headers["apns-id"]), valid(headers["apns-unique-id"])];
+  return { ...(apnsId ? { apnsId } : {}), ...(uniqueId ? { uniqueId } : {}) };
+}
+
+// " STATUS ENV[ id=…][ unique=…]", the end of every outcome line; the ids are checked again before they are written.
+function describe(response: ApnsResponse, env: DeviceDoc["environment"]): string {
+  const ids = apnsIds({ "apns-id": response.apnsId, "apns-unique-id": response.uniqueId });
+  return ` ${response.status} ${env}${ids.apnsId ? ` id=${ids.apnsId}` : ""}${ids.uniqueId ? ` unique=${ids.uniqueId}` : ""}`;
 }
 
 function reasonOf(body: string): { reason?: string } {
@@ -107,21 +122,24 @@ export function createWaker(opts: WakerOptions): { wake(account: string): Promis
       let response = await request(jwt!);
       const retry = response.status === 403 && response.reason === "ExpiredProviderToken" ? providerToken(now(), jwt) : undefined;
       if (retry) response = await request(retry);
-      if (response.status >= 200 && response.status < 300) return;
-      if (!DROP.has(`${response.status} ${response.reason}`)) return log("apns send failed");
+      const outcome = describe(response, device.environment);
+      if (response.status >= 200 && response.status < 300) return log(`apns sent${outcome}`);
+      if (!DROP.has(`${response.status} ${response.reason}`)) return log(`apns send failed${outcome}`);
       await dropToken(pool, device.token, device.environment);
-      log("apns token dropped");
+      log(`apns token dropped${outcome}`);
     } catch {
-      log("apns send failed");
+      log(`apns send failed error ${device.environment}`);
     }
   }
 
   return {
     async wake(account) {
       try {
-        await Promise.allSettled((await listTokens(pool, account)).map(deliver));
+        const devices = await listTokens(pool, account);
+        log(`apns wake devices=${devices.length}`);
+        await Promise.allSettled(devices.map(deliver));
       } catch {
-        log("apns send failed");
+        log("apns send failed list");
       }
     },
   };

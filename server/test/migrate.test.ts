@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { randomUUID } from "node:crypto";
 import { mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -183,11 +184,29 @@ async function within<T>(ms: number, work: Promise<T>): Promise<T> {
   }
 }
 
+// The advisory lock is database-wide and the other test files migrate in parallel against the same database,
+// so the lock test gets a throwaway database of its own (#963).
+async function freshDatabase(t: Parameters<typeof freshPool>[0]): Promise<{ pool: pg.Pool; url: string }> {
+  const name = `t_${randomUUID().replaceAll("-", "")}`;
+  const admin = new pg.Client({ connectionString: process.env.DATABASE_URL });
+  await admin.connect();
+  await admin.query(`CREATE DATABASE ${name}`);
+  const target = new URL(process.env.DATABASE_URL as string);
+  target.pathname = `/${name}`;
+  const url = target.toString();
+  const pool = new pg.Pool({ connectionString: url });
+  t.after(async () => {
+    await pool.end();
+    await admin.query(`DROP DATABASE ${name} WITH (FORCE)`);
+    await admin.end();
+  });
+  return { pool, url };
+}
+
 // Advisory locks are reentrant per session: a pooled connection that still held the lock would report it free.
-// So the probe opens its own new connection. Other test files migrate at the same time and may hold the lock
-// for a moment, so the probe retries briefly.
-async function lockIsFree(): Promise<boolean> {
-  const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
+// So the probe opens its own new connection and retries briefly.
+async function lockIsFree(url: string): Promise<boolean> {
+  const client = new pg.Client({ connectionString: url });
   await client.connect();
   try {
     for (let attempt = 0; attempt < 50; attempt++) {
@@ -205,7 +224,7 @@ async function lockIsFree(): Promise<boolean> {
 }
 
 test("AC-3: after a failed run the lock is free and a repaired run finishes (S3)", async (t) => {
-  const pool = await freshPool(t);
+  const { pool, url } = await freshDatabase(t);
   const dir = await migrationDir([
     ["001_first.sql", "CREATE TABLE first (id int);"],
     ["002_broken.sql", "SELECT * FROM no_such_table;"],
@@ -213,7 +232,7 @@ test("AC-3: after a failed run the lock is free and a repaired run finishes (S3)
   await assert.rejects(migrate(pool, dir), /no_such_table/);
 
   assert.equal(typeof MIGRATE_LOCK_ID, "number");
-  assert.equal(await lockIsFree(), true);
+  assert.equal(await lockIsFree(url), true);
   await writeFile(join(dir, "002_broken.sql"), "CREATE TABLE second (id int);");
   assert.deepEqual(await within(5000, migrate(pool, dir)), ["002_broken.sql"]);
   assert.deepEqual(await remembered(pool), ["001_first.sql", "002_broken.sql"]);

@@ -1,0 +1,23 @@
+Postgres on 127.0.0.1:63593, data in /var/folders/dk/p4qd3_xx6ls6_xybmqzfgs1h0000gn/T/tmp.mjsi3bfE4P
+✔ AC-1: applies migrations in number order and returns their names in that order (36.681417ms)
+✔ AC-2: a second run applies nothing, a new file alone is applied (17.593208ms)
+✔ AC-3: a broken migration rolls back completely and rethrows the Postgres error (13.827125ms)
+✔ AC-4: a gap in the numbers is refused before anything is applied (7.9445ms)
+✔ AC-4: a duplicate number is refused before anything is applied (15.995709ms)
+✔ AC-4: a misnamed .sql file is refused before anything is applied, README.md is ignored (6.927958ms)
+✔ AC-4: a README.md beside the migrations does not disturb the run (13.177708ms)
+✔ AC-4: number 000 is refused as invalid, not as a duplicate (5.977458ms)
+✔ AC-2: two runs at once apply every migration exactly once (S3) (323.219417ms)
+✔ AC-2: three runs at once apply every migration exactly once (S3) (320.501375ms)
+✔ AC-3: after a failed run the lock is free and a repaired run finishes (S3) (17.3ms)
+✔ AC-3: a failed ROLLBACK keeps the original error, discards the connection and skips the unlock (S3) (1.127ms)
+✔ AC-4: a gap is refused without ever connecting to the database (S3) (0.891625ms)
+✔ AC-5: without DATABASE_URL the test run fails and names the variable (419.094458ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1524.160584
