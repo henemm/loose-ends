@@ -165,5 +165,22 @@ final class MacAppDelegate: NSObject, NSApplicationDelegate {
 
     /// A menu bar app stays when its last window closes.
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
+
+    /// The device token and the silent wake-up go to `PushWakeUp.current` (#795 S5c-2a).
+    func application(_ application: NSApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Task { await PushWakeUp.current?.didReceive(token: deviceToken) }
+    }
+
+    func application(_ application: NSApplication, didFailToRegisterForRemoteNotificationsWithError error: any Error) {
+        Logger(subsystem: "com.henning.looseends", category: "push-wake-up")
+            .info("no device token: \(String(describing: type(of: error)), privacy: .public)")
+    }
+
+    /// AppKit has no completion here; `userInfo` is read here and never carried into the task.
+    func application(_ application: NSApplication, didReceiveRemoteNotification userInfo: [String: Any]) {
+        let isWake = PushWakeUp.isWake(userInfo)
+        guard let node = PushWakeUp.current else { return }
+        Task { _ = await node.handle(isWake: isWake) }
+    }
 }
 #endif

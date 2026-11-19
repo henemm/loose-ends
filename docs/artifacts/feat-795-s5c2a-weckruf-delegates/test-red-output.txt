@@ -1,0 +1,111 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/PushWakeUpTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEnds/Claude/DeviceRegistration.swift:67:17: [33mconstant 'sent' inferred to have type '()?', which may be unexpected[0m
+ 65 |         defer { running = false }
+[32m 66 |         do {[0m
+[[36mLooseEnds[0m] [1mCompiling[0m DeviceRegistration.swift
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEnds.swiftdoc
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEnds.abi.json
+[[36mLooseEnds[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEnds.swiftsourceinfo
+[[36mLooseEnds[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftConstValuesFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.SwiftFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests.LinkFileList
+[[36mLooseEndsTests[0m] [1mWrite Auxiliary File[0m LooseEndsTests-OutputFileMap.json
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsShare.appex
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:50:61: [31mcannot find type 'PushWakeUp' in scope[0m
+ 48 |                       wake: @escaping @MainActor () async -> Void = {},
+[36m 49 |                       remote: RemoteRegistrations = RemoteRegistrations(),[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:52:16: [31mcannot find 'PushWakeUp' in scope[0m
+ 50 |                       deadline: Duration = .seconds(20)) -> PushWakeUp {
+[36m 51 |         let registration = DeviceRegistration(account: account, device: { Self.device }, environment: .sandbox)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:73:23: [31mcannot find 'PushWakeUp' in scope[0m
+ 71 | 
+[36m 72 |     func testIsWakeOnlyWithLooseendsKey() {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:74:23: [31mcannot find 'PushWakeUp' in scope[0m
+ 72 |     func testIsWakeOnlyWithLooseendsKey() {
+[36m 73 |         XCTAssertTrue(PushWakeUp.isWake(["aps": ["content-available": 1], "looseends": ["v": 1]]))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:75:24: [31mcannot find 'PushWakeUp' in scope[0m
+ 73 |         XCTAssertTrue(PushWakeUp.isWake(["aps": ["content-available": 1], "looseends": ["v": 1]]))
+[36m 74 |         XCTAssertTrue(PushWakeUp.isWake(["looseends": ["v": 2]]))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:76:24: [31mcannot find 'PushWakeUp' in scope[0m
+ 74 |         XCTAssertTrue(PushWakeUp.isWake(["looseends": ["v": 2]]))
+[36m 75 |         XCTAssertFalse(PushWakeUp.isWake(["aps": ["content-available": 1]]))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:77:24: [31mcannot find 'PushWakeUp' in scope[0m
+ 75 |         XCTAssertFalse(PushWakeUp.isWake(["aps": ["content-available": 1]]))
+[36m 76 |         XCTAssertFalse(PushWakeUp.isWake(["ck": ["ce": 2], "aps": ["content-available": 1]]))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:78:24: [31mcannot find 'PushWakeUp' in scope[0m
+ 76 |         XCTAssertFalse(PushWakeUp.isWake(["ck": ["ce": 2], "aps": ["content-available": 1]]))
+[36m 77 |         XCTAssertFalse(PushWakeUp.isWake([:]))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:87:33: [31mtype 'Equatable' has no member 'woken'[0m
+ 85 |         let push = node(account: account(Wire()), wake: { woken += 1 })
+[36m 86 |         let result = await push.handle(isWake: true)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:91:45: [31mtype 'Equatable' has no member 'newData'[0m
+ 89 |         XCTAssertEqual(push.completions, 1)
+[36m 90 |         #if os(iOS)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:103:33: [31mtype 'Equatable' has no member 'deadline'[0m
+101 |         let started = clock.now
+[36m102 |         let result = await push.handle(isWake: true)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:107:45: [31mtype 'Equatable' has no member 'noData'[0m
+105 |         XCTAssertEqual(hanging.calls, 1)
+[36m106 |         #if os(iOS)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:108:22: [31mcannot find 'PushWakeUp' in scope[0m
+106 |         #if os(iOS)
+[36m107 |         XCTAssertEqual(result.fetchResult, .noData)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:108:48: [31mreference to member 'deadline' cannot be resolved without a contextual type[0m
+106 |         #if os(iOS)
+[36m107 |         XCTAssertEqual(result.fetchResult, .noData)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:108:59: [31mreference to member 'notOurs' cannot be resolved without a contextual type[0m
+106 |         #if os(iOS)
+[36m107 |         XCTAssertEqual(result.fetchResult, .noData)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:109:50: [31mtype 'Equatable' has no member 'failed'[0m
+107 |         XCTAssertEqual(result.fetchResult, .noData)
+[36m108 |         for each in [PushWakeUp.Result.woken, .deadline, .notOurs] {[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:121:33: [31mtype 'Equatable' has no member 'deadline'[0m
+119 |         let push = node(account: account(Wire()), wake: { await hanging.wake() }, deadline: .milliseconds(50))
+[36m120 |         let result = await push.handle(isWake: true)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:137:33: [31mtype 'Equatable' has no member 'notOurs'[0m
+135 |         let started = clock.now
+[36m136 |         let result = await push.handle(isWake: false)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:141:45: [31mtype 'Equatable' has no member 'noData'[0m
+139 |         XCTAssertEqual(woken, 0)
+[36m140 |         #if os(iOS)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:151:34: [31mtype 'Equatable' has no member 'registered'[0m
+149 |         let signedIn = node(account: account(wire))
+[36m150 |         let outcome = await signedIn.didReceive(token: Self.tokenBytes)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:162:31: [31mtype 'Equatable' has no member 'notSignedIn'[0m
+160 |         let signedOut = node(account: account(silentWire, token: nil))
+[36m161 |         let none = await signedOut.didReceive(token: Self.tokenBytes)[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:198:22: [31mcannot find 'PushWakeUp' in scope[0m
+196 |         let state = account(Wire())
+[36m197 |         let trigger = ClaudeSyncTrigger()[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:199:22: [31mcannot find 'PushWakeUp' in scope[0m
+197 |         let trigger = ClaudeSyncTrigger()
+[36m198 |         XCTAssertNil(PushWakeUp.forApp(account: state, trigger: trigger, silent: true))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:200:22: [31mcannot find 'PushWakeUp' in scope[0m
+198 |         XCTAssertNil(PushWakeUp.forApp(account: state, trigger: trigger, silent: true))
+[36m199 |         XCTAssertNil(PushWakeUp.forApp(account: nil, trigger: trigger, silent: false))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:201:25: [31mcannot find 'PushWakeUp' in scope[0m
+199 |         XCTAssertNil(PushWakeUp.forApp(account: nil, trigger: trigger, silent: false))
+[36m200 |         XCTAssertNil(PushWakeUp.forApp(account: state, trigger: nil, silent: false))[0m
+❌ /Users/hem/Developer/loose-ends/.claude/worktrees/rosy-sauteeing-volcano/LooseEndsTests/PushWakeUpTests.swift:203:22: [31mcannot find 'PushWakeUp' in scope[0m
+201 |         XCTAssertNotNil(PushWakeUp.forApp(account: state, trigger: trigger, silent: false))
+[36m202 |         // The unit test host itself starts under tests: nothing is installed there.[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m PushWakeUpTests.swift
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-rosy-sauteeing-volcano/Logs/Test/Test-LooseEnds-2026.11.19_12-54-44-+0100.xcresult

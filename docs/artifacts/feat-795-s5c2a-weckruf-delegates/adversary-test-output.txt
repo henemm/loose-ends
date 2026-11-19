@@ -1,0 +1,47 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/PushWakeUpTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-19 14:29:30.544.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-19 14:29:30.549.
+Test Suite 'PushWakeUpTests' started at 2026-11-19 14:29:30.550.
+    [32m✔[0m testDeadlineWinsMapsToNoData ([31m0.114[0m seconds)
+    [32m✔[0m testForeignNotificationReturnsImmediately (0.002 seconds)
+    [32m✔[0m testIsWakeOnlyWithLooseendsKey (0.001 seconds)
+    [32m✔[0m testLateWakeDoesNotCompleteTwice ([31m0.168[0m seconds)
+    [32m✔[0m testSignInTriggersOneRegistration ([31m0.544[0m seconds)
+    [32m✔[0m testSilentUnderTests (0.012 seconds)
+    [32m✔[0m testTokenForwardedOnlyWithSession (0.002 seconds)
+    [32m✔[0m testWakeWinsMapsToNewData (0.010 seconds)
+Executed 8 tests, with 0 failures (0 unexpected) in 0.853 (0.860) seconds
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-19 14:29:31.411.
+Executed 8 tests, with 0 failures (0 unexpected) in 0.853 (0.861) seconds
+Executed 8 tests, with 0 failures (0 unexpected) in 0.853 (0.867) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-rosy-sauteeing-volcano/Logs/Test/Test-LooseEnds-2026.11.19_14-28-30-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log

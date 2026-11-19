@@ -1,0 +1,64 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/PushWakeUpTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-19 13:03:46.285.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-19 13:03:46.287.
+Test Suite 'PushWakeUpTests' started at 2026-11-19 13:03:46.287.
+    [32m✔[0m testDeadlineWinsMapsToNoData ([31m0.113[0m seconds)
+    [32m✔[0m testForeignNotificationReturnsImmediately (0.001 seconds)
+    [32m✔[0m testIsWakeOnlyWithLooseendsKey (0.001 seconds)
+    [32m✔[0m testLateWakeDoesNotCompleteTwice ([31m0.170[0m seconds)
+    [32m✔[0m testSignInTriggersOneRegistration ([31m0.556[0m seconds)
+    [32m✔[0m testSilentUnderTests (0.003 seconds)
+    [32m✔[0m testTokenForwardedOnlyWithSession (0.001 seconds)
+    [32m✔[0m testWakeWinsMapsToNewData (0.001 seconds)
+Executed 8 tests, with 0 failures (0 unexpected) in 0.845 (0.849) seconds
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-19 13:03:47.137.
+Executed 8 tests, with 0 failures (0 unexpected) in 0.845 (0.850) seconds
+Executed 8 tests, with 0 failures (0 unexpected) in 0.845 (0.852) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-rosy-sauteeing-volcano/Logs/Test/Test-LooseEnds-2026.11.19_13-03-35-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
+
+=== Gesamtsuite ./scripts/sim.sh unit (2026-11-19, iPhone 17 Simulator, iOS 27) ===
+Ergebnis: Test Succeeded, exit 0
+xcresult: totalTestCount 1414, passed 1401, failed 0, skipped 13, expectedFailures 0
+Übersprungen (Mess-/Modell-/Hilfstests ohne Eingabedateien bzw. ohne Modell/Sprachmodell im Simulator):
+- Ergebnisdatei und Korpus werden vollständig zu Rohdaten und Zusammenfassung
+- Schreibt den Abschnitt „Echte Rohsätze“ nach stdout, ohne Modellaufruf
+- Hilfstest: legt den Kunst-Speicher fixture.store für den Skriptlauf ab
+- Hilfstest: lädt die vom Skript geschriebene Datei mit dem echten Leser
+- Every text twice through the real model, refusals classified and written as raw probes
+- One cold and ten warm calls, timed and written as raw probes
+- Apple Intelligence is available on this Mac
+- Every note gets an answer in time, and its title is short enough for a row
+- Most titles keep a word of their note (the writer drops the rest, #460)
+- Schreibt den Selbstkonsistenz-Bericht aus zwei bereits vorhandenen Dateien, ohne Modellaufruf (AC-9)
+- The first word arrives within 3 s of speech start
+- The final text keeps the key words
+- Schreibt den Textform-Bericht aus der vorhandenen Ergebnisdatei nach stdout
+./scripts/sim.sh mac-build: Build Succeeded (exit 0)
+./scripts/sim.sh build: Build erfolgreich (exit 0)
