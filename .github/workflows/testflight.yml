@@ -113,6 +113,9 @@ jobs:
       - name: Generate project
         run: xcodegen generate
 
+      - name: Set the APNs environment
+        run: plutil -replace LEApsEnvironment -string production LooseEnds/Info.plist   # jeder Lauf hier lädt hoch, auch v*-Tags (#795 S5c-2b)
+
       - name: Set the account switch
         if: env.ACCOUNT_BUILD == 'true'
         run: |
@@ -223,6 +226,8 @@ jobs:
           row "|--------|--------------|----------|"
           entitled com.henning.looseends com.apple.developer.ubiquity-kvstore-identifier
           entitled com.henning.looseends com.apple.developer.applesignin
+          # Push (#795 S5c-2b): nur Vorhandensein; das Archiv trägt development, production setzt erst der Export.
+          entitled com.henning.looseends aps-environment
           # Schalter der Konto-Gruppe (#615 S4c-2a): Typ Bool und Wert gleich der Eingabe konto, auch bei „aus“.
           # account-switch-check:begin
           account_switch() { # Info.plist; LEAccountEnabled muss ein Bool sein und der Eingabe konto gleichen (#615 S4c-2a)
@@ -237,6 +242,20 @@ jobs:
             fi
           }
           # account-switch-check:end
+          # APNs-Umgebung (#795 S5c-2b): die App meldet sie dem Dienst; TestFlight-Bauten sprechen production.
+          # aps-environment-check:begin
+          aps_environment() { # Info.plist; LEApsEnvironment muss der String production sein
+            local type value
+            type=$(plutil -type LEApsEnvironment "$1" 2>/dev/null || true)
+            value=$(plutil -extract LEApsEnvironment raw "$1" 2>/dev/null || true)
+            if [ "$type" = string ] && [ "$value" = production ]; then
+              row "| LEApsEnvironment | string production | OK |"
+            else
+              row "| LEApsEnvironment | ${type:-fehlt} $value | FEHLER |"
+              echo "::error::LEApsEnvironment is '${type:-missing} $value', expected string production (#795)"; fail=1
+            fi
+          }
+          # aps-environment-check:end
           app_info=""
           while IFS= read -r b; do
             [ "$(get CFBundleIdentifier "$b/Info.plist")" = com.henning.looseends ] && { app_info="$b/Info.plist"; break; }
@@ -245,6 +264,7 @@ jobs:
           row "| Schlüssel | Wert | Ergebnis |"
           row "|-----------|------|----------|"
           account_switch "$app_info"
+          aps_environment "$app_info"
           # Datenschutz-Manifest der App folgt dem Schalter (#625 S2): leer ohne konto, drei Typen mit konto.
           : "${ACCOUNT_BUILD:=false}"
           manifest="${app_info%/Info.plist}/PrivacyInfo.xcprivacy"
@@ -430,6 +450,9 @@ jobs:
       - name: Generate project
         run: xcodegen generate
 
+      - name: Set the APNs environment
+        run: plutil -replace LEApsEnvironment -string production LooseEnds/Info.plist   # jeder Lauf hier lädt hoch, auch v*-Tags (#795 S5c-2b)
+
       - name: Set the account switch
         if: env.ACCOUNT_BUILD == 'true'
         run: |
@@ -524,7 +547,22 @@ jobs:
             fi
           }
           # account-switch-check:end
+          # APNs-Umgebung (#795 S5c-2b): die App meldet sie dem Dienst; TestFlight-Bauten sprechen production.
+          # aps-environment-check:begin
+          aps_environment() { # Info.plist; LEApsEnvironment muss der String production sein
+            local type value
+            type=$(plutil -type LEApsEnvironment "$1" 2>/dev/null || true)
+            value=$(plutil -extract LEApsEnvironment raw "$1" 2>/dev/null || true)
+            if [ "$type" = string ] && [ "$value" = production ]; then
+              row "| LEApsEnvironment | string production | OK |"
+            else
+              row "| LEApsEnvironment | ${type:-fehlt} $value | FEHLER |"
+              echo "::error::LEApsEnvironment is '${type:-missing} $value', expected string production (#795)"; fail=1
+            fi
+          }
+          # aps-environment-check:end
           account_switch "$P"
+          aps_environment "$P"
           # Datenschutz-Manifest der App folgt dem Schalter (#625 S2), wie in der iOS-Prüfung.
           : "${ACCOUNT_BUILD:=false}"
           res=OK

@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-11-19T08:31:00+0100
+befehl: scripts/sim.sh test-proof StartNumberTests
+workflow: feat-795-s5c2b-aps-umgebung
+head: 58f13a1c6996153e13fb948389fae30d203028b8
+basis: 57963cd6ce7249f9663c3df59eb74c57803fab21 (merge-base origin/main HEAD)
+testklasse: StartNumberTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1795073397.036  ende: 1795073459.59
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-795-s5c2b-aps-umgebung/simulator-run/summary.json  sha256:3873029efff013ae3e03816a7ad9fb383987150d50c0397083e5aa1265a7c517
+xcresult: docs/artifacts/feat-795-s5c2b-aps-umgebung/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-795-s5c2b-aps-umgebung/simulator-run/*.png (2 Stück)
+
+## Geprüfte Dateien
+- sha256:8d4f9aa662cfda71acc2f7dfabe5f164e34a456ef398b1f175caffe3b85bb6aa  LooseEnds/Claude/DeviceRegistration.swift

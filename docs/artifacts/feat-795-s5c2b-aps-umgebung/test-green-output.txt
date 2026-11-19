@@ -1,0 +1,69 @@
+test_source_and_image_default_to_sandbox (__main__.SourceTests.test_source_and_image_default_to_sandbox) ... ok
+test_account_switch_blocks_untouched (__main__.WorkflowTests.test_account_switch_blocks_untouched) ... ok
+test_ios_verify_checks_mark_and_entitlement (__main__.WorkflowTests.test_ios_verify_checks_mark_and_entitlement) ... ok
+test_mac_verify_checks_mark (__main__.WorkflowTests.test_mac_verify_checks_mark) ... ok
+test_step_is_unconditional_in_both_jobs (__main__.WorkflowTests.test_step_is_unconditional_in_both_jobs) ... ok
+test_verify_snippet_accepts_only_production_string (__main__.WorkflowTests.test_verify_snippet_accepts_only_production_string) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.215s
+
+OK
+
+=== Python-Wächter scripts/test_*.py (Rückgabewert, Datei, letzte Zeile) ===
+0 scripts/test_abnahme_liste.py ['OK']
+0 scripts/test_app_icon_package.py ['OK']
+0 scripts/test_aps_environment.py ['OK']
+0 scripts/test_asc_app_info.py ['OK']
+0 scripts/test_asc_beta_invite.py ['OK']
+0 scripts/test_asc_beta_link.py ['OK']
+0 scripts/test_asc_beta_probe.py ['OK']
+0 scripts/test_asc_beta_setup.py ['OK']
+0 scripts/test_asc_cleanup_certs.py ['OK']
+0 scripts/test_asc_crashes.py ['OK']
+0 scripts/test_asc_header_upload.py ['OK']
+0 scripts/test_asc_review_notes.py ['OK']
+0 scripts/test_asc_store_images.py ['OK']
+0 scripts/test_asc_store_probe.py ['OK']
+0 scripts/test_asc_store_submit.py ['OK']
+0 scripts/test_asc_store_version.py ['OK']
+0 scripts/test_asc_version_texts.py ['OK']
+0 scripts/test_asc_wait_build.py ['OK']
+0 scripts/test_asc_watch_appinfo.py ['OK']
+0 scripts/test_asc_what_to_test.py ['OK']
+0 scripts/test_board.py ['OK']
+0 scripts/test_catalog_languages.py ['OK']
+0 scripts/test_check_cloudkit_production.py ['OK']
+0 scripts/test_ci_settle_sync.py ['OK']
+0 scripts/test_ci_xcode27.py ['OK']
+0 scripts/test_claim_satz.py ['OK']
+0 scripts/test_cloudkit_schema.py ['OK']
+0 scripts/test_compare_reports.py ['OK']
+0 scripts/test_datenschutz_text.py ['OK (skipped=1)']
+0 scripts/test_entitlements_sync.py ['OK']
+0 scripts/test_evidence_config.py ['OK']
+0 scripts/test_guardrail_corpus.py ['OK']
+0 scripts/test_info_plist_sync.py ['OK']
+0 scripts/test_latency_summary.py ['OK']
+0 scripts/test_mac_ci_entitlements.py ['OK']
+0 scripts/test_marketing_version.py ['OK']
+0 scripts/test_measurement_status.py ['OK']
+0 scripts/test_next_ticket.py ['OK']
+0 scripts/test_next_ticket_hook.py ['OK']
+0 scripts/test_privacy_manifest.py ['OK']
+0 scripts/test_real_model_result.py ['OK']
+0 scripts/test_shipped_languages.py ['OK']
+0 scripts/test_sim_lock.py ['OK']
+0 scripts/test_sim_proof.py ['OK']
+0 scripts/test_sim_run_xcodebuild.py ['OK']
+0 scripts/test_siri_phrases.py ['OK']
+0 scripts/test_store_header.py ['OK']
+0 scripts/test_store_screenshots.py ['OK']
+0 scripts/test_tags_wording.py ['OK']
+0 scripts/test_ui_smoke_shards.py ['OK']
+
+=== ./scripts/sim.sh sim-unit DeviceRegistrationTests ===
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-19 08:02:02.514.
+Executed 10 tests, with 0 failures (0 unexpected) in 0.449 (0.460) seconds
+Executed 10 tests, with 0 failures (0 unexpected) in 0.449 (0.465) seconds
+exit=0

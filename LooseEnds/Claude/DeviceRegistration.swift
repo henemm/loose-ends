@@ -10,7 +10,7 @@ enum PushEnvironment: String, Sendable {
         self = (infoValue as? String) == "production" ? .production : .sandbox
     }
 
-    /// The build's mark `LEApsEnvironment` (set from S5c-2b on; until then always sandbox).
+    /// The build's mark `LEApsEnvironment` (sandbox in project.yml; the TestFlight run sets production since S5c-2b).
     static var current: PushEnvironment {
         PushEnvironment(infoValue: Bundle.main.object(forInfoDictionaryKey: "LEApsEnvironment"))
     }

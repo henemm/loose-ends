@@ -66,7 +66,8 @@ targets:
         # iCloud key-value store: DueNotificationCenter syncs the reminder time across devices (#311).
         com.apple.developer.ubiquity-kvstore-identifier: $(TeamIdentifierPrefix)$(CFBundleIdentifier)
         # CloudKit mirroring pushes silently; without this the device never hears about a change
-        # made elsewhere. Xcode swaps the value for "production" on an App Store export.
+        # made elsewhere. Xcode swaps the value for "production" on an App Store export. iOS only: macOS
+        # drops this key when signing and would need com.apple.developer.aps-environment (S5c-2b2, #795).
         aps-environment: development
         # Sign in with Apple for the account group "Claude" (#615 S4c-2a). In every build, without effect while
         # LEAccountEnabled is off; the App ID has had the capability since #621 S6b.
@@ -82,6 +83,9 @@ targets:
         # Account group "Claude" (#615 S4c-2a): off by default, a real Bool. Only a TestFlight run with the
         # input `konto` switches it on (plutil after generate). LEServiceURL stays unset: the fallback is the one service.
         LEAccountEnabled: false
+        # APNs environment the app reports to the service (#795 S5c-2b): sandbox by default; only the TestFlight
+        # run sets production (plutil after generate) and checks it in the archive.
+        LEApsEnvironment: sandbox
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
         # "Neue Aufgabe" in the large widget opens capture as looseends://capture (#521).
