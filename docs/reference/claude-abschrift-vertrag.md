@@ -129,12 +129,12 @@ Auftrag bringt `dueDate`. Die Wiederholung ist eine Nutzerrevision mit Grund „
 `update` gilt für `repeat` nur der Status als erwarteter Stand (die Abschrift trägt keine Wiederholung). Eine Wiederholung
 entfernen gibt es in Version 1 nicht. `link` nur an `capture`: eine `http`- oder `https`-Adresse mit Host, die App legt sie als
 Quelle der Aufgabe ab, ohne Revision und ohne den Rohtext zu ändern. Unbekannte Werte, ein `interval` außerhalb 1 … 52, falsche
-`weekdays`, ein ungültiger `link` und `link` bei `update` sind `invalid`. Der Dienst nimmt `repeat` und `link` ab #938 Schnitt 2
-an; bis dahin weist er sie als unbekannte Schlüssel ab.
+`weekdays`, ein ungültiger `link` und `link` bei `update` sind `invalid`. Der Dienst nimmt `repeat` (an `capture` und `update`)
+und `link` (nur an `capture`) an und prüft nur ihre Form (#938 Schnitt 2).
 
 Die App prüft in dieser Reihenfolge und schreibt erst danach, in einem Zug: Form (`invalid`), Aufgabe (`missing`, nur `update`),
 Namen (`invalid`), erwarteter Stand (`stale`, nur `update`). Der Dienst nimmt `fields` an `capture` und `update` an und prüft
-nur die Form (#932 Schnitt 2 und 3).
+nur die Form (#932 Schnitt 2 und 3, #938 Schnitt 2).
 
 Weil eine Aufgabe keinen Änderungszeitpunkt führt, trägt jeder Auftrag den **erwarteten Stand** der Felder, die er ändert.
 Stimmt er nicht mehr mit dem Gerät überein, wird nichts geändert. `expectedDueDate` ist bei `complete` und `setDue` Pflicht

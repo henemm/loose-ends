@@ -302,9 +302,19 @@ const captureFieldsSchema = z.object({
   title: z.string(), notes: z.string(), dueDate: z.string(), dueHasTime: z.boolean(),
   importance: z.enum(LEVELS), urgency: z.enum(LEVELS), duration: z.enum(DURATIONS), energy: z.number().int().min(-3).max(3),
   contexts: z.array(z.string()), project: z.string(),
+  // Strict inside too, so "intervall" is refused instead of dropped.
+  repeat: z.object({
+    frequency: z.enum(["daily", "weekly", "monthly", "yearly"]), interval: z.number().int().min(1).max(52).optional(),
+    weekdays: z.array(z.number().int().min(1).max(7)).min(1).optional(), basis: z.enum(["fromDueDate", "fromCompletion"]).optional(),
+  }).strict(),
+  link: z.string(),
 }).partial().strict();
-// update_task's fields: capture's keys without notes (the contract allows no notes at update), strict as well.
-const updateFieldsSchema = captureFieldsSchema.omit({ notes: true }).strict();
+// update_task's fields: capture's keys without notes and link (the contract allows neither at update), strict as well.
+const updateFieldsSchema = captureFieldsSchema.omit({ notes: true, link: true }).strict();
+// Both tools say what repeat holds and the one rule it cannot express.
+const repeating = "repeat: frequency daily, weekly, monthly oder yearly, interval als Abstand 1 bis 52, weekdays (1 = Sonntag bis "
+  + "7 = Samstag) nur bei weekly, basis fromDueDate oder fromCompletion. „Jedes Jahr am n-ten Wochentag“ (z. B. 2. Samstag im "
+  + "Februar) gibt es nicht: dann jährlich zum Datum anlegen und dem Nutzer diese Abweichung nennen";
 
 // The order tools and get_order_result; with wake every newly stored order wakes the caller's devices.
 function registerOrders(server: McpServer, pool: pg.Pool, wake: Wake | undefined): void {
@@ -312,7 +322,8 @@ function registerOrders(server: McpServer, pool: pg.Pool, wake: Wake | undefined
     description: "Legt einen Auftrag zum Erfassen einer Aufgabe an; erfasst wird sie auf einem Gerät, sobald eines den Auftrag "
       + "abholt. Den Stand liefert get_order_result mit der zurückgegebenen orderID. text ist der Wortlaut des Nutzers, unverändert. "
       + "fields ist optional: Titel, Notiz, Fälligkeit (dueDate in UTC mit Z, nur zusammen mit dueHasTime), Wichtigkeit, "
-      + "Dringlichkeit, Dauer, Energie (−3 bis 3), Tags und Projekt; Tags und Projekt nur mit Namen, die es schon gibt",
+      + "Dringlichkeit, Dauer, Energie (−3 bis 3), Tags und Projekt; Tags und Projekt nur mit Namen, die es schon gibt. "
+      + "link ist eine http- oder https-Adresse, sie wird die Quelle der Aufgabe. " + repeating,
     inputSchema: z.object({ text: z.string(), fields: captureFieldsSchema.optional() }),
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
   }, capturing(pool, wake));
@@ -363,7 +374,8 @@ function registerUpdate(server: McpServer, pool: pg.Pool, wake: Wake | undefined
       + "mindestens eines: Titel, Fälligkeit (dueDate in UTC mit Z, nur zusammen mit dueHasTime), Wichtigkeit, Dringlichkeit, "
       + "Dauer, Energie (−3 bis 3), Tags und Projekt; Tags und Projekt nur mit Namen, die es schon gibt. Die Fälligkeit entfernt "
       + "set_due ohne date. Zuerst list_tasks oder get_now lesen und deren generatedAt mitgeben; ausgeführt wird auf einem Gerät, "
-      + "den Stand liefert get_order_result mit der zurückgegebenen orderID",
+      + "den Stand liefert get_order_result mit der zurückgegebenen orderID. " + repeating
+      + ". Eine Wiederholung lässt sich setzen und ändern, aber nicht entfernen",
     inputSchema: z.object({ taskID: z.string(), generatedAt: z.string(), fields: updateFieldsSchema }),
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
   }, updating(pool, wake));
