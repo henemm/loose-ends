@@ -70,6 +70,9 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
 - **Color budget.** Accent = tappable (incl. AI tint), red = time pressure, grey = hierarchy, green = the completion moment.
 - **The app never proposes the Knäuel or a bead** (Henning, 2026-10-26, #648 dropped): no row, no preselected menu
   entry, no notification suggests a task as the Knäuel or as a bead. Both are set by the user alone.
+- **Claude is an input channel, not a second app** (Henning, 2026-11-19): „mir geht es nicht darum, die Loose Ends App in
+  Claude nachzubauen.“ Work for Claude ranks by how well tasks get *into* Loose Ends (capture, wording kept, fields set);
+  rebuilding app views or controls inside Claude's window comes last. What Claude captured arrives as written (#953).
 - **SF Symbols only** (Henning, 2026-10-12, #350). Every sign in the app is an SF Symbol, outline where one exists:
   no emoji, no characters standing in for a symbol (»«, →), no own images. The one exception is the logo's thread
   (knot, loose thread, #180): it is the brand mark, not a control. Since #642 (Henning, 2026-10-23) its family holds two
@@ -78,7 +81,7 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
 - **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,
   regex, calendar, contacts or a word list. The on-device model only gets what needs language
   understanding (refining the title: since #202 `TitleRule` sets it at capture from the cleaned raw
-  text, at most 12 words — 312 of 319 raw sentences have ≤ 12 words; the model may refine it). Every analysis and spec that proposes the model for a field must contain
+  text, at most 12 words — 312 of 319 raw sentences have ≤ 12 words; the model may refine it, except the title of a task Claude captured (`capturedVia == .claude`), which is never the model's, #953). Every analysis and spec that proposes the model for a field must contain
   the line "Without the model this fails because …" with evidence from a measurement; without that line
   the rule path is the proposal. Every measurement report carries the rule-based column as baseline; if
   the rules beat the model, the rules win, and an existing ADR or schema is not a counter-argument.

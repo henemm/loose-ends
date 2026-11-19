@@ -1,0 +1,41 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/ClaudeTitleTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-19 08:22:14.261.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-19 08:22:14.266.
+Test Suite 'ClaudeTitleTests' started at 2026-11-19 08:22:14.266.
+    [32m✔[0m testAnalyzeAgainKeepsTheTitleOfAClaudeTask ([31m0.364[0m seconds)
+    [32m✔[0m testClaudeTaskEndsActiveEvenWithoutAModelTitle ([31m0.133[0m seconds)
+    [32m✔[0m testFirstRunKeepsTheTitleOfAClaudeTask ([31m0.151[0m seconds)
+    [32m✔[0m testModelStillSetsTheDurationOfAClaudeTask ([31m0.163[0m seconds)
+    [32m✔[0m testTaskFromTheAppIsStillRefinedByTheModel ([31m0.145[0m seconds)
+    [32m✔[0m testTitleClaudeSetKeepsAgainstTheModel ([31m0.263[0m seconds)
+Executed 6 tests, with 0 failures (0 unexpected) in 1.219 (1.225) seconds
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-19 08:22:15.492.
+Executed 6 tests, with 0 failures (0 unexpected) in 1.219 (1.226) seconds
+Executed 6 tests, with 0 failures (0 unexpected) in 1.219 (1.232) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-rosy-sauteeing-volcano/Logs/Test/Test-LooseEnds-2026.11.19_08-21-54-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log

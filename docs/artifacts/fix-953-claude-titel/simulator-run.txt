@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-11-19T09:22:46+0100
+befehl: scripts/sim.sh test-proof CaptureSmokeTests
+workflow: fix-953-claude-titel
+head: 7f5b255e27fce9587f35c58984651c92d677d6db
+basis: 57963cd6ce7249f9663c3df59eb74c57803fab21 (merge-base origin/main HEAD)
+testklasse: CaptureSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 28 gesamt, 28 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1795075566.898  ende: 1795076561.792
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/fix-953-claude-titel/simulator-run/summary.json  sha256:837cefed2c038b9c2232d5ec0dd8550b083eb528d8c676d0177e3cc95bf0d680
+xcresult: docs/artifacts/fix-953-claude-titel/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-953-claude-titel/simulator-run/*.png (17 Stück)
+
+## Geprüfte Dateien
+- sha256:120130e5a451ade4c7fccdda43df1724c5df55d838a09cde77cc643cbb54ba06  LooseEndsTests/ClaudeTitleTests.swift
+- sha256:d6a3f4547f4c5d338d7b6e8e973638687e70a4ed6523a105a1f1f9e49291872f  Shared/Enrichment/EnrichmentWriter.swift
