@@ -100,6 +100,7 @@ Kein App-Code, keine Migration, keine weitere Datei. Der `CLAUDE.md`-Absatz zu `
 2. `deliver` bestimmt aus der letzten Antwort die Ausgangszeile über eine kleine reine Hilfsfunktion `describe(response, env)` (Endung ` STATUS ENV[ id=…][ unique=…]`), die für die drei Ausgänge verwendet wird; der `catch`-Zweig loggt `apns send failed error ENV`.
 3. `wake` loggt nach `listTokens` einmal `apns wake devices=N`; der `catch` dort loggt `apns send failed list`.
 4. Reihenfolge je Gerät unverändert: JWT, senden, Wiederholung, Löschen, danach die eine Logzeile (bei Löschen nach dem erfolgreichen `dropToken`, wie heute).
+5. Voraussetzung für AC-7 (Vorbestand #963): `server/test/migrate.test.ts` „AC-3: after a failed run the lock is free …“ war lokal auch auf `origin/main` rot, weil alle Testdateien eine Datenbank teilen und das Advisory-Lock datenbankweit gilt. Der Test bekommt eine eigene Wegwerf-Datenbank (`freshDatabase`); seine Aussage bleibt gleich. Damit sind es drei Dateien (+25/−6 im Test), innerhalb der Limits.
 
 ## Test Plan
 
@@ -161,3 +162,4 @@ Der Schnitt berührt keinen Pfad der Geräteliste (`server/` ohne App, kein `pro
 ## Changelog
 
 - 2026-11-19: Initial spec created
+- 2026-11-19: migrate-Test isoliert (#963), Voraussetzung für AC-7
