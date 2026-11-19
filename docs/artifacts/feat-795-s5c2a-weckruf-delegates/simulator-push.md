@@ -142,3 +142,81 @@ zurück). Darüber der Systemdialog „„Loose Ends“ möchte dir Mitteilungen
   `didBecomeActive`. Das ist nicht weiter untersucht und betrifft den Auslöser aus S3b-1, nicht diesen Schnitt.
 - Lauf B weicht mit sichtbarem Inhalt von der Spec ab; er war nur ein Versuch, die Simulator-Sperre zu umgehen.
 - Dienste beendet (SIGINT, Ausgang 130, keine Restprozesse), App beendet.
+
+## Nachprüfung in /60-validate (2026-11-19, 13:38–13:43 UTC, Stand `5f5824b`, alles committet)
+
+Ziel: AC-12 doch noch belegen, indem die Sperre aus Lauf B (keine Mitteilungserlaubnis) aufgehoben wird.
+
+Recherche zuerst (Wortlaut 1401 und Simulator-Rückruf):
+- [Forum 663276](https://developer.apple.com/forums/thread/663276): 1401 „no user-facing content“ = Inhalt nur mit
+  `content-available`, das System reicht ihn nicht an die App weiter.
+- [Forum 826180](https://developer.apple.com/forums/thread/826180): im Simulator kommen nur sichtbare Mitteilungen an.
+- [Forum 130138](https://developer.apple.com/forums/thread/130138): der Simulator ruft bei `content-available`
+  `performFetchWithCompletionHandler` statt `didReceiveRemoteNotification` auf; das Gerät ruft `didReceiveRemoteNotification`.
+- [Forum 725200](https://developer.apple.com/forums/thread/725200): `didReceiveRemoteNotification` im Simulator nie aufgerufen.
+
+Ablauf: Mitteilungserlaubnis über den vorhandenen UI-Test erteilt
+(`LOOSEENDS_PUSH=scripts/fixtures/due-reminder.apns ./scripts/sim.sh test-proof DueNotificationTapTests/testBannerWhileAppIsOpenKeepsAppAlive`,
+grün, Beleg `simulator-run.txt`; zugleich Gegenprobe, dass der neue Delegate sichtbare Mitteilungen nicht stört), danach
+`LOOSEENDS_SIM_SIGN=1 ./scripts/sim.sh build` und `launch` im Debug-Weg **ohne** Deinstallation (Erlaubnis bleibt), frischer
+Wegwerf-Dienst. 20 s nach dem Start `device_tokens=1`.
+
+```
+## Lauf 1 still
+$ cat wake.apns
+{"Simulator Target Bundle":"com.henning.looseends","aps":{"content-available":1},"looseends":{"v":1}}
+$ fx order "Lauf 1 still"   (13:40:08Z)
+d8e72fe1-a1ab-42da-92f5-06f2bede8942
+$ fx result d8e72fe1-a1ab-42da-92f5-06f2bede8942   # vor dem Push
+waiting
+$ xcrun simctl push D553352F-E7E6-4A9A-B1F5-190001E01113 com.henning.looseends wake.apns   (13:40:09Z)
+Underlying error (domain=UNErrorDomain, code=1401):
+	Notification has no user visible content
+(Ausgang 121)
+$ fx result d8e72fe1-a1ab-42da-92f5-06f2bede8942   # alle 2 s, höchstens 20 s   (13:40:34Z, nach 20 s)
+waiting
+$ fx rows
+accounts=1 sessions=1 transcripts=1 orders=1 order_results=0 apple_tokens=0 oauth_records=0 device_tokens=1 
+## Lauf 2 Weckruf sichtbar
+$ cat wake-alert.apns
+{"Simulator Target Bundle":"com.henning.looseends","aps":{"content-available":1,"alert":{"title":"Simulator-Probe"}},"looseends":{"v":1}}
+$ fx order "Lauf 2 Weckruf sichtbar"   (13:40:43Z)
+4648a5d8-0018-4eb1-a432-b8c6836c599b
+$ fx result 4648a5d8-0018-4eb1-a432-b8c6836c599b   # vor dem Push
+waiting
+$ xcrun simctl push D553352F-E7E6-4A9A-B1F5-190001E01113 com.henning.looseends wake-alert.apns   (13:40:44Z)
+Notification sent to 'com.henning.looseends'
+(Ausgang 0)
+$ fx result 4648a5d8-0018-4eb1-a432-b8c6836c599b   # alle 2 s, höchstens 40 s   (13:41:31Z, nach 40 s)
+waiting
+$ fx rows
+accounts=1 sessions=1 transcripts=1 orders=2 order_results=0 apple_tokens=0 oauth_records=0 device_tokens=1 
+## Lauf 3 Weckruf Vordergrund (App im Vordergrund)
+$ cat wake-alert.apns
+{"Simulator Target Bundle":"com.henning.looseends","aps":{"content-available":1,"alert":{"title":"Simulator-Probe"}},"looseends":{"v":1}}
+$ xcrun simctl launch D553352F-E7E6-4A9A-B1F5-190001E01113 com.henning.looseends   (13:42:00Z)
+com.henning.looseends: 40692
+$ fx order "Lauf 3 Weckruf Vordergrund"   (13:42:09Z)
+a4c25427-213d-4d7f-8cd9-dcb926f9680f
+$ fx result a4c25427-213d-4d7f-8cd9-dcb926f9680f   # 12 s nach dem Anlegen, ohne Push   (13:42:21Z)
+waiting
+$ xcrun simctl push D553352F-E7E6-4A9A-B1F5-190001E01113 com.henning.looseends wake-alert.apns   (13:42:22Z)
+Notification sent to 'com.henning.looseends'
+(Ausgang 0)
+$ fx result a4c25427-213d-4d7f-8cd9-dcb926f9680f   # alle 2 s, höchstens 30 s   (13:42:56Z, nach 30 s)
+waiting
+$ fx rows
+accounts=1 sessions=1 transcripts=1 orders=3 order_results=2 apple_tokens=0 oauth_records=0 device_tokens=1 
+```
+
+App-Log (`log stream`, Subsystem `com.henning.looseends`): kein Eintrag `push-wake-up` in keinem der drei Läufe. Das
+Systemlog zeigt für Lauf 2 SpringBoard, das die Mitteilung `Simulator-Probe` einsortiert und als Banner zeigt; die App
+wird dafür nicht geweckt. In Lauf 3 holte der Start in den Vordergrund die beiden alten Aufträge (`order_results=2`, der
+Weg aus S3b-1 arbeitet), der Weckruf selbst holte den dritten nicht.
+
+**Ergebnis:** Der Simulator stellt `simctl push` nur als sichtbare Mitteilung zu und ruft
+`application(_:didReceiveRemoteNotification:)` weder im Hintergrund noch im Vordergrund auf, auch mit Erlaubnis und
+sichtbarem Teil. Das deckt sich mit den Forenberichten oben. AC-12 ist damit im Simulator nicht belegbar; belegt sind
+Token-Meldung, Durchreiche (Unit-Tests AC-1 bis AC-11) und dass sichtbare Mitteilungen weiter funktionieren. Der
+Empfang des Weckrufs bleibt Gerätepunkt der Definition of Done (Stufe 3, TestFlight-Konto-Bau). Eigens für den
+Simulator `performFetch` einzubauen wäre Code, den das Gerät nie nimmt, und wurde verworfen.

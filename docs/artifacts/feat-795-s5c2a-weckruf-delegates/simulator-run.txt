@@ -1,0 +1,22 @@
+# Simulator-Beleg
+erzeugt: 2026-11-19T14:38:38+0100
+befehl: scripts/sim.sh test-proof DueNotificationTapTests/testBannerWhileAppIsOpenKeepsAppAlive
+workflow: feat-795-s5c2a-weckruf-delegates
+head: 5f5824b4743f6880bcae291a552281daee2da6f1
+basis: bb225fea6bf45f9492d6646b931cd7b7583aabfc (merge-base origin/main HEAD)
+testklasse: DueNotificationTapTests/testBannerWhileAppIsOpenKeepsAppAlive
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1795095441.186  ende: 1795095515.953
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-795-s5c2a-weckruf-delegates/simulator-run/summary.json  sha256:67da1faebbbf625f214a35a9efdd0004f72e9e54f2ecf3709fa0af10e4f55bec
+xcresult: docs/artifacts/feat-795-s5c2a-weckruf-delegates/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-795-s5c2a-weckruf-delegates/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+- sha256:5227f429fab534875935cfedb584783cade70a4dc8e0d3d87e5bd99bc62e177f  LooseEnds/App/LooseEndsApp.swift
+- sha256:b30c6f8f9066fd2c00ca07a28ebc23748301dc7ee9a6eabdc70a165bb5c94a86  LooseEnds/Claude/PushWakeUp.swift
+- sha256:ca7a6cbc787a20056ac31aacd0a2af5be6cbc81bfb5c6ba92cb8188239f7a9e1  LooseEnds/Mac/MenuBarCapture.swift
+- sha256:453e0313c72256e2c57152e9db0b25d5b500df1ffe705e26ae747fe2235e60f0  LooseEnds/Notifications/IOSAppDelegate.swift
+- sha256:a6ccacfbdd2d0d362715d34e28aa51d3482a6c003ac26a72da5234e954c8b2fe  LooseEndsTests/PushWakeUpTests.swift

@@ -1,0 +1,17 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "905052E8-FE4E-45AD-9638-76DF43B45BC5.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "reminder-in-front_0_D383C1BA-5FEC-4B0E-8647-59D1A9E86EAC.png",
+        "timestamp" : 1795095514.746
+      }
+    ],
+    "testIdentifier" : "DueNotificationTapTests/testBannerWhileAppIsOpenKeepsAppAlive()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/DueNotificationTapTests/testBannerWhileAppIsOpenKeepsAppAlive"
+  }
+]
