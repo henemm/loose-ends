@@ -76,11 +76,12 @@ Dein Wunsch vom 2026-11-20: Der Dienst stupst dein Gerät höchstens einmal je V
 |------|-------------|-------------|
 | `server/src/apns.ts` | MODIFY | Drossel je Gerät in `createWaker`, Optionen `minGapMs`, `schedule`, Nachzügler, zwei Logzeilen; ≈ +50/−5 |
 | `server/test/apns.test.ts` | MODIFY | neue Drossel-Tests mit `send`-Stub, `now`, `schedule`; bestehende JWT-Tests mit `minGapMs: 0`; Logzeilen-Regex erweitert; ≈ +70/−5 |
+| `server/test/main.test.ts` | MODIFY | Test „capture_task sendet ueber den waker“: der zweite Auftrag weckt ein zweites Gerät desselben Kontos (410 → gelöscht), das erste bleibt gedrosselt; prüft die Drossel durch `main` ohne Änderung an `main.ts`; ≈ +6/−4 (Nachtrag Phase 6) |
 | `CLAUDE.md` | MODIFY | Absatz `src/apns.ts`: ein Halbsatz zu Drossel und Logzeilen; +1 |
 
 ### Estimated Changes
 
-- Dateien: 3
+- Dateien: 4
 - LoC: ≈ +130 (Test-Anteil überwiegt), innerhalb der Limits; Funktionen ≤ 50 LoC
 - Keine Permissions, keine AppStorage-Keys, kein CloudKit-Schema, keine Oberfläche, keine neue Abhängigkeit, keine Migration.
 - Seiteneffekt nach außen: weniger Weckrufe an Apple, zwei neue Logzeilen im Dienstlog; Risiko nur „zu wenig wecken“ (Auftrag wartet bis zum Öffnen, wie vor #795 S5), nie Datenverlust.
@@ -123,7 +124,6 @@ Server-Tests im bestehenden Stil (`node --test`, `send` injiziert, `now` und `sc
 - **AC-8:** GIVEN beliebige Drossel- und Nachzüglerausgänge WHEN die Logzeilen gesammelt werden THEN passt jede auf den erweiterten Regex und enthält weder Token noch Konto-Kennung noch Fehlertext (Test 9).
 - **AC-9:** GIVEN ein Fehler beim Neulesen oder Senden im Nachzügler WHEN er auslöst THEN wirft nichts nach außen; `wake` wirft weiterhin nie (Test 10).
 - **AC-10:** GIVEN die Änderung WHEN `./server/scripts/test-local.sh` läuft THEN sind `npm run typecheck` und `npm test` grün, einschließlich der bestehenden Tests zu Anfrage, JWT, Wiederholversuch und Löschregel; Sendeweg, Payload und Priorität sind unverändert (Test 11, Diff-Durchsicht).
-- **AC-11:** GIVEN der Dienst ist auf `rennwienix` ausgerollt WHEN eine Auftragsserie von Claude läuft THEN zeigt das Dienstlog je Gerät höchstens eine Sendezeile `apns sent …` binnen 15 min, dazu `apns wake throttled`-Zeilen und höchstens ein `apns wake later`; der Beleg liegt unter `docs/artifacts/feat-960-sparsam-wecken/` (nur diese Zeilen, ohne Fremdzeilen). Gerätetest und App-Änderung entfallen. Eine Probe-Serie in Hennings Daten nur nach seinem Ja, sonst der nächste natürliche Fall; der Stand steht bis dahin im Issue.
 
 ## Abgrenzung (Out of Scope)
 
@@ -147,12 +147,13 @@ Der Schnitt berührt keinen Pfad der Geräteliste (`server/` ohne App, kein `pro
 
 ## Definition of Done
 
-- [ ] AC-1 bis AC-11 erfüllt, Server-Tests und Typprüfung grün
+- [ ] AC-1 bis AC-10 erfüllt, Server-Tests und Typprüfung grün
 - [ ] PR mit `Refs #960` gemergt (Issue bleibt offen, bis der Betriebsbeleg und die Gerätewirkung geklärt sind)
 - [ ] Deploy auf `rennwienix` (`bash scripts/deploy-loose-ends.sh` mit `LE_COMMIT` des Merge-Stands; `/health` 200, im Log kein `apns config invalid`)
-- [ ] Betriebsbeleg nach AC-11 unter `docs/artifacts/feat-960-sparsam-wecken/`
+- [ ] Betriebsbeleg: GIVEN der Dienst ist auf `rennwienix` ausgerollt WHEN eine Auftragsserie von Claude läuft THEN zeigt das Dienstlog je Gerät höchstens eine Sendezeile `apns sent …` binnen 15 min, dazu `apns wake throttled`-Zeilen und höchstens ein `apns wake later`; der Beleg liegt unter `docs/artifacts/feat-960-sparsam-wecken/` (nur diese Zeilen, ohne Fremdzeilen). Gerätetest und App-Änderung entfallen. Eine Probe-Serie in Hennings Daten nur nach seinem Ja, sonst der nächste natürliche Fall; der Stand steht bis dahin im Issue.
 - [ ] Issue #960 kommentiert, Board-Karte aktuell, Memory geschrieben
 
 ## Changelog
 
 - 2026-11-20: Initial spec created
+- 2026-11-20: Phase 6: `main.test.ts` nachgetragen; sein zweiter Weckruf binnen 15 min wäre sonst gedrosselt (Spec hatte ihn übersehen). AC-11 (Betriebsbeleg nach dem Ausrollen) in die Definition of Done verschoben, weil er vor Commit und Ausrollen nicht belegbar ist

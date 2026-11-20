@@ -14,6 +14,8 @@ const BODY = JSON.stringify({ aps: { "content-available": 1 }, looseends: { v: 1
 const MIN = 60_000;
 const RENEW_AFTER = 50 * MIN;
 const MIN_AGE = 20 * MIN;
+// At most one wake-up per device in this window (#960 S2); iOS throttles silent pushes sent more often.
+const MIN_GAP = 15 * MIN;
 // Apple's reasons that mean the token is no good for this app; everything else keeps the row.
 const DROP = new Set(["410 Unregistered", "400 BadDeviceToken", "400 DeviceTokenNotForTopic"]);
 const UUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
@@ -97,13 +99,20 @@ function reasonOf(body: string): { reason?: string } {
 type WakerOptions = {
   config: ApnsConfig; pool: pg.Pool; send?: (request: ApnsRequest) => Promise<ApnsResponse>;
   now?: () => number; log?: (event: string) => void; origins?: Origins;
+  minGapMs?: number; schedule?: (run: () => Promise<void>, delayMs: number) => void;
 };
 
+// unref, so a planned later wake never keeps the process from ending.
+const laterTimer = (run: () => Promise<void>, delayMs: number) => { setTimeout(run, delayMs).unref(); };
+
 // wake(account) sends a silent push to every device of the account and drops dead tokens; it never throws.
+// Per device (key ENV:token) at most one push per minGapMs; a wake inside the window plans exactly one later wake.
 export function createWaker(opts: WakerOptions): { wake(account: string): Promise<void> } {
-  const { config, pool, send = sendHttp2, now = Date.now, origins = ORIGINS } = opts;
+  const { config, pool, send = sendHttp2, now = Date.now, origins = ORIGINS, minGapMs = MIN_GAP, schedule = laterTimer } = opts;
   const log = (event: string) => { try { opts.log?.(event); } catch { /* a broken log never stops a wake */ } };
   let cached: { jwt: string; issuedAt: number } | undefined;
+  const paced = new Map<string, { last: number; later: boolean }>();
+  const keyOf = (device: DeviceDoc) => `${device.environment}:${device.token}`;
 
   // Renew at 50 minutes; after ExpiredProviderToken renew only if at least 20 minutes old (undefined = no retry).
   function providerToken(at: number, rejected?: string): string | undefined {
@@ -132,12 +141,44 @@ export function createWaker(opts: WakerOptions): { wake(account: string): Promis
     }
   }
 
+  // Sends now and opens a new window, whatever Apple answers.
+  function wakeNow(device: DeviceDoc): Promise<void> {
+    paced.set(keyOf(device), { last: now(), later: false });
+    return deliver(device);
+  }
+
+  // The later wake reads the devices again and wakes only one that still exists; it never throws.
+  async function wakeLater(account: string, key: string): Promise<void> {
+    // A newer wake took the window over after the plan (later is false then); this plan is void.
+    if (!paced.get(key)?.later) return;
+    try {
+      const device = (await listTokens(pool, account)).find((d) => keyOf(d) === key);
+      if (device) return await wakeNow(device);
+      paced.delete(key);
+    } catch {
+      const state = paced.get(key);
+      if (state) state.later = false;
+      log("apns send failed list");
+    }
+  }
+
+  // Inside the window: plan one later wake at its end, or drop the wake if one is planned already.
+  function pace(account: string, device: DeviceDoc): Promise<void> | void {
+    const key = keyOf(device);
+    const state = paced.get(key);
+    if (!state || now() - state.last >= minGapMs) return wakeNow(device);
+    if (state.later) return log(`apns wake throttled ${device.environment}`);
+    state.later = true;
+    log(`apns wake later ${device.environment}`);
+    schedule(() => wakeLater(account, key), Math.max(0, state.last + minGapMs - now()));
+  }
+
   return {
     async wake(account) {
       try {
         const devices = await listTokens(pool, account);
         log(`apns wake devices=${devices.length}`);
-        await Promise.allSettled(devices.map(deliver));
+        await Promise.allSettled(devices.map((device) => pace(account, device)));
       } catch {
         log("apns send failed list");
       }

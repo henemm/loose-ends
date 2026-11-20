@@ -837,12 +837,17 @@ test("main: capture_task sendet ueber den waker", async (t) => {
   assert.equal(calls[0].token, nTok(1));
   assert.equal(calls[0].topic, "com.henning.looseends.weck");
   assert.ok(!calls.some((call) => call.token === nTok(2)), "fremdes Konto geweckt");
+  // A second device of the same account is new to the throttle (#960 S2): the next order wakes it at once, nTok(1) waits.
+  await putDevice(pool, mine, nDev(3), { token: nTok(3), environment: "production" });
   answerWith = { status: 410, reason: "Unregistered" };
   const second = await captureVia(t, running.url, "tok-mine", "Weck mich nochmal");
   assert.equal(second.isError, false, second.text);
-  const mineLeft = async () => (await pool.query("SELECT count(*)::int AS n FROM device_tokens WHERE token = $1", [nTok(1)])).rows[0].n as number;
-  await until(async () => (await mineLeft()) === 0);
+  const left = async (token: string) => (await pool.query("SELECT count(*)::int AS n FROM device_tokens WHERE token = $1", [token])).rows[0].n as number;
+  await until(async () => (await left(nTok(3))) === 0);
   assert.equal(calls.length, 2);
-  assert.equal(await mineLeft(), 0, "toter Token bleibt");
-  assert.equal((await pool.query("SELECT count(*)::int AS n FROM device_tokens WHERE token = $1", [nTok(2)])).rows[0].n, 1);
+  assert.equal(calls[1].token, nTok(3));
+  assert.equal(await left(nTok(3)), 0, "toter Token bleibt");
+  // nTok(1) was throttled, not sent, so it stays.
+  assert.equal(await left(nTok(1)), 1, "gedrosseltes Gerät gelöscht");
+  assert.equal(await left(nTok(2)), 1);
 });

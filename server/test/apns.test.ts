@@ -354,6 +354,20 @@ test("apns drossel: nachzuegler weckt einmal und eroeffnet ein neues fenster", a
   assert.deepEqual([s.calls.length, c.plans.map((p) => p.delay), logs.at(-1)], [2, [12 * MIN, 14 * MIN], "apns wake later production"]);
 });
 
+test("apns drossel: abgelaufener nachzuegler sendet nicht nach einem neueren weckruf", async (t) => {
+  const { pool, account } = await setup(t, ["production"]);
+  const [s, c] = [stub(), clock()];
+  const w = paced(pool, s, [], c);
+  await w.wake(account);
+  at(c, 5);
+  await w.wake(account);
+  // The window ended before the planned later wake ran; a newer wake took it over and sent.
+  at(c, 16);
+  await w.wake(account);
+  await c.plans[0].run();
+  assert.equal(s.calls.length, 2);
+});
+
 test("apns drossel: nachzuegler weckt kein geloeschtes geraet", async (t) => {
   const { pool, account } = await setup(t, ["production"]);
   const [s, c] = [stub(), clock()];
