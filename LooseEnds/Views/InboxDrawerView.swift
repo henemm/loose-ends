@@ -173,7 +173,7 @@ struct InboxDrawerView: View {
             return
         }
         do {
-            let item = try CaptureService.save(text, via: .app, in: modelContext)
+            let item = try CaptureService.save(text, via: .keyboard, in: modelContext)
             text = ""
             withAnimation(motion) { drawer.didCapture(item.id) }
             AccessibilityNotification.Announcement(String(localized: "Filed in New: \(item.displayTitle)")).post()

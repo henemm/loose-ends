@@ -229,6 +229,18 @@ final class CaptureSmokeTests: XCTestCase {
                       "Row should show the title, was \(row.label)")
     }
 
+    /// #950: a typed task keeps its own words as title. The model is off under `--ui-testing`, so this proves the typed
+    /// path up to the stored task; that the model leaves the title alone is proven by `KeyboardTitleTests`.
+    @MainActor
+    func testTypedCaptureKeepsItsWordingAsTitle() throws {
+        let app = launch()
+        let titleField = captureAndOpenDetail("Angebot für die Gartenhütte bei Müller einholen", in: app)
+
+        XCTAssertTrue(waitForValue("Angebot für die Gartenhütte bei Müller einholen", of: titleField),
+                      "Title field should hold the typed words, was \(String(describing: titleField.value))")
+        attachScreenshot(app, "950-sheet-getippt")
+    }
+
     /// #202: a long dictation gets its first twelve words as title; the full text stays below.
     @MainActor
     func testLongCaptureKeepsFullTextBelowTwelveWordTitle() throws {

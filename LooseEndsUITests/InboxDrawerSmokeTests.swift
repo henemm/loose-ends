@@ -75,4 +75,21 @@ final class InboxDrawerSmokeTests: XCTestCase {
             .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_' AND label CONTAINS 'Reifen wechseln'")).firstMatch
         XCTAssertTrue(listed.waitForExistence(timeout: 10), "New should list the typed task")
     }
+
+    /// #950: a task typed into the line keeps its own words as title. The model is off under `--ui-testing`, so this
+    /// proves the line's path up to the stored task; the channel itself is proven by `KeyboardTitleTests`.
+    @MainActor
+    func testTypedLineKeepsItsWordingAsTitle() throws {
+        let app = launch()
+        let line = element("startCaptureField", in: app)
+        XCTAssertTrue(line.waitForExistence(timeout: 10), "The start screen shows no writing line")
+        line.tap()
+        line.typeText("Angebot für die Gartenhütte bei Müller einholen\n")
+
+        let first = rows(in: app).firstMatch
+        XCTAssertTrue(first.waitForExistence(timeout: 10), "Return should put the task into the drawer")
+        XCTAssertTrue(first.label.contains("Angebot für die Gartenhütte bei Müller einholen"),
+                      "The drawer row should show the typed words, got \(first.label)")
+        shot(app, "950-zeile-getippt")
+    }
 }

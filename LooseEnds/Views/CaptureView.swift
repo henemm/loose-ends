@@ -12,6 +12,8 @@ struct CaptureView: View {
     @FocusState private var isFocused: Bool
     @State private var text: String
     @State private var saveFailed = false
+    /// A speech result reached the field while listening: the capture is spoken, not typed (#950).
+    @State private var heard = false
     @State private var speech = SpeechCapture()
 
     private let channel: CaptureChannel
@@ -76,6 +78,8 @@ struct CaptureView: View {
         .onDisappear { speech.stop() }
         .onChange(of: speech.transcript) { _, transcript in
             if speech.isListening { text = transcript }
+            // Once speech reached the field, the capture counts as spoken, even if typed over later (#950).
+            if speech.isListening, !transcript.isEmpty { heard = true }
         }
         .onChange(of: speech.state) { _, state in
             switch state {
@@ -386,6 +390,7 @@ struct CaptureView: View {
             return
         }
         text = ""
+        heard = false  // the next capture in the panel is typed until the mic hears something (#950)
         onFinish(saved)
     }
 
@@ -393,7 +398,7 @@ struct CaptureView: View {
         guard canSave else { return }
         speech.stop()
         do {
-            try CaptureService.save(text, via: channel, sourceURL: sourceURL, in: modelContext)
+            try CaptureService.save(text, via: channel.forTyping(heard: heard), sourceURL: sourceURL, in: modelContext)
             finish(saved: true)
         } catch {
             Self.logger.error("Capture failed: \(error, privacy: .public)")

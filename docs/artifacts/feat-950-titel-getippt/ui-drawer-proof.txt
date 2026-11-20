@@ -1,0 +1,11 @@
+# InboxDrawerSmokeTests auf e7eb07a (2026-11-20, /60-validate)
+
+    ✔ testReturnOpensTheDrawerAndATapBesideFoldsIt (19.006 seconds)
+    ✔ testTypedLineKeepsItsWordingAsTitle (9.885 seconds)
+Executed 2 tests, with 0 failures (0 unexpected) in 28.891 (28.895) seconds
+Executed 2 tests, with 0 failures (0 unexpected) in 28.891 (28.896) seconds
+Executed 2 tests, with 0 failures (0 unexpected) in 28.891 (28.897) seconds
+[sim] Projekt erzeugt.
+[sim] Simulator bereit (iPhone 17).
+[sim] UI-Test bestanden, Beleg: docs/artifacts/feat-950-titel-getippt/simulator-run.txt
+[sim] UI-Test mit Beleg: InboxDrawerSmokeTests → docs/artifacts/feat-950-titel-getippt/simulator-run.txt

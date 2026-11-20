@@ -1,0 +1,305 @@
+=== KeyboardTitleTests ===
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/KeyboardTitleTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-20 15:08:26.053.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-20 15:08:26.054.
+Test Suite 'KeyboardTitleTests' started at 2026-11-20 15:08:26.054.
+    [32m✔[0m testAnalyzeAgainKeepsTheTitleOfATypedTask ([31m0.136[0m seconds)
+    [32m✔[0m testClaudeTaskStillKeepsItsTitle ([33m0.050[0m seconds)
+    [32m✔[0m testFirstRunKeepsTheTitleOfATypedTask ([33m0.049[0m seconds)
+    [32m✔[0m testForTypingTurnsOnlyAnUnheardAppCaptureIntoKeyboard (0.000 seconds)
+    [32m✔[0m testKeyboardRawValueRoundTripsAndUnknownReadsAsApp (0.004 seconds)
+    [32m✔[0m testModelStillSetsTheDurationOfATypedTask ([33m0.050[0m seconds)
+    [32m✔[0m testSpokenAndWatchTasksAreStillRefinedByTheModel ([31m0.133[0m seconds)
+    [32m✔[0m testTypedTaskEndsActive ([33m0.053[0m seconds)
+Executed 8 tests, with 0 failures (0 unexpected) in 0.475 (0.477) seconds
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-20 15:08:26.533.
+Executed 8 tests, with 0 failures (0 unexpected) in 0.475 (0.479) seconds
+Executed 8 tests, with 0 failures (0 unexpected) in 0.475 (0.480) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-eventual-meandering-umbrella/Logs/Test/Test-LooseEnds-2026.11.20_15-08-17-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
+exit 0
+=== ClaudeTitleTests ===
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/ClaudeTitleTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-20 15:08:33.297.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-20 15:08:33.297.
+Test Suite 'ClaudeTitleTests' started at 2026-11-20 15:08:33.297.
+    [32m✔[0m testAnalyzeAgainKeepsTheTitleOfAClaudeTask ([31m0.109[0m seconds)
+    [32m✔[0m testClaudeTaskEndsActiveEvenWithoutAModelTitle ([33m0.048[0m seconds)
+    [32m✔[0m testFirstRunKeepsTheTitleOfAClaudeTask ([33m0.048[0m seconds)
+    [32m✔[0m testModelStillSetsTheDurationOfAClaudeTask ([33m0.049[0m seconds)
+    [32m✔[0m testTaskFromTheAppIsStillRefinedByTheModel ([33m0.050[0m seconds)
+    [32m✔[0m testTitleClaudeSetKeepsAgainstTheModel ([33m0.092[0m seconds)
+Executed 6 tests, with 0 failures (0 unexpected) in 0.396 (0.399) seconds
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-20 15:08:33.696.
+Executed 6 tests, with 0 failures (0 unexpected) in 0.396 (0.399) seconds
+Executed 6 tests, with 0 failures (0 unexpected) in 0.396 (0.400) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-eventual-meandering-umbrella/Logs/Test/Test-LooseEnds-2026.11.20_15-08-29-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
+exit 0
+=== EnrichmentTests ===
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/EnrichmentTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-20 15:08:41.311.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-20 15:08:41.311.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-20 15:08:41.311.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-eventual-meandering-umbrella/Logs/Test/Test-LooseEnds-2026.11.20_15-08-36-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
+exit 0
+=== CaptureServiceTests ===
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/CaptureServiceTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-20 15:08:48.080.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-20 15:08:48.081.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-20 15:08:48.081.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest run started.[0m
+Suite "CaptureService" started
+    [32m✔[0m "Saves trimmed raw text with channel and source, unprocessed, visible in New" ([33m0.032[0m seconds)
+    [32m✔[0m "Newest capture comes first in New" ([33m0.040[0m seconds)
+    [32m✔[0m "Ready attachments are stored on the new task, in the order they were shared" ([33m0.033[0m seconds)
+    [32m✔[0m "Too large and over the limit are never read; a file over 50 MB on disk is not stored either" (0.014 seconds)
+    [32m✔[0m "An unreadable file is skipped, the task and the others are kept" (0.014 seconds)
+    [32m✔[0m "No task without text, even with an attachment" (0.006 seconds)
+Suite "CaptureService" passed after 0.154 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-eventual-meandering-umbrella/Logs/Test/Test-LooseEnds-2026.11.20_15-08-43-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
+exit 0
+=== EnrichmentWriterTests ===
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/EnrichmentWriterTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-20 15:09:02.271.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-20 15:09:02.271.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-20 15:09:02.271.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest run started.[0m
+Suite "EnrichmentWriter" started
+    [32m✔[0m "Fields at or above the threshold are written with source, confidence and one AI revision each" ([33m0.038[0m seconds)
+    [32m✔[0m "A title below the threshold leaves the task unverified with the raw text on show" (0.003 seconds)
+    [32m✔[0m "The model's project is never written (#469)" (0.006 seconds)
+Suite "EnrichmentWriter" passed after 0.050 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-eventual-meandering-umbrella/Logs/Test/Test-LooseEnds-2026.11.20_15-08-57-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
+exit 0
+=== EnrichmentCoordinatorTests ===
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/EnrichmentCoordinatorTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-20 15:09:09.154.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-20 15:09:09.155.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-20 15:09:09.155.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest run started.[0m
+Suite "EnrichmentCoordinator" started
+    [32m✔[0m "Every unprocessed task is enriched once; a second pass touches nothing" ([33m0.089[0m seconds)
+    [32m✔[0m "A task confirmed with Looks right before its model step still gets its one run (#318)" ([33m0.050[0m seconds)
+    [32m✔[0m "A failing model leaves the task unprocessed for the next pass" ([33m0.045[0m seconds)
+    [32m✔[0m "An unavailable model is not called at all" ([33m0.037[0m seconds)
+    [32m✔[0m "Examples are the most recent completed tasks with their final attributes" (0.011 seconds)
+    [32m✔[0m "Ohne verfügbares Modell schreibt die Regel trotzdem das Datum" ([33m0.044[0m seconds)
+    [32m✔[0m "Der Nachhol-Durchgang holt den Titel, ohne die Regel-Revision zu verdoppeln" ([33m0.077[0m seconds)
+    [32m✔[0m "Wichtigkeit ist unabhängig vom Erfassungszeitpunkt (AC-5)" ([33m0.041[0m seconds)
+    [32m✔[0m "Der Nachhol-Durchgang verdoppelt keine Wichtigkeits-/Dringlichkeits-Revision (AC-6)" ([33m0.041[0m seconds)
+Suite "EnrichmentCoordinator" passed after 0.440 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-eventual-meandering-umbrella/Logs/Test/Test-LooseEnds-2026.11.20_15-09-04-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
+exit 0
+=== CaptureServiceTests ===
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/CaptureServiceTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-20 15:09:16.072.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-20 15:09:16.072.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-20 15:09:16.072.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+[1mTest run started.[0m
+Suite "CaptureService" started
+    [32m✔[0m "Saves trimmed raw text with channel and source, unprocessed, visible in New" ([33m0.031[0m seconds)
+    [32m✔[0m "Newest capture comes first in New" ([33m0.037[0m seconds)
+    [32m✔[0m "Ready attachments are stored on the new task, in the order they were shared" (0.016 seconds)
+    [32m✔[0m "Too large and over the limit are never read; a file over 50 MB on disk is not stored either" (0.013 seconds)
+    [32m✔[0m "An unreadable file is skipped, the task and the others are kept" (0.013 seconds)
+    [32m✔[0m "No task without text, even with an attachment" (0.003 seconds)
+Suite "CaptureService" passed after 0.136 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-eventual-meandering-umbrella/Logs/Test/Test-LooseEnds-2026.11.20_15-09-11-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log
+exit 0
+
+=== Runde 3 (Nachpruefung F001): ./scripts/sim.sh sim-unit KeyboardTitleTests, exit=0 ===
+Executed 8 tests, with 0 failures (0 unexpected) in 0.421 (0.424) seconds
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-20 15:11:25.360.
+Executed 8 tests, with 0 failures (0 unexpected) in 0.421 (0.424) seconds
+Executed 8 tests, with 0 failures (0 unexpected) in 0.421 (0.425) seconds

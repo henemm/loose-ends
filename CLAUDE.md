@@ -81,7 +81,7 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
 - **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,
   regex, calendar, contacts or a word list. The on-device model only gets what needs language
   understanding (refining the title: since #202 `TitleRule` sets it at capture from the cleaned raw
-  text, at most 12 words — 312 of 319 raw sentences have ≤ 12 words; the model may refine it, except the title of a task Claude captured (`capturedVia == .claude`), which is never the model's, #953). Every analysis and spec that proposes the model for a field must contain
+  text, at most 12 words — 312 of 319 raw sentences have ≤ 12 words; the model may refine it, except the title of a task Claude captured (`capturedVia == .claude`), which is never the model's, #953, nor the title of a task typed by hand (`capturedVia == .keyboard`, #950)). Every analysis and spec that proposes the model for a field must contain
   the line "Without the model this fails because …" with evidence from a measurement; without that line
   the rule path is the proposal. Every measurement report carries the rule-based column as baseline; if
   the rules beat the model, the rules win, and an existing ADR or schema is not a counter-argument.
