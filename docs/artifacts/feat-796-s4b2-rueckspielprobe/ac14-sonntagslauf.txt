@@ -1,0 +1,25 @@
+# #796 S4b-2: Sonntagslauf der Rückspielprobe auf rennwienix (Cron-Weg, nicht vorgezogen)
+# Quelle: ssh rennwienix /home/hem/backups/backup.log (hält nur den jüngsten Lauf), abgerufen 2026-11-20
+# Code: henemm/henemm-infra#385, Merge f7dfedc (2026-11-04T13:54:59Z)
+# Auszug: erste Logzeile, Abschnitt „Rueckspielprobe Loose Ends“, dann Zahl der Fehlerzeilen danach
+
+2026-11-15T03:00:02Z  ==> Server-Config-Backup: /home/hem/backups/server-config_2026-11-15_0300.tar.gz
+2026-11-15T03:06:25Z  ==> Rueckspielprobe Loose Ends (sonntags)
+2026-11-15T03:06:25Z  ==> 1/6 Juengsten Off-Site-Snapshot des Loose-Ends-Pfads ermitteln
+2026-11-15T03:06:26Z    Snapshot 2d7b0e9d vom 2026-11-15T03:02:24.511382096Z, Pfad /home/hem/backups/loose-ends
+2026-11-15T03:06:26Z    ok — RPO: 242 s alt (Grenze 48 h)
+2026-11-15T03:06:26Z  ==> 2/6 Snapshot zurueckholen (entschluesseln)
+2026-11-15T03:06:28Z    ok — looseends.sql zurueckgeholt (68K)
+2026-11-15T03:06:28Z  ==> 3/6 Wegwerf-Container le-restore-probe starten
+2026-11-15T03:06:28Z    ok — Image postgres:18.6 gefunden
+2026-11-15T03:06:28Z  ==> 4/6 Bereitschaft (pg_isready ueber TCP, bis 60 s)
+2026-11-15T03:06:30Z    ok — bereit nach 3 Versuch(en)
+2026-11-15T03:06:30Z  ==> 5/6 Dump einspielen (psql, ON_ERROR_STOP)
+2026-11-15T03:06:31Z    ok — eingespielt ohne Fehler
+2026-11-15T03:06:31Z  ==> 6/6 Vergleich mit live (loose-ends-db, nur lesend)
+2026-11-15T03:06:31Z    ok — Tabellenliste gleich (8 Tabellen)
+2026-11-15T03:06:31Z    ok — Migrationen: Restore ⊆ live, Zusaetze juenger als der Snapshot
+2026-11-15T03:06:31Z
+2026-11-15T03:06:31Z  RUECKSPIELPROBE BESTANDEN — Snapshot 2d7b0e9ddc558fafeb1204f8aba2af311ab87a4e021ca64e6b4cc93a14cafe1b (2026-11-15T03:02:24.511382096Z).
+# Fehlerzeilen nach der Probe (NICHT/FEHL/ERROR), Anzahl:
+0
