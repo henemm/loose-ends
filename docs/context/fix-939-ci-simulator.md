@@ -72,3 +72,55 @@ Lauf 44705007016, UI Smoke part 1 (`CaptureSmokeTests SettingsSmokeTests StartNu
   Reserve ≈ 7 min — ein Bau über ~17 min oder ein langsamer Testteil kippt den Teil.
 - „Restarting after unexpected exit“ ist in grünen Läufen nicht sichtbar (xcbeautify verschluckt die Zeile, Rohlog nur bei Fehlschlag).
 - Unit Tests und Build scheiterten nie.
+
+## Analysis
+
+### Type
+Bug (CI-Infrastruktur; kein App-Code betroffen)
+
+### Root Cause (aus der Klassifikation belegt)
+- b1 (43 von 94): Der Schritt „Run UI smoke tests“ enthält Bau **und** Tests; Bau 10–22 min + Tests 25–46 min liegt am bzw. über dem
+  45-min-Limit. Teil 1 (23 der 43) besteht fast nur aus `CaptureSmokeTests` (29 Tests); die Aufteilung nach Klassen kann diese eine Klasse
+  nicht zerlegen, mit 5 oder 6 Teilen bliebe der größte Teil bei 29. Keine geteilten statischen Zustände in `CaptureSmokeTests` (geprüft).
+- d sonstiges: Artefakt-Upload (ENOTFOUND/404) macht einen grünen Teil rot (3 Fälle).
+
+### Zeitbudget je Teil (Hochrechnung aus den gemessenen Werten: grün ≈ 52 s/Test, Bau 11 min; schlechter Runner ≈ 90 s/Test, Bau 14 min)
+| Variante | größter Teil | grün | schlechter Runner | Befund |
+|---|---|---|---|---|
+| Ist (4 Teile, Klassen) | 31 Tests | 38 min | 60 min | Abbruch erklärt |
+| C: nur Limits höher (65/80) | 31 | 38 | 60 | maskiert, verlängert echte Hänger |
+| B: Methoden-Split, 6 Teile | ≈ 21 | 29 | 46 | mit Limit 55 Luft |
+| B: 8 Teile | ≈ 16 | 25 | 38 | sicher, aber 8 macOS-Runner (Warteschlange) |
+| A: einmal bauen, 4 Teile | 31 | 27 + Transfer | 46 + Transfer | Teil 1 bleibt am Limit |
+| A + B, 6 Teile | ≈ 21 | 20 | 34 | robust im Schritt, aber serieller Bau-Job davor (Gesamtdauer ≈ 58 min) |
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `scripts/ui_smoke_shards.py` | MODIFY | Klassen über der Zielgröße (Gesamtgewicht / N) auf Methodenebene zerlegen (`-only-testing:LooseEndsUITests/<Klasse>/<test>`), übrige Klassen unverändert, Fotoklassen weiter getrennt, deterministisch |
+| `scripts/test_ui_smoke_shards.py` | MODIFY | jede Methode genau einmal, kein Teil über Zielgröße + 1 Test, Fotoklassen getrennt, kein leeres `only`, deterministisch |
+| `.github/workflows/ci.yml` | MODIFY | `ui_smoke_shards.py 6`; Testschritt 45 → 55 min, Job 60 → 70; `continue-on-error: true` an den Upload-Schritten der Teile |
+
+### Scope Assessment
+- Files: 3
+- Estimated LoC: ≈ +100/-10 (Skript ≈ 40, Tests ≈ 40, YAML ≈ 15); kein App-Code
+- Risk Level: LOW — nur CI; der geschützte Check „UI Smoke (iOS Simulator)“ bleibt unverändert (hängt an `needs: ui-smoke-shard`)
+
+### Technical Approach (Empfehlung)
+Schnitt 1: **B + D + maßvolles Limit** — Methoden-Split der übergroßen Klasse, 6 Teile, Testschritt 55 min, Uploads dürfen den Teil nicht rot machen.
+Erst wenn b1 danach in 3–5 Läufen bleibt: Schnitt 2 **A** (Bau-Job mit `build-for-testing`, Produkte + `.xctestrun` als tar-Artefakt,
+Teile mit `test-without-building -xctestrun … -only-testing … -destination id=$SIM_UDID`, Muster wie `mac-gallery`); Artefaktgröße vorher messen.
+Alternative: A sofort statt B (ändert keine Aufteilung, löst Teil 1 aber allein nicht). Keine ADR betroffen.
+
+### Dependencies
+- Matrix-Erzeugung `ui-smoke-plan` → `ui-smoke-shard` → Sammel-Check `ui-smoke`. 6 statt 4 macOS-Runner gleichzeitig (Warteschlangen-Risiko gering).
+- #882 (Kalender-Test wackelt) **nicht bündeln**: eigener Test-Fix mit eigener Ursache; läuft unabhängig.
+
+### Was #939 allein nicht löst (gegen den Plan)
+- c echte/wacklige Tests: `testDefaultCalendarIsStampedOnSwitchOn` (#882), `testDeleteCancelKeepsSignedIn` (4×), Mac Gallery
+  `testSubtaskOpensItsOwnDetailAndLeadsBack` (3×) — als eigenes Issue bündeln, falls nicht schon vorhanden.
+- d/a Laufzeit verloren (11, Image-Ereignis 11-16) und b2 Hänger (7): Runner-seitig, kein Fix in Reichweite; Beleg „mehrere Läufe grün“
+  hängt deshalb auch an diesen.
+
+### Open Questions
+- keine (rein technisch)
