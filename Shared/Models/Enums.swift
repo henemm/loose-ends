@@ -17,6 +17,17 @@ enum CaptureChannel: String, Codable, CaseIterable, Sendable {
     case siri, watch, control, share, mail, app, actionButton
     /// An order from Claude (#613), through `OrderExecutor`.
     case claude
+    /// Typed by hand in the app, nothing heard (#950): the user worded it already.
+    case keyboard
+
+    /// The user's own wording stands: the model never rewrites the title (#953, #950).
+    var keepsWording: Bool { self == .claude || self == .keyboard }
+
+    /// An app capture without any speech result becomes `.keyboard`; spoken (even if corrected) and every other
+    /// channel stay as they are (#950).
+    func forTyping(heard: Bool) -> CaptureChannel {
+        self == .app && !heard ? .keyboard : self
+    }
 }
 
 /// Who set a derived field last. `rule` is read from the user's own words (`DueDateRule`,

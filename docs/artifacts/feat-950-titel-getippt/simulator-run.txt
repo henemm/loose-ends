@@ -1,0 +1,24 @@
+# Simulator-Beleg
+erzeugt: 2026-11-20T15:07:19+0100
+befehl: scripts/sim.sh test-proof InboxDrawerSmokeTests
+workflow: feat-950-titel-getippt
+head: 4b80f949ed97a5633b9ffb21c3b0807e6f5920d0
+basis: a3b2ea041b0bde230ec27310e0680ae9e6a9c05a (merge-base origin/main HEAD)
+testklasse: InboxDrawerSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1795183587.022  ende: 1795183638.429
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-950-titel-getippt/simulator-run/summary.json  sha256:5f7150a68ea0a189a28b2bd3907429bfd58794885ab6c6d5bad58366ac33e563
+xcresult: docs/artifacts/feat-950-titel-getippt/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-950-titel-getippt/simulator-run/*.png (5 Stück)
+
+## Geprüfte Dateien
+- sha256:73716c97578b3611d587e50c042aea2ea8a5523955cd06cfb7378ba14803b731  LooseEnds/Views/CaptureView.swift
+- sha256:1a5d2daf928e1e781d676edfbc23034fb4306419db1c7fa9c5954b1b406a583a  LooseEnds/Views/InboxDrawerView.swift
+- sha256:654c80f4bb9b2c4dd955f0dfc549f9e06d00903e03f7f7db672806b0c19475a1  LooseEndsTests/KeyboardTitleTests.swift
+- sha256:0fe9a92f3b2931f6501f00797304b3fe49c824d3c1db01fd6bfddde7a4404dfd  LooseEndsUITests/CaptureSmokeTests.swift
+- sha256:897cca30474017f5a6e0d5a0431a24c758c08f241022887995c09ede0817a677  LooseEndsUITests/InboxDrawerSmokeTests.swift
+- sha256:4e1d274d70b3c86b6e3ec0c53f1ac561a4d3a0c272b089dfbe4ed504c9c4a13a  Shared/Enrichment/EnrichmentWriter.swift
+- sha256:009e430184f154e46ac71ca08b6669421c377746d5c761dfe63bdc9cc0b2a851  Shared/Models/Enums.swift

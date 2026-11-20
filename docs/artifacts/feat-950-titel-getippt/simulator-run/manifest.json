@@ -1,0 +1,59 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "384C9589-0668-4D7E-B201-1A26C70175ED.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "601-4-zugeklappt_0_CFCEFEC9-D3E0-48B3-8995-E6753601FA09.png",
+        "timestamp" : 1795183623.815
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "687AA964-50C7-4698-AE30-58B3DCDC570F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "601-3-zwei-zeilen_0_05A5486F-BFEE-4A73-9150-166559E96914.png",
+        "timestamp" : 1795183620.141
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "7C6F654A-0E51-41F3-95AB-3544C557CB0C.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "601-2-erste-zeile-in-der-schublade_0_21AAE52F-42A7-4243-BF2F-17F6CDCDD4C1.png",
+        "timestamp" : 1795183618.022
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "4FF17B42-3076-474B-B6DA-AFFCD0B6AE5D.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "601-1-leer_0_AEC183B7-322B-4522-B3D1-BFF6330C0DC3.png",
+        "timestamp" : 1795183609.485
+      }
+    ],
+    "testIdentifier" : "InboxDrawerSmokeTests/testReturnOpensTheDrawerAndATapBesideFoldsIt()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/InboxDrawerSmokeTests/testReturnOpensTheDrawerAndATapBesideFoldsIt"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "4723AD9F-65BC-4C99-92BE-FEA1B66651AA.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "950-zeile-getippt_0_64C59868-AC0B-4D0F-B484-5F35420E68F2.png",
+        "timestamp" : 1795183637.879
+      }
+    ],
+    "testIdentifier" : "InboxDrawerSmokeTests/testTypedLineKeepsItsWordingAsTitle()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/InboxDrawerSmokeTests/testTypedLineKeepsItsWordingAsTitle"
+  }
+]
