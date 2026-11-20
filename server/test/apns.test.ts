@@ -459,3 +459,79 @@ test("apns drossel: logzeilen nur feste namen", async (t) => {
   for (const l of logs) assert.match(l, LINE);
   assert.ok(!logs.some((l) => l.includes(account) || /abcdef|GEHEIM|bearer|eyJ/.test(l)));
 });
+
+// A pool whose next query, once armed, waits until the test lets it go (or fails it); every other query runs normally.
+function held(pool: pg.Pool) {
+  const run = (...a: unknown[]) => (pool.query.bind(pool) as (...x: unknown[]) => Promise<unknown>)(...a);
+  const h = {
+    next: undefined as undefined | ((...a: unknown[]) => Promise<unknown>),
+    reached: Promise.resolve(),
+    release: (_fail?: boolean) => {},
+    // The next query reports that it was reached and waits for release(); release(true) fails it.
+    arm() {
+      let reach!: () => void;
+      h.reached = new Promise<void>((r) => { reach = r; });
+      const gate = new Promise<boolean>((r) => { h.release = (fail = false) => r(fail); });
+      h.next = async (...a: unknown[]) => {
+        reach();
+        if (await gate) throw new Error("db down GEHEIM");
+        return run(...a);
+      };
+    },
+    pool: {
+      query: (...a: unknown[]) => {
+        const next = h.next;
+        h.next = undefined;
+        return next ? next(...a) : run(...a);
+      },
+      connect: () => pool.connect(),
+    } as unknown as pg.Pool,
+  };
+  return h;
+}
+
+test("apns drossel: nachzuegler sendet nicht, wenn waehrend seines neulesens ein neuer weckruf das fenster uebernommen hat", async (t) => {
+  const { pool, account } = await setup(t, ["production"]);
+  const h = held(pool);
+  const [s, c] = [stub(), clock()];
+  const w = createWaker({ config, pool: h.pool, send: s.send, now: () => c.now, log: () => {}, schedule: c.schedule });
+  await w.wake(account);
+  at(c, 5);
+  await w.wake(account);
+  at(c, 15);
+  // The later wake reads the devices again and is held there.
+  h.arm();
+  const later = c.plans[0].run();
+  await h.reached;
+  // Meanwhile a new wake finds the window ended and sends at once.
+  await w.wake(account);
+  assert.equal(s.calls.length, 2);
+  h.release();
+  await later;
+  assert.equal(s.calls.length, 2, "der Nachzuegler darf nach dem neuen Weckruf nicht noch einmal senden");
+});
+
+test("apns drossel: fehlschlagender nachzuegler setzt den plan eines neueren fensters nicht zurueck", async (t) => {
+  const { pool, account } = await setup(t, ["production"]);
+  const h = held(pool);
+  const [s, c, logs] = [stub(), clock(), [] as string[]];
+  const w = createWaker({ config, pool: h.pool, send: s.send, now: () => c.now, log: (e) => logs.push(e), schedule: c.schedule });
+  await w.wake(account);
+  at(c, 5);
+  await w.wake(account);
+  at(c, 15);
+  h.arm();
+  const later = c.plans[0].run();
+  await h.reached;
+  // A new wake sends and opens a new window; a further one inside it plans the next later wake.
+  await w.wake(account);
+  at(c, 16);
+  await w.wake(account);
+  assert.deepEqual([s.calls.length, c.plans.length], [2, 2]);
+  // The held read of the old later wake fails now; the new plan must stay in force.
+  h.release(true);
+  await later;
+  at(c, 17);
+  await w.wake(account);
+  assert.deepEqual([s.calls.length, c.plans.length, logs.at(-1)], [2, 2, "apns wake throttled production"]);
+});

@@ -150,14 +150,17 @@ export function createWaker(opts: WakerOptions): { wake(account: string): Promis
   // The later wake reads the devices again and wakes only one that still exists; it never throws.
   async function wakeLater(account: string, key: string): Promise<void> {
     // A newer wake took the window over after the plan (later is false then); this plan is void.
-    if (!paced.get(key)?.later) return;
+    const plan = paced.get(key);
+    if (!plan?.later) return;
+    // A wake during the read replaces the window object; then this plan is void too.
+    const current = () => paced.get(key) === plan;
     try {
       const device = (await listTokens(pool, account)).find((d) => keyOf(d) === key);
+      if (!current()) return;
       if (device) return await wakeNow(device);
       paced.delete(key);
     } catch {
-      const state = paced.get(key);
-      if (state) state.later = false;
+      if (current()) plan.later = false;
       log("apns send failed list");
     }
   }

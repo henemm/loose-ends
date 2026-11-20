@@ -94,6 +94,38 @@ Confirmation:
   Evidence: Diff gegen de0f43e: Sendeweg, Payload, Prioritaet unveraendert; main.test nutzt zweites Geraet nTok(3); 502/502 gruen, tsc sauber.
   Status: CONFIRMED
 
+### Runde 3
+**Adversary:** Pruefung des Fixes fuer F003 (Race im Nachzuegler). Eigener Lauf ./server/scripts/test-local.sh (adversary-test-output.txt ueberschrieben): tsc sauber, 504 bestanden, 0 fehlgeschlagen, 0 uebersprungen. Angriffe: (a) zwei gleichzeitige wake ohne Zustand: pace() laeuft nach dem Lesen synchron je Geraet und setzt paced in wakeNow vor jedem await, der zweite sieht das Fenster, kein Doppelsenden. (b) Nachzuegler waehrend Neulesen ueberholt: current() prueft nach dem await die Objektidentitaet, ueberholter Plan sendet nicht (Test 1, 2 statt 3 Sends). (c) Neulesefehler des alten Plans nach neuem Fenster plus neuem Plan: catch setzt later=false nur bei current(), neuer Plan bleibt (Test 2, danach 'throttled'). (d) Geraet geloescht waehrend neuer wake laeuft: paced.delete nur bei current(), ein neues Fenster wird nie geloescht; ohne current-Plan wird nichts gesendet. (e) AC-6 (kein Senden an geloeschtes Geraet) und AC-9 (wakeLater wirft nie: Map-Zugriff vor try, Rest in try/catch) nicht verschlechtert, Tests gruen. (f) Determinismus der neuen Tests: held(pool) gibt Anfrage ueber Promise-Gate frei, kein Timer, kein Sleep, injizierte Uhr; die Anfrage wird synchron beim Start von wakeLater erreicht (await h.reached), reihenfolgesicher; mehrfach in der Suite gruen.
+Finding:
+  ID: F003
+  Severity: MEDIUM
+  Category: edge_case
+  Code reference: server/src/apns.ts:153
+  Description: Plan-Objekt wird vor dem await gemerkt, nach dem Neulesen prueft current() paced.get(key)===plan (Z.156, 159); catch setzt later=false nur am eigenen gueltigen Plan (Z.163).
+  Spec requirement: AC-5 — hoechstens ein Weckruf je Geraet je 15 min
+  Conflict: keiner mehr; Status CONFIRMED (behoben), durch Tests apns.test.ts:493 und :514 belegt (RED in test-red-race-output.txt).
+  Remediation: umgesetzt.
+Finding:
+  ID: F004
+  Severity: LOW
+  Category: edge_case
+  Code reference: server/src/apns.ts:176
+  Description: Der Nachzuegler prueft nach dem Timer nicht erneut now()-last; feuert setTimeout eine Millisekunde vor Date.now-Ablauf des Fensters, sendet er minimal frueher als 15 min nach dem letzten Senden.
+  Spec requirement: AC-5
+  Conflict: Abweichung nur im Millisekundenbereich, ohne praktische Folge (Apple-Drossel zielt auf Minuten). AKZEPTIERT, Status OPEN-LOW.
+  Remediation: keine noetig.
+Confirmation:
+  AC: AC-10
+  Code reference: server/test/main.test.ts:819
+  Evidence: Sendeweg, Payload, Prioritaet unveraendert; main.test.ts nutzt zweites Geraet nTok(3), 504/504 gruen.
+  Status: CONFIRMED
+Confirmation:
+  AC: AC-5
+  Code reference: server/test/apns.test.ts:493
+  Evidence: Test 'nachzuegler sendet nicht, wenn waehrend seines neulesens ein neuer weckruf das fenster uebernommen hat' gruen; zweiter Test :514 fuer den Fehlerpfad.
+  Status: CONFIRMED
+**Implementierer:** Fix wie beschrieben.
+
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
@@ -103,21 +135,21 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 ═══════════════════════════════════════
 VERDICT: VERIFIED
 ═══════════════════════════════════════
-F001 behoben und getestet, F002 (LOW) akzeptiert.
-Tests: 502 passed, 0 failed, 0 uebersprungen; typecheck gruen
+F001 und F003 behoben und getestet, F002 und F004 (LOW) akzeptiert.
+Tests: 504 passed, 0 failed, 0 uebersprungen; typecheck gruen
 Edge cases: All checked, none broken
 Regressions: None found
 Checklist: 10/10 points proven
 
 ## Geprüfte Dateien
 
-- sha256:d5e966bcffcfe2b9c2b11313d8ccd4bc4bae05bca03cf16f766af900ee6a76ef  server/src/apns.ts
-- sha256:27deeb0c7b51e63c6f21aeccaf926f88d030f8f9769bc94c2a26c1eba948d4b0  server/test/apns.test.ts
+- sha256:7a9b8c32dca78fe4320942bc14d45fefc6c60ec17e3cc5e619fbe3f996af6afe  server/src/apns.ts
+- sha256:2eb6264be7503184a6c335bcad0707e46e82f2141f989efd05a4c127e77a145b  server/test/apns.test.ts
 - sha256:820fb8eede791d01a2fb2d52f0622c479e59ce64ef038edfa6282c668f2812f4  server/test/main.test.ts
 
 ## Prüfbasis
 
 - base: de0f43e3eb9aeccadc068947ccc898894668e33e
-- blob:f1ec1e3a31c06011374593b145a8c1f98af351cc  server/src/apns.ts
-- blob:0e6d87fb03ef3dc319c6ccf3d2c7be3da945735a  server/test/apns.test.ts
+- blob:535817a5128bf6135817343f4d7231d0abb125f4  server/src/apns.ts
+- blob:19f247c6d9cde9a59e76754ad922a01fc2054c4a  server/test/apns.test.ts
 - blob:a49e41d18d496096e1a10d73be2419acd698a740  server/test/main.test.ts
