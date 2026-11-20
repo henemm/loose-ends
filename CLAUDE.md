@@ -10,6 +10,7 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
 - **Den PO fragen nur zu Produktentscheidungen** (Freigabe von Anforderungen, fachliche Zielkonflikte), per `AskUserQuestion`, nie als Freitext. Tooling, Git, Hooks, Server-Mechanik klärt Claude selbst.
 - **Aufgaben nur als GitHub-Issues** in diesem Repo; ein Issue erst schließen, wenn es end-to-end erledigt ist.
 - **Form der Antworten an den Product Owner** (jede Antwort, auch nach langer Arbeit): Das Ergebnis steht zuerst, in ein bis zwei Sätzen, danach nur, was er entscheiden oder tun muss. Keine Dateinamen, Commit- oder PR-Nummern, Testzahlen, Werkzeug- oder Funktionsnamen, außer er fragt danach. Was nicht geklappt hat, in einem Satz mit dem nächsten Schritt. Kurze Absätze, keine langen Listen und Tabellen; Fachwörter, die sich nicht vermeiden lassen, in einem Halbsatz erklären. Technische Einzelheiten gehören in das Issue oder den Pull Request, nicht in den Chat.
+- **Keine Floskeln** (Henning, 2026-11-20): jeder Satz trägt Inhalt; kein „Du hast recht“, kein „ich melde mich“ ohne laufenden Wächter (dann mit Uhrzeit), keine Wiederholung des Ergebnisses am Ende; statt „Guter Moment für /clear“ ein konkreter Prompt für nach dem `/clear` als Codeblock (Befehl, Issue-Nummer, Auftrag in einem Satz).
 - **Frage nach einer Nummer → nur die Nummer** (Henning, 2026-11-13): „Welches Issue als Nächstes?“ wird mit `#N` und höchstens dem Kurztitel beantwortet; Begründung und Alternativen nur auf Nachfrage.
 
 ## Feste Arbeitsregeln (Kurzfassung, Begründungen in `docs/reference/zusammenarbeit.md`)
@@ -40,6 +41,8 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
   Sagt Henning, etwas soll nicht mehr kommen, wird das Issue sofort als „not planned“ geschlossen.
 - **Henning merkt sich keine Termine:** wartet ein Nachweis auf später, wird der Auslöser vorgezogen oder der offene
   Schritt mit Datum im Issue festgehalten und von Claude selbst nachgeholt.
+- **Erst fragen, dann aufs Gerät** (Henning, 2026-11-20, #883): lässt sich eine Ursache mit einer einfachen Frage an ihn
+  klären („Hast du die App beendet?“), wird gefragt, bevor eine Prüfung auf seinem Gerät vorgeschlagen wird.
 - **Präferenzen landen im Repo:** äußert Henning eine dauerhafte Vorgabe, steht sie in derselben Antwort hier oder in
   der Doku, nicht nur im lokalen Gedächtnis (Cloud-Sitzungen sehen nur das Repo).
 - **Jede Übergabe löst herdr aus** (Henning, 2026-11-17): Stand auf der Platte, dann `workflow.py autoclear` (setzt die
