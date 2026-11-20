@@ -41,6 +41,8 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
   Sagt Henning, etwas soll nicht mehr kommen, wird das Issue sofort als „not planned“ geschlossen.
 - **Henning merkt sich keine Termine:** wartet ein Nachweis auf später, wird der Auslöser vorgezogen oder der offene
   Schritt mit Datum im Issue festgehalten und von Claude selbst nachgeholt.
+- **Erst fragen, dann aufs Gerät** (Henning, 2026-11-20, #883): lässt sich eine Ursache mit einer einfachen Frage an ihn
+  klären („Hast du die App beendet?“), wird gefragt, bevor eine Prüfung auf seinem Gerät vorgeschlagen wird.
 - **Präferenzen landen im Repo:** äußert Henning eine dauerhafte Vorgabe, steht sie in derselben Antwort hier oder in
   der Doku, nicht nur im lokalen Gedächtnis (Cloud-Sitzungen sehen nur das Repo).
 - **Jede Übergabe löst herdr aus** (Henning, 2026-11-17): Stand auf der Platte, dann `workflow.py autoclear` (setzt die
