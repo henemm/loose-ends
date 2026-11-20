@@ -32,7 +32,7 @@ const iat = (r: ApnsRequest) => part(r.jwt, 1).iat as number;
 const A = "4D3E1B2C-1111-4222-8333-444455556666";
 const U = "0a9b8c7d-5555-4666-8777-888899990000";
 const UUID = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}";
-const LINE = new RegExp(`^apns (wake devices=\\d+|jwt failed|send failed list|send failed error (sandbox|production)|(sent|send failed|token dropped) \\d{3} (sandbox|production)( id=${UUID})?( unique=${UUID})?)$`);
+const LINE = new RegExp(`^apns (wake devices=\\d+|wake (later|throttled) (sandbox|production)|jwt failed|send failed list|send failed error (sandbox|production)|(sent|send failed|token dropped) \\d{3} (sandbox|production)( id=${UUID})?( unique=${UUID})?)$`);
 const sorted = (l: string[]) => [...l].sort();
 
 // An account with one device per entry, plus a foreign account with one device that must never be touched.
@@ -51,8 +51,9 @@ function stub(answer: Answer = () => ({ status: 200 })) {
   const s = { calls: [] as ApnsRequest[], answer, send: async (r: ApnsRequest) => { s.calls.push(r); return s.answer(r, s.calls.length); } };
   return s;
 }
-const waker = (pool: pg.Pool, s: ReturnType<typeof stub>, logs: string[] = [], now = () => T0) =>
-  createWaker({ config, pool, send: s.send, now, log: (e) => logs.push(e) });
+// minGapMs 0 turns the throttle off for tests that wake one device again and again on purpose (#960 S2).
+const waker = (pool: pg.Pool, s: ReturnType<typeof stub>, logs: string[] = [], now = () => T0, minGapMs?: number) =>
+  createWaker({ config, pool, send: s.send, now, log: (e) => logs.push(e), minGapMs });
 
 test("apns: config alles oder nichts", () => {
   assert.equal(apnsConfigFromEnv({}), undefined);
@@ -84,7 +85,7 @@ test("apns: jwt cache und erneuerung", async (t) => {
   const { pool, account } = await setup(t, ["production"]);
   const s = stub();
   let now = T0;
-  const w = waker(pool, s, [], () => now);
+  const w = waker(pool, s, [], () => now, 0);
   for (const m of [0, 19, 49, 50, 60]) { now = T0 + m * MIN; await w.wake(account); }
   assert.deepEqual(s.calls.map(iat), [0, 0, 0, 50, 50].map((m) => (T0 + m * MIN) / 1000));
   assert.deepEqual([s.calls[1].jwt, s.calls[2].jwt, s.calls[4].jwt], [s.calls[0].jwt, s.calls[0].jwt, s.calls[3].jwt]);
@@ -97,7 +98,7 @@ test("apns: expiredprovidertoken genau ein wiederholversuch", async (t) => {
     const { pool, account, count } = await setup(t, envs);
     const [before, logs, s] = [await count(), [] as string[], stub()];
     let now = T0;
-    const w = waker(pool, s, logs, () => now);
+    const w = waker(pool, s, logs, () => now, 0);
     await w.wake(account);
     [s.calls.length, s.answer, now, logs.length] = [0, answer, T0 + at * MIN, 0];
     await w.wake(account);
@@ -274,7 +275,7 @@ test("apns: http2 rahmung", async (t) => {
   // The waker reaches the same server through the origins option and the real transport.
   const { pool, account, count } = await setup(t, ["sandbox"]);
   const logs: string[] = [];
-  const real = createWaker({ config, pool, now: () => T0, origins: { sandbox: origin, production: origin }, log: (e) => logs.push(e) });
+  const real = createWaker({ config, pool, now: () => T0, minGapMs: 0, origins: { sandbox: origin, production: origin }, log: (e) => logs.push(e) });
   mode = "ids";
   await real.wake(account);
   mode = "answer";
@@ -292,4 +293,155 @@ test("apns: listtokens und droptoken", async (t) => {
   await putDevice(pool, account, dev(2), { token: tok(3), environment: "production" });
   assert.deepEqual([await dropToken(pool, tok(2), "production"), await count()], [false, [tok(1), tok(3), tok(99)]]);
   assert.deepEqual([await dropToken(pool, tok(1).toUpperCase(), "sandbox"), await count()], [true, [tok(3), tok(99)]]);
+});
+
+// #960 S2: at most one wake-up per device per 15 minutes, one later wake at the end of the window.
+const GAP = 15 * MIN;
+type Plan = { run: () => Promise<void>; delay: number };
+// A clock and a planner the test moves by hand; a plan's run returns the promise of its wake.
+function clock() {
+  const c = { now: T0, plans: [] as Plan[], schedule: (run: () => Promise<void>, delay: number) => { c.plans.push({ run, delay }); } };
+  return c;
+}
+const paced = (pool: pg.Pool, s: ReturnType<typeof stub>, logs: string[], c: ReturnType<typeof clock>) =>
+  createWaker({ config, pool, send: s.send, now: () => c.now, log: (e) => logs.push(e), schedule: c.schedule });
+const at = (c: ReturnType<typeof clock>, minutes: number) => { c.now = T0 + minutes * MIN; };
+
+test("apns drossel: erster weckruf sofort, zweiter plant genau einen nachzuegler", async (t) => {
+  const { pool, account } = await setup(t, ["production"]);
+  const [s, c, logs] = [stub(), clock(), [] as string[]];
+  const w = paced(pool, s, logs, c);
+  await w.wake(account);
+  assert.deepEqual([s.calls.length, c.plans.length, logs], [1, 0, ["apns wake devices=1", "apns sent 200 production"]]);
+  at(c, 5);
+  await w.wake(account);
+  assert.deepEqual([s.calls.length, c.plans.map((p) => p.delay), logs.slice(2)], [1, [10 * MIN], ["apns wake devices=1", "apns wake later production"]]);
+  for (const m of [7, 9]) { at(c, m); await w.wake(account); }
+  assert.deepEqual([s.calls.length, c.plans.length, logs.slice(4)], [1, 1,
+    ["apns wake devices=1", "apns wake throttled production", "apns wake devices=1", "apns wake throttled production"]]);
+});
+
+test("apns drossel: nach fensterende sofort wieder", async (t) => {
+  const { pool, account } = await setup(t, ["production"]);
+  const [s, c] = [stub(), clock()];
+  const w = paced(pool, s, [], c);
+  await w.wake(account);
+  c.now = T0 + GAP - 1;
+  await w.wake(account);
+  const plans = c.plans.length;
+  c.plans.length = 0;
+  const other = await setup(t, ["sandbox"], 2);
+  const [s2, c2] = [stub(), clock()];
+  const w2 = paced(other.pool, s2, [], c2);
+  await w2.wake(other.account);
+  c2.now = T0 + GAP;
+  await w2.wake(other.account);
+  assert.deepEqual([s.calls.length, plans, s2.calls.length, c2.plans.length], [1, 1, 2, 0]);
+});
+
+test("apns drossel: nachzuegler weckt einmal und eroeffnet ein neues fenster", async (t) => {
+  const { pool, account } = await setup(t, ["production"]);
+  const [s, c, logs] = [stub(), clock(), [] as string[]];
+  const w = paced(pool, s, logs, c);
+  await w.wake(account);
+  at(c, 3);
+  await w.wake(account);
+  at(c, 15);
+  await c.plans[0].run();
+  assert.deepEqual([s.calls.length, logs.at(-1)], [2, "apns sent 200 production"]);
+  at(c, 16);
+  await w.wake(account);
+  assert.deepEqual([s.calls.length, c.plans.map((p) => p.delay), logs.at(-1)], [2, [12 * MIN, 14 * MIN], "apns wake later production"]);
+});
+
+test("apns drossel: nachzuegler weckt kein geloeschtes geraet", async (t) => {
+  const { pool, account } = await setup(t, ["production"]);
+  const [s, c] = [stub(), clock()];
+  const w = paced(pool, s, [], c);
+  await w.wake(account);
+  at(c, 2);
+  await w.wake(account);
+  await dropToken(pool, tok(1), "production");
+  at(c, 15);
+  await c.plans[0].run();
+  assert.equal(s.calls.length, 1);
+  // The same token registered again starts without a window.
+  await putDevice(pool, account, dev(1), { token: tok(1), environment: "production" });
+  at(c, 16);
+  await w.wake(account);
+  assert.deepEqual([s.calls.length, c.plans.length], [2, 1]);
+});
+
+test("apns drossel: je geraet und umgebung getrennt", async (t) => {
+  const { pool, account } = await setup(t, ["production"]);
+  const [s, c, logs] = [stub(), clock(), [] as string[]];
+  const w = paced(pool, s, logs, c);
+  await w.wake(account);
+  await putDevice(pool, account, dev(2), { token: tok(2), environment: "production" });
+  at(c, 1);
+  await w.wake(account);
+  assert.deepEqual([s.calls.map(nr), c.plans.length, sorted(logs.slice(2))], [[1, 2], 1,
+    ["apns sent 200 production", "apns wake devices=2", "apns wake later production"]]);
+  // The same token moved from production to sandbox is another device for Apple, with its own window.
+  await putDevice(pool, account, dev(2), { token: tok(2), environment: "sandbox" });
+  at(c, 2);
+  await w.wake(account);
+  assert.deepEqual([s.calls.map(nr), s.calls.at(-1)?.origin, c.plans.length], [[1, 2, 2], "https://api.sandbox.push.apple.com", 1]);
+});
+
+test("apns drossel: fehler im nachzuegler werfen nicht und blockieren nichts", async (t) => {
+  const [unhandled, onUnhandled] = [[] as unknown[], (e: unknown) => { unhandled.push(e); }];
+  process.on("unhandledRejection", onUnhandled);
+  t.after(async () => { process.off("unhandledRejection", onUnhandled); });
+  // The database fails while the later wake reads the devices again.
+  const { pool, account } = await setup(t, ["production"]);
+  let down = false;
+  const flaky = { query: (...a: unknown[]) => (down ? Promise.reject(new Error("db down GEHEIM")) : (pool.query.bind(pool) as (...x: unknown[]) => unknown)(...a)),
+    connect: () => pool.connect() } as unknown as pg.Pool;
+  const [s, c, logs] = [stub(), clock(), [] as string[]];
+  const w = createWaker({ config, pool: flaky, send: s.send, now: () => c.now, log: (e) => logs.push(e), schedule: c.schedule });
+  await w.wake(account);
+  at(c, 4);
+  await w.wake(account);
+  down = true;
+  at(c, 15);
+  await assert.doesNotReject(c.plans[0].run());
+  down = false;
+  assert.deepEqual([s.calls.length, logs.at(-1)], [1, "apns send failed list"]);
+  await w.wake(account);
+  at(c, 16);
+  await w.wake(account);
+  assert.deepEqual([s.calls.length, c.plans.length, logs.at(-1)], [2, 2, "apns wake later production"]);
+  // Apple fails while the later wake sends; the window still moves on and the next wake plans again.
+  const [s2, c2, logs2] = [stub(), clock(), [] as string[]];
+  const other = await setup(t, ["sandbox"], 3);
+  const w2 = paced(other.pool, s2, logs2, c2);
+  await w2.wake(other.account);
+  at(c2, 4);
+  await w2.wake(other.account);
+  s2.answer = () => { throw new Error("connect ECONNREFUSED"); };
+  at(c2, 15);
+  await assert.doesNotReject(c2.plans[0].run());
+  s2.answer = () => ({ status: 200 });
+  at(c2, 16);
+  await w2.wake(other.account);
+  assert.deepEqual([s2.calls.length, c2.plans.length, logs2.at(-1)], [2, 2, "apns wake later sandbox"]);
+  assert.ok(logs2.includes("apns send failed error sandbox"));
+  await new Promise((r) => setImmediate(r));
+  assert.deepEqual(unhandled, []);
+});
+
+test("apns drossel: logzeilen nur feste namen", async (t) => {
+  const { pool, account } = await setup(t, ["production", "sandbox"]);
+  const [s, c, logs] = [stub(), clock(), [] as string[]];
+  const w = paced(pool, s, logs, c);
+  for (const m of [0, 1, 2]) { at(c, m); await w.wake(account); }
+  await dropToken(pool, tok(2), "sandbox");
+  at(c, 15);
+  for (const p of c.plans) await p.run();
+  for (const line of ["apns wake later production", "apns wake later sandbox", "apns wake throttled production", "apns wake throttled sandbox"]) {
+    assert.ok(logs.includes(line), line);
+  }
+  for (const l of logs) assert.match(l, LINE);
+  assert.ok(!logs.some((l) => l.includes(account) || /abcdef|GEHEIM|bearer|eyJ/.test(l)));
 });

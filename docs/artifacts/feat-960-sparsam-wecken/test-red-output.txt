@@ -1,0 +1,168 @@
+
+> typecheck
+> tsc --noEmit
+
+test/apns.test.ts(56,76): error TS2353: Object literal may only specify known properties, and 'minGapMs' does not exist in type 'WakerOptions'.
+test/apns.test.ts(278,59): error TS2353: Object literal may only specify known properties, and 'minGapMs' does not exist in type 'WakerOptions'.
+test/apns.test.ts(307,89): error TS2353: Object literal may only specify known properties, and 'schedule' does not exist in type 'WakerOptions'.
+test/apns.test.ts(402,106): error TS2353: Object literal may only specify known properties, and 'schedule' does not exist in type 'WakerOptions'.
+TYPECHECK FAILED (erwartet in RED: minGapMs/schedule fehlen in WakerOptions)
+✔ apns: config alles oder nichts (50.544166ms)
+✔ apns: anbieter-jwt (137.6795ms)
+✔ apns: jwt cache und erneuerung (61.652417ms)
+✔ apns: expiredprovidertoken genau ein wiederholversuch (237.130416ms)
+✔ apns: anfrage kopfzeilen und koerper (70.682334ms)
+✔ apns: ungueltige tokens loeschen (98.219084ms)
+✔ apns: andere fehler loeschen nichts (115.557791ms)
+✔ apns: sendeergebnis im log (60.978917ms)
+✔ apns: ids nur als kanonische uuid (1.237ms)
+✔ apns: wake wirft nie (123.186792ms)
+✔ apns: log nur feste namen (282.0975ms)
+✔ apns: http2 rahmung (316.81475ms)
+✔ apns: listtokens und droptoken (104.110167ms)
+✖ apns drossel: erster weckruf sofort, zweiter plant genau einen nachzuegler (84.521417ms)
+✖ apns drossel: nach fensterende sofort wieder (151.398916ms)
+✖ apns drossel: nachzuegler weckt einmal und eroeffnet ein neues fenster (50.073041ms)
+✖ apns drossel: nachzuegler weckt kein geloeschtes geraet (89.697333ms)
+✖ apns drossel: je geraet und umgebung getrennt (87.236709ms)
+✖ apns drossel: fehler im nachzuegler werfen nicht und blockieren nichts (102.78375ms)
+✖ apns drossel: logzeilen nur feste namen (202.152625ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 13
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3305.332042
+
+✖ failing tests:
+
+test at test/apns.test.ts:310:1
+✖ apns drossel: erster weckruf sofort, zweiter plant genau einen nachzuegler (84.521417ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   2,
+  +   [],
+  -   1,
+      [
+  -     600000
+  -   ],
+  -   [
+        'apns wake devices=1',
+  +     'apns sent 200 production'
+  -     'apns wake later production'
+      ]
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/eventual-meandering-umbrella/server/test/apns.test.ts:318:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 2, [], [ 'apns wake devices=1', 'apns sent 200 production' ] ],
+    expected: [ 1, [ 600000 ], [ 'apns wake devices=1', 'apns wake later production' ] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apns.test.ts:324:1
+✖ apns drossel: nach fensterende sofort wieder (151.398916ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  -   1,
+  -   1,
+      2,
+      0,
+  +   2,
+  +   0
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/eventual-meandering-umbrella/server/test/apns.test.ts:339:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 2, 0, 2, 0 ],
+    expected: [ 1, 1, 2, 0 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apns.test.ts:342:1
+✖ apns drossel: nachzuegler weckt einmal und eroeffnet ein neues fenster (50.073041ms)
+  TypeError [Error]: Cannot read properties of undefined (reading 'run')
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/eventual-meandering-umbrella/server/test/apns.test.ts:350:20)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at test/apns.test.ts:357:1
+✖ apns drossel: nachzuegler weckt kein geloeschtes geraet (89.697333ms)
+  TypeError [Error]: Cannot read properties of undefined (reading 'run')
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/eventual-meandering-umbrella/server/test/apns.test.ts:366:20)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at test/apns.test.ts:375:1
+✖ apns drossel: je geraet und umgebung getrennt (87.236709ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      [
+        1,
+  +     1,
+        2
+      ],
+  +   0,
+  -   1,
+      [
+        'apns sent 200 production',
+  +     'apns sent 200 production',
+        'apns wake devices=2',
+  -     'apns wake later production'
+      ]
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/eventual-meandering-umbrella/server/test/apns.test.ts:383:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ [ 1, 1, 2 ], 0, [ 'apns sent 200 production', 'apns sent 200 production', 'apns wake devices=2' ] ],
+    expected: [ [ 1, 2 ], 1, [ 'apns sent 200 production', 'apns wake devices=2', 'apns wake later production' ] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/apns.test.ts:392:1
+✖ apns drossel: fehler im nachzuegler werfen nicht und blockieren nichts (102.78375ms)
+  TypeError [Error]: Cannot read properties of undefined (reading 'run')
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/eventual-meandering-umbrella/server/test/apns.test.ts:408:41)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at test/apns.test.ts:434:1
+✖ apns drossel: logzeilen nur feste namen (202.152625ms)
+  AssertionError [ERR_ASSERTION]: apns wake later production
+      at TestContext.<anonymous> (file:///Users/hem/Developer/loose-ends/.claude/worktrees/eventual-meandering-umbrella/server/test/apns.test.ts:443:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

@@ -40,3 +40,64 @@ Auftrag (9 Weckrufe in 5 s bei einer Auftragsserie am 2026-11-20 06:53Z).
 - Dienst-Änderung, Ausrollen per `scripts/deploy-loose-ends.sh` in `henemm-infra` auf `rennwienix`; App unverändert, keine Gerätestufe nötig.
 - Zustand im Speicher geht bei Neustart verloren (dann darf sofort geweckt werden, unkritisch).
 - Testaufgaben aus dem Gerätelauf am 2026-11-20 per complete_task abgehakt.
+
+## Analysis
+
+### Type
+Feature (Dienst-Verhalten, PO-Entscheidung 2026-11-20). Kein App-Code, keine Gerätestufe.
+
+### Recherche
+- Apple, „Pushing background updates to your App“: Hintergrund-Pushes haben niedrige Priorität, das System kann sie
+  drosseln; „don't try to send more than two or three per hour“. Quelle:
+  https://developer.apple.com/documentation/usernotifications/pushing-background-updates-to-your-app
+- `apns-collapse-id` fasst nur beim Speichern nicht zugestellter Mitteilungen zusammen; Apple speichert ohnehin nur eine je
+  App. Es spart kein Budget beim Senden → keine Alternative (siehe Kontext).
+
+### Befund (Code gelesen 2026-11-20)
+- `createWaker().wake(account)` sendet bei **jedem** Aufruf sofort an jedes Gerät; `storeOrder` ruft es je neu gespeichertem
+  Auftrag. Eine Serie von 9 Aufträgen = 9 Weckrufe je Gerät in Sekunden.
+- Uhr (`now`) und Sender (`send`) sind schon injiziert; ein Waker je Prozess (`main.ts` `wakeFor`) → Zustand im Speicher reicht.
+- Zwei bestehende Tests („jwt cache und erneuerung“, „expiredprovidertoken …“) wecken dasselbe Gerät mehrfach binnen
+  15 min (49/50 min, 0/10 min); sie testen den JWT-Cache, nicht die Drossel → sie bekommen den Abstand 0 per Option.
+
+### Entwurf (Empfehlung)
+Drossel je Gerätetoken (+ Umgebung) im Waker, „vorne sofort, hinten einmal nachfassen“:
+1. Erster Auftrag: Gerät sofort wecken (wie heute), Zeitpunkt merken.
+2. Weitere Aufträge binnen 15 min: kein Weckruf, stattdessen genau **ein** Nachzügler am Fensterende (Zeitpunkt + 15 min),
+   egal wie viele Aufträge noch kommen. Ohne den Nachzügler bliebe ein Auftrag liegen, den der erste Abruf nicht mehr
+   erwischt hat, bis Henning die App öffnet.
+3. Der Nachzügler liest die Geräte des Kontos neu (ein inzwischen gelöschtes Token wird nicht mehr geweckt) und eröffnet
+   ein neues Fenster. Damit gilt streng: höchstens ein Weckruf je Gerät je Viertelstunde (≤ 4/h im Dauerfeuer, sonst 1).
+4. Log, feste Namen, nie Token oder Konto: `apns wake throttled ENV` (Weckruf fällt ins Fenster, Nachzügler schon geplant
+   oder neu geplant) bzw. `apns wake later ENV` beim Planen; die Sendezeile des Nachzüglers ist die gewohnte `apns sent …`.
+5. Optionen für Tests: `minGapMs` (Standard 15 min, JWT-Tests 0), `schedule` (Standard `setTimeout` mit `unref`, damit ein
+   geplanter Nachzügler das Beenden nicht aufhält); Neustart verliert den Plan (dann weckt der nächste Auftrag sofort).
+
+### Alternativen
+- **B, Sammelpause vorne (z. B. 10 s nach dem ersten Auftrag wecken):** fängt eine Serie in einem Weckruf, kostet aber
+  jedem Einzelauftrag 10 s und macht `wake` zeitversetzt (alle Tests umbauen). Verworfen für diesen Schnitt; kann folgen,
+  wenn der Log zeigt, dass Nachzügler häufig sind.
+- **C, Zeitpunkt in Postgres (`device_tokens.woken_at`):** übersteht Neustart und mehrere Prozesse. Kippt nichts, aber
+  Migration + Schemaänderung für einen Vorteil, den ein Prozess nicht braucht (ADR „ein Waker je Prozess“, #795 S5a-2b).
+- **D, Nachzügler nur, wenn noch Aufträge warten:** spart einen Weckruf, wenn Henning die App inzwischen geöffnet hat;
+  braucht eine neue Abfrage in `orders.ts` (dritte Code-Datei). Später möglich, wenn der Log unnötige Nachzügler zeigt.
+- **E, Schlüssel Konto statt Gerät:** einfacher, aber ein Gerät mit frischem Budget (Mac) würde mitgedrosselt; PO hat „je Gerät“ entschieden.
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `server/src/apns.ts` | MODIFY | Drossel je Gerät in `createWaker` (Map Schlüssel `env:token` → letzter Weckruf, geplanter Nachzügler), Optionen `minGapMs`, `schedule`, zwei feste Logzeilen |
+| `server/test/apns.test.ts` | MODIFY | Fälle: zweiter Auftrag binnen 15 min → kein Senden + ein Nachzügler; dritter → kein zweiter Nachzügler; nach 15 min wieder sofort; Nachzügler weckt nicht ein inzwischen gelöschtes Token; Geräte getrennt gedrosselt; Logzeilen-Regex erweitert; JWT-Tests mit `minGapMs: 0` |
+| `CLAUDE.md` | MODIFY | Absatz `src/apns.ts`: Drossel und Logzeilen in einem Halbsatz |
+
+### Scope Assessment
+- Files: 3
+- Estimated LoC: +50/-5 (Quelle), +70/-5 (Tests), +1 (Doku) ≈ 130
+- Risk Level: LOW–MEDIUM — nur der Dienst; Fehler wären „zu wenig wecken“ (Auftrag wartet bis zum Öffnen, wie vor #795 S5), nie Datenverlust.
+
+### Dependencies
+- `mcp.ts` `storeOrder` und `main.ts` `wakeFor` bleiben unverändert (Waker-Schnittstelle gleich).
+- Ausrollen: Merge, dann `scripts/deploy-loose-ends.sh` auf `rennwienix` (henemm-infra), Beleg im Dienstlog.
+
+### Open Questions
+- keine an den PO; Nachzügler ist die wörtliche Umsetzung von „Aufträge in dieser Zeit kommen mit dem einen Weckruf mit“.
