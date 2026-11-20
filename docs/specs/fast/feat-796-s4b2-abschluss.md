@@ -14,7 +14,7 @@ Issue #796, Schnitt S4b-2 (wöchentliche automatische Rückspielprobe), Abschlus
   `docs/artifacts/feat-796-s4b2-rueckspielprobe/ac14-sonntagslauf.txt` (das Log hält nur den jüngsten Lauf, deshalb
   jetzt gesichert, bevor der Lauf am 2026-11-22 ihn überschreibt).
 
-## Acceptance Criteria
+## Was ändert sich
 
 - **AC-1:** Der Sonntagslauf vom 2026-11-15 liegt als Beleg im Repo (Datei oben), mit Quelle, Abrufdatum und Infra-PR.
 - **AC-2:** `CLAUDE.md` (Abschnitt `server/`, Betrieb) nennt die wöchentliche Rückspielprobe als in Betrieb (sonntags,
