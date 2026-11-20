@@ -1,0 +1,12 @@
+PASS AC-1 Beleg vorhanden
+PASS AC-1 bestanden am 2026-11-15
+PASS AC-1 Fehlerzahl 0
+PASS AC-1 Quelle und Infra-PR
+PASS AC-2 kein 'follows with S4b-2'
+PASS AC-2 Probe in Betrieb mit henemm-infra#385
+PASS AC-3 neues Issue mit Wortlaut und Verweis auf #796
+PASS AC-3 #966 ist Teil von #612
+PASS AC-3 #966 auf dem Board
+PASS AC-3 #625 wartet auf #966 statt #796
+FEHLER=0
+10 passed, 0 failed

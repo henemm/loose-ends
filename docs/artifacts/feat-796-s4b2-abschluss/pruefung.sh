@@ -4,7 +4,8 @@
 set -u
 cd "$(dirname "$0")/../../.."
 fehler=0
-pruefe() { if eval "$2"; then echo "PASS $1"; else echo "FAIL $1"; fehler=$((fehler+1)); fi; }
+bestanden=0
+pruefe() { if eval "$2"; then echo "PASS $1"; bestanden=$((bestanden+1)); else echo "FAIL $1"; fehler=$((fehler+1)); fi; }
 
 BELEG=docs/artifacts/feat-796-s4b2-rueckspielprobe/ac14-sonntagslauf.txt
 WORTLAUT="auf einem eigenen Server im selben Projekt"
@@ -36,4 +37,5 @@ if [ "${1:-}" = "--nach-merge" ]; then
 fi
 
 echo "FEHLER=$fehler"
+echo "$bestanden passed, $fehler failed"
 [ "$fehler" -eq 0 ]
