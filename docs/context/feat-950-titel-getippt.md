@@ -45,3 +45,52 @@ Modelltitel bei `capturedVia == .claude`); offen ist der Tastatur-Weg.
 - Diktat über die Tastatur ist nicht von Tippen unterscheidbar → zählt als getippt.
 - Bestehende Aufgaben (`.app`) bleiben unverändert; keine Migration.
 - Geräteliste: `Shared/Enrichment/EnrichmentWriter.swift` steht nicht darauf; `LooseEnds/Speech/` nur, falls `SpeechCapture` geändert werden muss.
+
+## Analysis
+
+### Type
+Feature (Fortsetzung von #953: Claude-Weg erledigt, offen ist der Tastatur-Weg)
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `Shared/Models/Enums.swift` | MODIFY | neuer Kanal `CaptureChannel.keyboard` (String-Rohwert) + `keepsWording` (true für `.claude`, `.keyboard`) |
+| `Shared/Enrichment/EnrichmentWriter.swift` | MODIFY | `fromClaude` → `task.capturedVia.keepsWording`; Status wird wie bei #953 trotzdem gehoben |
+| `LooseEnds/Views/CaptureView.swift` | MODIFY | `@State heard`: wahr, sobald ein **nicht-leeres** Transkript beim Zuhören in `text` landet; `save()` speichert `.keyboard`, wenn nichts gehört wurde und der Kanal `.app` ist (Sheet iPhone/iPad, Mac-Fenster, Menüleisten-Panel) |
+| `LooseEnds/Views/InboxDrawerView.swift` | MODIFY | Schreibzeile unter „Neu“ speichert `.keyboard` statt `.app` |
+| `LooseEndsTests/KeyboardTitleTests.swift` (o. ä.) | CREATE | Kette Erfassung → Anreicherung mit `StubEnricher` nach Muster `ClaudeTitleTests`: `.keyboard` behält den Titel bei Erstlauf und „Erneut analysieren“, Status wird gehoben; Gegenprobe `.app`/`.watch` wird verfeinert |
+| UI-Test (Smoke) | CREATE/MODIFY | getippte Erfassung im Sheet und in der Schreibzeile wird als `.keyboard` gespeichert, Titel bleibt der eigene Wortlaut |
+
+### Scope Assessment
+- Files: 4 Produktiv + 1–2 Test
+- Estimated LoC: ca. +15 Produktiv, ca. +80–100 Tests
+- Risk Level: LOW — eine Regelstelle im Writer, neuer Enum-Wert ohne Schemaänderung (`CD_capturedViaRaw` ist STRING)
+- Geräteliste: kein Pfad berührt (`LooseEnds/Speech/` bleibt unverändert) → Abnahme endet nach Stufe 2
+
+### Technical Approach
+Kanalregel wie #953: Der Kanal steht dauerhaft am Task und gilt für Erstlauf, „Erneut analysieren“ und alte, noch
+unangereicherte Aufgaben. `TitleRule` (Regeltitel, Datumswörter, höchstens 12 Wörter) bleibt wie bei #953 aktiv.
+Abgrenzung getippt/gesprochen im Sheet: gesprochen, sobald ein nicht-leeres Sprachergebnis in das Feld kam (auch wenn
+danach per Tastatur korrigiert wurde — das Modell glättet Erkennungsfehler); sonst getippt. Diktat über die iOS-Tastatur
+ist nicht unterscheidbar und zählt als getippt.
+
+Geprüft (Plan-Agent): kein erschöpfender `switch` über `CaptureChannel`, kein Vergleich `== .app` im Produktcode,
+nichts in `Measurement/`, `scripts/`, Labor-App. `onChange(of: speech.transcript)` feuert nicht beim Start (`""` → `""`),
+kann aber bei nicht-leer → leer feuern → Guard `!transcript.isEmpty`.
+Teilschritte (`Subtasks.add` speichert `.app`) sind nicht betroffen: das Modell sieht sie nie (#565,
+`EnrichmentCoordinator` Zweig `task.parent != nil`).
+
+### Alternatives
+- **Merker `titleLocked` am Task** statt Kanal: trennt Absicht vom Kanal, auch für weitere Quellen nutzbar; kostet
+  aber eine CloudKit-Schemaänderung samt Production-Deploy, ältere Builds ignorieren ihn. Verworfen: zu viel für das Ziel.
+- **Modell für getippte Aufgaben ganz aus** (wie Teilschritte, #565): dann setzt das Modell auch Energie u. a. nicht
+  mehr. Geht über den Wortlaut des Issues hinaus (nur „Titel“).
+- **Auch `TitleRule` aus** für getippt: wurde bei #953 bewusst nicht gemacht; bleibt konsistent aus.
+
+### Risks
+- Ältere Builds auf anderen Geräten lesen `.keyboard` als `.app` und könnten den Titel noch verfeinern, falls sie die
+  Anreicherung zuerst fahren. Akzeptierter Rest bis zum Update.
+- Bestehende Aufgaben (`.app`) bleiben unverändert, keine Migration.
+
+### Open Questions
+- keine (Mischform und TitleRule technisch entschieden, oben begründet; Spec-Freigabe durch PO)
