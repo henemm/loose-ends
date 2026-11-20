@@ -101,3 +101,8 @@ Drossel je Gerätetoken (+ Umgebung) im Waker, „vorne sofort, hinten einmal na
 
 ### Open Questions
 - keine an den PO; Nachzügler ist die wörtliche Umsetzung von „Aufträge in dieser Zeit kommen mit dem einen Weckruf mit“.
+
+## Umfang-Freigabe (2026-11-20, /60-validate)
+
+Endstand nach dem Race-Fix (F003): 46/-2 Quelle, 248/-6 Tests, 9/-4 main.test.ts, 1/-1 CLAUDE.md ≈ 318 LoC statt ≈130.
+Überhang aus den Nebenläufigkeitstests des Nachzüglers. Henning: „So übernehmen“.
