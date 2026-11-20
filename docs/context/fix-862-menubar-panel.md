@@ -51,3 +51,54 @@ bei Wiederholung grün. Ziel (#862): beim ersten Versuch grün, Ursache belegt, 
 - Nachstellen geht nur in der CI (Lauf ≈ 30–40 min); ein deterministischer Reproduktionstest (Panel öffnen, Return, Symbol
   einmal klicken → Panel muss da sein) ist der Hebel.
 - Ein reiner Test-Umbau (dritter Klick) würde einen echten Fehler verdecken.
+
+## Analysis
+
+### Type
+Bug (Nutzer- und Testfehler: nach Return oder „Open Loose Ends“ öffnet der erste Klick aufs Menüleistensymbol das Panel nicht)
+
+### Ursache (Hypothese, belegt durch Quelltext, noch nicht in der CI nachgestellt)
+Seit macOS 27 steuert AppKit ein `.window`-`MenuBarExtra` über eine private „expanded interface session“ am `NSStatusItem`
+(Quelle: `orchetect/MenuBarExtraAccess`, `Sources/MenuBarExtraAccess/NSStatusItem+ExpandedInterfaceSession.swift`, Kommentar
+Z. 11–30 und 62–72: Target/Action des Buttons sind nil, die Session ist non-nil, solange das Fenster gezeigt wird; ein Begin mit
+einem Zeitstempel vor dem Ende der vorigen Session wird still verworfen). `MacWindows.closeMenuBarPanel()` schließt nur das
+`NSWindow` (`close()`), die Session bleibt offen. Der nächste Klick beendet die verwaiste Session (sichtbar: nichts), erst ein
+weiterer öffnet. Das passt zu `testWindowFromMenuBarFitsScreen` (zweiter Klick öffnet). Der rote `testPanelTypedGerman` (auch der
+zweite Klick öffnete nicht) ist damit noch nicht ganz erklärt: Kandidat Entprellung (Zweitklick 15,6 s später, also eher nicht)
+oder (b) unten — die Nachstellung muss das klären.
+- (b) Wechsel der Aktivierungsrichtlinie in `applyDockPolicy`: im roten `testPanelTypedGerman` gab es kein Hauptfenster, die
+  Richtlinie blieb also vermutlich `.accessory`; (b) ist dort unwahrscheinlich, aber nicht ausgeschlossen.
+- Ausgeschlossen als Fix: `performClick` am Statusbutton (auf macOS 27 wirkungslos, Target/Action nil, gleiche Quelle).
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `LooseEnds/Mac/MenuBarCapture.swift` | MODIFY | Panel über SwiftUIs eigenen Schließweg schließen (`@Environment(\.dismiss)` im `MenuBarCaptureView`) statt `NSWindow.close()`; `closeMenuBarPanel` entfällt oder bleibt nur als Rückfall |
+| `LooseEndsUITests/MacGalleryTests.swift` (oder neue Klasse `MacMenuBarReopenTests.swift`) | MODIFY/CREATE | Nachstellung: frischer Start → Panel → tippen → Return → Symbol GENAU EINMAL → Panel da; Variante „Open Loose Ends“ → ⌘W → ein Klick |
+| `LooseEndsUITests/MacUITestSupport.swift` | MODIFY | Zweitklick-Rückfall in `macOpenMainWindowIfNeeded` entfernen, sobald die Nachstellung grün ist |
+
+### Scope Assessment
+- Files: 2–3
+- Estimated LoC: App-Code ca. +10/−5, Tests ca. +60
+- Risk Level: MEDIUM — Verhalten hängt an nicht dokumentierter Systemmechanik; nur in der CI (macOS 27, `xcode-27`) prüfbar
+
+### Technical Approach
+1. TDD RED = Nachstellung: der Ein-Klick-Test muss mit dem heutigen Code in der CI rot sein (sonst ist die Ursache falsch → zurück
+   in die Analyse). Die Tests hängen `debugDescription`/Zeitpunkte als Anhang an.
+2. Fix: `dismiss` aus der SwiftUI-Umgebung des Panels (öffentliche API, nimmt SwiftUIs eigenen Weg und beendet die Session).
+   „Open Loose Ends“: erst `dismiss()`, dann `showMain`.
+3. GREEN: Ein-Klick-Tests grün, Zweitklick-Rückfall entfernt, Mac-Galerie in mehreren CI-Läufen beim ersten Versuch grün (DoD).
+
+### Alternativen
+- **MenuBarExtraAccess als Abhängigkeit** (`isPresented`-Bindung, macOS-27-Unterstützung über SPI): wenn `dismiss` die Session nicht
+  beendet. Neue Abhängigkeit → PO-Freigabe; fiele: Regel „keine neuen Dependencies“.
+- **Eigenes `NSStatusItem` + `NSPanel` statt `MenuBarExtra`**: volle Kontrolle, ca. 150–250 LoC, Fokus/Dunkel/Position neu; fiele: die
+  Entscheidung aus #356 für `MenuBarExtra`.
+- **SPI selbst aufrufen** (`expandedInterfaceSession.cancel`): klein, aber private API im App Store → nicht empfohlen.
+- **Nur Test anpassen** (dritter Klick): verdeckt einen Nutzerfehler → verworfen.
+
+### Dependencies
+SwiftUI `MenuBarExtra(.window)`, AppKit `NSStatusItem` (macOS 27 Session-Mechanik), `MacAppDelegate`-Beobachter (`applyDockPolicy`).
+
+### Open Questions
+- [ ] Beendet `dismiss` im `MenuBarExtra`-Inhalt die Session? (klärt der GREEN-Lauf in der CI; falls nein → Alternative mit PO-Frage)
