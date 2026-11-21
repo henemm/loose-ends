@@ -79,3 +79,19 @@ Scope: 3 Dateien, ~+130 LoC Doku/Test, kein App-Code. **Kein Pfad der Gerätelis
 - Freigabe: Die Angaben sind rechtliche Aussagen; wie beim Datenschutztext (Memory „Rechtstext erst nach Freigabe“) braucht
   das Eintragen Hennings ausdrückliches Ja, die Auto-Ampel reicht nicht.
 - Risiko Adversary: nur Doku + Test → niedrig, 1 Runde.
+
+### Type
+Feature (Doku + Gleichlauf-Test, kein App-Code)
+
+### Nachprüfung 2026-11-21 (Wiedereinstieg nach /clear)
+- `ACCOUNT_TYPES` in `scripts/privacy_manifest.py` unverändert: UserID, DeviceID, OtherUserContent; verknüpft, kein Tracking, ein Zweck.
+- Push-Token: `PushWakeUp.swift` ruft `DeviceRegistration` auf; `datenschutz-entwurf.md` Z. 208–210 sagt noch „ruft ihn noch nicht auf“ → Befund am Rand bestätigt, eigener Schnitt in #625.
+- Vorlage `docs/reference/app-store-datenschutzangaben.md` existiert noch nicht.
+- PR #976 (Doku „kein eigener Server“) offen, CI läuft; mergen, sobald grün (berührt keine Datei dieses Schnitts).
+
+### Dependencies
+- Quelle: `scripts/privacy_manifest.py` (`ACCOUNT_TYPES`); Test läuft über `ci.yml` (`unittest discover -s scripts`).
+- Eintragen im ASC-Web erst mit dem Schalter-Schnitt und nur nach Hennings ausdrücklicher Freigabe des Wortlauts.
+
+### Open Questions
+- keine für den PO in dieser Phase; die Freigabe der Antworten selbst erfolgt mit der Spec (`approved`).
