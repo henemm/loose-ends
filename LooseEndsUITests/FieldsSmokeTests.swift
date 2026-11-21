@@ -103,12 +103,14 @@ final class FieldsSmokeTests: XCTestCase {
     @MainActor
     func testCalendarWaitsForADate() throws {
         let app = launch()
+        let captured = Date()
         captureAndOpenDetail("Steuerbescheid morgen prüfen", in: app)
 
         XCTAssertTrue(element("field_calendar", in: app).waitForExistence(timeout: 5), "A dated task should offer Calendar")
         let dueRow = element("field_dueDate", in: app)
         XCTAssertTrue(dueRow.waitForExistence(timeout: 5), "The set date stands as a line")
-        XCTAssertTrue(dueRow.label.contains("Tomorrow"), "Row label was \(dueRow.label)")
+        let label = dueRow.label
+        XCTAssertTrue(label.contains(Self.dueWord(capturedOn: captured, readAt: Date())), "Row label was \(label)")
         XCTAssertFalse(element("field_repeatRule", in: app).exists, "Repeat is off in the standard")
         XCTAssertFalse(element("showInCalendarToggle", in: app).exists, "The calendar section waits for its word")
         shot(app, "538-3-dated-task-offers-calendar")
@@ -226,11 +228,57 @@ final class FieldsSmokeTests: XCTestCase {
     @MainActor
     private func choose(_ level: String, in line: XCUIElement, app: XCUIApplication) {
         line.tap()
-        let option = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", level)).firstMatch
+        let option = app.buttons["levelOption_\(level.lowercased())"]
         XCTAssertTrue(option.waitForExistence(timeout: 5), "The editor should offer \(level)")
         option.tap()
-        // A single choice closes the editor by itself (#482).
-        let shows = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label CONTAINS %@", level), object: line)
-        XCTAssertEqual(XCTWaiter().wait(for: [shows], timeout: 5), .completed, "Line label was \(line.label)")
+        // A single choice closes the editor by itself (#482); its going tells a lost tap from a late label (#972).
+        XCTAssertTrue(option.waitForNonExistence(timeout: Self.lineBudget), "Editor did not close after tapping \(level)")
+        XCTAssertEqual(waitUntil(line, says: level), .completed, "Line label was \(line.label)")
+    }
+
+    /// How long a register line may take to say its new value (#972: one query on a loaded CI simulator took 4.2 s).
+    static let lineBudget: TimeInterval = 15
+
+    /// Waits until `object`'s label contains `text`, within `lineBudget`.
+    private func waitUntil(_ object: Any, says text: String) -> XCTWaiter.Result {
+        let shows = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label CONTAINS %@", text), object: object)
+        return XCTWaiter().wait(for: [shows], timeout: Self.lineBudget)
+    }
+
+    /// The word the due line shows for "morgen" captured at `capturedOn` and read at `readAt` (#972: a run across
+    /// midnight read the right "Today").
+    static func dueWord(capturedOn: Date, readAt: Date, calendar: Calendar = .current) -> String {
+        calendar.startOfDay(for: readAt) != calendar.startOfDay(for: capturedOn) ? "Today" : "Tomorrow"
+    }
+
+    /// #972, the CI failure without the app: the first read of the line's label takes 4.2 s and still finds the
+    /// old value, the next one the chosen value. The wait has to outlast that one slow query.
+    func testLineWaitOutlastsOneSlowQuery() {
+        XCTAssertEqual(waitUntil(SlowLine(), says: "Low"), .completed, "One slow query must not use up the budget")
+    }
+
+    /// #972: captured at 23:59:58, read at 00:00:04, "morgen" is today by the time the row is read.
+    func testDueWordFollowsMidnight() throws {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = try XCTUnwrap(TimeZone(identifier: "UTC"))
+        let before = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-11-20T23:59:58Z"))
+        let after = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-11-21T00:00:04Z"))
+        XCTAssertEqual(Self.dueWord(capturedOn: before, readAt: after, calendar: calendar), "Today")
+        XCTAssertEqual(Self.dueWord(capturedOn: before, readAt: before, calendar: calendar), "Tomorrow")
+    }
+}
+
+/// Stands in for a register line on a loaded CI simulator (#972, run 44814947423): the first read of its label
+/// takes 4.2 s and still finds the old value, every later read the chosen one.
+private final class SlowLine: NSObject {
+    private var reads = 0
+
+    @objc var label: String {
+        reads += 1
+        guard reads > 1 else {
+            Thread.sleep(forTimeInterval: 4.2)
+            return "Urgency, High"
+        }
+        return "Urgency, Low"
     }
 }
