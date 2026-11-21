@@ -9,6 +9,7 @@ import SwiftUI
 /// panel closes again. No window opens; without one the app lives in the menu bar only.
 struct MenuBarCaptureView: View {
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.dismiss) private var dismiss
     let enrichment: EnrichmentCoordinator
 
     var body: some View {
@@ -16,7 +17,9 @@ struct MenuBarCaptureView: View {
             CaptureView(channel: .app) { saved in
                 // Without a window ContentView does not see the new task; the rules run here.
                 if saved { Task { await enrichment.processPending() } }
-                MacWindows.closeMenuBarPanel()
+                // The panel closes through SwiftUI, so the symbol ends the status item's session too
+                // and the next click opens it again (#862).
+                dismiss()
             }
             // The panel takes the capture's ideal height: without it Cancel and Done slid under the footer.
             .fixedSize(horizontal: false, vertical: true)
@@ -27,7 +30,7 @@ struct MenuBarCaptureView: View {
                 .accessibilityHidden(true)
             HStack {
                 Button("Open Loose Ends") {
-                    MacWindows.closeMenuBarPanel()
+                    dismiss()
                     MacWindows.showMain { openWindow(id: MacWindows.mainWindowID) }
                 }
                 .accessibilityIdentifier("menuBarOpenApp")
@@ -94,10 +97,6 @@ enum MacWindows {
             open()
         }
         NSApp.activate()
-    }
-
-    static func closeMenuBarPanel() {
-        NSApp.windows.first { $0 is NSPanel && $0.isVisible && $0.isKeyWindow }?.close()
     }
 }
 
