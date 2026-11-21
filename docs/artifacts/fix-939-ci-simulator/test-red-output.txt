@@ -1,0 +1,72 @@
+test_ac1_every_method_exactly_once (__main__.ShardTests.test_ac1_every_method_exactly_once) ... ok
+test_ac1_oversized_class_is_split_by_method (__main__.ShardTests.test_ac1_oversized_class_is_split_by_method) ... ERROR
+test_ac2_no_shard_empty_and_photo_classes_apart (__main__.ShardTests.test_ac2_no_shard_empty_and_photo_classes_apart) ... ok
+test_ac3_load_bound_and_below_today (__main__.ShardTests.test_ac3_load_bound_and_below_today) ... ERROR
+test_ac4_deterministic_and_new_class_is_assigned (__main__.ShardTests.test_ac4_deterministic_and_new_class_is_assigned) ... ok
+test_cli_prints_matrix_json (__main__.ShardTests.test_cli_prints_matrix_json) ... ok
+test_f001_attribute_and_own_base_class_are_found (__main__.ShardTests.test_f001_attribute_and_own_base_class_are_found) ... ERROR
+test_f002_empty_only_is_an_error (__main__.ShardTests.test_f002_empty_only_is_an_error) ... ok
+test_f002_only_skips_weight_zero_and_is_never_empty (__main__.ShardTests.test_f002_only_skips_weight_zero_and_is_never_empty) ... ok
+test_f002_split_class_and_mac_class_in_temp_dir (__main__.ShardTests.test_f002_split_class_and_mac_class_in_temp_dir) ... FAIL
+test_ac5_collector_job_keeps_the_protected_name (__main__.WorkflowTests.test_ac5_collector_job_keeps_the_protected_name) ... ok
+test_ac5_six_parts_and_time_limits (__main__.WorkflowTests.test_ac5_six_parts_and_time_limits) ... FAIL
+test_ac5_uploads_do_not_fail_a_part (__main__.WorkflowTests.test_ac5_uploads_do_not_fail_a_part) ... FAIL
+
+======================================================================
+ERROR: test_ac1_oversized_class_is_split_by_method (__main__.ShardTests.test_ac1_oversized_class_is_split_by_method)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_ui_smoke_shards.py", line 90, in test_ac1_oversized_class_is_split_by_method
+    units = mod.units(UI_TESTS, N)
+            ^^^^^^^^^
+AttributeError: module 'ui_smoke_shards' has no attribute 'units'
+
+======================================================================
+ERROR: test_ac3_load_bound_and_below_today (__main__.ShardTests.test_ac3_load_bound_and_below_today)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_ui_smoke_shards.py", line 109, in test_ac3_load_bound_and_below_today
+    units = mod.units(UI_TESTS, N)
+            ^^^^^^^^^
+AttributeError: module 'ui_smoke_shards' has no attribute 'units'
+
+======================================================================
+ERROR: test_f001_attribute_and_own_base_class_are_found (__main__.ShardTests.test_f001_attribute_and_own_base_class_are_found)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_ui_smoke_shards.py", line 140, in test_f001_attribute_and_own_base_class_are_found
+    self.assertEqual(mod.methods(Path(tmp))["SubTests"], ["testA", "testB"])
+                     ^^^^^^^^^^^
+AttributeError: module 'ui_smoke_shards' has no attribute 'methods'
+
+======================================================================
+FAIL: test_f002_split_class_and_mac_class_in_temp_dir (__main__.ShardTests.test_f002_split_class_and_mac_class_in_temp_dir)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_ui_smoke_shards.py", line 164, in test_f002_split_class_and_mac_class_in_temp_dir
+    self.assertNotIn(("AlphaTests", ""), named, "übergroße Klasse steht ganz in -only-testing")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('AlphaTests', '') unexpectedly found in [('AlphaTests', ''), ('BetaTests', '')] : übergroße Klasse steht ganz in -only-testing
+
+======================================================================
+FAIL: test_ac5_six_parts_and_time_limits (__main__.WorkflowTests.test_ac5_six_parts_and_time_limits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_ui_smoke_shards.py", line 205, in test_ac5_six_parts_and_time_limits
+    self.assertIn("python3 scripts/ui_smoke_shards.py 6", plan["run"])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'python3 scripts/ui_smoke_shards.py 6' not found in 'matrix=$(python3 scripts/ui_smoke_shards.py 4)\necho "$matrix" | python3 -m json.tool\necho "matrix=$matrix" >> "$GITHUB_OUTPUT"\n'
+
+======================================================================
+FAIL: test_ac5_uploads_do_not_fail_a_part (__main__.WorkflowTests.test_ac5_uploads_do_not_fail_a_part)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/scripts/test_ui_smoke_shards.py", line 211, in test_ac5_uploads_do_not_fail_a_part
+    self.assertIs(self._step("ui-smoke-shard", name).get("continue-on-error"), True, name)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None is not True : Upload design gallery
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.326s
+
+FAILED (failures=3, errors=3)
