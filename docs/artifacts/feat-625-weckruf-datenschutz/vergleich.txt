@@ -1,0 +1,34 @@
+OK   de Spec:69 Entwurf=ja Seite=ja | Damit deine App Aufträge aus Claude zügig abholt, ohne dass du sie öffnen musst, kann der 
+OK   de Spec:69 Entwurf=ja Seite=ja | Dafür fragt die App nach der Anmeldung und bei jedem Start, solange du angemeldet bist, be
+OK   de Spec:69 Entwurf=ja Seite=ja | Das Gerätetoken ist eine Adresse, die Apple für diese App auf diesem Gerät vergibt; es ent
+OK   de Spec:69 Entwurf=ja Seite=ja | Der Dienst speichert je Gerät eines, mit dem Zeitpunkt der letzten Meldung, höchstens zehn
+OK   de Spec:69 Entwurf=ja Seite=ja | Hinterlegt Claude einen neuen Auftrag, schickt der Dienst über den Push-Dienst von Apple (
+OK   de Spec:69 Entwurf=ja Seite=ja | Sie hat einen festen Inhalt, enthält nichts aus deinen Aufgaben und zeigt nichts an; die A
+OK   de Spec:69 Entwurf=ja Seite=ja | Der Dienst schickt je Gerät höchstens eine solche Mitteilung in 15 Minuten.
+OK   de Spec:69 Entwurf=ja Seite=ja | Das Gerätetoken bleibt gespeichert, bis du dein Konto löschst, bis Apple es als ungültig m
+OK   de Spec:69 Entwurf=ja Seite=ja | "Abmelden" löscht es nicht:
+OK   de Spec:69 Entwurf=ja Seite=ja | Dein Gerät kann danach weiter still geweckt werden, holt aber nichts ab, solange du nicht 
+OK   de Spec:73 Entwurf=ja Seite=ja | Dieselbe Kennung schickt die App auch mit, wenn sie sich für den Weckruf meldet; sie wird 
+OK   de Spec:77 Entwurf=ja Seite=ja | Das entfernt dein Konto und alle Daten, die der Dienst zu diesem Konto gespeichert hat, da
+OK   de Spec:81 Entwurf=ja Seite=ja | Push-Mitteilungen:
+OK   de Spec:81 Entwurf=ja Seite=ja | Die stille Mitteilung für den Weckruf stellt Apples Push-Dienst zu; dort gilt Apples Daten
+OK   en Spec:91 Entwurf=ja Seite=ja | So that your app collects orders from Claude promptly without you having to open it, the s
+OK   en Spec:91 Entwurf=ja Seite=ja | For this, after sign-in and at every start while you are signed in, the app asks Apple for
+OK   en Spec:91 Entwurf=ja Seite=ja | The device token is an address that Apple assigns to this app on this device; it contains 
+OK   en Spec:91 Entwurf=ja Seite=ja | The service stores one per device, with the time of the last report, at most ten devices p
+OK   en Spec:91 Entwurf=ja Seite=ja | When Claude places a new order, the service sends a silent notification to your devices th
+OK   en Spec:91 Entwurf=ja Seite=ja | It has a fixed content, contains nothing from your tasks and shows nothing; the app then c
+OK   en Spec:91 Entwurf=ja Seite=ja | The service sends at most one such notification per device in 15 minutes.
+OK   en Spec:91 Entwurf=ja Seite=ja | The device token stays stored until you delete your account, until Apple reports it as inv
+OK   en Spec:91 Entwurf=ja Seite=ja | "Sign out" does not delete it: your device can still be woken silently afterwards, but col
+OK   en Spec:95 Entwurf=ja Seite=ja | The app also sends the same identifier when it registers for the wake-up; it is then store
+OK   en Spec:99 Entwurf=ja Seite=ja | This removes your account and all data the service has stored for that account, including 
+OK   en Spec:103 Entwurf=ja Seite=ja | Push notifications:
+OK   en Spec:103 Entwurf=ja Seite=ja | The silent notification for the wake-up is delivered by Apple's push service; there Apple'
+OK   de interner Abschnitt 'Beleg im Code' nicht auf der Seite
+OK   de interner Abschnitt 'Offen, nicht belegt' nicht auf der Seite
+OK   en interner Abschnitt 'Beleg im Code' nicht auf der Seite
+OK   en interner Abschnitt 'Offen, nicht belegt' nicht auf der Seite
+
+Sätze: 27, Abweichungen und Fehler: 0
+ERGEBNIS: GLEICH
