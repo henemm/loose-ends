@@ -4,11 +4,11 @@ Datum: 2026-11-21 07:45
 
 ## Checkliste
 - [x] **AC-1:** Given ein frischer Start, das Panel über das Symbol geöffnet, Text getippt und Return gedrückt / When das Symbol genau einmal geklickt wird / Then ist das Panel innerhalb von 10 s da. Belegt durch Test 1, zuerst rot im CI-Lauf mit dem heutigen Code, dann grün.
-- [ ] **AC-2:** Given ein frischer Start, „Open Loose Ends“ geklickt, Hauptfenster da und per ⌘W geschlossen / When das Symbol genau einmal geklickt wird / Then ist das Panel innerhalb von 10 s da. Belegt durch Test 2, zuerst rot, dann grün.
+- [x] **AC-2:** Given ein frischer Start, „Open Loose Ends“ geklickt, Hauptfenster da und per ⌘W geschlossen / When das Symbol genau einmal geklickt wird / Then ist das Panel innerhalb von 10 s da. Belegt durch Test 2, zuerst rot, dann grün. (PO-override 2026-11-21, Restverhalten in #978, Test ausgesetzt)
 - [x] **AC-3:** Given `MenuBarCaptureView` / When der Diff geprüft wird / Then schließen Return und „Open Loose Ends“ das Panel über `@Environment(\.dismiss)` („Open Loose Ends“: erst `dismiss()`, dann `showMain`), `MacWindows.closeMenuBarPanel` ist entfernt und kein Aufrufer bleibt übrig. Belegt durch Diff-Prüfung und einen grünen Mac-Bau.
 - [x] **AC-4:** Given `macOpenMainWindowIfNeeded` / When der Diff geprüft wird / Then enthält sie keinen zweiten Klick auf das Symbol und keine Wartezeit auf ein sich schließendes Panel mehr. Belegt durch Diff-Prüfung.
 - [x] **AC-5:** Given der Mac-Galerie-Job / When er nach dem Fix läuft / Then sind `testPanelTypedGerman` und `testWindowFromMenuBarFitsScreen` beim ersten Versuch grün, ohne Wiederholung der CI. Belegt durch den Lauf.
-- [ ] **AC-6:** Given der Job „Mac Gallery (macOS)“ / When er nach dem Fix in drei aufeinanderfolgenden CI-Läufen (verschiedene Pushes oder Neustarts ohne Codeänderung, jeweils erster Versuch) läuft / Then ist er jedes Mal grün (Galerie, Klick- und Tastatur-Tests). Belegt durch die Lauf-Nummern im Abschlussbericht.
+- [x] **AC-6:** Given der Job „Mac Gallery (macOS)“ / When er nach dem Fix in drei aufeinanderfolgenden CI-Läufen (verschiedene Pushes oder Neustarts ohne Codeänderung, jeweils erster Versuch) läuft / Then ist er jedes Mal grün (Galerie, Klick- und Tastatur-Tests). Belegt durch die Lauf-Nummern im Abschlussbericht.
 - [x] **AC-7:** Given der Diff / When er geprüft wird / Then berührt er nur die drei genannten Dateien, kein `try?`, kein `print`, jede Funktion ≤ 50 LoC, kein Eintrag in `project.yml`, `Info.plist` oder Entitlements; alle Unit-Tests und der iOS-Bau sind grün.
 
 ## Dialog
@@ -136,17 +136,39 @@ Confirmation:
   Evidence: Die neue Skip-Zeile setzt den AC-2-Test aus: `throw XCTSkip("#978: ...")` als erste Anweisung, vor `macLaunch`; das Verhalten ist in der Spec unter Known Limitations (Z. 184-190) benannt und an #978 gebunden (PO 2026-11-21). Nur teilweise belegt: rot dann grün in Versuch 1, 2 von 4 Wiederholungen rot.
   Status: AMBIGUOUS
 
+### Runde 3
+**Adversary:**
+Selbst nachgeprüft per `gh api` (Lauf 44917030929, Job "Mac Gallery (macOS)"): Versuch 1 = Job 136884732760, Versuch 2 = Job 136940501292, Versuch 3 = Job 136949458716, alle `success`, alle `head_sha` 2cb7e01a0f8b8a6609d1a967bfe12461f7b4a30e (der Stand mit Skip). Gefilterte Ausgabe Versuch 3 in `adversary-test-output.txt` gelesen: Galerie "Executed 18 tests, with 1 test skipped and 0 failures", Klicktests "Executed 11 tests, with 0 failures", Tastatur "Executed 18 tests, with 0 failures". Der Skip ist `testMenuBarReopensAfterOpenAppWithOneClick` (AC-2-Test, #978); sonst kein Test übersprungen. Die Tastatur-Stufe lief diesmal ohne Jobgrenze (#974 trat nicht auf).
+
+- AC-6: Strenge Lesart "drei verschiedene Läufe, jeweils erster Versuch" ist nicht erfüllt; Versuch 1 ist der einzige erste Versuch. Die Spec lässt aber ausdrücklich "Neustarts ohne Codeänderung" zu; Versuche 2 und 3 sind genau das, auf identischem Commit, jeder Versuch ein voller Neustart des Jobs auf frischem Runner. Das Lauf-Ergebnis ist 3 von 3 grün. Einschränkung: grün heißt hier "mit einem ausgesetzten Test", die AC-2-Abdeckung zählt nicht mit (F002/F003). Bewertung: PROVEN unter dieser Auslegung.
+- AC-2: Kein neuer Beleg; durch PO-override (2026-11-21, `adversary_ambiguous_override`) freigegeben. Der Haken in der Checkliste ist ein Vermerk des override, kein Nachweis; F002 und F003 bleiben offen (Test ausgesetzt, Ursache in #978 offen).
+- Skip-Prüfung: Dass drei Läufe auf demselben Commit grün sind, sagt über die Stabilität des AC-2-Weges nichts, weil der Test nicht läuft. Früher rote Versuche (2 von 4) bleiben unwiderlegt.
+
+**Implementierer:**
+(Aus dem Auftrag und `stand.md`, vom Adversary gegengelesen.) Drei Versuche auf 2cb7e01, Versuche 2 und 3 Neustarts ohne Codeänderung; Zählung: Galerie 18 mit 1 Skip, Klick 11/11, Tastatur 18/18, 0 failures. Skip benannt: `testMenuBarReopensAfterOpenAppWithOneClick`.
+
+Confirmation:
+  AC: AC-6
+  Code reference: LooseEndsUITests/MacGalleryTests.swift:464
+  Evidence: Lauf 44917030929, Job "Mac Gallery (macOS)", Versuch 1 (136884732760), 2 (136940501292), 3 (136949458716), alle success auf 2cb7e01, je 0 failures; ein Test einzeln benannt übersprungen: testMenuBarReopensAfterOpenAppWithOneClick (#978). Versuche 2 und 3 sind Neustarts ohne Codeänderung, von der Spec zugelassen.
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-2
+  Code reference: LooseEnds/Mac/MenuBarCapture.swift:33
+  Evidence: Kein neuer Nachweis. Verhalten durch PO-override akzeptiert (Restverhalten #978, Test ausgesetzt); Lücke bleibt als F002/F003 offen.
+  Status: AMBIGUOUS
+
 ## Herkunft der Vorbedingungen
 
 kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
 ## Verdict
+**AMBIGUOUS**
 
-AMBIGUOUS
-
-Bedingung: AC-2 ist nur teilweise belegt (rot dann grün, aber in 2 von 4 Versuchen des Fix-Laufs wieder rot; Test ausgesetzt, #978) und AC-6 ist offen (kein Lauf auf dem Stand mit Skip). Fix-Kern bewiesen: AC-1, AC-3, AC-4, AC-5, AC-7.
-Findings: F002 (MEDIUM, seltenes Schließen im AC-2-Weg, #978), F003 (LOW, Skip), F004 (LOW, #974 Jobgrenze).
-Phase 7: drei aufeinanderfolgende CI-Läufe (jeweils erster Versuch) des Jobs "Mac Gallery (macOS)" auf dem Stand mit Skip nachweisen, Lauf-Nummern nennen, den übersprungenen AC-2-Test je Lauf einzeln benennen, rote Läufe der Ursache nach (Fix, #974, #978) trennen.
+PO-override 2026-11-21 (`adversary_ambiguous_override` im Workflow-State): Ausliefern mit bekannter Lücke #978, AC-2-Test per XCTSkip ausgesetzt. Bewusst nicht VERIFIED, weil der AC-2-Weg unbewiesen ist (F002 MEDIUM, F003 LOW offen).
+AC-6 ist belegt: Lauf 44917030929, Versuche 1 bis 3 (Jobs 136884732760, 136940501292, 136949458716) je success auf 2cb7e01, Galerie 18 Tests mit 1 skipped (testMenuBarReopensAfterOpenAppWithOneClick), Klick 11/11, Tastatur 18/18, 0 failures; Versuche 2 und 3 sind Neustarts ohne Codeänderung.
+Fix-Kern bewiesen: AC-1, AC-3, AC-4, AC-5, AC-6, AC-7. Offen: AC-2 (nur per override abgehakt). F004 (#974) trat in den drei Läufen nicht auf.
 
 ## Geprüfte Dateien
 
@@ -156,7 +178,7 @@ Phase 7: drei aufeinanderfolgende CI-Läufe (jeweils erster Versuch) des Jobs "M
 
 ## Prüfbasis
 
-- base: ec5707ab99acb0845f1a7beea1e4aea2ba638ce2
+- base: c7d10bf7d05e22e13cc0fd9029a0a0789d38e447
 - blob:2f82202726776cb44d154164a84a2940e5ae2911  LooseEnds/Mac/MenuBarCapture.swift
 - blob:76987d9d3d290ae497949ef8f70f7821a65053f9  LooseEndsUITests/MacGalleryTests.swift
 - blob:f9aaf18a38ed1745d898f5c79f5207f1d7983141  LooseEndsUITests/MacUITestSupport.swift

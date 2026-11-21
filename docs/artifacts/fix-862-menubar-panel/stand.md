@@ -121,3 +121,16 @@ Hinweis: Commit nach `origin/main`-Vorsprung nur per Merge von `origin/main` (ke
      Lauf 44877016605 V1 belegt (rot→grün), seltenes Schließen (2 von 15 Läufen) → #978, Test bis dahin ausgesetzt (PO 2026-11-21).
   3. Commit + Push, dann drei grüne Läufe Mac Gallery (AC-6), Adversary Runde 2, stamp, qa_gate, phase7.
   4. Diagnosezweig `diag/862-panel-schliesst` + Draft-PR #975 erst nach #978 schließen (Werkzeug für #978) — im Issue vermerkt.
+
+## Nachtrag 2026-11-21 nachmittags — ausgesetzt, Adversary AMBIGUOUS, PO-override
+- Skip + Known Limitations committet (2cb7e01, nach Merge origin/main), gepusht. Adversary Runde 2: AMBIGUOUS (F002 #978,
+  F003 Skip, F004 #974), PO tippte „override“, `override-ambiguous` gesetzt, Protokoll registriert und gestempelt.
+- Offen: qa_gate braucht frische Testausgabe (≤30 min) → Log des Mac-Gallery-Jobs aus CI-Lauf 44917030929 als
+  `adversary-test-output.txt` speichern, `qa_gate.py … --checklist … --infra --no-visual "Mac-UI nur in der CI, Belege als Anhänge"`,
+  dann `workflow.py phase phase7_validate`. AC-6: dieser Lauf = 1 von 3 (Skip einzeln benennen); 2 weitere per Neustart.
+- AC-6 Lauf 1/3: 44917030929, Job 136884732760, success (Galerie 18 inkl. 1 Skip, Klick 11, Tastatur 18; 0 rot).
+  Beleg `adversary-test-output.txt`. qa_gate: Checkliste AC-2/AC-6 noch offen → nach Lauf 2+3 (Job-Neustart, erst
+  möglich wenn der ganze Lauf fertig ist) Adversary-Nachtrag (AC-6 [x], AC-2 per PO-override), stamp, qa_gate, phase7.
+- Ganzer Lauf 44917030929 grün. AC-6 Lauf 2/3 gestartet: Neustart Mac Gallery, Versuch 2, Job 136940501292.
+- AC-6 Lauf 2/3: Versuch 2, Job 136940501292, success (Galerie 18 inkl. 1 Skip, Klick 11, Tastatur 18; 0 rot). Lauf 3/3: Versuch 3, Job 136949458716, läuft.
+- AC-6 Lauf 3/3: Versuch 3, Job 136949458716, success. Alle drei grün. Adversary Runde 3 läuft (Checkliste AC-2/AC-6), danach stamp, qa_gate, phase7.
