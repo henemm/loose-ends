@@ -70,6 +70,9 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
 - **Color budget.** Accent = tappable (incl. AI tint), red = time pressure, grey = hierarchy, green = the completion moment.
 - **The app never proposes the Knäuel or a bead** (Henning, 2026-10-26, #648 dropped): no row, no preselected menu
   entry, no notification suggests a task as the Knäuel or as a bead. Both are set by the user alone.
+- **No server of its own** (Henning, 2026-11-21, #966 not planned): „Alles soll auf meinem Server bei Hetzner laufen.“ The service
+  for Claude stays on `rennwienix`, also once external users come (#625). Never propose or order another server or paid infrastructure
+  unless Henning asks for it.
 - **Claude is an input channel, not a second app** (Henning, 2026-11-19): „mir geht es nicht darum, die Loose Ends App in
   Claude nachzubauen.“ Work for Claude ranks by how well tasks get *into* Loose Ends (capture, wording kept, fields set);
   rebuilding app views or controls inside Claude's window comes last. What Claude captured arrives as written (#953).
