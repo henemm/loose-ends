@@ -1,0 +1,30 @@
+# Beleg AC-10 (#625 S3), erhoben 2026-11-21T14:04:59Z
+
+# git diff --stat origin/main...   (Zweig vor dem Commit der Vorlage)
+ docs/artifacts/feat-625-s3-fragebogen/red.txt | 200 ++++++++++++++++++++++
+ docs/briefings/feat-625-s3-fragebogen.md      |  36 ++++
+ docs/context/feat-625-s3-fragebogen.md        | 100 +++++++++++
+ docs/specs/feat-625-schnitt-3-fragebogen.md   | 191 +++++++++++++++++++++
+ scripts/test_app_store_datenschutzangaben.py  | 236 ++++++++++++++++++++++++++
+ 5 files changed, 763 insertions(+)
+
+# git diff --stat   (Arbeitsbaum, geht in den Commit der Vorlage)
+ docs/reference/datenschutz-entwurf.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+# neue unversionierte Dateien dieses Schnitts (gehen in den Commit der Vorlage)
+docs/reference/app-store-datenschutzangaben.md   (83 Zeilen)
+docs/artifacts/feat-625-s3-fragebogen/green.txt
+docs/artifacts/feat-625-s3-fragebogen/schalter.txt
+
+# Keine Datei unter LooseEnds/, Shared/, server/, .github/; weder project.yml noch eine Info.plist.
+# (docs/briefings, docs/context, docs/specs sind Workflow-Unterlagen dieses Schnitts.)
+
+# grep -n LEAccountEnabled -A2 project.yml
+74:        # LEAccountEnabled is off; the App ID has had the capability since #621 S6b.
+75-        com.apple.developer.applesignin: [Default]
+76-    info:
+--
+86:        LEAccountEnabled: false
+87-        # APNs environment the app reports to the service (#795 S5c-2b): sandbox by default; only the TestFlight
+88-        # run sets production (plutil after generate) and checks it in the archive.

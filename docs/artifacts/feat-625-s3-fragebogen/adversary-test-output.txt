@@ -1,0 +1,20 @@
+test_header_changed (test_app_store_datenschutzangaben.BrokenTemplateTests.test_header_changed) ... ok
+test_missing_section (test_app_store_datenschutzangaben.BrokenTemplateTests.test_missing_section) ... ok
+test_missing_table (test_app_store_datenschutzangaben.BrokenTemplateTests.test_missing_table) ... ok
+test_value_not_yes_no (test_app_store_datenschutzangaben.BrokenTemplateTests.test_value_not_yes_no) ... ok
+test_doubled_row (test_app_store_datenschutzangaben.MutatedTemplateTests.test_doubled_row) ... ok
+test_extra_row (test_app_store_datenschutzangaben.MutatedTemplateTests.test_extra_row) ... ok
+test_linked_changed (test_app_store_datenschutzangaben.MutatedTemplateTests.test_linked_changed) ... ok
+test_missing_row (test_app_store_datenschutzangaben.MutatedTemplateTests.test_missing_row) ... ok
+test_purpose_changed (test_app_store_datenschutzangaben.MutatedTemplateTests.test_purpose_changed) ... ok
+test_tracking_changed (test_app_store_datenschutzangaben.MutatedTemplateTests.test_tracking_changed) ... ok
+test_ip_point_quotes_apple_and_names_retention (test_app_store_datenschutzangaben.TemplateFollowsManifestTests.test_ip_point_quotes_apple_and_names_retention) ... ok
+test_sections_in_order (test_app_store_datenschutzangaben.TemplateFollowsManifestTests.test_sections_in_order) ... ok
+test_sources_name_apple_page (test_app_store_datenschutzangaben.TemplateFollowsManifestTests.test_sources_name_apple_page) ... ok
+test_table_equals_account_types (test_app_store_datenschutzangaben.TemplateFollowsManifestTests.test_table_equals_account_types) ... ok
+test_today_names_data_not_collected (test_app_store_datenschutzangaben.TemplateFollowsManifestTests.test_today_names_data_not_collected) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.002s
+
+OK
