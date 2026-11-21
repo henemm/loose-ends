@@ -183,7 +183,8 @@ bei Apple gesetzt über die Repo-Variable `ASC_PRIVACY_POLICY_URL` (en-US: Konst
 am Text gilt erst, wenn auch die Website-Seite angepasst ist. Seit 2026-11-10 enthält der Text den Konto-Teil (Verbindung zu Claude,
 `docs/specs/feat-615-schnitt-4e-datenschutz.md`); der Store-Schalter `LEAccountEnabled` bleibt bis #625 aus, die Sicherungsfrist des Dienstes beträgt 30 Tage.
 Seit 2026-11-17 beschreibt der Text auch die Abschrift der offenen Aufgaben und die Kennung dieser Installation
-(`docs/specs/feat-625-schnitt-1-datenschutztext.md`); der Weckruf-Absatz (Push-Token) folgt mit #795 S5c-2.
+(`docs/specs/feat-625-schnitt-1-datenschutztext.md`).
+Seit 2026-11-21 beschreibt der Text auch den Weckruf (Gerätetoken, stille Mitteilung; `docs/specs/feat-625-schnitt-4-weckruf-datenschutz.md`).
 Die Vorlage für Apples App-Store-Datenschutzfragebogen liegt in `docs/reference/app-store-datenschutzangaben.md`, `scripts/test_app_store_datenschutzangaben.py` hält sie gleich `ACCOUNT_TYPES`; eingetragen wird erst mit dem Store-Schalter nach Hennings Ja (#625 S3).
 
 `DEVELOPMENT_TEAM` steht in `project.yml` (`XK87E2B3VR`) und darf dort nicht geleert werden: Xcode

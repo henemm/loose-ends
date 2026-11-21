@@ -1,0 +1,29 @@
+test_account_with_wake_words_passes (__main__.CheckerTests.test_account_with_wake_words_passes) ... ok
+test_account_without_device_token_is_caught (__main__.CheckerTests.test_account_without_device_token_is_caught) ... ok
+test_account_without_transcript_is_caught (__main__.CheckerTests.test_account_without_transcript_is_caught) ... ok
+test_account_without_us_is_allowed (__main__.CheckerTests.test_account_without_us_is_allowed) ... ok
+test_bold_label_meets_anchor (__main__.CheckerTests.test_bold_label_meets_anchor) ... ok
+test_english_wake_words_are_caught (__main__.CheckerTests.test_english_wake_words_are_caught) ... ok
+test_german_quotes_still_meet_anchor (__main__.CheckerTests.test_german_quotes_still_meet_anchor) ... ok
+test_missing_number_is_caught (__main__.CheckerTests.test_missing_number_is_caught) ... ok
+test_not_built_sentence_is_caught (__main__.CheckerTests.test_not_built_sentence_is_caught) ... ok
+test_old_wake_up_sentence_is_caught (__main__.CheckerTests.test_old_wake_up_sentence_is_caught) ... ok
+test_other_wording_with_typographic_quotes_is_caught (__main__.CheckerTests.test_other_wording_with_typographic_quotes_is_caught) ... ok
+test_stale_sentence_is_caught (__main__.CheckerTests.test_stale_sentence_is_caught) ... ok
+test_transcript_found_in_section (__main__.CheckerTests.test_transcript_found_in_section) ... ok
+test_transcript_with_negatives_passes (__main__.CheckerTests.test_transcript_with_negatives_passes) ... ok
+test_transcript_without_raw_text_is_caught (__main__.CheckerTests.test_transcript_without_raw_text_is_caught) ... ok
+test_typographic_quotes_meet_anchor (__main__.CheckerTests.test_typographic_quotes_meet_anchor) ... ok
+test_wrapped_stale_sentence_is_caught (__main__.CheckerTests.test_wrapped_stale_sentence_is_caught) ... ok
+test_account_section_exists_in_order (__main__.DraftTests.test_account_section_exists_in_order) ... ok
+test_core_statements_per_language (__main__.DraftTests.test_core_statements_per_language) ... ok
+test_no_stale_phrases (__main__.DraftTests.test_no_stale_phrases) ... ok
+test_released_sentences_per_language (__main__.DraftTests.test_released_sentences_per_language) ... ok
+test_transcript_in_account_section (__main__.DraftTests.test_transcript_in_account_section) ... ok
+test_wake_up_in_account_section (__main__.DraftTests.test_wake_up_in_account_section) ... ok
+test_live_pages (__main__.LiveTests.test_live_pages) ... skipped 'Live-Seiten nur mit DATENSCHUTZ_LIVE=1'
+
+----------------------------------------------------------------------
+Ran 24 tests in 0.023s
+
+OK (skipped=1)

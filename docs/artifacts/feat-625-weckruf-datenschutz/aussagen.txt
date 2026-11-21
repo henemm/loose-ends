@@ -1,0 +1,206 @@
+# AC-2: Aussagen des Absatzes „Weckruf.“, des Zusatzsatzes unter „Kennung dieser Installation.“ und des Löschsatzes gegen den Code
+# Stand: Basis 076c942 plus Arbeitsstand, 2026-11-21T19:58:25Z. Zeilen = Datei:Zeile aus grep -n.
+# Keine Tokens, Konten, sub-Werte oder IP-Adressen; nur Code.
+
+## W1 Die App fragt nach der Anmeldung und bei jedem Start, solange angemeldet, bei Apple ein Gerätetoken an
+  $ grep -n -E 'observeSignIn|wasSignedIn|registerForRemote\(\)|registerForRemoteNotifications\(\)' LooseEnds/Claude/PushWakeUp.swift
+    64:        UIApplication.shared.registerForRemoteNotifications()
+    66:        NSApplication.shared.registerForRemoteNotifications()
+    107:    func observeSignIn() {
+    111:            var wasSignedIn = false
+    114:                if signedIn, !wasSignedIn { self?.registerForRemote() }
+    115:                wasSignedIn = signedIn
+  $ grep -n -E 'PushWakeUp.forApp|observeSignIn' LooseEnds/App/LooseEndsApp.swift
+    70:        let push = PushWakeUp.forApp(account: account, trigger: claudeSync,
+    73:        push?.observeSignIn()
+  Deutung: Beobachtung beginnt mit wasSignedIn = false; jeder Wechsel auf .signedIn (auch der erste Wert beim Start
+  einer schon angemeldeten App) ruft registerForRemote -> registerForRemoteNotifications. forApp + observeSignIn laufen in
+  LooseEndsApp.init bei jedem Start (nil ohne Konto und unter Tests). Ergebnis: belegt.
+
+## W2 ... und schickt es an den Dienst, mit Art des Systems (Test/Produktion) und Kennung dieser Installation (auch Zusatzsatz Kennung)
+  $ grep -n -E 'didRegisterForRemoteNotificationsWithDeviceToken|didReceive\(token' LooseEnds/Notifications/IOSAppDelegate.swift
+    11:    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    12:        Task { await PushWakeUp.current?.didReceive(token: deviceToken) }
+  $ grep -n -E 'didRegisterForRemoteNotificationsWithDeviceToken|didReceive\(token' LooseEnds/Mac/MenuBarCapture.swift
+    170:    func application(_ application: NSApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    171:        Task { await PushWakeUp.current?.didReceive(token: deviceToken) }
+  $ grep -n -E 'func didReceive|registration.register' LooseEnds/Claude/PushWakeUp.swift
+    102:    func didReceive(token: Data) async -> DeviceRegistration.Outcome {
+    103:        await registration.register(token: token)
+  $ grep -n -E 'DeviceIdentity\(\)\.current\(\)' LooseEnds/Claude/PushWakeUp.swift
+    55:        let registration = DeviceRegistration(account: account, device: { try DeviceIdentity().current() },
+  $ grep -n -E 'case sandbox, production|LEApsEnvironment' LooseEnds/Claude/DeviceRegistration.swift
+    6:    case sandbox, production
+    13:    /// The build's mark `LEApsEnvironment` (sandbox in project.yml; the TestFlight run sets production since S5c-2b).
+    15:        PushEnvironment(infoValue: Bundle.main.object(forInfoDictionaryKey: "LEApsEnvironment"))
+  $ grep -n -E 'func putDevice|app/device|X-Device|"token": token' LooseEnds/Claude/ServiceClient.swift
+    92:        request.setValue(device.uuidString.lowercased(), forHTTPHeaderField: "X-Device")
+    100:        request.setValue(device.uuidString.lowercased(), forHTTPHeaderField: "X-Device")
+    106:    /// `POST /app/device` with exactly `token` (hex) and `environment`: the address for the wake-up (#795 S5c-1).
+    107:    func putDevice(token: String, environment: PushEnvironment, sessionToken: String, device: UUID) async throws {
+    108:        var request = bearer(path: "app/device", sessionToken)
+    109:        request.setValue(device.uuidString.lowercased(), forHTTPHeaderField: "X-Device")
+    111:        request.httpBody = try JSONSerialization.data(withJSONObject: ["token": token, "environment": environment.rawValue])
+  $ grep -n -E 'async function register|admitted\(deps, request, \{ device: true \}\)|checkDevice|putDevice\(deps.pool' server/src/app-routes.ts
+    4:import { checkDevice, type DeviceDoc, putDevice } from "./devices.ts";
+    89:  const checked = await admitted(deps, request, { device: true });
+    98:  const checked = await admitted(deps, request, { device: true });
+    107:async function register(deps: AppDeps, request: Request): Promise<Response> {
+    108:  const checked = await admitted(deps, request, { device: true });
+    110:  const body = await jsonBody(request, checkDevice);
+    112:  await putDevice(deps.pool, checked.account, checked.device, body.doc as DeviceDoc);
+  $ grep -n -E 'shape\(doc, "", \{ token, environment \}\)' server/src/devices.ts
+    19:  shape(doc, "", { token, environment });
+  Deutung: Körper genau token + environment (sandbox = Test, production = Produktion), Kopf X-Device = Kennung dieser
+  Installation (DeviceIdentity, dieselbe wie bei claimOrder/putResult, siehe X-Device-Zeilen in ServiceClient.swift);
+  der Dienst speichert sie als Spalte device. Ergebnis: belegt.
+
+## W3 Meldung nur mit Sitzung
+  $ grep -n -E 'account.withSession|guard sent != nil else \{ return .notSignedIn \}' LooseEnds/Claude/DeviceRegistration.swift
+    67:            let sent = try await account.withSession { client, session in
+    71:            guard sent != nil else { return .notSignedIn }
+  $ grep -n -E 'func withSession|guard status == .signedIn, let token' LooseEnds/Claude/AccountState.swift
+    117:    func withSession<T: Sendable>(_ call: (ServiceClient, String) async throws -> T) async throws -> T? {
+    118:        guard status == .signedIn, let token = Self.storedToken(in: store) else { return nil }
+  Ergebnis: belegt (Voraussetzung für „solange du angemeldet bist“).
+
+## W4 Das Gerätetoken ist eine Adresse, die Apple für diese App auf diesem Gerät vergibt; enthält weder Namen noch Aufgaben
+  $ grep -n -E 'token\.map|%02x' LooseEnds/Claude/DeviceRegistration.swift
+    56:        token.map { String(format: "%02x", $0) }.joined()
+  $ grep -n -E 'const token: Check|v.length < 64' server/src/devices.ts
+    11:const token: Check = (v, p) => {
+    12:  if (typeof v !== "string" || !hex.test(v) || v.length % 2 !== 0 || v.length < 64 || v.length > 200) fail(p, "kein Gerätetoken");
+  Deutung: Der Wert kommt unverändert aus Apples Rückruf (W2) und wird nur als Hex gesendet; der Dienst nimmt nur Hex
+  von 64 bis 200 Zeichen. Dass Apples Token nichts Persönliches enthält, ist Apples Sache (APNs), im Code nicht
+  prüfbar; der Code fügt nichts hinzu. Ergebnis: belegt, soweit der Code reicht; kein Gegenbeleg.
+
+## W5 Der Dienst speichert je Gerät eines, mit dem Zeitpunkt der letzten Meldung
+  $ grep -n -E 'PRIMARY KEY \(account_id, device\)|UNIQUE \(token\)|updated_at' server/migrations/008_device_tokens.sql
+    9:  updated_at  timestamptz NOT NULL DEFAULT now(),
+    10:  PRIMARY KEY (account_id, device),
+    11:  UNIQUE (token)
+  $ grep -n -E 'ON CONFLICT \(account_id, device\)|updated_at = now\(\)' server/src/devices.ts
+    32:       ON CONFLICT (account_id, device) DO UPDATE SET token = EXCLUDED.token, environment = EXCLUDED.environment, updated_at = now()`,
+  Ergebnis: belegt.
+
+## W6 Höchstens zehn Geräte je Konto; kommt ein elftes dazu, fällt das älteste weg
+  $ grep -n -E 'MAX_DEVICES = 10|ORDER BY updated_at DESC|OFFSET \$3|MAX_DEVICES - 1' server/src/devices.ts
+    7:export const MAX_DEVICES = 10;
+    35:    // Keep the written row and the MAX_DEVICES - 1 newest others; everything older goes.
+    39:         ORDER BY updated_at DESC, device DESC OFFSET $3)`,
+    40:      [account, device, MAX_DEVICES - 1],
+  Deutung: behalten werden die gerade geschriebene Zeile und die neun neuesten anderen (updated_at absteigend);
+  beim elften fällt das älteste. Ergebnis: belegt.
+
+## W7 Hinterlegt Claude einen neuen Auftrag, schickt der Dienst über APNs eine stille Mitteilung an deine Geräte
+  $ grep -n -E 'export async function storeOrder|stored === "stored" && wake' server/src/mcp.ts
+    116:export async function storeOrder(
+    125:  if (stored === "stored" && wake !== undefined) void Promise.resolve().then(() => wake(owner)).catch(() => {});
+  $ grep -n -E 'createWaker|wake: wakeFor' server/src/main.ts
+    13:import { type ApnsConfig, apnsConfigFromEnv, type ApnsRequest, type ApnsResponse, createWaker } from "./apns.ts";
+    155:  return createWaker({ config, pool, send, log: logError }).wake;
+    215:  const mcp = mcpHandler(pool, { wake: wakeFor(options, pool) });
+  $ grep -n -E 'const devices = await listTokens|apns wake devices' server/src/apns.ts
+    182:        const devices = await listTokens(pool, account);
+    183:        log(`apns wake devices=${devices.length}`);
+  $ grep -n -E 'export async function listTokens|WHERE account_id = \$1 ORDER BY device' server/src/devices.ts
+    52:export async function listTokens(pool: pg.Pool, account: string): Promise<DeviceDoc[]> {
+    53:  const { rows } = await pool.query("SELECT token, environment FROM device_tokens WHERE account_id = $1 ORDER BY device", [account]);
+  Deutung: nur bei neu gespeichertem Auftrag (nie bei bekannter id), an jede Gerätezeile des Kontos. Ergebnis: belegt.
+
+## W8 Fester Inhalt, nichts aus deinen Aufgaben, zeigt nichts an; die App holt daraufhin den Auftrag ab
+  $ grep -n -E 'const BODY|apns-push-type|apns-priority' server/src/apns.ts
+    13:const BODY = JSON.stringify({ aps: { "content-available": 1 }, looseends: { v: 1 } });
+    58:        "apns-topic": request.topic, "apns-push-type": "background", "apns-priority": "5", "content-type": "application/json",
+  $ grep -n -E 'body: BODY' server/src/apns.ts
+    130:      const request = (token: string) => send({ origin: origins[device.environment], token: device.token, jwt: token, topic: config.topic, body: BODY });
+  $ grep -n -E 'func isWake|userInfo\["looseends"\]|await self.wake\(\)' LooseEnds/Claude/PushWakeUp.swift
+    71:    nonisolated static func isWake(_ userInfo: [AnyHashable: Any]) -> Bool {
+    72:        userInfo["looseends"] != nil
+    90:                await self.wake()
+  $ grep -n -E 'func wake\(\)|sendThenPull\(\)' LooseEnds/Claude/ClaudeSyncTrigger.swift
+    75:            MainActor.assumeIsolated { self?.sendThenPull() }
+    96:        sendThenPull()
+    107:    func wake() async {
+    110:            sendThenPull()
+    115:    private func sendThenPull() {
+  Deutung: Inhalt immer {"aps":{"content-available":1},"looseends":{"v":1}} (kein alert, sound, badge = nichts
+  Sichtbares), push-type background, Priorität 5; die App erkennt den Schlüssel looseends und ruft wake() = senden, dann
+  abholen. Ergebnis: belegt.
+
+## W9 Höchstens eine Mitteilung je Gerät in 15 Minuten
+  $ grep -n -E 'const MIN_GAP|minGapMs = MIN_GAP|now\(\) - state.last >= minGapMs|apns wake throttled|apns wake later' server/src/apns.ts
+    18:const MIN_GAP = 15 * MIN;
+    111:  const { config, pool, send = sendHttp2, now = Date.now, origins = ORIGINS, minGapMs = MIN_GAP, schedule = laterTimer } = opts;
+    172:    if (!state || now() - state.last >= minGapMs) return wakeNow(device);
+    173:    if (state.later) return log(`apns wake throttled ${device.environment}`);
+    175:    log(`apns wake later ${device.environment}`);
+  Deutung: Schlüssel je Gerät (ENV:token); innerhalb des Fensters kein weiterer Push sofort, höchstens einer am
+  Fensterende nachgeholt. Ergebnis: belegt.
+
+## W10 Löschwege: Konto löschen / Apple meldet ungültig / dasselbe Token bei anderem Konto oder Gerät / ältestes von > 10
+  $ grep -n -E 'ON DELETE CASCADE' server/migrations/008_device_tokens.sql
+    5:  account_id  text        NOT NULL REFERENCES accounts (id) ON DELETE CASCADE,
+  $ grep -n -E 'export async function deleteAccount|DELETE FROM accounts WHERE id' server/src/accounts.ts
+    101:export async function deleteAccount(pool: pg.Pool, accountId: string): Promise<Deletion> {
+    124:    await client.query("DELETE FROM accounts WHERE id = $1", [accountId]);
+  $ grep -n -E 'const DROP|await dropToken' server/src/apns.ts
+    20:const DROP = new Set(["410 Unregistered", "400 BadDeviceToken", "400 DeviceTokenNotForTopic"]);
+    137:      await dropToken(pool, device.token, device.environment);
+  $ grep -n -E 'export async function dropToken|DELETE FROM device_tokens WHERE token = \$1 AND environment' server/src/devices.ts
+    58:export async function dropToken(pool: pg.Pool, token: string, environment: DeviceDoc["environment"]): Promise<boolean> {
+    59:  const result = await pool.query("DELETE FROM device_tokens WHERE token = $1 AND environment = $2", [token.toLowerCase(), environment]);
+  $ grep -n -E 'DELETE FROM device_tokens WHERE token = \$1 AND \(account_id, device\)' server/src/devices.ts
+    29:    await client.query("DELETE FROM device_tokens WHERE token = $1 AND (account_id, device) <> ($2, $3)", [value, account, device]);
+  Viertens: siehe W6. Alle Löschstellen im Dienst (grep -rn 'DELETE FROM device_tokens' server/src):
+    server/src/devices.ts:29:    await client.query("DELETE FROM device_tokens WHERE token = $1 AND (account_id, device) <> ($2, $3)", [value, account, device]);
+    server/src/devices.ts:37:      `DELETE FROM device_tokens WHERE account_id = $1 AND device IN (
+    server/src/devices.ts:59:  const result = await pool.query("DELETE FROM device_tokens WHERE token = $1 AND environment = $2", [token.toLowerCase(), environment]);
+  Ergebnis: belegt, die Aufzählung ist vollständig (drei Stellen in devices.ts + Kaskade).
+
+## W11 „Abmelden“ löscht es nicht; das Gerät kann weiter still geweckt werden, holt aber nichts ab, solange nicht angemeldet
+  $ grep -n -E 'async function logout|await endSession' server/src/auth.ts
+    96:async function logout(deps: AuthDeps, request: Request): Promise<Response> {
+    100:  await endSession(deps.pool, token);
+  $ grep -n -E 'export async function endSession|DELETE FROM sessions WHERE token_hash' server/src/accounts.ts
+    90:export async function endSession(pool: pg.Pool, token: string): Promise<boolean> {
+    92:  const result = await pool.query("DELETE FROM sessions WHERE token_hash = $1", [hash(token)]);
+  $ grep -rn unregisterForRemoteNotifications LooseEnds Shared
+    (kein Treffer, Ausgang 1: die App meldet sich beim Abmelden nirgends ab)
+  $ grep -n -E 'func signOut|client.logout' LooseEnds/Claude/AccountState.swift
+    70:    func signOut() async {
+    84:            try await client.logout(sessionToken: token)
+  $ grep -n -E 'account.withSession' LooseEnds/Claude/ClaudeSync.swift
+    69:            let sent = try await account.withSession { client, token in
+    88:                claim = try await account.withSession { client, token in
+    123:            let sent = try await account.withSession { client, token in
+  Deutung: logout löscht nur die Sitzung; device_tokens bleibt, der Weckruf geht weiter an das Gerät (W7 liest nur
+  device_tokens, keine Sitzung). Senden und Abholen in ClaudeSync laufen nur über withSession, das ohne Sitzung nil
+  liefert (W3) -> nichts wird abgeholt. Ergebnis: belegt.
+
+## W12 Löschsatz: „Konto löschen“ entfernt auch das Gerätetoken für den Weckruf
+  siehe W10 (ON DELETE CASCADE auf accounts, deleteAccount löscht die Konto-Zeile). Ergebnis: belegt.
+
+## W13 Beleg-Tabelle „Dienstprotokoll ohne Token und Konto“ (nicht Teil des Absatzes, zur Vollständigkeit)
+  $ grep -n -E 'log\(`apns|log\("apns' server/src/apns.ts
+    128:    try { jwt = providerToken(now()); } catch { log("apns jwt failed"); return; }
+    135:      if (response.status >= 200 && response.status < 300) return log(`apns sent${outcome}`);
+    136:      if (!DROP.has(`${response.status} ${response.reason}`)) return log(`apns send failed${outcome}`);
+    138:      log(`apns token dropped${outcome}`);
+    140:      log(`apns send failed error ${device.environment}`);
+    164:      log("apns send failed list");
+    173:    if (state.later) return log(`apns wake throttled ${device.environment}`);
+    175:    log(`apns wake later ${device.environment}`);
+    183:        log(`apns wake devices=${devices.length}`);
+    186:        log("apns send failed list");
+  $ grep -n -E 'function describe' server/src/apns.ts
+    85:function describe(response: ApnsResponse, env: DeviceDoc["environment"]): string {
+  Deutung: Logzeilen nennen nur Status, Umgebung, Anzahl und Apples id/unique-Kennungen; device.token und account
+  kommen in keiner log()-Zeile vor. Ergebnis: belegt.
+
+## Gesamtergebnis
+Jede Aussage hat einen Beleg im Code; kein Gegenbeleg gefunden.
+Hinweis (kein Gegenbeleg zum Text): Der Kommentar „Nothing calls it yet.“ in LooseEnds/Claude/DeviceRegistration.swift
+ist überholt (PushWakeUp.forApp ruft es); bekannt aus der Spec, Folgearbeit im Epic #795.
+  $ grep -n -E 'Nothing calls it yet' LooseEnds/Claude/DeviceRegistration.swift
+    20:/// The only door is `AccountState.withSession`; without a session nothing is read or sent. Nothing calls it yet.

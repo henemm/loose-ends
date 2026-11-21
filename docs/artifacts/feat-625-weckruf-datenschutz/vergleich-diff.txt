@@ -1,0 +1,91 @@
+# Vorstufe AC-12: Entwurf gegen den Website-Branch feat/625-weckruf-datenschutz (henemm/henemm-website PR #82), Satz für Satz
+# 2026-11-21T20:00Z; Branch-Stand a1acb58, Inhalte per gh api contents?ref=…
+# Normalisierung: „“”‚‘’ -> " bzw. ', Fettsterne entfernt, Leerraum (inkl. Zeilenumbrüche) zu einem Leerzeichen.
+# Entwurf: docs/reference/datenschutz-entwurf.md (de vor „## English“, en ab dort). Die Live-Fassung (AC-12) folgt nach Merge.
+
+## de
+### Kennung dieser Installation. (Zusatzsatz)
+OK    Kennung dieser Installation.
+OK    Wenn die App Aufträge von Claude abholt und deren Ergebnis meldet, schickt sie eine zufällige Kennung dieser Installation mit.
+OK    Die App erzeugt sie einmal selbst und legt sie im Schlüsselbund dieses Geräts ab; sie wird nicht über iCloud abgeglichen und ist kein Merkmal des Geräts wie Seriennummer oder Werbekennung.
+OK    Der Dienst vermerkt sie an dem Auftrag, den dieses Gerät übernimmt, und am Ergebnis, damit ein Auftrag jeweils an ein Gerät geht und nur dieses das Ergebnis melden kann.
+OK    Sie bleibt mit dem Auftrag gespeichert, bis du dein Konto löschst.
+OK    Dieselbe Kennung schickt die App auch mit, wenn sie sich für den Weckruf meldet; sie wird dann zusammen mit dem Gerätetoken gespeichert (siehe "Weckruf.").
+  Absatz als Ganzes gleich: ja
+### Weckruf.
+OK    Weckruf.
+OK    Damit deine App Aufträge aus Claude zügig abholt, ohne dass du sie öffnen musst, kann der Dienst sie still wecken.
+OK    Dafür fragt die App nach der Anmeldung und bei jedem Start, solange du angemeldet bist, bei Apple ein Gerätetoken an und schickt es an den Dienst, zusammen mit der Art des Systems (Test oder Produktion) und der Kennung dieser Installation.
+OK    Das Gerätetoken ist eine Adresse, die Apple für diese App auf diesem Gerät vergibt; es enthält weder deinen Namen noch etwas aus deinen Aufgaben.
+OK    Der Dienst speichert je Gerät eines, mit dem Zeitpunkt der letzten Meldung, höchstens zehn Geräte je Konto; kommt ein elftes dazu, fällt das älteste weg.
+OK    Hinterlegt Claude einen neuen Auftrag, schickt der Dienst über den Push-Dienst von Apple (APNs) eine stille Mitteilung an deine Geräte.
+OK    Sie hat einen festen Inhalt, enthält nichts aus deinen Aufgaben und zeigt nichts an; die App holt daraufhin den Auftrag ab.
+OK    Der Dienst schickt je Gerät höchstens eine solche Mitteilung in 15 Minuten.
+OK    Das Gerätetoken bleibt gespeichert, bis du dein Konto löschst, bis Apple es als ungültig meldet, bis dasselbe Token bei einem anderen Konto oder Gerät gemeldet wird oder bis es als ältestes von mehr als zehn Geräten wegfällt.
+OK    "Abmelden" löscht es nicht: Dein Gerät kann danach weiter still geweckt werden, holt aber nichts ab, solange du nicht angemeldet bist.
+  Absatz als Ganzes gleich: ja
+### Löschen.
+OK    Löschen.
+OK    In den Einstellungen unter "Claude" löschst du mit "Konto löschen" dein Konto.
+OK    Das entfernt dein Konto und alle Daten, die der Dienst zu diesem Konto gespeichert hat, darunter die Abschrift deiner Aufgaben, Aufträge und Ergebnisse und das Gerätetoken für den Weckruf, und widerruft die Anmeldung bei Apple.
+OK    Vorhandene Sicherungen laufen innerhalb von 30 Tagen aus.
+OK    "Abmelden" beendet nur die Sitzung auf diesem Gerät.
+  Absatz als Ganzes gleich: ja
+### Was Apple dabei übernimmt (Einleitung)
+OK    An fünf Stellen handelt Apples System, nicht die App.
+### Was Apple dabei übernimmt (Punkt Push-Mitteilungen)
+OK    - Push-Mitteilungen: Die stille Mitteilung für den Weckruf stellt Apples Push-Dienst zu; dort gilt Apples Datenschutz.
+  Absatz als Ganzes gleich: ja
+Datum *Stand: 21. November 2026*: vorhanden
+Alter Satz „An vier Stellen“ auf der Seite: nicht vorhanden
+Alter Satz „Im Text ist der Weckruf deshalb nicht beschrieben“ auf der Seite: nicht vorhanden
+Alter Satz „Ergebnisse, und widerruft“ auf der Seite: nicht vorhanden
+Interner Abschnitt „Beleg im Code“: nicht vorhanden
+Interner Abschnitt „Offen, nicht belegt“: nicht vorhanden
+Ergebnis de: 23 Sätze gleich, 0 Abweichungen
+
+## en
+### Identifier of this installation. (added sentence)
+OK    Identifier of this installation.
+OK    When the app collects orders from Claude and reports their result, it sends a random identifier of this installation.
+OK    The app creates it once itself and keeps it in this device's keychain; it is not synced through iCloud and is not a feature of the device such as a serial number or an advertising identifier.
+OK    The service notes it on the order this device takes over and on the result, so that an order goes to one device at a time and only that device can report the result.
+OK    It stays stored with the order until you delete your account.
+OK    The app also sends the same identifier when it registers for the wake-up; it is then stored together with the device token (see "Wake-up.").
+  Absatz als Ganzes gleich: ja
+### Wake-up.
+OK    Wake-up.
+OK    So that your app collects orders from Claude promptly without you having to open it, the service can wake it silently.
+OK    For this, after sign-in and at every start while you are signed in, the app asks Apple for a device token and sends it to the service, together with the kind of system (test or production) and the identifier of this installation.
+OK    The device token is an address that Apple assigns to this app on this device; it contains neither your name nor anything from your tasks.
+OK    The service stores one per device, with the time of the last report, at most ten devices per account; when an eleventh is added, the oldest drops out.
+OK    When Claude places a new order, the service sends a silent notification to your devices through Apple's push service (APNs).
+OK    It has a fixed content, contains nothing from your tasks and shows nothing; the app then collects the order.
+OK    The service sends at most one such notification per device in 15 minutes.
+OK    The device token stays stored until you delete your account, until Apple reports it as invalid, until the same token is reported for another account or device, or until it drops out as the oldest of more than ten devices.
+OK    "Sign out" does not delete it: your device can still be woken silently afterwards, but collects nothing as long as you are not signed in.
+  Absatz als Ganzes gleich: ja
+### Deleting.
+OK    Deleting.
+OK    In Settings under "Claude" you delete your account with "Delete account".
+OK    This removes your account and all data the service has stored for that account, including the transcript of your tasks, orders and results and the device token for the wake-up, and revokes the sign-in with Apple.
+OK    Existing backups expire within 30 days.
+OK    "Sign out" only ends the session on this device.
+  Absatz als Ganzes gleich: ja
+### 6. What Apple takes over (intro)
+OK    In five places Apple's system acts, not the app.
+### 6. What Apple takes over (bullet Push notifications)
+OK    - Push notifications: The silent notification for the wake-up is delivered by Apple's push service; there Apple's privacy rules apply.
+  Absatz als Ganzes gleich: ja
+Datum *Last updated: November 21, 2026*: vorhanden
+Alter Satz „In four places“ auf der Seite: nicht vorhanden
+Alter Satz „orders and results, and revokes“ auf der Seite: nicht vorhanden
+Interner Abschnitt „Beleg im Code“: nicht vorhanden
+Interner Abschnitt „Offen, nicht belegt“: nicht vorhanden
+Ergebnis en: 23 Sätze gleich, 0 Abweichungen
+
+Gesamt: alle Kernsätze gleich, keine Abweichung
+
+## Gegenprobe
+Eine Kopie der deutschen Branch-Seite mit „in 10 Minuten“ statt „in 15 Minuten“ ergibt: UNGL für genau diesen Satz,
+„Absatz als Ganzes gleich: NEIN“ für „Weckruf.“, Gesamt 2 Abweichungen. Der Vergleich fängt also eine Abweichung.

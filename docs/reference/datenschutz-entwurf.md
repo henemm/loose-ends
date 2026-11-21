@@ -14,6 +14,9 @@ Nachtrag Abschrift und Kennung dieser Installation (Absätze „Deine offenen Au
 Installation.“, Löschsatz) von Henning freigegeben am 2026-11-17 (#625 Schnitt 1,
 `docs/specs/feat-625-schnitt-1-datenschutztext.md`); veröffentlicht auf der Website-Seite am 2026-11-17
 (henemm/henemm-website#80); der Satz zum Zeitpunkt der Abschrift am 2026-11-17 (henemm/henemm-website#81).
+Nachtrag Weckruf (Absatz „Weckruf.“, Zusatzsatz unter „Kennung dieser Installation.“, Löschsatz, Punkt
+„Push-Mitteilungen“ unter „Was Apple dabei übernimmt“) von Henning freigegeben am 2026-11-21 (#625 Schnitt 4,
+`docs/specs/feat-625-schnitt-4-weckruf-datenschutz.md`).
 
 Geschrieben aus dem, was der Code am 2026-10-26 belegt (#342, Teil 2). Jede Aussage hat unten einen Beleg im
 Code; was der Code nicht beweist, steht unter „Offen, nicht belegt“.
@@ -42,7 +45,7 @@ Informationsfreiheit Nordrhein-Westfalen. (Henning, 2026-10-27: Rechte wie Grego
 
 ## Was Apple dabei übernimmt
 
-An vier Stellen handelt Apples System, nicht die App. Dort gilt Apples Datenschutz, und wir sagen nicht mehr zu,
+An fünf Stellen handelt Apples System, nicht die App. Dort gilt Apples Datenschutz, und wir sagen nicht mehr zu,
 als der Code belegt:
 
 - **Karten:** Ortssuche und der Name deines aktuellen Ortes laufen über Apple Karten.
@@ -51,6 +54,7 @@ als der Code belegt:
 - **Siri und Kurzbefehle:** Beim Erfassen per Siri gilt Apples Verhalten.
 - **Diktat auf der Watch:** Die Watch nimmt Text über das Diktat von watchOS auf; wohin Apple das Gesprochene
   schickt, regelt Apple.
+- **Push-Mitteilungen:** Die stille Mitteilung für den Weckruf stellt Apples Push-Dienst zu; dort gilt Apples Datenschutz.
 
 ## Was erfasst wird
 
@@ -106,6 +110,21 @@ zufällige Kennung dieser Installation mit. Die App erzeugt sie einmal selbst un
 Geräts ab; sie wird nicht über iCloud abgeglichen und ist kein Merkmal des Geräts wie Seriennummer oder Werbekennung.
 Der Dienst vermerkt sie an dem Auftrag, den dieses Gerät übernimmt, und am Ergebnis, damit ein Auftrag jeweils an ein
 Gerät geht und nur dieses das Ergebnis melden kann. Sie bleibt mit dem Auftrag gespeichert, bis du dein Konto löschst.
+Dieselbe Kennung schickt die App auch mit, wenn sie sich für den Weckruf meldet; sie wird dann zusammen mit dem
+Gerätetoken gespeichert (siehe „Weckruf.“).
+
+**Weckruf.** Damit deine App Aufträge aus Claude zügig abholt, ohne dass du sie öffnen musst, kann der Dienst sie still
+wecken. Dafür fragt die App nach der Anmeldung und bei jedem Start, solange du angemeldet bist, bei Apple ein
+Gerätetoken an und schickt es an den Dienst, zusammen mit der Art des Systems (Test oder Produktion) und der Kennung
+dieser Installation. Das Gerätetoken ist eine Adresse, die Apple für diese App auf diesem Gerät vergibt; es enthält
+weder deinen Namen noch etwas aus deinen Aufgaben. Der Dienst speichert je Gerät eines, mit dem Zeitpunkt der letzten
+Meldung, höchstens zehn Geräte je Konto; kommt ein elftes dazu, fällt das älteste weg. Hinterlegt Claude einen neuen
+Auftrag, schickt der Dienst über den Push-Dienst von Apple (APNs) eine stille Mitteilung an deine Geräte. Sie hat einen
+festen Inhalt, enthält nichts aus deinen Aufgaben und zeigt nichts an; die App holt daraufhin den Auftrag ab. Der Dienst
+schickt je Gerät höchstens eine solche Mitteilung in 15 Minuten. Das Gerätetoken bleibt gespeichert, bis du dein Konto
+löschst, bis Apple es als ungültig meldet, bis dasselbe Token bei einem anderen Konto oder Gerät gemeldet wird oder bis
+es als ältestes von mehr als zehn Geräten wegfällt. „Abmelden“ löscht es nicht: Dein Gerät kann danach weiter still
+geweckt werden, holt aber nichts ab, solange du nicht angemeldet bist.
 
 **Wo.** Der Dienst läuft auf einem Server der Hetzner Online GmbH in Deutschland.
 
@@ -118,7 +137,7 @@ Deutschland. Sicherungen werden höchstens 30 Tage aufbewahrt.
 
 **Löschen.** In den Einstellungen unter „Claude“ löschst du mit „Konto löschen“ dein Konto. Das entfernt dein Konto und
 alle Daten, die der Dienst zu diesem Konto gespeichert hat, darunter die Abschrift deiner Aufgaben, Aufträge und
-Ergebnisse, und widerruft die Anmeldung bei Apple. Vorhandene Sicherungen laufen innerhalb von 30 Tagen aus. „Abmelden“ beendet nur die Sitzung auf diesem Gerät.
+Ergebnisse und das Gerätetoken für den Weckruf, und widerruft die Anmeldung bei Apple. Vorhandene Sicherungen laufen innerhalb von 30 Tagen aus. „Abmelden“ beendet nur die Sitzung auf diesem Gerät.
 
 **Apple und Claude.** Bei der Anmeldung handelt Apple nach Apples Datenschutz. Was Claude (Anthropic) mit dem macht,
 was du dort schreibst oder abrufst, regelt Anthropics Datenschutz, nicht dieser Text.
@@ -169,6 +188,17 @@ Die App fragt **nicht** nach Kontakten. Sie liest keine Kontakte.
 | Kennung geht an Auftrag abholen und Ergebnis melden, nicht an die Abschrift | `LooseEnds/Claude/ServiceClient.swift` (`X-Device` in `claimOrder`, `putResult`); `LooseEnds/Claude/ClaudeSync.swift` (`pullOrders`); `docs/reference/claude-abschrift-vertrag.md` („`transcript` braucht kein Gerät“) |
 | Dienst vermerkt sie an Auftrag und Ergebnis, ein Gerät zur Zeit | `server/src/orders.ts` (`claimOrder` setzt `claimed_by`, `putResult` nur vom haltenden Gerät), `server/migrations/001_claude_schema.sql` (`orders.claimed_by`, `order_results.reported_by`) |
 | Auftrag, Ergebnis und Kennung werden mit dem Konto gelöscht | `server/src/accounts.ts` (`deleteAccount` löscht `order_results`, `orders`) |
+| App fragt das Gerätetoken nach der Anmeldung und bei jedem Start (angemeldet) an | `LooseEnds/Claude/PushWakeUp.swift` (`observeSignIn`: `registerForRemote` beim Wechsel auf `signedIn`, `requestDeviceToken`) |
+| Meldung nur mit Sitzung; Inhalt: Token, Art des Systems, Kennung dieser Installation | `LooseEnds/Claude/DeviceRegistration.swift` (`register`, `AccountState.withSession`, `PushEnvironment`); `LooseEnds/Claude/ServiceClient.swift` (`putDevice`: Körper `token`, `environment`; Kopf `X-Device`) |
+| Gespeichert je Gerät mit Zeitpunkt, ein Token gehört einem Konto und Gerät | `server/migrations/008_device_tokens.sql` (`device_tokens`, `UNIQUE (token)`, `updated_at`); `server/src/devices.ts` (`putDevice`) |
+| Höchstens zehn Geräte je Konto, ältestes fällt weg; umgezogenes Token verlässt den alten Besitzer | `server/src/devices.ts` (`MAX_DEVICES` = 10, `DELETE … OFFSET`, `DELETE … WHERE token`) |
+| Weckruf nach jedem neu gespeicherten Auftrag | `server/src/mcp.ts` (`storeOrder`: `stored === "stored"` → `wake(owner)`) |
+| Fester Inhalt, nichts Sichtbares, über APNs | `server/src/apns.ts` (`BODY`, `apns-push-type: background`, `apns-priority: 5`) |
+| Höchstens eine Mitteilung je Gerät in 15 Minuten | `server/src/apns.ts` (`MIN_GAP`, `minGapMs`-Fenster, ein späterer Weckruf) |
+| Token fällt bei Apples Ungültig-Meldung weg | `server/src/apns.ts` (`DROP`: 410 `Unregistered`, 400 `BadDeviceToken`, 400 `DeviceTokenNotForTopic`), `server/src/devices.ts` (`dropToken`) |
+| „Konto löschen“ entfernt das Token | `server/migrations/008_device_tokens.sql` (`ON DELETE CASCADE`), `server/src/accounts.ts` (`deleteAccount` löscht das Konto) |
+| „Abmelden“ löscht das Token nicht, Gerät holt danach nichts ab | `server/src/auth.ts` (`POST /auth/logout` ruft nur `endSession`); `LooseEnds/Claude/PushWakeUp.swift` (nichts beim Abmelden); `AccountState.withSession` (ohne Sitzung nichts) |
+| Dienstprotokoll ohne Token und Konto | #960, `server/src/apns.ts` (Logzeilen nur mit Status, Umgebung, Kennungen Apples) |
 | „Abmelden“ beendet nur die Sitzung dieses Geräts | `server/src/auth.ts` (`POST /auth/logout` beendet genau diese Sitzung), `LooseEnds/Views/AccountSection.swift` (Hinweis „Signing out disconnects only this device“) |
 | Sicherungen auf einem weiteren Rechner in Deutschland, verschlüsselt | `henemm-infra` `docs/backup-offsite.md` (restic, verschlüsselt, append-only), Beleg `sicherung.txt` (AC-10); Standort Deutschland: Bestätigung Henning 2026-11-11 (`docs/artifacts/feat-615-s4e-datenschutz/heimserver.txt`) |
 | Apple und Anthropic handeln nach eigenem Datenschutz | kein Code-Beleg möglich; Verweis auf fremde Verantwortung, steht deshalb unter „Offen, nicht belegt“ als bewusst nicht prüfbar |
@@ -204,12 +234,9 @@ Die App fragt **nicht** nach Kontakten. Sie liest keine Kontakte.
 - **Verantwortlicher, Kontaktadresse:** entschieden (oben). Der Löschhinweis zum iCloud-Bereich beschreibt die
   Systemeinstellung. Die Seite ist seit 2026-10-27 veröffentlicht; das Gegenlesen des Hinweises auf einem Gerät ist
   weiter offen und vor dem App Store nötig, nur auf Hennings ausdrückliches Wort (#705).
-- **Die vier Apple-Punkte** stehen jetzt im Text als „Was Apple dabei übernimmt“ (Entscheidung Henning,
-  2026-10-27); sie bleiben hier als Hinweis, dass der Code sie nicht belegen kann.
-- **Weckruf (Push-Token):** Der Dienst kann je Gerät einen Push-Token speichern (`server/migrations/008_device_tokens.sql`,
-  `server/src/devices.ts`); die App hat den Kern dafür (`LooseEnds/Claude/DeviceRegistration.swift`, `DeviceRegistration`),
-  ruft ihn aber noch nicht auf. Im Text ist der Weckruf deshalb nicht beschrieben; der Absatz dazu kommt mit #795 S5c-2
-  und ändert Text und Website-Seite erneut.
+- **Die fünf Apple-Punkte** stehen jetzt im Text als „Was Apple dabei übernimmt“ (Entscheidung Henning,
+  2026-10-27; der Punkt „Push-Mitteilungen“ kam mit #625 Schnitt 4 dazu); sie bleiben hier als Hinweis, dass der Code
+  sie nicht belegen kann.
 - **Anthropic:** Was Claude (Anthropic) mit Inhalten macht, die du dort schreibst oder abrufst, ist Anthropics Sache
   und im Code nicht prüfbar; der Text verweist bewusst nur darauf.
 
@@ -229,8 +256,11 @@ Nachtrag Abschrift und Kennung dieser Installation (in Abschnitt 4 die Absätze 
 2026-11-17 (#625 Schnitt 1, `docs/specs/feat-625-schnitt-1-datenschutztext.md`); veröffentlicht auf
 https://www.henemm.com/legal/loose-ends/privacy-policy-en/ am 2026-11-17 (henemm/henemm-website#80); der Satz zum Zeitpunkt
 der Abschrift am 2026-11-17 (henemm/henemm-website#81).
+Nachtrag Weckruf (in Abschnitt 4 der Absatz „Wake-up.“, der Zusatzsatz unter „Identifier of this installation.“ und der
+Löschsatz, in Abschnitt 6 der Punkt „Push notifications“) wortgetreu aus der Spec übernommen, von Henning freigegeben am
+2026-11-21 (#625 Schnitt 4, `docs/specs/feat-625-schnitt-4-weckruf-datenschutz.md`).
 
-*Last updated: November 17, 2026*
+*Last updated: November 21, 2026*
 
 ### 1. Who is responsible?
 
@@ -298,7 +328,22 @@ until your app takes it over, and then the result. Orders and results stay store
 random identifier of this installation. The app creates it once itself and keeps it in this device's keychain; it is
 not synced through iCloud and is not a feature of the device such as a serial number or an advertising identifier. The
 service notes it on the order this device takes over and on the result, so that an order goes to one device at a time
-and only that device can report the result. It stays stored with the order until you delete your account.
+and only that device can report the result. It stays stored with the order until you delete your account. The app also
+sends the same identifier when it registers for the wake-up; it is then stored together with the device token (see
+"Wake-up.").
+
+**Wake-up.** So that your app collects orders from Claude promptly without you having to open it, the service can wake
+it silently. For this, after sign-in and at every start while you are signed in, the app asks Apple for a device token
+and sends it to the service, together with the kind of system (test or production) and the identifier of this
+installation. The device token is an address that Apple assigns to this app on this device; it contains neither your
+name nor anything from your tasks. The service stores one per device, with the time of the last report, at most ten
+devices per account; when an eleventh is added, the oldest drops out. When Claude places a new order, the service sends
+a silent notification to your devices through Apple's push service (APNs). It has a fixed content, contains nothing from
+your tasks and shows nothing; the app then collects the order. The service sends at most one such notification per
+device in 15 minutes. The device token stays stored until you delete your account, until Apple reports it as invalid,
+until the same token is reported for another account or device, or until it drops out as the oldest of more than ten
+devices. "Sign out" does not delete it: your device can still be woken silently afterwards, but collects nothing as
+long as you are not signed in.
 
 **Where.** The service runs on a server of Hetzner Online GmbH in Germany.
 
@@ -310,8 +355,8 @@ interest). The logs are deleted after 14 days.
 for 30 days at most.
 
 **Deleting.** In Settings under "Claude" you delete your account with "Delete account". This removes your account and
-all data the service has stored for that account, including the transcript of your tasks, orders and results, and
-revokes the sign-in with Apple. Existing backups expire within 30 days. "Sign out" only ends the session on this device.
+all data the service has stored for that account, including the transcript of your tasks, orders and results and the
+device token for the wake-up, and revokes the sign-in with Apple. Existing backups expire within 30 days. "Sign out" only ends the session on this device.
 
 **Apple and Claude.** At sign-in, Apple acts under Apple's privacy rules. What Claude (Anthropic) does with what you
 write or retrieve there is governed by Anthropic's privacy policy, not by this text.
@@ -333,7 +378,7 @@ The app does **not** ask for contacts. It does not read contacts.
 
 ### 6. What Apple takes over
 
-In four places Apple's system acts, not the app. There Apple's privacy rules apply, and we promise no more
+In five places Apple's system acts, not the app. There Apple's privacy rules apply, and we promise no more
 than the app's code proves:
 
 - **Maps:** Place search and the name of your current place go through Apple Maps.
@@ -342,6 +387,8 @@ than the app's code proves:
 - **Siri and Shortcuts:** When capturing through Siri, Apple's behavior applies.
 - **Dictation on the Watch:** The Watch takes in text through watchOS dictation; where Apple sends what is said
   is for Apple to regulate.
+- **Push notifications:** The silent notification for the wake-up is delivered by Apple's push service; there Apple's
+  privacy rules apply.
 
 ### 7. Your rights, deletion and changes
 
