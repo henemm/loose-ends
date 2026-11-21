@@ -1,0 +1,120 @@
+===== Lauf 1 2026-11-21T07:12:32Z =====
+    ✔ testCalendarWaitsForADate (24.266 seconds)
+    ✔ testDueWordFollowsMidnight (0.185 seconds)
+    ✔ testFieldsSettingSwitchesWordAndStartPageGroup (39.905 seconds)
+    ✔ testLineWaitOutlastsOneSlowQuery (6.119 seconds)
+    ✔ testLowAndMediumShowNoSignInTheRowButTheLadderInTheDetail (47.994 seconds)
+    ✔ testNewTaskShowsOnlyTheStandardWordsAndNoEmptySection (32.334 seconds)
+    ✔ testSignsStandInTheRowAndBehindTheValuesInTheDetail (35.789 seconds)
+Executed 7 tests, with 0 failures (0 unexpected) in 186.593 (186.605) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 186.593 (186.610) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 186.593 (186.613) seconds
+EXIT 0
+===== Lauf 2 2026-11-21T07:15:55Z =====
+    ✔ testCalendarWaitsForADate (22.116 seconds)
+    ✔ testDueWordFollowsMidnight (0.090 seconds)
+    ✔ testFieldsSettingSwitchesWordAndStartPageGroup (40.053 seconds)
+    ✔ testLineWaitOutlastsOneSlowQuery (6.127 seconds)
+    ✔ testLowAndMediumShowNoSignInTheRowButTheLadderInTheDetail (47.358 seconds)
+    ✔ testNewTaskShowsOnlyTheStandardWordsAndNoEmptySection (30.268 seconds)
+    ✔ testSignsStandInTheRowAndBehindTheValuesInTheDetail (35.247 seconds)
+Executed 7 tests, with 0 failures (0 unexpected) in 181.259 (181.269) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 181.259 (181.301) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 181.259 (181.323) seconds
+EXIT 0
+===== Lauf 3 2026-11-21T07:19:09Z =====
+    ✔ testCalendarWaitsForADate (21.340 seconds)
+    ✔ testDueWordFollowsMidnight (0.076 seconds)
+    ✔ testFieldsSettingSwitchesWordAndStartPageGroup (38.544 seconds)
+    ✔ testLineWaitOutlastsOneSlowQuery (6.138 seconds)
+    ✔ testLowAndMediumShowNoSignInTheRowButTheLadderInTheDetail (48.524 seconds)
+    ✔ testNewTaskShowsOnlyTheStandardWordsAndNoEmptySection (33.864 seconds)
+    ✔ testSignsStandInTheRowAndBehindTheValuesInTheDetail (34.168 seconds)
+Executed 7 tests, with 0 failures (0 unexpected) in 182.655 (182.665) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 182.655 (182.678) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 182.655 (182.679) seconds
+EXIT 0
+===== Lauf 4 2026-11-21T07:22:25Z =====
+    ✔ testCalendarWaitsForADate (23.215 seconds)
+    ✔ testDueWordFollowsMidnight (0.098 seconds)
+    ✔ testFieldsSettingSwitchesWordAndStartPageGroup (41.846 seconds)
+    ✔ testLineWaitOutlastsOneSlowQuery (6.171 seconds)
+    ✔ testLowAndMediumShowNoSignInTheRowButTheLadderInTheDetail (49.832 seconds)
+    ✔ testNewTaskShowsOnlyTheStandardWordsAndNoEmptySection (30.087 seconds)
+    ✔ testSignsStandInTheRowAndBehindTheValuesInTheDetail (33.952 seconds)
+Executed 7 tests, with 0 failures (0 unexpected) in 185.199 (185.208) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 185.199 (185.213) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 185.199 (185.214) seconds
+EXIT 0
+===== Lauf 5 2026-11-21T07:25:41Z =====
+    ✔ testCalendarWaitsForADate (20.448 seconds)
+    ✔ testDueWordFollowsMidnight (0.144 seconds)
+    ✔ testFieldsSettingSwitchesWordAndStartPageGroup (43.408 seconds)
+    ✔ testLineWaitOutlastsOneSlowQuery (6.181 seconds)
+    ✔ testLowAndMediumShowNoSignInTheRowButTheLadderInTheDetail (47.138 seconds)
+    ✔ testNewTaskShowsOnlyTheStandardWordsAndNoEmptySection (36.169 seconds)
+    ✔ testSignsStandInTheRowAndBehindTheValuesInTheDetail (43.369 seconds)
+Executed 7 tests, with 0 failures (0 unexpected) in 196.858 (196.869) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 196.858 (196.881) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 196.858 (196.884) seconds
+EXIT 0
+===== Lauf 6 2026-11-21T07:29:08Z =====
+    ✔ testCalendarWaitsForADate (21.195 seconds)
+    ✔ testDueWordFollowsMidnight (0.067 seconds)
+    ✔ testFieldsSettingSwitchesWordAndStartPageGroup (38.815 seconds)
+    ✔ testLineWaitOutlastsOneSlowQuery (6.140 seconds)
+    ✔ testLowAndMediumShowNoSignInTheRowButTheLadderInTheDetail (47.424 seconds)
+    ✔ testNewTaskShowsOnlyTheStandardWordsAndNoEmptySection (30.094 seconds)
+    ✔ testSignsStandInTheRowAndBehindTheValuesInTheDetail (35.612 seconds)
+Executed 7 tests, with 0 failures (0 unexpected) in 179.347 (179.356) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 179.347 (179.367) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 179.347 (179.369) seconds
+EXIT 0
+===== Lauf 7 2026-11-21T07:32:20Z =====
+    ✔ testCalendarWaitsForADate (23.133 seconds)
+    ✔ testDueWordFollowsMidnight (0.085 seconds)
+    ✔ testFieldsSettingSwitchesWordAndStartPageGroup (42.539 seconds)
+    ✔ testLineWaitOutlastsOneSlowQuery (6.119 seconds)
+    ✔ testLowAndMediumShowNoSignInTheRowButTheLadderInTheDetail (45.315 seconds)
+    ✔ testNewTaskShowsOnlyTheStandardWordsAndNoEmptySection (37.647 seconds)
+    ✔ testSignsStandInTheRowAndBehindTheValuesInTheDetail (37.629 seconds)
+Executed 7 tests, with 0 failures (0 unexpected) in 192.466 (192.473) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 192.466 (192.481) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 192.466 (192.483) seconds
+EXIT 0
+===== Lauf 8 2026-11-21T07:35:46Z =====
+    ✔ testCalendarWaitsForADate (20.981 seconds)
+    ✔ testDueWordFollowsMidnight (0.117 seconds)
+    ✔ testFieldsSettingSwitchesWordAndStartPageGroup (40.472 seconds)
+    ✔ testLineWaitOutlastsOneSlowQuery (6.195 seconds)
+    ✔ testLowAndMediumShowNoSignInTheRowButTheLadderInTheDetail (47.636 seconds)
+    ✔ testNewTaskShowsOnlyTheStandardWordsAndNoEmptySection (30.495 seconds)
+    ✔ testSignsStandInTheRowAndBehindTheValuesInTheDetail (34.401 seconds)
+Executed 7 tests, with 0 failures (0 unexpected) in 180.299 (180.306) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 180.299 (180.319) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 180.299 (180.320) seconds
+EXIT 0
+===== Lauf 9 2026-11-21T07:38:57Z =====
+    ✔ testCalendarWaitsForADate (20.833 seconds)
+    ✔ testDueWordFollowsMidnight (0.064 seconds)
+    ✔ testFieldsSettingSwitchesWordAndStartPageGroup (38.711 seconds)
+    ✔ testLineWaitOutlastsOneSlowQuery (6.131 seconds)
+    ✔ testLowAndMediumShowNoSignInTheRowButTheLadderInTheDetail (47.529 seconds)
+    ✔ testNewTaskShowsOnlyTheStandardWordsAndNoEmptySection (31.938 seconds)
+    ✔ testSignsStandInTheRowAndBehindTheValuesInTheDetail (34.937 seconds)
+Executed 7 tests, with 0 failures (0 unexpected) in 180.144 (180.153) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 180.144 (180.161) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 180.144 (180.162) seconds
+EXIT 0
+===== Lauf 10 2026-11-21T07:42:09Z =====
+    ✔ testCalendarWaitsForADate (19.963 seconds)
+    ✔ testDueWordFollowsMidnight (0.157 seconds)
+    ✔ testFieldsSettingSwitchesWordAndStartPageGroup (38.057 seconds)
+    ✔ testLineWaitOutlastsOneSlowQuery (6.127 seconds)
+    ✔ testLowAndMediumShowNoSignInTheRowButTheLadderInTheDetail (45.570 seconds)
+    ✔ testNewTaskShowsOnlyTheStandardWordsAndNoEmptySection (30.868 seconds)
+    ✔ testSignsStandInTheRowAndBehindTheValuesInTheDetail (33.633 seconds)
+Executed 7 tests, with 0 failures (0 unexpected) in 174.375 (174.382) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 174.375 (174.395) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 174.375 (174.396) seconds
+EXIT 0

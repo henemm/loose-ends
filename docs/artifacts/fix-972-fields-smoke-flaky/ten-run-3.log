@@ -1,0 +1,55 @@
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/LooseEnds.xcodeproj
+[0;32m[sim][0m Projekt erzeugt.
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test mit Beleg: FieldsSmokeTests → docs/artifacts/fix-972-fields-smoke-flaky/simulator-run.txt
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-21 08:19:21.134.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-21 08:19:21.134.
+Test Suite 'FieldsSmokeTests' started at 2026-11-21 08:19:21.135.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.FieldsSmokeTests testCalendarWaitsForADate] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     9.10s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    10.13s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testCalendarWaitsForADate ([31m21.340[0m seconds)
+    [32m✔[0m testDueWordFollowsMidnight ([33m0.076[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.FieldsSmokeTests testFieldsSettingSwitchesWordAndStartPageGroup] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    27.69s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    28.72s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testFieldsSettingSwitchesWordAndStartPageGroup ([31m38.544[0m seconds)
+    [32m✔[0m testLineWaitOutlastsOneSlowQuery ([31m6.138[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.FieldsSmokeTests testLowAndMediumShowNoSignInTheRowButTheLadderInTheDetail] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     9.09s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    10.11s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testLowAndMediumShowNoSignInTheRowButTheLadderInTheDetail ([31m48.524[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.FieldsSmokeTests testNewTaskShowsOnlyTheStandardWordsAndNoEmptySection] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    11.07s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    12.09s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testNewTaskShowsOnlyTheStandardWordsAndNoEmptySection ([31m33.864[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.FieldsSmokeTests testSignsStandInTheRowAndBehindTheValuesInTheDetail] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =     7.29s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =     8.32s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testSignsStandInTheRowAndBehindTheValuesInTheDetail ([31m34.168[0m seconds)
+Executed 7 tests, with 0 failures (0 unexpected) in 182.655 (182.665) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-11-21 08:22:23.812.
+Executed 7 tests, with 0 failures (0 unexpected) in 182.655 (182.678) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 182.655 (182.679) seconds
+[1mTest session results:[0m /Users/hem/Developer/loose-ends/.claude/worktrees/elegant-growing-ritchie/docs/artifacts/fix-972-fields-smoke-flaky/simulator-run/run.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden, Beleg: docs/artifacts/fix-972-fields-smoke-flaky/simulator-run.txt
