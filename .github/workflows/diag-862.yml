@@ -7,7 +7,7 @@ jobs:
   diag:
     name: Diag 862 (macOS)
     runs-on: xcode-27
-    timeout-minutes: 60
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v7
       - name: Select Xcode 27.0
@@ -20,7 +20,7 @@ jobs:
         run: |
           sudo automationmodetool enable-automationmode-without-authentication
           sudo DevToolsSecurity -enable || true
-      - name: Run diagnosis tests
+      - name: Run the full Mac gallery three times (#862, original surroundings)
         continue-on-error: true
         run: |
           set -o pipefail
@@ -28,10 +28,14 @@ jobs:
             -project LooseEnds.xcodeproj \
             -scheme LooseEnds \
             -destination 'platform=macOS' \
-            -only-testing:LooseEndsUITests/MacGalleryTests/testDiag862LateSelfActivation \
-            -only-testing:LooseEndsUITests/MacGalleryTests/testDiag862LateFinderActivation \
-            -only-testing:LooseEndsUITests/MacGalleryTests/testDiag862LateSelfActivationNoCmdW \
-            -test-iterations 4 \
+            -only-testing:LooseEndsUITests/MacGalleryTests \
+            -skip-testing:LooseEndsUITests/MacGalleryTests/testDiag862OpenAppNoPause \
+            -skip-testing:LooseEndsUITests/MacGalleryTests/testDiag862OpenAppPause \
+            -skip-testing:LooseEndsUITests/MacGalleryTests/testDiag862ReturnNoPause \
+            -skip-testing:LooseEndsUITests/MacGalleryTests/testDiag862LateSelfActivation \
+            -skip-testing:LooseEndsUITests/MacGalleryTests/testDiag862LateFinderActivation \
+            -skip-testing:LooseEndsUITests/MacGalleryTests/testDiag862LateSelfActivationNoCmdW \
+            -test-iterations 3 \
             -parallel-testing-enabled NO \
             -resultBundlePath Diag.xcresult \
             CODE_SIGN_IDENTITY=- \
@@ -42,9 +46,9 @@ jobs:
       - name: Collect logs
         if: always()
         run: |
-          log show --last 60m --style compact \
+          log show --last 160m --style compact \
             --predicate 'subsystem == "com.henning.looseends" AND category == "Mac862"' > diag-app.log || true
-          log show --last 60m --style compact \
+          log show --last 160m --style compact \
             --predicate 'process == "LooseEnds" AND (subsystem BEGINSWITH "com.apple.AppKit" OR subsystem == "com.apple.SwiftUI")' \
             | tail -3000 > diag-appkit.log || true
           xcrun xcresulttool export attachments --path Diag.xcresult --output-path diag-attachments || true
