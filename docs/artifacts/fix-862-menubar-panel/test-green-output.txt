@@ -1,0 +1,32 @@
+# fix-862-menubar-panel GREEN (lokal, 2026-11-20)
+# Hinweis: Die massgeblichen Mac-UI-Tests (testMenuBarReopensAfterReturnWithOneClick, testMenuBarReopensAfterOpenAppWithOneClick in MacGalleryTests) laufen nur im CI-Job "Mac Gallery (macOS)" und werden dort nachgereicht.
+# Lokal: sim.sh generate OK, sim.sh build (iOS) Build Succeeded, sim.sh mac-build Build Succeeded, sim.sh unit (Auszug unten)
+
+[sim] Unit-Tests im Simulator (Mac als Host nur mit LOOSEENDS_MAC_HOST=1).
+[sim] Simulator bereit (iPhone 17).
+[sim] Unit-Tests (iOS-Simulator): LooseEndsTests
+Executed 2 tests, with 0 failures (0 unexpected) in 0.034 (0.041) seconds
+Executed 17 tests, with 0 failures (0 unexpected) in 16.221 (16.229) seconds
+Executed 6 tests, with 0 failures (0 unexpected) in 0.794 (0.797) seconds
+Executed 10 tests, with 0 failures (0 unexpected) in 0.027 (0.031) seconds
+Executed 10 tests, with 0 failures (0 unexpected) in 0.432 (0.436) seconds
+Executed 2 tests, with 0 failures (0 unexpected) in 0.225 (0.255) seconds
+Executed 8 tests, with 0 failures (0 unexpected) in 0.714 (0.717) seconds
+Executed 9 tests, with 0 failures (0 unexpected) in 0.278 (0.281) seconds
+Executed 13 tests, with 0 failures (0 unexpected) in 0.374 (0.377) seconds
+Executed 9 tests, with 0 failures (0 unexpected) in 0.100 (0.103) seconds
+Executed 8 tests, with 0 failures (0 unexpected) in 0.843 (0.845) seconds
+Executed 6 tests, with 0 failures (0 unexpected) in 0.072 (0.074) seconds
+Executed 100 tests, with 0 failures (0 unexpected) in 20.113 (20.251) seconds
+Executed 100 tests, with 0 failures (0 unexpected) in 20.113 (20.253) seconds
+Test Succeeded
+[sim] Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: Sprache de_DE wird hier nicht unterstützt (isAvailable false, supportedLocales.count 0, installedLocales.count 0)
+[sim]   The final text keeps the key words – NICHT gemessen: Sprache de_DE wird hier nicht unterstützt (isAvailable false, supportedLocales.count 0, installedLocales.count 0)
+
+Swift Testing: 1215 Tests bestanden, 0 fehlgeschlagen
