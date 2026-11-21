@@ -128,6 +128,14 @@ enum Diag862 {
                 let key = window?.isKeyWindow ?? false
                 MainActor.assumeIsolated {
                     log.notice("#862 \(label, privacy: .public) class=\(kind, privacy: .public) id=\(id, privacy: .public) visible=\(visible, privacy: .public) key=\(key, privacy: .public) active=\(NSApp.isActive, privacy: .public) policy=\(NSApp.activationPolicy().rawValue, privacy: .public)")
+                    // Who closes the panel: the call stack of every close or loss of key outside the main window.
+                    if (label == "willClose" || label == "didResignKey"), !id.hasPrefix("main") {
+                        for (index, frame) in Thread.callStackSymbols.prefix(40).enumerated() {
+                            log.notice("#862 stack \(label, privacy: .public) \(index, privacy: .public) \(frame, privacy: .public)")
+                        }
+                        let event = NSApp.currentEvent.map { "\($0.type.rawValue) window=\($0.windowNumber)" } ?? "nil"
+                        log.notice("#862 currentEvent \(label, privacy: .public) \(event, privacy: .public)")
+                    }
                 }
             })
         }
