@@ -30,7 +30,9 @@ struct MenuBarCaptureView: View {
                 .accessibilityHidden(true)
             HStack {
                 Button("Open Loose Ends") {
+                    Diag862.log.notice("#862 openAppTap before dismiss active=\(NSApp.isActive, privacy: .public)")
                     dismiss()
+                    Diag862.log.notice("#862 openAppTap after dismiss active=\(NSApp.isActive, privacy: .public)")
                     MacWindows.showMain { openWindow(id: MacWindows.mainWindowID) }
                 }
                 .accessibilityIdentifier("menuBarOpenApp")
@@ -85,11 +87,14 @@ enum MacWindows {
     /// Dock icon and app switcher follow the open windows.
     static func applyDockPolicy() {
         let policy: NSApplication.ActivationPolicy = DockPolicy.showsDockIcon(openMainWindows: mainWindows.count) ? .regular : .accessory
+        let old = NSApp.activationPolicy()
+        Diag862.log.notice("#862 applyDockPolicy old=\(old.rawValue, privacy: .public) new=\(policy.rawValue, privacy: .public) mainWindows=\(mainWindows.count, privacy: .public) switch=\(old != policy, privacy: .public) active=\(NSApp.isActive, privacy: .public)")
         if NSApp.activationPolicy() != policy { NSApp.setActivationPolicy(policy) }
     }
 
     /// Brings the list to the front, opening a window only when none is there.
     static func showMain(open: () -> Void) {
+        Diag862.log.notice("#862 showMain enter mainWindows=\(mainWindows.count, privacy: .public) policy=\(NSApp.activationPolicy().rawValue, privacy: .public) active=\(NSApp.isActive, privacy: .public)")
         NSApp.setActivationPolicy(.regular)
         if let window = mainWindows.first {
             window.makeKeyAndOrderFront(nil)
@@ -97,6 +102,53 @@ enum MacWindows {
             open()
         }
         NSApp.activate()
+    }
+}
+
+/// Diagnosis only (#862, throw-away branch): logs window, app and activation events with timestamps.
+@MainActor
+enum Diag862 {
+    nonisolated static let log = Logger(subsystem: "com.henning.looseends", category: "Mac862")
+
+    static func observe(into observers: inout [NSObjectProtocol]) {
+        let center = NotificationCenter.default
+        let windowEvents: [(NSNotification.Name, String)] = [
+            (NSWindow.didBecomeKeyNotification, "didBecomeKey"),
+            (NSWindow.didResignKeyNotification, "didResignKey"),
+            (NSWindow.willCloseNotification, "willClose"),
+            (NSWindow.didChangeOcclusionStateNotification, "didChangeOcclusionState"),
+            (NSWindow.didBecomeMainNotification, "didBecomeMain"),
+        ]
+        for (name, label) in windowEvents {
+            observers.append(center.addObserver(forName: name, object: nil, queue: .main) { note in
+                let window = note.object as? NSWindow
+                let kind = window.map { String(describing: type(of: $0)) } ?? "nil"
+                let id = window?.identifier?.rawValue ?? "nil"
+                let visible = window?.isVisible ?? false
+                let key = window?.isKeyWindow ?? false
+                MainActor.assumeIsolated {
+                    log.notice("#862 \(label, privacy: .public) class=\(kind, privacy: .public) id=\(id, privacy: .public) visible=\(visible, privacy: .public) key=\(key, privacy: .public) active=\(NSApp.isActive, privacy: .public) policy=\(NSApp.activationPolicy().rawValue, privacy: .public)")
+                }
+            })
+        }
+        let appEvents: [(NSNotification.Name, String)] = [
+            (NSApplication.didBecomeActiveNotification, "didBecomeActive"),
+            (NSApplication.didResignActiveNotification, "didResignActive"),
+        ]
+        for (name, label) in appEvents {
+            observers.append(center.addObserver(forName: name, object: nil, queue: .main) { _ in
+                MainActor.assumeIsolated {
+                    log.notice("#862 \(label, privacy: .public) policy=\(NSApp.activationPolicy().rawValue, privacy: .public) mainWindows=\(MacWindows.mainWindows.count, privacy: .public)")
+                }
+            })
+        }
+        observers.append(NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main
+        ) { note in
+            let app = note.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication
+            let bundle = app?.bundleIdentifier ?? "nil"
+            log.notice("#862 workspaceDidActivateApplication bundle=\(bundle, privacy: .public)")
+        })
     }
 }
 
@@ -159,6 +211,7 @@ final class MacAppDelegate: NSObject, NSApplicationDelegate {
                 DispatchQueue.main.async { MainActor.assumeIsolated { MacWindows.applyDockPolicy() } }
             })
         }
+        Diag862.observe(into: &observers)
         MacWindows.applyDockPolicy()
     }
 

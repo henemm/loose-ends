@@ -1,0 +1,62 @@
+# Throw-away diagnosis for #862 (never merged): the menu bar panel closes again after one click.
+name: Diag 862
+
+on: pull_request
+
+jobs:
+  diag:
+    name: Diag 862 (macOS)
+    runs-on: xcode-27
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - name: Select Xcode 27.0
+        uses: ./.github/actions/select-xcode-27
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: Enable UI automation (#511)
+        run: |
+          sudo automationmodetool enable-automationmode-without-authentication
+          sudo DevToolsSecurity -enable || true
+      - name: Run diagnosis tests
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project LooseEnds.xcodeproj \
+            -scheme LooseEnds \
+            -destination 'platform=macOS' \
+            -only-testing:LooseEndsUITests/MacGalleryTests/testDiag862OpenAppNoPause \
+            -only-testing:LooseEndsUITests/MacGalleryTests/testDiag862OpenAppPause \
+            -only-testing:LooseEndsUITests/MacGalleryTests/testDiag862ReturnNoPause \
+            -test-iterations 8 \
+            -retry-tests-on-failure NO \
+            -parallel-testing-enabled NO \
+            -resultBundlePath Diag.xcresult \
+            CODE_SIGN_IDENTITY=- \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM= \
+            CODE_SIGN_ENTITLEMENTS= \
+            2>&1 | tee xcodebuild.log | xcbeautify
+      - name: Collect logs
+        if: always()
+        run: |
+          log show --last 60m --style compact \
+            --predicate 'subsystem == "com.henning.looseends" AND category == "Mac862"' > diag-app.log || true
+          log show --last 60m --style compact \
+            --predicate 'process == "LooseEnds" AND (subsystem BEGINSWITH "com.apple.AppKit" OR subsystem == "com.apple.SwiftUI")' \
+            | tail -3000 > diag-appkit.log || true
+          xcrun xcresulttool export attachments --path Diag.xcresult --output-path diag-attachments || true
+      - name: Upload diagnosis
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: Diag862
+          path: |
+            Diag.xcresult
+            diag-app.log
+            diag-appkit.log
+            diag-attachments
+            xcodebuild.log
