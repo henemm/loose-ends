@@ -1,0 +1,62 @@
+1795244190.26 Start Test at 2026-11-21 06:56:30.255
+1795244190.31 Set Up
+1795244190.32 Open com.henning.looseends
+  1795244190.32 Launch com.henning.looseends
+1795244191.00 Open com.henning.looseends
+  1795244191.01 Activate com.henning.looseends
+1795244191.02 Waiting 20.0s for StatusItem (First Match) to exist
+  1795244192.04 Checking `Expect predicate `existsNoRetry == 1` for object StatusItem (First Match)`
+1795244192.07 Click StatusItem (First Match)
+  1795244192.07 Wait for com.henning.looseends to idle
+  1795244192.07 Find the StatusItem (First Match)
+  1795244192.09 Check for interrupting elements affecting "Loose Ends" StatusItem
+  1795244192.09 Synthesize event
+  1795244197.53 Wait for com.henning.looseends to idle
+1795244197.54 Waiting 10.0s for "menuBarOpenApp" Button to exist
+  1795244198.58 Checking `Expect predicate `existsNoRetry == 1` for object "menuBarOpenApp" Button`
+1795244198.67 Requesting snapshot of accessibility hierarchy for app with pid 44979
+1795244198.70 Requesting snapshot of accessibility hierarchy for app with pid 44979
+1795244198.74 Added attachment named 'mac-gallery-panel-reopen-return-hierarchy'
+  1795244198.74 mac-gallery-panel-reopen-return-hierarchy
+1795244198.74 Checking existence of `Window (First Match)`
+1795244198.76 Checking existence of `Popover (First Match)`
+1795244198.78 Checking existence of `Group (First Match)`
+1795244198.79 Waiting 5.0s for "captureTextField" Any to exist
+  1795244199.82 Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`
+1795244199.85 Click "captureTextField" Any
+  1795244199.85 Wait for com.henning.looseends to idle
+  1795244199.85 Find the "captureTextField" Any
+  1795244199.86 Check for interrupting elements affecting "captureTextField" TextField
+  1795244199.87 Open com.henning.looseends
+  1795244199.88 Synthesize event
+  1795244200.33 Wait for com.henning.looseends to idle
+1795244200.34 Type 'Blumen gießen' into "captureTextField" TextField
+  1795244200.34 Wait for com.henning.looseends to idle
+  1795244200.34 Find the "captureTextField" TextField
+  1795244200.35 Check for interrupting elements affecting "captureTextField" TextField
+  1795244200.36 Synthesize event
+  1795244200.86 Wait for com.henning.looseends to idle
+1795244200.86 Type '\n' into "captureTextField" TextField
+  1795244200.86 Wait for com.henning.looseends to idle
+  1795244200.86 Find the "captureTextField" TextField
+  1795244200.87 Check for interrupting elements affecting "captureTextField" TextField
+  1795244200.88 Synthesize event
+  1795244201.01 Wait for com.henning.looseends to idle
+1795244202.05 Checking `Expect predicate `exists == 0` for object "menuBarOpenApp" Button`
+  1795244202.05 Checking existence of `"menuBarOpenApp" Button`
+1795244202.10 Waiting 10.0s for StatusItem (First Match) to exist
+  1795244203.12 Checking `Expect predicate `existsNoRetry == 1` for object StatusItem (First Match)`
+1795244203.13 Click StatusItem (First Match)
+  1795244203.13 Wait for com.henning.looseends to idle
+  1795244203.14 Find the StatusItem (First Match)
+  1795244203.15 Check for interrupting elements affecting "Loose Ends" StatusItem
+  1795244203.15 Synthesize event
+  1795244208.68 Wait for com.henning.looseends to idle
+1795244208.68 Waiting 10.0s for "menuBarOpenApp" Button to exist
+  1795244209.72 Checking `Expect predicate `existsNoRetry == 1` for object "menuBarOpenApp" Button`
+1795244209.78 Requesting snapshot of accessibility hierarchy for app with pid 44979
+1795244209.82 Requesting snapshot of accessibility hierarchy for app with pid 44979
+1795244209.85 Added attachment named 'mac-gallery-reopen-return-click'
+  1795244209.85 mac-gallery-reopen-return-click
+1795244209.86 Terminate com.henning.looseends:44979
+1795244210.89 Tear Down

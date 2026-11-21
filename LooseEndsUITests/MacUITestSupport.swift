@@ -46,13 +46,8 @@ extension XCTestCase {
             return false
         }
         let openApp = app.buttons["menuBarOpenApp"]
-        // A panel that is still closing (Return in the German gallery test, #596) swallows the first
-        // click: wait until it is gone, then click, and once more if nothing opened within 10 s.
-        _ = macWait(timeout: 5) { !openApp.exists }
+        // One click opens the panel since #862.
         statusItem.click()
-        if !openApp.waitForExistence(timeout: 10) {
-            statusItem.click()
-        }
         guard openApp.waitForExistence(timeout: 10) else {
             XCTFail("Menu bar panel shows no Open Loose Ends")
             return false

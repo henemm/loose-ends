@@ -413,7 +413,7 @@ final class MacGalleryTests: XCTestCase {
 
         // The panel's field is vertical: Return arrives as a newline, which `submitOnReturn` saves.
         field.typeText("\n")
-        // `closeMenuBarPanel` closes the panel's window, so its elements leave the tree.
+        // Closing the panel takes its window away, so its elements leave the tree.
         let closed = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: app.buttons["menuBarOpenApp"])
         XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 10), .completed, "Return did not close the panel")
         _ = macOpenMainWindowIfNeeded(app)
@@ -435,6 +435,63 @@ final class MacGalleryTests: XCTestCase {
         XCTAssertTrue(saved.waitForExistence(timeout: 10), "New shows no \"Müll rausbringen\" after Return")
         macShot(window, "mac-gallery-panel-de-saved-in-new")
         app.terminate()
+    }
+
+    // MARK: - #862: the symbol opens the panel with one click after it closed
+
+    /// #862 AC-1: Return saves and closes the panel; the next single click on the symbol opens it again.
+    /// Before the fix the panel closed its window only, and the first click after that showed nothing.
+    @MainActor
+    func testMenuBarReopensAfterReturnWithOneClick() throws {
+        let app = macLaunch(dark: false)
+        guard let panel = openPanel(in: app, label: "reopen-return") else { return }
+        let field = macElement("captureTextField", in: panel)
+        XCTAssertTrue(field.waitForExistence(timeout: 5), "Panel shows no field")
+        field.click()
+        field.typeText("Blumen gießen")
+        field.typeText("\n")
+        let closed = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: app.buttons["menuBarOpenApp"])
+        XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 10), .completed, "Return did not close the panel")
+        assertSymbolOpensPanelWithOneClick(app, label: "reopen-return")
+        app.terminate()
+    }
+
+    /// #862 AC-2: "Open Loose Ends" closes the panel and opens the main window; once that window is closed
+    /// with ⌘W, a single click on the symbol opens the panel again.
+    /// Skipped until #978 (PO 2026-11-21): the panel closes again in 2 of 15 runs, cause open.
+    @MainActor
+    func testMenuBarReopensAfterOpenAppWithOneClick() throws {
+        throw XCTSkip("#978: panel closes again now and then after Open Loose Ends + ⌘W; cause open")
+        let app = macLaunch(dark: false)
+        guard openPanel(in: app, label: "reopen-open-app") != nil else { return }
+        app.buttons["menuBarOpenApp"].click()
+        let window = macMainWindow(of: app)
+        app.activate()
+        app.typeKey("w", modifierFlags: .command)
+        let closed = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: window)
+        XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 10), .completed, "⌘W did not close the main window")
+        assertSymbolOpensPanelWithOneClick(app, label: "reopen-open-app")
+        app.terminate()
+    }
+
+    /// Clicks the symbol exactly once and expects the panel within 10 s. The time of the click and of the
+    /// answer and the hierarchy go along as attachments, so a red run in CI can be read.
+    @MainActor
+    private func assertSymbolOpensPanelWithOneClick(_ app: XCUIApplication, label: String) {
+        let statusItem = app.statusItems.firstMatch
+        XCTAssertTrue(statusItem.waitForExistence(timeout: 10), "No menu bar symbol")
+        let clickedAt = Date()
+        statusItem.click()
+        let opened = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)
+        let note = XCTAttachment(string: """
+            click: \(String(format: "%.3f", clickedAt.timeIntervalSince1970)) (seconds since 1970)
+            after: \(String(format: "%.2f", Date().timeIntervalSince(clickedAt))) s, panel \(opened ? "open" : "not open")
+            \(app.debugDescription)
+            """)
+        note.name = "mac-gallery-\(label)-click"
+        note.lifetime = .keepAlways
+        add(note)
+        XCTAssertTrue(opened, "One click on the symbol opened no panel (\(label))")
     }
 }
 #endif

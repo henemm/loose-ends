@@ -1,0 +1,64 @@
+# #862 RED: CI-Lauf 44806231140, Job Mac Gallery (macOS) 136530846453, Commit e40f0ac (heutiger App-Code, nur neue Tests)
+
+✔︎ Bottle Manifest xcodegen (2.46.0)
+✔︎ Bottle xcodegen (2.46.0)
+    ✔ testCalendarAskDark (51.068 seconds)
+    ✔ testCalendarAskLight (27.269 seconds)
+    ✔ testGalleryDark (46.029 seconds)
+    ✔ testGalleryLight (44.733 seconds)
+    ✔ testLooseEndsTopDark (123.668 seconds)
+    ✔ testLooseEndsTopLight (129.018 seconds)
+##[error]    testMenuBarReopensAfterOpenAppWithOneClick, XCTAssertTrue failed - One click on the symbol opened no panel (reopen-open-app)
+##[error]    testMenuBarReopensAfterReturnWithOneClick, XCTAssertTrue failed - One click on the symbol opened no panel (reopen-return)
+    ✔ testPanelDark (19.971 seconds)
+    ✔ testPanelDiagnosis (11.612 seconds)
+    ✔ testPanelLight (19.294 seconds)
+    ✔ testPanelListening (12.409 seconds)
+    ✔ testPanelTypedGerman (58.236 seconds)
+    ✔ testSettingsDark (35.618 seconds)
+    ✔ testSettingsLight (35.624 seconds)
+    ✔ testStartNumberDark (30.387 seconds)
+    ✔ testStartNumberLight (29.773 seconds)
+    ✔ testWindowFromMenuBarFitsScreen (67.895 seconds)
+Executed 18 tests, with 2 failures (0 unexpected) in 810.427 (810.443) seconds
+Test Suite 'LooseEndsUITests.xctest' failed at 2026-11-20 20:11:10.470.
+Executed 18 tests, with 2 failures (0 unexpected) in 810.427 (810.445) seconds
+Executed 18 tests, with 2 failures (0 unexpected) in 810.427 (810.447) seconds
+##[error]Process completed with exit code 65.
+    ✔ testCompleteWithAnOpenSubtaskAsks (52.258 seconds)
+    ✔ testFieldsOpensFromTheMiddleOfItsRow (17.854 seconds)
+    ✔ testFileOpensTheOpenPanel (32.480 seconds)
+    ✔ testFileOpensTheOpenPanelFromTheStartPage (28.723 seconds)
+    ✔ testNoteTakesAClickAndIsSaved (29.008 seconds)
+    ✔ testPhotoOpensThePhotoPicker (26.365 seconds)
+##[error]    testSubtaskIsAddedByClickAndCheckedByClick, XCTAssertEqual failed: ("XCTWaiterResult(rawValue: 2)") is not equal to ("XCTWaiterResult(rawValue: 1)") - Field kept Einkaufen
+    ✔ testSubtaskOpensItsOwnDetailAndLeadsBack (36.228 seconds)
+    ✔ testTaskFromTheStartPageLeadsBack (20.075 seconds)
+    ✔ testTitleTakesAClickAndKeepsTheNewWords (24.991 seconds)
+    ✔ testWritingLineOpensTheDrawerAndEscapeFoldsIt (17.606 seconds)
+Executed 11 tests, with 1 failure (0 unexpected) in 299.575 (299.586) seconds
+Test Suite 'LooseEndsUITests.xctest' failed at 2026-11-20 20:20:30.502.
+Executed 11 tests, with 1 failure (0 unexpected) in 299.575 (299.587) seconds
+Executed 11 tests, with 1 failure (0 unexpected) in 299.575 (299.590) seconds
+##[error]Process completed with exit code 65.
+    ✔ testArrowsSelectAndSpaceCompletes (31.525 seconds)
+    ✔ testClickOpensAndMarks (36.504 seconds)
+    ✔ testDeleteAsksFirst (34.866 seconds)
+    ✔ testSelectionPhotoDark (28.764 seconds)
+    ✔ testSelectionPhotoLight (28.583 seconds)
+    ✔ testShortcutsAndContextMenu (34.059 seconds)
+    ✔ testStartArrowsSelectAndSpaceCompletes (44.687 seconds)
+    ✔ testStartDeleteAsksFirst (38.735 seconds)
+    ✔ testStartHasNoListFocusOnAppear (38.044 seconds)
+    ✔ testStartMoreExtendsRows (55.580 seconds)
+    ✔ testStartNewTaskShortcutFocusesWritingLine (32.551 seconds)
+    ✔ testStartSelectionClearsWhenRowGoes (39.025 seconds)
+    ✔ testStartSelectionPhotoDark (34.241 seconds)
+    ✔ testStartSelectionPhotoLight (33.895 seconds)
+    ✔ testStartSelectionSurvivesDetail (35.848 seconds)
+    ✔ testStartWritingLineKeepsKeys (32.518 seconds)
+    ✔ testTextFocusKeepsKeys (28.995 seconds)
+    ✔ testWindowMinimumSize (24.237 seconds)
+Executed 18 tests, with 0 failures (0 unexpected) in 632.658 (632.690) seconds
+Executed 18 tests, with 0 failures (0 unexpected) in 632.658 (632.692) seconds
+Executed 18 tests, with 0 failures (0 unexpected) in 632.658 (632.694) seconds

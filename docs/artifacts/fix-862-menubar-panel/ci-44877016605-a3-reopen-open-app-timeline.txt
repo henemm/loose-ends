@@ -1,0 +1,124 @@
+1795254355.08 Start Test at 2026-11-21 09:45:55.082
+1795254355.19   kXCTAttachmentScreenRecording
+1795254355.20 Set Up
+1795254355.21 Open com.henning.looseends
+1795254355.21   Launch com.henning.looseends
+1795254355.92     Wait for accessibility to load
+1795254357.02     Setting up automation session
+1795254357.05     Wait for com.henning.looseends to idle
+1795254357.07 Open com.henning.looseends
+1795254357.07   Activate com.henning.looseends
+1795254357.10     Wait for com.henning.looseends to idle
+1795254357.10 Waiting 20.0s for StatusItem (First Match) to exist
+1795254358.15   Checking `Expect predicate `existsNoRetry == 1` for object StatusItem (First Match)`
+1795254358.15     Checking existence of `StatusItem (First Match)`
+1795254358.19 Click StatusItem (First Match)
+1795254358.19   Wait for com.henning.looseends to idle
+1795254358.20   Find the StatusItem (First Match)
+1795254358.22   Check for interrupting elements affecting "Loose Ends" StatusItem
+1795254358.22   Synthesize event
+1795254363.72     kXCTAttachmentLegacySynthesizedEvent
+1795254363.73   Wait for com.henning.looseends to idle
+1795254363.73 Waiting 10.0s for "menuBarOpenApp" Button to exist
+1795254364.76   Checking `Expect predicate `existsNoRetry == 1` for object "menuBarOpenApp" Button`
+1795254364.76     Checking existence of `"menuBarOpenApp" Button`
+1795254365.15 Requesting snapshot of accessibility hierarchy for app with pid 32641
+1795254365.37 Requesting snapshot of accessibility hierarchy for app with pid 32641
+1795254365.49 Added attachment named 'mac-gallery-panel-reopen-open-app-hierarchy'
+1795254365.49   mac-gallery-panel-reopen-open-app-hierarchy
+1795254365.49 Checking existence of `Window (First Match)`
+1795254365.61 Checking existence of `Popover (First Match)`
+1795254365.69 Checking existence of `Group (First Match)`
+1795254365.73 Click "menuBarOpenApp" Button
+1795254365.73   Wait for com.henning.looseends to idle
+1795254365.73   Find the "menuBarOpenApp" Button
+1795254365.85   Check for interrupting elements affecting "menuBarOpenApp" Button
+1795254365.87   Synthesize event
+1795254365.87     kXCTAttachmentLegacySnapshot
+1795254366.48     kXCTAttachmentLegacySynthesizedEvent
+1795254366.48   Wait for com.henning.looseends to idle
+1795254366.52 Waiting 10.0s for Window (First Match) to exist
+1795254367.55   Checking `Expect predicate `existsNoRetry == 1` for object Window (First Match)`
+1795254367.55     Checking existence of `Window (First Match)`
+1795254367.60 Find the Window (First Match)
+1795254367.64 Open com.henning.looseends
+1795254367.64   Activate com.henning.looseends
+1795254367.64     Wait for com.henning.looseends to idle
+1795254367.64 Type 'w' key with modifiers '⌘' (0x10)
+1795254367.64   Wait for com.henning.looseends to idle
+1795254367.65   Find the Target Application 'com.henning.looseends'
+1795254367.75   Check for interrupting elements affecting "Loose Ends" Application
+1795254367.75   Synthesize event
+1795254367.76     kXCTAttachmentLegacySnapshot
+1795254373.21     kXCTAttachmentLegacySynthesizedEvent
+1795254373.22   Wait for com.henning.looseends to idle
+1795254374.27 Checking `Expect predicate `exists == 0` for object "main-AppWindow-1" Window`
+1795254374.28   Checking existence of `"main-AppWindow-1" Window`
+1795254374.34 Waiting 10.0s for StatusItem (First Match) to exist
+1795254375.39   Checking `Expect predicate `existsNoRetry == 1` for object StatusItem (First Match)`
+1795254375.39     Checking existence of `StatusItem (First Match)`
+1795254375.40 Click StatusItem (First Match)
+1795254375.40   Wait for com.henning.looseends to idle
+1795254375.41   Find the StatusItem (First Match)
+1795254375.43   Check for interrupting elements affecting "Loose Ends" StatusItem
+1795254375.43   Open com.henning.looseends
+1795254375.43     Activate com.henning.looseends
+1795254375.45       Wait for com.henning.looseends to idle
+1795254375.45   Synthesize event
+1795254375.45     kXCTAttachmentLegacySnapshot
+1795254380.95     kXCTAttachmentLegacySynthesizedEvent
+1795254380.95   Wait for com.henning.looseends to idle
+1795254380.95 Waiting 10.0s for "menuBarOpenApp" Button to exist
+1795254381.97   Checking `Expect predicate `existsNoRetry == 1` for object "menuBarOpenApp" Button`
+1795254381.97     Checking existence of `"menuBarOpenApp" Button`
+1795254382.04     Capturing element debug description
+1795254382.04     Debug description for `"menuBarOpenApp" Button`
+1795254382.99   Checking `Expect predicate `existsNoRetry == 1` for object "menuBarOpenApp" Button`
+1795254382.99     Checking existence of `"menuBarOpenApp" Button`
+1795254383.04     Capturing element debug description
+1795254383.04     Debug description for `"menuBarOpenApp" Button`
+1795254384.00   Checking `Expect predicate `existsNoRetry == 1` for object "menuBarOpenApp" Button`
+1795254384.00     Checking existence of `"menuBarOpenApp" Button`
+1795254384.05     Capturing element debug description
+1795254384.06     Debug description for `"menuBarOpenApp" Button`
+1795254384.97   Checking `Expect predicate `existsNoRetry == 1` for object "menuBarOpenApp" Button`
+1795254384.97     Checking existence of `"menuBarOpenApp" Button`
+1795254385.01     Capturing element debug description
+1795254385.01     Debug description for `"menuBarOpenApp" Button`
+1795254385.99   Checking `Expect predicate `existsNoRetry == 1` for object "menuBarOpenApp" Button`
+1795254385.99     Checking existence of `"menuBarOpenApp" Button`
+1795254386.05     Debug description for `"menuBarOpenApp" Button`
+1795254386.05     Capturing element debug description
+1795254386.97   Checking `Expect predicate `existsNoRetry == 1` for object "menuBarOpenApp" Button`
+1795254386.97     Checking existence of `"menuBarOpenApp" Button`
+1795254387.02     Capturing element debug description
+1795254387.02     Debug description for `"menuBarOpenApp" Button`
+1795254387.97   Checking `Expect predicate `existsNoRetry == 1` for object "menuBarOpenApp" Button`
+1795254387.97     Checking existence of `"menuBarOpenApp" Button`
+1795254388.01     Capturing element debug description
+1795254388.02     Debug description for `"menuBarOpenApp" Button`
+1795254388.98   Checking `Expect predicate `existsNoRetry == 1` for object "menuBarOpenApp" Button`
+1795254388.98     Checking existence of `"menuBarOpenApp" Button`
+1795254389.05     Capturing element debug description
+1795254389.05     Debug description for `"menuBarOpenApp" Button`
+1795254390.01   Checking `Expect predicate `existsNoRetry == 1` for object "menuBarOpenApp" Button`
+1795254390.01     Checking existence of `"menuBarOpenApp" Button`
+1795254390.07     Capturing element debug description
+1795254390.07     Debug description for `"menuBarOpenApp" Button`
+1795254390.96   Checking `Expect predicate `existsNoRetry == 1` for object "menuBarOpenApp" Button`
+1795254390.96     Checking existence of `"menuBarOpenApp" Button`
+1795254391.00     Debug description for `"menuBarOpenApp" Button`
+1795254391.00     Capturing element debug description
+1795254391.00   Checking existence of `"menuBarOpenApp" Button`
+1795254391.03 Collecting debug information to assist test failure triage
+1795254391.03   Requesting snapshot of accessibility hierarchy for app with pid 32641
+1795254391.08   App UI hierarchy for com.henning.looseends
+1795254391.08   kXCTAttachmentLegacySnapshot
+1795254391.09 Requesting snapshot of accessibility hierarchy for app with pid 32641
+1795254391.09   Using snapshot previously cached by application
+1795254391.09 Requesting snapshot of accessibility hierarchy for app with pid 32641
+1795254391.12 Added attachment named 'mac-gallery-reopen-open-app-click'
+1795254391.12   mac-gallery-reopen-open-app-click
+1795254391.13 XCTAssertTrue failed - One click on the symbol opened no panel (reopen-open-app)
+0.00   
+1795254391.64 Tear Down
