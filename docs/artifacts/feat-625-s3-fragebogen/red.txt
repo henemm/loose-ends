@@ -1,0 +1,200 @@
+test_header_changed (test_app_store_datenschutzangaben.BrokenTemplateTests.test_header_changed) ... ERROR
+test_missing_section (test_app_store_datenschutzangaben.BrokenTemplateTests.test_missing_section) ... ERROR
+test_missing_table (test_app_store_datenschutzangaben.BrokenTemplateTests.test_missing_table) ... ERROR
+test_value_not_yes_no (test_app_store_datenschutzangaben.BrokenTemplateTests.test_value_not_yes_no) ... ERROR
+test_doubled_row (test_app_store_datenschutzangaben.MutatedTemplateTests.test_doubled_row) ... ERROR
+test_extra_row (test_app_store_datenschutzangaben.MutatedTemplateTests.test_extra_row) ... ERROR
+test_linked_changed (test_app_store_datenschutzangaben.MutatedTemplateTests.test_linked_changed) ... ERROR
+test_missing_row (test_app_store_datenschutzangaben.MutatedTemplateTests.test_missing_row) ... ERROR
+test_purpose_changed (test_app_store_datenschutzangaben.MutatedTemplateTests.test_purpose_changed) ... ERROR
+test_tracking_changed (test_app_store_datenschutzangaben.MutatedTemplateTests.test_tracking_changed) ... ERROR
+test_ip_point_quotes_apple_and_names_retention (test_app_store_datenschutzangaben.TemplateFollowsManifestTests.test_ip_point_quotes_apple_and_names_retention) ... ERROR
+test_sections_in_order (test_app_store_datenschutzangaben.TemplateFollowsManifestTests.test_sections_in_order) ... ERROR
+test_sources_name_apple_page (test_app_store_datenschutzangaben.TemplateFollowsManifestTests.test_sources_name_apple_page) ... ERROR
+test_table_equals_account_types (test_app_store_datenschutzangaben.TemplateFollowsManifestTests.test_table_equals_account_types) ... ERROR
+test_today_names_data_not_collected (test_app_store_datenschutzangaben.TemplateFollowsManifestTests.test_today_names_data_not_collected) ... ERROR
+
+======================================================================
+ERROR: test_header_changed (test_app_store_datenschutzangaben.BrokenTemplateTests.test_header_changed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 210, in setUp
+    self.text = read_template()
+                ~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 125, in read_template
+    with open(TEMPLATE, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/docs/reference/app-store-datenschutzangaben.md'
+
+======================================================================
+ERROR: test_missing_section (test_app_store_datenschutzangaben.BrokenTemplateTests.test_missing_section)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 210, in setUp
+    self.text = read_template()
+                ~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 125, in read_template
+    with open(TEMPLATE, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/docs/reference/app-store-datenschutzangaben.md'
+
+======================================================================
+ERROR: test_missing_table (test_app_store_datenschutzangaben.BrokenTemplateTests.test_missing_table)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 210, in setUp
+    self.text = read_template()
+                ~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 125, in read_template
+    with open(TEMPLATE, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/docs/reference/app-store-datenschutzangaben.md'
+
+======================================================================
+ERROR: test_value_not_yes_no (test_app_store_datenschutzangaben.BrokenTemplateTests.test_value_not_yes_no)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 210, in setUp
+    self.text = read_template()
+                ~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 125, in read_template
+    with open(TEMPLATE, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/docs/reference/app-store-datenschutzangaben.md'
+
+======================================================================
+ERROR: test_doubled_row (test_app_store_datenschutzangaben.MutatedTemplateTests.test_doubled_row)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 176, in setUp
+    self.text = read_template()
+                ~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 125, in read_template
+    with open(TEMPLATE, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/docs/reference/app-store-datenschutzangaben.md'
+
+======================================================================
+ERROR: test_extra_row (test_app_store_datenschutzangaben.MutatedTemplateTests.test_extra_row)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 176, in setUp
+    self.text = read_template()
+                ~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 125, in read_template
+    with open(TEMPLATE, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/docs/reference/app-store-datenschutzangaben.md'
+
+======================================================================
+ERROR: test_linked_changed (test_app_store_datenschutzangaben.MutatedTemplateTests.test_linked_changed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 176, in setUp
+    self.text = read_template()
+                ~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 125, in read_template
+    with open(TEMPLATE, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/docs/reference/app-store-datenschutzangaben.md'
+
+======================================================================
+ERROR: test_missing_row (test_app_store_datenschutzangaben.MutatedTemplateTests.test_missing_row)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 176, in setUp
+    self.text = read_template()
+                ~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 125, in read_template
+    with open(TEMPLATE, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/docs/reference/app-store-datenschutzangaben.md'
+
+======================================================================
+ERROR: test_purpose_changed (test_app_store_datenschutzangaben.MutatedTemplateTests.test_purpose_changed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 176, in setUp
+    self.text = read_template()
+                ~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 125, in read_template
+    with open(TEMPLATE, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/docs/reference/app-store-datenschutzangaben.md'
+
+======================================================================
+ERROR: test_tracking_changed (test_app_store_datenschutzangaben.MutatedTemplateTests.test_tracking_changed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 176, in setUp
+    self.text = read_template()
+                ~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 125, in read_template
+    with open(TEMPLATE, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/docs/reference/app-store-datenschutzangaben.md'
+
+======================================================================
+ERROR: test_ip_point_quotes_apple_and_names_retention (test_app_store_datenschutzangaben.TemplateFollowsManifestTests.test_ip_point_quotes_apple_and_names_retention)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 147, in setUp
+    self.text = read_template()
+                ~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 125, in read_template
+    with open(TEMPLATE, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/docs/reference/app-store-datenschutzangaben.md'
+
+======================================================================
+ERROR: test_sections_in_order (test_app_store_datenschutzangaben.TemplateFollowsManifestTests.test_sections_in_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 147, in setUp
+    self.text = read_template()
+                ~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 125, in read_template
+    with open(TEMPLATE, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/docs/reference/app-store-datenschutzangaben.md'
+
+======================================================================
+ERROR: test_sources_name_apple_page (test_app_store_datenschutzangaben.TemplateFollowsManifestTests.test_sources_name_apple_page)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 147, in setUp
+    self.text = read_template()
+                ~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 125, in read_template
+    with open(TEMPLATE, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/docs/reference/app-store-datenschutzangaben.md'
+
+======================================================================
+ERROR: test_table_equals_account_types (test_app_store_datenschutzangaben.TemplateFollowsManifestTests.test_table_equals_account_types)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 147, in setUp
+    self.text = read_template()
+                ~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 125, in read_template
+    with open(TEMPLATE, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/docs/reference/app-store-datenschutzangaben.md'
+
+======================================================================
+ERROR: test_today_names_data_not_collected (test_app_store_datenschutzangaben.TemplateFollowsManifestTests.test_today_names_data_not_collected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 147, in setUp
+    self.text = read_template()
+                ~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_app_store_datenschutzangaben.py", line 125, in read_template
+    with open(TEMPLATE, encoding="utf-8") as handle:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/docs/reference/app-store-datenschutzangaben.md'
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.003s
+
+FAILED (errors=15)
