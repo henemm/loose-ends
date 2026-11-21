@@ -32,7 +32,6 @@ jobs:
             -only-testing:LooseEndsUITests/MacGalleryTests/testDiag862OpenAppPause \
             -only-testing:LooseEndsUITests/MacGalleryTests/testDiag862ReturnNoPause \
             -test-iterations 8 \
-            -retry-tests-on-failure NO \
             -parallel-testing-enabled NO \
             -resultBundlePath Diag.xcresult \
             CODE_SIGN_IDENTITY=- \
