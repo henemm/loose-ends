@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-11-21T08:45:15+0100
+befehl: scripts/sim.sh test-proof FieldsSmokeTests
+workflow: fix-972-fields-smoke-flaky
+head: 86d7f7089dc34583d49a3ccc2019b6b6cc9b1c22
+basis: 6d5153b05ca7fda9b2856e038f9bee3aa6f39160 (merge-base origin/main HEAD)
+testklasse: FieldsSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 7 gesamt, 7 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1795246932.608  ende: 1795247114.11
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/fix-972-fields-smoke-flaky/simulator-run/summary.json  sha256:d3bdec105bf52df82dbdcdd0d995e13522e6e4f1e50aca4e82eca6376db7b875
+xcresult: docs/artifacts/fix-972-fields-smoke-flaky/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/fix-972-fields-smoke-flaky/simulator-run/*.png (10 Stück)
+
+## Geprüfte Dateien
+- sha256:404b68120feef10c221ceab9478feb9d1bae9d744290e59458c3f81214149df9  LooseEndsUITests/FieldsSmokeTests.swift

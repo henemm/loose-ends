@@ -228,15 +228,16 @@ final class FieldsSmokeTests: XCTestCase {
     @MainActor
     private func choose(_ level: String, in line: XCUIElement, app: XCUIApplication) {
         line.tap()
-        let option = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", level)).firstMatch
+        let option = app.buttons["levelOption_\(level.lowercased())"]
         XCTAssertTrue(option.waitForExistence(timeout: 5), "The editor should offer \(level)")
         option.tap()
-        // A single choice closes the editor by itself (#482).
+        // A single choice closes the editor by itself (#482); its going tells a lost tap from a late label (#972).
+        XCTAssertTrue(option.waitForNonExistence(timeout: Self.lineBudget), "Editor did not close after tapping \(level)")
         XCTAssertEqual(waitUntil(line, says: level), .completed, "Line label was \(line.label)")
     }
 
     /// How long a register line may take to say its new value (#972: one query on a loaded CI simulator took 4.2 s).
-    static let lineBudget: TimeInterval = 5
+    static let lineBudget: TimeInterval = 15
 
     /// Waits until `object`'s label contains `text`, within `lineBudget`.
     private func waitUntil(_ object: Any, says text: String) -> XCTWaiter.Result {
@@ -247,7 +248,7 @@ final class FieldsSmokeTests: XCTestCase {
     /// The word the due line shows for "morgen" captured at `capturedOn` and read at `readAt` (#972: a run across
     /// midnight read the right "Today").
     static func dueWord(capturedOn: Date, readAt: Date, calendar: Calendar = .current) -> String {
-        "Tomorrow"
+        calendar.startOfDay(for: readAt) != calendar.startOfDay(for: capturedOn) ? "Today" : "Tomorrow"
     }
 
     /// #972, the CI failure without the app: the first read of the line's label takes 4.2 s and still finds the
