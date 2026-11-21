@@ -1,5 +1,5 @@
-"""Datenschutztext mit Konto-Teil (#615 Schnitt 4e) und Abschrift samt Kennung der Installation (#625 Schnitt 1):
-Kernaussagen da, veraltete Sätze weg.
+"""Datenschutztext mit Konto-Teil (#615 Schnitt 4e), Abschrift samt Kennung der Installation (#625 Schnitt 1) und
+Weckruf mit Gerätetoken (#625 Schnitt 4): Kernaussagen da, veraltete Sätze weg.
 
 Das Skript belegt nur, dass der Text die freigegebenen Kernsätze enthält und die veralteten nicht; ob die Aussagen
 wahr sind, belegt die Beleg-Tabelle im Entwurf (Code und Betrieb). Die Live-Seiten auf henemm.com prüft es nur mit
@@ -30,7 +30,9 @@ CORE = {
 # Wendungen des Textes vor dem Konto-Teil; „kein Konto bei uns“ ist erlaubt, der neue Abschnitt sagt es absichtlich.
 # „weil sie nicht gebaut ist“ war der Offen-Punkt zur Aufgabenübertragung vor #625 Schnitt 1; er darf nicht zurückkehren.
 STALE = ["keinen eigenen Server", "Kein eigenes Backend", "no server of our own", "No backend of our own",
-         "weil sie nicht gebaut ist"]
+         "weil sie nicht gebaut ist",
+         # Offen-Punkt zum Weckruf vor #625 Schnitt 4; er darf nicht zurückkehren.
+         "Im Text ist der Weckruf deshalb nicht beschrieben"]
 # Kernsätze der Punkte 1 bis 4 (#615 4e) und der Absätze zu Abschrift, Kennung und Löschen (#625 Schnitt 1),
 # wörtlich aus der jeweils freigegebenen Spec.
 ANCHORS = {
@@ -54,7 +56,17 @@ ANCHORS = {
         "Wenn die App Aufträge von Claude abholt und deren Ergebnis meldet, schickt sie eine zufällige Kennung dieser "
         "Installation mit.",
         "sie wird nicht über iCloud abgeglichen und ist kein Merkmal des Geräts wie Seriennummer oder Werbekennung.",
-        "darunter die Abschrift deiner Aufgaben, Aufträge und Ergebnisse, und widerruft die Anmeldung bei Apple.",
+        # Weckruf (#625 Schnitt 4); der Löschsatz ersetzt den aus Schnitt 1.
+        "Dafür fragt die App nach der Anmeldung und bei jedem Start, solange du angemeldet bist, bei Apple ein "
+        "Gerätetoken an und schickt es an den Dienst",
+        "Sie hat einen festen Inhalt, enthält nichts aus deinen Aufgaben und zeigt nichts an",
+        "Der Dienst schickt je Gerät höchstens eine solche Mitteilung in 15 Minuten.",
+        "„Abmelden“ löscht es nicht: Dein Gerät kann danach weiter still geweckt werden, holt aber nichts ab, solange "
+        "du nicht angemeldet bist.",
+        "darunter die Abschrift deiner Aufgaben, Aufträge und Ergebnisse und das Gerätetoken für den Weckruf, und "
+        "widerruft die Anmeldung bei Apple.",
+        "Dieselbe Kennung schickt die App auch mit, wenn sie sich für den Weckruf meldet",
+        "Push-Mitteilungen: Die stille Mitteilung für den Weckruf stellt Apples Push-Dienst zu",
     ],
     "en": [
         "Only if you use the voluntary connection to Claude",
@@ -77,11 +89,21 @@ ANCHORS = {
         "installation.",
         "it is not synced through iCloud and is not a feature of the device such as a serial number or an advertising "
         "identifier.",
-        "including the transcript of your tasks, orders and results, and revokes the sign-in with Apple.",
+        "the app asks Apple for a device token and sends it to the service",
+        "It has a fixed content, contains nothing from your tasks and shows nothing",
+        "The service sends at most one such notification per device in 15 minutes.",
+        "\"Sign out\" does not delete it: your device can still be woken silently afterwards, but collects nothing as "
+        "long as you are not signed in.",
+        "including the transcript of your tasks, orders and results and the device token for the wake-up, and revokes "
+        "the sign-in with Apple.",
+        "The app also sends the same identifier when it registers for the wake-up",
+        "Push notifications: The silent notification for the wake-up is delivered by Apple's push service",
     ],
 }
 # Was der Konto-Abschnitt je Sprache nennen muss: die Abschrift und, was nicht in ihr steht (#625 Schnitt 1).
 TRANSCRIPT = {"de": ["Abschrift", "Rohtext", "Notizen"], "en": ["transcript", "raw text", "notes"]}
+# Was der Konto-Abschnitt je Sprache zum Weckruf nennen muss (#625 Schnitt 4).
+WAKE = {"de": ["Weckruf", "Gerätetoken", "Abmelden"], "en": ["wake-up", "device token", "Sign out"]}
 
 
 # Hugo setzt gerade Anführungszeichen typografisch; der Wortlaut zählt, nicht die Form der Anführungszeichen.
@@ -90,8 +112,9 @@ QUOTES = str.maketrans({"„": '"', "“": '"', "”": '"', "‚": "'", "‘": "
 
 def normalize(text: str) -> str:
     """Zeilenumbrüche und Blockzitat-Zeichen zu einfachen Leerzeichen, damit umbrochene Sätze vergleichbar bleiben;
-    typografische Anführungszeichen zu geraden, damit Entwurf und gerenderte Seite gleich verglichen werden."""
-    text = re.sub(r"^\s*>\s?", "", text, flags=re.MULTILINE)
+    typografische Anführungszeichen zu geraden, damit Entwurf und gerenderte Seite gleich verglichen werden;
+    Fettdruck-Sternchen fallen weg, weil die gerenderte Seite sie nicht zeigt."""
+    text = re.sub(r"^\s*>\s?", "", text, flags=re.MULTILINE).replace("**", "")
     return re.sub(r"\s+", " ", text).translate(QUOTES)
 
 
@@ -125,6 +148,12 @@ def missing_transcript(body: str, lang: str):
     """Die Wörter aus TRANSCRIPT, die dem Konto-Abschnitt fehlen, ohne Rücksicht auf Groß- und Kleinschreibung."""
     flat = normalize(body).lower()
     return [w for w in TRANSCRIPT[lang] if w.lower() not in flat]
+
+
+def missing_wake(body: str, lang: str):
+    """Die Wörter aus WAKE, die dem Konto-Abschnitt fehlen, ohne Rücksicht auf Groß- und Kleinschreibung."""
+    flat = normalize(body).lower()
+    return [w for w in WAKE[lang] if w.lower() not in flat]
 
 
 def stale_phrases(text: str):
@@ -184,6 +213,13 @@ class DraftTests(unittest.TestCase):
                 self.assertTrue(body, f"Konto-Abschnitt fehlt ({lang})")
                 self.assertEqual(missing_transcript(body, lang), [], f"Abschrift im Konto-Abschnitt unvollständig ({lang})")
 
+    def test_wake_up_in_account_section(self):
+        for lang, part in self.parts.items():
+            with self.subTest(lang=lang):
+                body = section(part, lang)
+                self.assertTrue(body, f"Konto-Abschnitt fehlt ({lang})")
+                self.assertEqual(missing_wake(body, lang), [], f"Weckruf im Konto-Abschnitt unvollständig ({lang})")
+
 
 class CheckerTests(unittest.TestCase):
     """Gegenprobe: die Prüfung fängt veraltete Sätze und fehlende Zahlen auch wirklich."""
@@ -227,6 +263,25 @@ class CheckerTests(unittest.TestCase):
     def test_transcript_with_negatives_passes(self):
         text = "Die Abschrift enthält nicht den Rohtext und nicht deine Notizen."
         self.assertEqual(missing_transcript(text, "de"), [])
+
+    def test_account_without_device_token_is_caught(self):
+        self.assertEqual(missing_wake("Der Weckruf weckt die App; Abmelden beendet die Sitzung.", "de"), ["Gerätetoken"])
+
+    def test_account_with_wake_words_passes(self):
+        text = "Weckruf. Die App meldet ein Gerätetoken. „Abmelden“ löscht es nicht."
+        self.assertEqual(missing_wake(text, "de"), [])
+
+    def test_english_wake_words_are_caught(self):
+        self.assertEqual(missing_wake("The wake-up uses a device token.", "en"), ["Sign out"])
+
+    def test_old_wake_up_sentence_is_caught(self):
+        text = "Offen: Im Text ist der Weckruf deshalb nicht beschrieben."
+        self.assertEqual(stale_phrases(text), ["Im Text ist der Weckruf deshalb nicht beschrieben"])
+
+    def test_bold_label_meets_anchor(self):
+        text = "- **Push-Mitteilungen:** Die stille Mitteilung für den Weckruf stellt Apples Push-Dienst zu; dort gilt"
+        anchor = "Push-Mitteilungen: Die stille Mitteilung für den Weckruf stellt Apples Push-Dienst zu"
+        self.assertNotIn(anchor, missing_anchors(text, "de"))
 
     def test_not_built_sentence_is_caught(self):
         self.assertEqual(stale_phrases("Offen: nicht beschrieben, weil sie nicht gebaut ist."), ["weil sie nicht gebaut ist"])

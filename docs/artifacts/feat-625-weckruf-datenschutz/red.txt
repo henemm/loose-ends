@@ -1,0 +1,106 @@
+...................FFF.FFs
+======================================================================
+FAIL: test_no_stale_phrases (__main__.DraftTests.test_no_stale_phrases)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_datenschutz_text.py", line 197, in test_no_stale_phrases
+    self.assertEqual(stale_phrases(self.text), [], "veraltete Sätze im Entwurf")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['Im Text ist der Weckruf deshalb nicht beschrieben'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'Im Text ist der Weckruf deshalb nicht beschrieben'
+
+- ['Im Text ist der Weckruf deshalb nicht beschrieben']
++ [] : veraltete Sätze im Entwurf
+
+======================================================================
+FAIL: test_released_sentences_per_language (__main__.DraftTests.test_released_sentences_per_language) (lang='de')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_datenschutz_text.py", line 194, in test_released_sentences_per_language
+    self.assertEqual(missing_anchors(part, lang), [], f"freigegebene Sätze fehlen ({lang})")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['Dafür fragt die App nach der Anmeldung u[721 chars] zu'] != []
+
+First list contains 7 additional elements.
+First extra element 0:
+'Dafür fragt die App nach der Anmeldung und bei jedem Start, solange du angemeldet bist, bei Apple ein Gerätetoken an und schickt es an den Dienst'
+
++ []
+- ['Dafür fragt die App nach der Anmeldung und bei jedem Start, solange du '
+-  'angemeldet bist, bei Apple ein Gerätetoken an und schickt es an den Dienst',
+-  'Sie hat einen festen Inhalt, enthält nichts aus deinen Aufgaben und zeigt '
+-  'nichts an',
+-  'Der Dienst schickt je Gerät höchstens eine solche Mitteilung in 15 Minuten.',
+-  '„Abmelden“ löscht es nicht: Dein Gerät kann danach weiter still geweckt '
+-  'werden, holt aber nichts ab, solange du nicht angemeldet bist.',
+-  'darunter die Abschrift deiner Aufgaben, Aufträge und Ergebnisse und das '
+-  'Gerätetoken für den Weckruf, und widerruft die Anmeldung bei Apple.',
+-  'Dieselbe Kennung schickt die App auch mit, wenn sie sich für den Weckruf '
+-  'meldet',
+-  'Push-Mitteilungen: Die stille Mitteilung für den Weckruf stellt Apples '
+-  'Push-Dienst zu'] : freigegebene Sätze fehlen (de)
+
+======================================================================
+FAIL: test_released_sentences_per_language (__main__.DraftTests.test_released_sentences_per_language) (lang='en')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_datenschutz_text.py", line 194, in test_released_sentences_per_language
+    self.assertEqual(missing_anchors(part, lang), [], f"freigegebene Sätze fehlen ({lang})")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['the app asks Apple for a device token an[630 chars]ice"] != []
+
+First list contains 7 additional elements.
+First extra element 0:
+'the app asks Apple for a device token and sends it to the service'
+
++ []
+- ['the app asks Apple for a device token and sends it to the service',
+-  'It has a fixed content, contains nothing from your tasks and shows nothing',
+-  'The service sends at most one such notification per device in 15 minutes.',
+-  '"Sign out" does not delete it: your device can still be woken silently '
+-  'afterwards, but collects nothing as long as you are not signed in.',
+-  'including the transcript of your tasks, orders and results and the device '
+-  'token for the wake-up, and revokes the sign-in with Apple.',
+-  'The app also sends the same identifier when it registers for the wake-up',
+-  'Push notifications: The silent notification for the wake-up is delivered by '
+-  "Apple's push service"] : freigegebene Sätze fehlen (en)
+
+======================================================================
+FAIL: test_wake_up_in_account_section (__main__.DraftTests.test_wake_up_in_account_section) (lang='de')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_datenschutz_text.py", line 221, in test_wake_up_in_account_section
+    self.assertEqual(missing_wake(body, lang), [], f"Weckruf im Konto-Abschnitt unvollständig ({lang})")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['Weckruf', 'Gerätetoken'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'Weckruf'
+
+- ['Weckruf', 'Gerätetoken']
++ [] : Weckruf im Konto-Abschnitt unvollständig (de)
+
+======================================================================
+FAIL: test_wake_up_in_account_section (__main__.DraftTests.test_wake_up_in_account_section) (lang='en')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/humming-jumping-unicorn/scripts/test_datenschutz_text.py", line 221, in test_wake_up_in_account_section
+    self.assertEqual(missing_wake(body, lang), [], f"Weckruf im Konto-Abschnitt unvollständig ({lang})")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['wake-up', 'device token'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'wake-up'
+
+- ['wake-up', 'device token']
++ [] : Weckruf im Konto-Abschnitt unvollständig (en)
+
+----------------------------------------------------------------------
+Ran 24 tests in 0.027s
+
+FAILED (failures=5, skipped=1)
