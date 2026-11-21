@@ -95,3 +95,6 @@ Feature (Doku + Gleichlauf-Test, kein App-Code)
 
 ### Open Questions
 - keine für den PO in dieser Phase; die Freigabe der Antworten selbst erfolgt mit der Spec (`approved`).
+
+### Offen außerhalb des Schnitts (2026-11-21 14:30)
+- PR #976: Job „UI iPad“ wurde in „Prepare the simulator“ abgebrochen (Lauf 44905178565). Nach Ende des Laufs `gh run rerun 44905178565 --failed`, bei grün mergen.
