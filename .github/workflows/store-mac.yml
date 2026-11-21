@@ -53,7 +53,7 @@ jobs:
       - name: Export the pictures
         if: always()
         run: xcrun xcresulttool export attachments --path MacStore.xcresult --output-path StoreMac
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: StoreMac-${{ inputs.language || 'de' }}
