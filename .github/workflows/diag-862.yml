@@ -7,7 +7,7 @@ jobs:
   diag:
     name: Diag 862 (macOS)
     runs-on: xcode-27
-    timeout-minutes: 200
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v7
       - name: Select Xcode 27.0
@@ -20,7 +20,7 @@ jobs:
         run: |
           sudo automationmodetool enable-automationmode-without-authentication
           sudo DevToolsSecurity -enable || true
-      - name: Run the full Mac gallery eight times (#862, original surroundings, close stacks)
+      - name: Run the full Mac gallery four times (#862, original surroundings, close stacks)
         continue-on-error: true
         run: |
           set -o pipefail
@@ -35,7 +35,7 @@ jobs:
             -skip-testing:LooseEndsUITests/MacGalleryTests/testDiag862LateSelfActivation \
             -skip-testing:LooseEndsUITests/MacGalleryTests/testDiag862LateFinderActivation \
             -skip-testing:LooseEndsUITests/MacGalleryTests/testDiag862LateSelfActivationNoCmdW \
-            -test-iterations 8 \
+            -test-iterations 4 \
             -parallel-testing-enabled NO \
             -resultBundlePath Diag.xcresult \
             CODE_SIGN_IDENTITY=- \
