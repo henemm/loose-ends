@@ -1,0 +1,57 @@
+# #862 GREEN: CI-Lauf 44877016605, Job Mac Gallery (macOS) 136763847707, Commit bb05d4d
+    ✔ testArrowsSelectAndSpaceCompletes (28.086 seconds)
+    ✔ testCalendarAskDark (46.215 seconds)
+    ✔ testCalendarAskLight (40.330 seconds)
+    ✔ testClickOpensAndMarks (31.071 seconds)
+    ✔ testCompleteWithAnOpenSubtaskAsks (46.260 seconds)
+    ✔ testDeleteAsksFirst (28.366 seconds)
+    ✔ testFieldsOpensFromTheMiddleOfItsRow (16.235 seconds)
+    ✔ testFileOpensTheOpenPanel (26.731 seconds)
+    ✔ testFileOpensTheOpenPanelFromTheStartPage (29.755 seconds)
+    ✔ testGalleryDark (60.240 seconds)
+    ✔ testGalleryLight (40.249 seconds)
+    ✔ testLooseEndsTopDark (106.674 seconds)
+    ✔ testLooseEndsTopLight (105.399 seconds)
+    ✔ testMenuBarReopensAfterOpenAppWithOneClick (26.218 seconds)
+    ✔ testMenuBarReopensAfterReturnWithOneClick (20.668 seconds)
+    ✔ testNoteTakesAClickAndIsSaved (28.633 seconds)
+    ✔ testPanelDark (18.156 seconds)
+    ✔ testPanelDiagnosis (11.247 seconds)
+    ✔ testPanelLight (18.178 seconds)
+    ✔ testPanelListening (11.296 seconds)
+    ✔ testPanelTypedGerman (40.803 seconds)
+    ✔ testPhotoOpensThePhotoPicker (24.109 seconds)
+    ✔ testSelectionPhotoDark (23.282 seconds)
+    ✔ testSelectionPhotoLight (23.547 seconds)
+    ✔ testSettingsDark (34.941 seconds)
+    ✔ testSettingsLight (34.612 seconds)
+    ✔ testShortcutsAndContextMenu (27.396 seconds)
+    ✔ testStartArrowsSelectAndSpaceCompletes (37.115 seconds)
+    ✔ testStartDeleteAsksFirst (32.343 seconds)
+    ✔ testStartHasNoListFocusOnAppear (30.299 seconds)
+    ✔ testStartMoreExtendsRows (44.141 seconds)
+    ✔ testStartNewTaskShortcutFocusesWritingLine (26.696 seconds)
+    ✔ testStartNumberDark (31.096 seconds)
+    ✔ testStartNumberLight (30.460 seconds)
+    ✔ testStartSelectionClearsWhenRowGoes (31.934 seconds)
+    ✔ testStartSelectionPhotoDark (26.808 seconds)
+    ✔ testStartSelectionPhotoLight (26.616 seconds)
+    ✔ testStartSelectionSurvivesDetail (31.112 seconds)
+    ✔ testStartWritingLineKeepsKeys (27.604 seconds)
+    ✔ testSubtaskIsAddedByClickAndCheckedByClick (26.786 seconds)
+    ✔ testSubtaskOpensItsOwnDetailAndLeadsBack (32.346 seconds)
+    ✔ testTaskFromTheStartPageLeadsBack (18.296 seconds)
+    ✔ testTextFocusKeepsKeys (25.192 seconds)
+    ✔ testTitleTakesAClickAndKeepsTheNewWords (22.839 seconds)
+    ✔ testWindowFromMenuBarFitsScreen (51.099 seconds)
+    ✔ testWindowMinimumSize (21.672 seconds)
+    ✔ testWritingLineOpensTheDrawerAndEscapeFoldsIt (14.620 seconds)
+Executed 11 tests, with 0 failures (0 unexpected) in 286.610 (286.617) seconds
+Executed 11 tests, with 0 failures (0 unexpected) in 286.610 (286.618) seconds
+Executed 11 tests, with 0 failures (0 unexpected) in 286.610 (286.619) seconds
+Executed 18 tests, with 0 failures (0 unexpected) in 523.281 (523.296) seconds
+Executed 18 tests, with 0 failures (0 unexpected) in 523.281 (523.297) seconds
+Executed 18 tests, with 0 failures (0 unexpected) in 523.281 (523.298) seconds
+Executed 18 tests, with 0 failures (0 unexpected) in 727.880 (727.893) seconds
+Executed 18 tests, with 0 failures (0 unexpected) in 727.880 (727.894) seconds
+Executed 18 tests, with 0 failures (0 unexpected) in 727.880 (727.896) seconds

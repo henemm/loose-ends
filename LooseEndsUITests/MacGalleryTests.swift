@@ -458,8 +458,10 @@ final class MacGalleryTests: XCTestCase {
 
     /// #862 AC-2: "Open Loose Ends" closes the panel and opens the main window; once that window is closed
     /// with ⌘W, a single click on the symbol opens the panel again.
+    /// Skipped until #978 (PO 2026-11-21): the panel closes again in 2 of 15 runs, cause open.
     @MainActor
     func testMenuBarReopensAfterOpenAppWithOneClick() throws {
+        throw XCTSkip("#978: panel closes again now and then after Open Loose Ends + ⌘W; cause open")
         let app = macLaunch(dark: false)
         guard openPanel(in: app, label: "reopen-open-app") != nil else { return }
         app.buttons["menuBarOpenApp"].click()

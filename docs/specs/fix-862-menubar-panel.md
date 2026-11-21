@@ -181,6 +181,15 @@ Keine neue externe Abhängigkeit.
 - [ ] Mac-Galerie in drei aufeinanderfolgenden CI-Läufen beim ersten Versuch grün, Lauf-Nummern im Bericht; Anhänge geöffnet.
 - [ ] Abschlussbericht: „Kein Pfad der Geräteliste berührt.“ PR mit `Closes #862`.
 
+## Known Limitations
+
+- **AC-2 schwankt selten (PO-Entscheidung 2026-11-21: ausliefern):** AC-2 ist durch CI-Lauf 44877016605, Versuch 1, belegt
+  (rot vor dem Fix, grün danach). In 2 von 15 Läufen mit dem Fix-Code (Versuche 3 und 4 desselben Laufs) öffnete sich das Panel
+  nach „Open Loose Ends“ + ⌘W und schloss sich binnen 5 s wieder; in den übrigen 13 Läufen (2 normale CI-Versuche, 11 Diagnoseläufe,
+  davon 4 mit unverändertem Fix-Code) trat es nie auf. Ursache offen, Weitersuche in #978. Bis dahin ist `testMenuBarReopensAfterOpenAppWithOneClick` per
+  `XCTSkip` ausgesetzt und zählt nicht in AC-6.
+
 ## Changelog
 
 - 2026-11-20: Initiale Spec für #862 (Schließen über `dismiss`, Nachstellung in der CI).
+- 2026-11-21: Known Limitations ergänzt: seltenes Schließen im AC-2-Weg → #978, Test bis dahin ausgesetzt (PO 2026-11-21).
