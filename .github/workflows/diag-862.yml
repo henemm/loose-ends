@@ -28,10 +28,10 @@ jobs:
             -project LooseEnds.xcodeproj \
             -scheme LooseEnds \
             -destination 'platform=macOS' \
-            -only-testing:LooseEndsUITests/MacGalleryTests/testDiag862OpenAppNoPause \
-            -only-testing:LooseEndsUITests/MacGalleryTests/testDiag862OpenAppPause \
-            -only-testing:LooseEndsUITests/MacGalleryTests/testDiag862ReturnNoPause \
-            -test-iterations 8 \
+            -only-testing:LooseEndsUITests/MacGalleryTests/testDiag862LateSelfActivation \
+            -only-testing:LooseEndsUITests/MacGalleryTests/testDiag862LateFinderActivation \
+            -only-testing:LooseEndsUITests/MacGalleryTests/testDiag862LateSelfActivationNoCmdW \
+            -test-iterations 4 \
             -parallel-testing-enabled NO \
             -resultBundlePath Diag.xcresult \
             CODE_SIGN_IDENTITY=- \

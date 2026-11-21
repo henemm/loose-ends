@@ -1,4 +1,5 @@
 #if os(macOS)
+import AppKit
 import XCTest
 
 /// #511: photographs the Mac app, light and dark, so the Mac tickets (#477–#480) get a picture of
@@ -549,6 +550,79 @@ final class MacGalleryTests: XCTestCase {
     }
 
     @MainActor private static var diag862Counter = 0
+
+    @MainActor
+    func testDiag862LateSelfActivation() throws {
+        let app = diag862OpenAppThenCmdW(label: "diag-lateself")
+        diag862ClickThenActivate(app, label: "lateself", bundle: "com.henning.looseends")
+        app.terminate()
+    }
+
+    @MainActor
+    func testDiag862LateFinderActivation() throws {
+        let app = diag862OpenAppThenCmdW(label: "diag-latefinder")
+        diag862ClickThenActivate(app, label: "latefinder", bundle: "com.apple.finder")
+        app.terminate()
+    }
+
+    @MainActor
+    func testDiag862LateSelfActivationNoCmdW() throws {
+        let app = macLaunch(dark: false)
+        guard openPanel(in: app, label: "diag-lateselffresh") != nil else { return }
+        diag862ActivateAndWatch(app, label: "lateselffresh", bundle: "com.henning.looseends", lines: [])
+        app.terminate()
+    }
+
+    /// Panel, "Open Loose Ends", main window, ⌘W; the app is left with no main window.
+    @MainActor
+    private func diag862OpenAppThenCmdW(label: String) -> XCUIApplication {
+        let app = macLaunch(dark: false)
+        guard openPanel(in: app, label: label) != nil else { return app }
+        app.buttons["menuBarOpenApp"].click()
+        let window = macMainWindow(of: app)
+        app.activate()
+        app.typeKey("w", modifierFlags: .command)
+        let closed = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: window)
+        XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 10), .completed, "⌘W did not close the main window")
+        return app
+    }
+
+    /// One click on the symbol, wait for the panel, then activate `bundle` from the test process and watch.
+    @MainActor
+    private func diag862ClickThenActivate(_ app: XCUIApplication, label: String, bundle: String) {
+        let statusItem = app.statusItems.firstMatch
+        XCTAssertTrue(statusItem.waitForExistence(timeout: 10), "No menu bar symbol")
+        let clickedAt = Date()
+        statusItem.click()
+        let opened = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)
+        XCTAssertTrue(opened, "Panel never appeared before the activation (\(label))")
+        guard opened else { return }
+        diag862ActivateAndWatch(app, label: label, bundle: bundle, lines: ["click: \(diag862Stamp(clickedAt))"])
+    }
+
+    /// Activates `bundle`, then samples every 0.5 s for 8 s whether the panel is there. Measures, never fails on it.
+    @MainActor
+    private func diag862ActivateAndWatch(_ app: XCUIApplication, label: String, bundle: String, lines start: [String]) {
+        var lines = start
+        lines.append("panel-seen: \(diag862Stamp(Date()))")
+        let target = NSRunningApplication.runningApplications(withBundleIdentifier: bundle).first
+        let activated = target?.activate(options: []) ?? false
+        lines.append("activate \(bundle): \(diag862Stamp(Date())) found=\(target != nil) result=\(activated)")
+        let end = Date().addingTimeInterval(8)
+        while Date() < end {
+            lines.append("\(diag862Stamp(Date())) exists=\(app.buttons["menuBarOpenApp"].exists)")
+            Thread.sleep(forTimeInterval: 0.5)
+        }
+        lines.append("\(diag862Stamp(Date())) exists=\(app.buttons["menuBarOpenApp"].exists) (final)")
+        let iteration = Self.diag862Counter
+        Self.diag862Counter += 1
+        let note = XCTAttachment(string: lines.joined(separator: "\n") + "\n\n" + app.debugDescription)
+        note.name = "mac-gallery-diag-\(label)-\(iteration)"
+        note.lifetime = .keepAlways
+        add(note)
+    }
+
+    private func diag862Stamp(_ date: Date) -> String { String(format: "%.3f", date.timeIntervalSince1970) }
 
     /// Clicks the symbol exactly once and expects the panel within 10 s. The time of the click and of the
     /// answer and the hierarchy go along as attachments, so a red run in CI can be read.
