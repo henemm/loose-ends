@@ -1,0 +1,14 @@
+# AC-5: Dateiangaben der elf neuen Beleg-Zeilen (docs/reference/datenschutz-entwurf.md, Abschnitt „Beleg im Code“), Existenzprüfung mit test -f
+# Stand: Basis 076c942 plus Arbeitsstand, 2026-11-21T19:58:50Z
+# Zeilen: von „App fragt das Gerätetoken …“ bis „Dienstprotokoll ohne Token und Konto“; Anzahl: 11
+# Nicht-Dateiangaben in den Zeilen: „AccountState.withSession“ (Typ.Methode; Datei LooseEnds/Claude/AccountState.swift unten mitgeprüft), „#960“ (Issue)
+OK    LooseEnds/Claude/DeviceRegistration.swift
+OK    LooseEnds/Claude/PushWakeUp.swift
+OK    LooseEnds/Claude/ServiceClient.swift
+OK    server/migrations/008_device_tokens.sql
+OK    server/src/accounts.ts
+OK    server/src/apns.ts
+OK    server/src/auth.ts
+OK    server/src/devices.ts
+OK    server/src/mcp.ts
+OK    LooseEnds/Claude/AccountState.swift   (zu „AccountState.withSession“)

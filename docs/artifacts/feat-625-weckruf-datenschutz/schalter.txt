@@ -1,0 +1,33 @@
+# AC-13: Dateilisten beider Änderungen und der Store-Schalter, 2026-11-21T20:00Z (Vorstand vor dem Commit des Entwurfs)
+
+## loose-ends: seit 23b3b4d, committet und Arbeitsbaum (git diff --name-status 23b3b4dfdb70da0e9e437a248eeecea89460fa9d)
+M	CLAUDE.md
+A	docs/artifacts/feat-625-weckruf-datenschutz/red.txt
+A	docs/briefings/feat-625-weckruf-datenschutz.md
+A	docs/context/feat-625-weckruf-datenschutz.md
+M	docs/reference/datenschutz-entwurf.md
+A	docs/specs/feat-625-schnitt-4-weckruf-datenschutz.md
+M	scripts/test_datenschutz_text.py
+
+## loose-ends: Arbeitsbaum (git status --short --untracked-files=all, ohne .claude/)
+ M CLAUDE.md
+ M docs/reference/datenschutz-entwurf.md
+?? docs/artifacts/feat-625-weckruf-datenschutz/aussagen.txt
+?? docs/artifacts/feat-625-weckruf-datenschutz/belege-pfade.txt
+?? docs/artifacts/feat-625-weckruf-datenschutz/green.txt
+?? docs/artifacts/feat-625-weckruf-datenschutz/test-green-output.txt
+?? docs/artifacts/feat-966-s1-host/adversary-dialog.md
+?? docs/artifacts/feat-966-s1-host/test-green-output.txt
+Hinweis: docs/artifacts/feat-966-s1-host/ stammt nicht aus diesem Schnitt (#966 ist verworfen); gehört nicht in den PR.
+Dazu kommen in diesem Schnitt noch schalter.txt und vergleich-diff.txt (Belege, nur unter docs/artifacts/).
+
+## henemm/henemm-website PR #82 (gh pr view 82 -R henemm/henemm-website --json files)
+content/legal/loose-ends/privacy-policy-en/_index.md +22 -5
+content/legal/loose-ends/privacy-policy/_index.md +19 -3
+
+## Verbotene Pfade in beiden Dateilisten (project.yml, Info.plist, PrivacyInfo.xcprivacy, LooseEnds/, Shared/, server/)
+keine
+
+## project.yml, Zeile LEAccountEnabled (grep -n LEAccountEnabled project.yml)
+74:        # LEAccountEnabled is off; the App ID has had the capability since #621 S6b.
+86:        LEAccountEnabled: false
