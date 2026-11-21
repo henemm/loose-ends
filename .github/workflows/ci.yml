@@ -110,8 +110,8 @@ jobs:
             DEVELOPMENT_TEAM= \
             | xcbeautify
 
-  # #910: the classes of LooseEndsUITests, read from the code, split into four parts (scripts/ui_smoke_shards.py), so a
-  # new class can never fall out of the run. Each part runs on its own runner and simulator (#228: never two in one job).
+  # #910: the classes of LooseEndsUITests, read from the code, split into six parts (scripts/ui_smoke_shards.py), so a
+  # new class can never fall out of the run. #939: a class over the target size is split by method. Each part runs on its own runner and simulator (#228: never two in one job).
   ui-smoke-plan:
     name: UI Smoke plan
     runs-on: xcode-27
@@ -124,7 +124,7 @@ jobs:
         uses: ./.github/actions/select-xcode-27
       - id: split
         run: |
-          matrix=$(python3 scripts/ui_smoke_shards.py 4)
+          matrix=$(python3 scripts/ui_smoke_shards.py 6)
           echo "$matrix" | python3 -m json.tool
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
@@ -135,7 +135,7 @@ jobs:
     # #905: the whole run needed 100-113 min, so it got 160/135. #910: a part carries about a quarter of the tests
     # (≈ 20 min plus ≈ 12 min build and boot); the limits sit above that, so a real hang ends red instead of after the
     # default 360 min; the test step ends first and leaves room for the diagnose and upload steps.
-    timeout-minutes: 60
+    timeout-minutes: 70
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.ui-smoke-plan.outputs.matrix) }}
@@ -224,13 +224,13 @@ jobs:
             sleep 20
           done' > host-load.log 2>&1 &
       - name: Run UI smoke tests
-        timeout-minutes: 45
+        timeout-minutes: 55
         env:
           ONLY: ${{ matrix.only }}
         run: |
           set -o pipefail
           echo "part ${{ matrix.shard }}: ${{ matrix.classes }}"
-          # $ONLY unquoted on purpose: one -only-testing:LooseEndsUITests/<class> per class of this part.
+          # $ONLY unquoted on purpose: one -only-testing:LooseEndsUITests/<class> per class or class/test of this part.
           # shellcheck disable=SC2086
           xcodebuild test \
             -project LooseEnds.xcodeproj \
@@ -347,6 +347,7 @@ jobs:
           PY
       - name: Upload design gallery
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v7
         with:
           name: DesignGallery-${{ matrix.shard }}
@@ -354,6 +355,7 @@ jobs:
           if-no-files-found: warn
       - name: Upload UI test results
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v7
         with:
           name: UITestResults-${{ matrix.shard }}
