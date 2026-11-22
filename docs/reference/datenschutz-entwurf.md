@@ -16,7 +16,8 @@ Installation.“, Löschsatz) von Henning freigegeben am 2026-11-17 (#625 Schnit
 (henemm/henemm-website#80); der Satz zum Zeitpunkt der Abschrift am 2026-11-17 (henemm/henemm-website#81).
 Nachtrag Weckruf (Absatz „Weckruf.“, Zusatzsatz unter „Kennung dieser Installation.“, Löschsatz, Punkt
 „Push-Mitteilungen“ unter „Was Apple dabei übernimmt“) von Henning freigegeben am 2026-11-21 (#625 Schnitt 4,
-`docs/specs/feat-625-schnitt-4-weckruf-datenschutz.md`).
+`docs/specs/feat-625-schnitt-4-weckruf-datenschutz.md`); veröffentlicht auf der Website-Seite am 2026-11-21
+(henemm/henemm-website#82).
 
 Geschrieben aus dem, was der Code am 2026-10-26 belegt (#342, Teil 2). Jede Aussage hat unten einen Beleg im
 Code; was der Code nicht beweist, steht unter „Offen, nicht belegt“.
@@ -258,7 +259,8 @@ https://www.henemm.com/legal/loose-ends/privacy-policy-en/ am 2026-11-17 (henemm
 der Abschrift am 2026-11-17 (henemm/henemm-website#81).
 Nachtrag Weckruf (in Abschnitt 4 der Absatz „Wake-up.“, der Zusatzsatz unter „Identifier of this installation.“ und der
 Löschsatz, in Abschnitt 6 der Punkt „Push notifications“) wortgetreu aus der Spec übernommen, von Henning freigegeben am
-2026-11-21 (#625 Schnitt 4, `docs/specs/feat-625-schnitt-4-weckruf-datenschutz.md`).
+2026-11-21 (#625 Schnitt 4, `docs/specs/feat-625-schnitt-4-weckruf-datenschutz.md`); veröffentlicht auf
+https://www.henemm.com/legal/loose-ends/privacy-policy-en/ am 2026-11-21 (henemm/henemm-website#82).
 
 *Last updated: November 21, 2026*
 

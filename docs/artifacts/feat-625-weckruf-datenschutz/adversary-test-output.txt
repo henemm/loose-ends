@@ -21,9 +21,9 @@ test_no_stale_phrases (__main__.DraftTests.test_no_stale_phrases) ... ok
 test_released_sentences_per_language (__main__.DraftTests.test_released_sentences_per_language) ... ok
 test_transcript_in_account_section (__main__.DraftTests.test_transcript_in_account_section) ... ok
 test_wake_up_in_account_section (__main__.DraftTests.test_wake_up_in_account_section) ... ok
-test_live_pages (__main__.LiveTests.test_live_pages) ... skipped 'Live-Seiten nur mit DATENSCHUTZ_LIVE=1'
+test_live_pages (__main__.LiveTests.test_live_pages) ... ok
 
 ----------------------------------------------------------------------
-Ran 24 tests in 0.023s
+Ran 24 tests in 0.426s
 
-OK (skipped=1)
+OK
