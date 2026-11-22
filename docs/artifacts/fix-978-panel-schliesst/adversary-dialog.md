@@ -3,11 +3,11 @@ Spec: docs/specs/fix-978-panel-schliesst.md
 Datum: 2026-11-22 07:10
 
 ## Checkliste
-- [ ] **AC-1:** Given `testMenuBarReopensAfterOpenAppWithOneClick` / When der Diff geprüft und der Job „Mac Gallery (macOS)“ auf dem PR-Zweig gelaufen ist / Then enthält der Test kein `XCTSkip` mehr, der Test steht im Ergebnis als ausgeführt, und die Klickprüfung steht in `XCTExpectFailure(…, options: .nonStrict())` mit Verweis `#978`. Belegt durch Diff und Ergebnisbündel des PR-Laufs.
-- [ ] **AC-2:** Given der Mac-Galerie-Job / When der Test das Panel öffnen kann oder das Schließen auftritt / Then ist der Job grün (ein Auftreten erscheint als erwarteter Fehler, kein roter Test). Belegt durch den Lauf auf dem PR-Zweig, beim ersten Versuch grün.
-- [ ] **AC-3:** Given `MenuBarCapture.swift` / When das Panelfenster Key wird oder schließt / Then schreibt die App immer (auch ohne Testflags) eine Zeile der Kategorie `MenuBarPanel` auf Stufe Notice mit Ereignis, gekürztem Aufrufstapel, Typ von `NSApp.currentEvent`, Bundle-ID der aktiven App und Aktivierungsrichtlinie. Belegt durch `log show`-Zeilen im Artefakt `MacGalleryPanelLog` des PR-Laufs, geöffnet und beschrieben.
+- [x] **AC-1:** Given `testMenuBarReopensAfterOpenAppWithOneClick` / When der Diff geprüft und der Job „Mac Gallery (macOS)“ auf dem PR-Zweig gelaufen ist / Then enthält der Test kein `XCTSkip` mehr, der Test steht im Ergebnis als ausgeführt, und die Klickprüfung steht in `XCTExpectFailure(…, options: .nonStrict())` mit Verweis `#978`. Belegt durch Diff und Ergebnisbündel des PR-Laufs.
+- [x] **AC-2:** Given der Mac-Galerie-Job / When der Test das Panel öffnen kann oder das Schließen auftritt / Then ist der Job grün (ein Auftreten erscheint als erwarteter Fehler, kein roter Test). Belegt durch den Lauf auf dem PR-Zweig, beim ersten Versuch grün.
+- [x] **AC-3:** Given `MenuBarCapture.swift` / When das Panelfenster Key wird oder schließt / Then schreibt die App immer (auch ohne Testflags) eine Zeile der Kategorie `MenuBarPanel` auf Stufe Notice mit Ereignis, gekürztem Aufrufstapel, Typ von `NSApp.currentEvent`, Bundle-ID der aktiven App und Aktivierungsrichtlinie. Belegt durch `log show`-Zeilen im Artefakt `MacGalleryPanelLog` des PR-Laufs, geöffnet und beschrieben.
 - [x] **AC-4:** Given der Diff von `MenuBarCapture.swift` / When er geprüft wird / Then ändert er kein Verhalten (`applyDockPolicy`, `dismiss()`, `showMain` unberührt), enthält kein `print`, kein `try?`, keinen Aufgabentext, Fenstertitel oder Token in den Zeilen, jede Funktion ≤ 50 LoC; Unit-Tests und iOS-Bau sind grün. Belegt durch Diff-Prüfung und die Läufe.
-- [ ] **AC-5:** Given `ci.yml` / When der Job „Mac Gallery (macOS)“ läuft / Then sammelt ein Schritt nach der Galerie (`if: always()`) die Kategorie `MenuBarPanel` per `log show` und lädt sie als `MacGalleryPanelLog` hoch; schlägt Log oder Upload fehl, bleibt der Job grün. Belegt durch das Artefakt im PR-Lauf und Diff-Prüfung (`continue-on-error`).
+- [x] **AC-5:** Given `ci.yml` / When der Job „Mac Gallery (macOS)“ läuft / Then sammelt ein Schritt nach der Galerie (`if: always()`) die Kategorie `MenuBarPanel` per `log show` und lädt sie als `MacGalleryPanelLog` hoch; schlägt Log oder Upload fehl, bleibt der Job grün. Belegt durch das Artefakt im PR-Lauf und Diff-Prüfung (`continue-on-error`).
 - [x] **AC-6:** Given der Diff / When er geprüft wird / Then berührt er nur die drei genannten Dateien, kein Eintrag in `project.yml`, `Info.plist` oder Entitlements, App-Code ≤ 250 LoC. Belegt durch `git diff --stat`.
 
 ## Dialog
@@ -72,6 +72,51 @@ Finding:
 Verdict dieser Runde: BROKEN (F004). AC-1, AC-2, AC-5 durch den Lauf belegt.
 **Implementierer:**
 
+### Runde 4
+**Adversary:** PR-Lauf 45070786960 (Commit 596a4f3): Mac-Job success beim ersten Versuch, 18 Tests 0 failures. Prüfskript selbst gelaufen: 12 Tests OK (angehängt an adversary-test-output.txt). Panel-Log selbst gelesen: 53 Zeilen, Stufe `Df` (Notice), je Zeile Fensterklasse, Ereignis (event=NSEventType), front=Bundle-ID, policy, Stapel; 18 key, 13 resign, 13 hide für MenuBarExtraWindow; Treffer auf Titel/Token: 0.
+
+F004 geschlossen: Das Verschwinden des Panels hinterlässt jetzt Zeilen. `resign` trägt den Auslöser (z. B. event=2/21 mit front=Finder, Stapel in observePanelHiding), `hide` kommt über didChangeOcclusionState. 0 close-Zeilen bleibt, weil SwiftUI das Panel ausblendet statt schließt; das ist nun belegt und kein Mangel mehr.
+
+Neue Beobachtungen (kein Befund): (a) `hide` feuert auch, wenn das Panel nur verdeckt ist (occlusionState ohne .visible), also Rauschen bei Überdeckung; unkritisch, resign bleibt die Ursachenzeile. (b) Der Occlusion-Beobachter liest `panel.isVisible`/`occlusionState` in `assumeIsolated` bei `queue: .main`; Mac-Job (Swift 6) baut und läuft grün, keine Isolationswarnung. (c) Datenschutz: nur Klassenname, Symbolnamen, Ereignistyp, Bundle-ID, Richtlinie.
+
+Confirmation:
+  AC: AC-1
+  Code reference: LooseEnds/Mac/MenuBarCapture.swift:103
+  Evidence: Kein XCTSkip mehr, XCTExpectFailure nonStrict mit #978 (MacGalleryTests.swift:477); Test im PR-Lauf als ausgeführt und bestanden belegt.
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-2
+  Code reference: LooseEnds/Mac/MenuBarCapture.swift:184
+  Evidence: Mac-Job 137357027432 success, Versuch 1, 0 failures.
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-3
+  Code reference: LooseEnds/Mac/MenuBarCapture.swift:111
+  Evidence: record(event,kind) schreibt Notice-Zeile; Aufrufer für key/close (Z. 202), resign (Z. 218) und hide (Z. 226); Log zeigt alle Felder und `Df`.
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-4
+  Code reference: LooseEnds/Mac/MenuBarCapture.swift:205
+  Evidence: applyDockPolicy weiter nur bei key/close und einmal am Start (Z. 185); resign/hide rufen es nicht auf; dismiss/showMain unberührt (Z. 92); kein print/try?; Funktionen unter 30 Zeilen.
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-5
+  Code reference: LooseEnds/Mac/MenuBarCapture.swift:213
+  Evidence: CI-Schritt if: always() und continue-on-error (ci.yml), Artefakt MacGalleryPanelLog vorhanden und lesbar (53 Zeilen).
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-6
+  Code reference: LooseEnds/Mac/MenuBarCapture.swift:190
+  Evidence: Diffstat 47a0273..596a4f3: nur ci.yml, MenuBarCapture.swift (+71), MacGalleryTests.swift, Skript, Spec/Artefakte; kein project.yml/Info.plist/Entitlements; App-Code unter 250 LoC.
+  Status: CONFIRMED
+
+Verdict dieser Runde: VERIFIED.
+
 ## Herkunft der Vorbedingungen
 
 Kein Sprachprofil konfiguriert (`precondition_origins.default_lang`). Die Änderung schreibt keine Produktionsfelder, nur Logzeilen.
@@ -109,18 +154,18 @@ Confirmation:
 AC-2: offen: braucht PR-Lauf.
 
 ## Verdict
-VERDICT: VERIFIED (vorläufig, Code und Skript)
-Begründung: F001-F003 behoben, keine neuen Befunde, Skript 10/10. Offen bis PR-Lauf (nicht bestätigt): AC-2 (Job grün), AC-1 (Test als ausgeführt), AC-3-Artefakt MacGalleryPanelLog, AC-5 (Upload, log show ohne sudo). Alte Begründung Runde 1: Keine CRITICAL/HIGH-Befunde, Skript 10/10. F001 (continueAfterFailure=false im Expect-Failure-Block, terminate() evtl. übersprungen) ist ohne PR-Lauf nicht entscheidbar; AC-2, AC-3-Artefakt und AC-5 brauchen einen PR-Lauf. F002 und F003 LOW.
+VERDICT: VERIFIED
+Begründung: F001-F004 geschlossen, PR-Lauf 45070786960 grün beim ersten Versuch, Panel-Log belegt key/resign/hide mit Stapel, Ereignis, Front-App, Richtlinie; Prüfskript 12/12; keine neuen Befunde. 6/6 ACs belegt.
 
 ## Geprüfte Dateien
 
 - sha256:ec7132c3043bc55f1a5c22e6fefe1f7bdcba1f483d1379d628f0378b0624fb2f  .github/workflows/ci.yml
-- sha256:f5ad9d5fcf2db21a521058439367a4f48402ba645f2178414d5dfc30658e2e8d  LooseEnds/Mac/MenuBarCapture.swift
+- sha256:b354653516113272d51ce7708458085acbb5405b0f5970d2cc6e47d4c85b2c15  LooseEnds/Mac/MenuBarCapture.swift
 - sha256:811b48f021298ad18c37ab8c9aee7e1038d1dae00e879c4fee32c07b07a916c6  LooseEndsUITests/MacGalleryTests.swift
 
 ## Prüfbasis
 
 - base: 47a0273e24e23732bbbe6040cd5086f8e0be43a1
 - blob:4f4404a20006b754025e1a7d58127f26fc14e052  .github/workflows/ci.yml
-- blob:941794e4637e556cad0e21a77341b38c9f964c5f  LooseEnds/Mac/MenuBarCapture.swift
+- blob:0c852efa08f009a5b89b66c24fdf05d46f91d519  LooseEnds/Mac/MenuBarCapture.swift
 - blob:750d1c73bc4488f4ba1101c9e272781c0f1a2927  LooseEndsUITests/MacGalleryTests.swift
