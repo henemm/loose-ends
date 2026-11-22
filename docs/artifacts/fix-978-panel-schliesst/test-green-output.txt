@@ -1,0 +1,46 @@
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 0.152s
+
+OK
+
+--- ./scripts/sim.sh build (iOS), Endzeilen ---
+Build Succeeded
+[sim] Build erfolgreich.
+
+--- ./scripts/sim.sh mac-build, Endzeilen ---
+Build Succeeded
+[sim] macOS-Build erfolgreich.
+
+--- xcodebuild build-for-testing -destination 'platform=macOS' -only-testing:LooseEndsUITests/MacGalleryTests (nur übersetzt, kein Lauf; Signatur wie im CI-Job) ---
+** TEST BUILD SUCCEEDED **
+
+--- ./scripts/sim.sh unit (iOS-Simulator), Ergebnisbündel Test-LooseEnds-2026.11.22_07-05-21-+0100.xcresult ---
+result=Passed total=1422 passed=1409 failed=0 skipped=13 expectedFailures=0
+(erster Lauf 07:01 brach vor den Tests ab: "Failed to install or launch the test runner ... Mach error -308 (ipc/mig) server died", Simulator-Infrastruktur; zweiter Lauf grün)
+Übersprungen (Mess-/Modell-/Gerätetests, nur mit eigenem Schalter): IphoneGuardrailReportTests/reportFromResultFile,
+RawSentenceReportTests/printsSeparateSection, RawTextExportTests/writeFixtureStoreForScriptRun, RawTextExportTests/readScriptResult,
+RealModelGuardrailTests/refusalRate, RealModelLatencyTests/coldThenWarm, RealModelTests/modelIsAvailable,
+RealModelTests/answersInShape, RealModelTests/titlesStayWithTheNote, SelfConsistencyReportTests/writesReport,
+SpeechLatencyTests/firstWordArrivesWithinThreeSecondsOfSpeechStart, SpeechLatencyTests/finalTextContainsKeyWords,
+TextFormModelReportTests/printsReport
+
+=== Nachbesserung Runde 1 (F001 continueAfterFailure, F002 Kommentar, F003 Fensterklasse in der Zeile) ===
+
+--- python3 scripts/test_menubar_panel_log.py ---
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 0.053s
+
+OK
+
+--- ./scripts/sim.sh mac-build, Endzeilen ---
+Build Succeeded
+[sim] macOS-Build erfolgreich.
+
+--- xcodebuild build-for-testing -destination 'platform=macOS' -only-testing:LooseEndsUITests/MacGalleryTests (nur übersetzt, kein Lauf) ---
+** TEST BUILD SUCCEEDED **
+
+--- ./scripts/sim.sh build (iOS), Endzeilen ---
+Build Succeeded
+[sim] Build erfolgreich.

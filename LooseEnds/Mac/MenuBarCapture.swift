@@ -100,6 +100,36 @@ enum MacWindows {
     }
 }
 
+/// The menu bar panel's own record (#978): one notice line when the panel becomes key and when it closes,
+/// always on, so a panel that closes by itself leaves its cause behind (stack, current event, front app,
+/// activation policy). No title, no task text: only names the system gives.
+@MainActor
+enum MenuBarPanelLog {
+    private static let panelLogger = Logger(subsystem: "com.henning.looseends", category: "MenuBarPanel")
+
+    /// `kind` is the window's class name only, never its title.
+    static func record(_ name: Notification.Name, kind: String) {
+        let event = name == NSWindow.willCloseNotification ? "close" : "key"
+        // Frame 0 is this function; the next ones show who closed or keyed the panel.
+        let stack = Thread.callStackSymbols.dropFirst().prefix(12)
+            .map { $0.split(separator: " ", omittingEmptySubsequences: true).dropFirst(3).joined(separator: " ") }
+            .joined(separator: " | ")
+        let current = NSApp.currentEvent.map { "\($0.type.rawValue) \(String(describing: $0.type))" } ?? "nil"
+        let front = NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "nil"
+        let policy = policyName(NSApp.activationPolicy())
+        panelLogger.notice("panel \(event, privacy: .public) window=\(kind, privacy: .public) event=\(current, privacy: .public) front=\(front, privacy: .public) policy=\(policy, privacy: .public) stack=\(stack, privacy: .public)")
+    }
+
+    private static func policyName(_ policy: NSApplication.ActivationPolicy) -> String {
+        switch policy {
+        case .regular: "regular"
+        case .accessory: "accessory"
+        case .prohibited: "prohibited"
+        @unknown default: "unknown \(policy.rawValue)"
+        }
+    }
+}
+
 /// Launch at login (#356): on by default from the first start, switchable in the settings. Never
 /// under tests, which host this app on the Mac.
 @MainActor
@@ -154,7 +184,14 @@ final class MacAppDelegate: NSObject, NSApplicationDelegate {
         }
         let center = NotificationCenter.default
         for name in [NSWindow.didBecomeKeyNotification, NSWindow.willCloseNotification] {
-            observers.append(center.addObserver(forName: name, object: nil, queue: .main) { _ in
+            observers.append(center.addObserver(forName: name, object: nil, queue: .main) { note in
+                // At the moment it happens, so stack and current event are the cause's (#978).
+                // Every NSPanel (the menu bar panel, but also open panels and alerts), so the line names the
+                // window's class; only that string goes into the main actor, never the window.
+                if let panel = note.object as? NSPanel {
+                    let kind = String(describing: type(of: panel))
+                    MainActor.assumeIsolated { MenuBarPanelLog.record(name, kind: kind) }
+                }
                 // After the close has gone through, not before.
                 DispatchQueue.main.async { MainActor.assumeIsolated { MacWindows.applyDockPolicy() } }
             })

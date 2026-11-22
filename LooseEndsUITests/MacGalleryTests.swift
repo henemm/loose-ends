@@ -458,10 +458,12 @@ final class MacGalleryTests: XCTestCase {
 
     /// #862 AC-2: "Open Loose Ends" closes the panel and opens the main window; once that window is closed
     /// with ⌘W, a single click on the symbol opens the panel again.
-    /// Skipped until #978 (PO 2026-11-21): the panel closes again in 2 of 15 runs, cause open.
+    /// #978 Schnitt 1: the panel closes again in 2 of 15 runs, cause open. Opening the panel, "Open Loose Ends"
+    /// and ⌘W stay hard checks; the click on the symbol, waiting for the symbol included, is an expected failure
+    /// (not strict), so a rare close shows up without turning CI red, and the app's `MenuBarPanel` lines
+    /// (artifact `MacGalleryPanelLog`) carry its cause.
     @MainActor
     func testMenuBarReopensAfterOpenAppWithOneClick() throws {
-        throw XCTSkip("#978: panel closes again now and then after Open Loose Ends + ⌘W; cause open")
         let app = macLaunch(dark: false)
         guard openPanel(in: app, label: "reopen-open-app") != nil else { return }
         app.buttons["menuBarOpenApp"].click()
@@ -470,7 +472,11 @@ final class MacGalleryTests: XCTestCase {
         app.typeKey("w", modifierFlags: .command)
         let closed = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: window)
         XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 10), .completed, "⌘W did not close the main window")
-        assertSymbolOpensPanelWithOneClick(app, label: "reopen-open-app")
+        // #978: an expected failure must not end the test here, so the app is still terminated below.
+        continueAfterFailure = true
+        XCTExpectFailure("#978: Panel schließt selten von selbst, Ursache wird geerntet", options: .nonStrict()) {
+            assertSymbolOpensPanelWithOneClick(app, label: "reopen-open-app")
+        }
         app.terminate()
     }
 
