@@ -85,6 +85,18 @@ class AppWritesPanelLines(unittest.TestCase):
         for needle in ("callStackSymbols", "NSApp.currentEvent", "frontmostApplication", "activationPolicy"):
             self.assertIn(needle, self.source, needle)
 
+    def test_events_cover_hiding(self):
+        """Run 44994038524: the SwiftUI panel is ordered out, never closed; resign and hide leave a line too."""
+        for name in ("didBecomeKeyNotification", "willCloseNotification",
+                     "didResignKeyNotification", "didChangeOcclusionStateNotification"):
+            self.assertIn(f"NSWindow.{name}", self.source, name)
+        for event in ('"key"', '"close"', '"resign"', '"hide"'):
+            self.assertIn(event, self.source, event)
+
+    def test_hiding_does_not_touch_dock_policy(self):
+        """AC-4: resign and hide only log, the Dock policy runs as often as before."""
+        self.assertNotIn("applyDockPolicy", function_body(self.source, "observePanelHiding"))
+
     def test_notice_level(self):
         self.assertRegex(self.source, r"panelLogger\.notice\(")
 

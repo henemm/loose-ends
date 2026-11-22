@@ -20,3 +20,10 @@ Wiedereinstieg: `/50-implement #978`, Step 8 fortsetzen.
 4. `workflow.py phase phase7_validate`, dann `/60-validate #978`.
 5. Nach Merge: Draft-PR #975 schließen, Zweig `diag/862-panel-schliesst` löschen, Stichtag der Ernte (≥ 15 Läufe) als Kommentar
    in #978; Issue bleibt offen.
+
+## Nachtrag 2026-11-22 (Runde 3)
+- PR-Lauf 44994038524: Mac-Job grün beim ersten Versuch, Test ausgeführt und bestanden (AC-1, AC-2, AC-5 belegt).
+  Artefakt `ci-44994038524-panel.log`: 23 key-, 0 close-Zeilen → F004 (HIGH, AC-3): Panel wird ausgeblendet, nicht geschlossen.
+- Nachbesserung (resign/hide, ohne zusätzliches applyDockPolicy) liegt UNCOMMITTET im Worktree; Prüfskript 12/12, Mac- und iOS-Bau grün.
+- Commit-Gate blockt (kein VERIFIED) → PO tippt „override“, dann committen, pushen, neuer Mac-Lauf, Belege holen
+  (resign/hide-Zeilen im Panel-Log), Adversary Runde 4, stempeln, registrieren, qa_gate, Phase 7.

@@ -56,6 +56,22 @@ Ohne Befund: `MainActor.assumeIsolated` im Beobachter mit `queue: .main` ist das
 Keine neuen Befunde. `record` ist 15 Zeilen.
 **Implementierer:**
 
+### Runde 3
+**Adversary:** Belege des PR-Laufs 44994038524 geprüft (Job „Mac Gallery (macOS)“ 137122254510, grün beim ersten Versuch; `testMenuBarReopensAfterOpenAppWithOneClick` ausgeführt und bestanden, 29,5 s, „0 failures (0 unexpected)“). Artefakt `MacGalleryPanelLog` als docs/artifacts/fix-978-panel-schliesst/ci-44994038524-panel.log: 23 Zeilen `panel key` (window=MenuBarExtraWindow<AnyView>, event, front, policy, stack; eine Zeile `_NSAlertPanel`), keine Nutzerdaten, kein Titel. Aber 0 `close`-Zeilen, obwohl das Panel im Lauf dutzendfach verschwindet.
+
+Finding:
+  ID: F004
+  Severity: HIGH
+  Category: spec_violation
+  Code reference: LooseEnds/Mac/MenuBarCapture.swift:186
+  Description: Das Panel `MenuBarExtraWindow` wird ausgeblendet, nicht geschlossen; `willCloseNotification` feuert nie. Das Ereignis, dessen Ursache #978 ernten soll (Panel verschwindet von selbst), hinterlässt keine Zeile.
+  Spec requirement: AC-3 — Zeile, wenn das Panelfenster Key wird oder schließt.
+  Conflict: Belegt durch das Artefakt des PR-Laufs: key ja, close nie.
+  Remediation: Zusätzlich `didResignKey` (Ursache: Stapel, Ereignis) und Ausblenden über `didChangeOcclusionState` protokollieren, ohne `applyDockPolicy` öfter auszulösen.
+
+Verdict dieser Runde: BROKEN (F004). AC-1, AC-2, AC-5 durch den Lauf belegt.
+**Implementierer:**
+
 ## Herkunft der Vorbedingungen
 
 Kein Sprachprofil konfiguriert (`precondition_origins.default_lang`). Die Änderung schreibt keine Produktionsfelder, nur Logzeilen.

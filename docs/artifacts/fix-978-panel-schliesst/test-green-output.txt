@@ -44,3 +44,24 @@ Build Succeeded
 --- ./scripts/sim.sh build (iOS), Endzeilen ---
 Build Succeeded
 [sim] Build erfolgreich.
+
+=== Nachbesserung Runde 3 (2026-11-22T16:03Z) ===
+Anlass: CI-Lauf 44994038524 (ci-44994038524-panel.log): 23 Zeilen "panel key", 0 Zeilen "close".
+Das SwiftUI-Panel (MenuBarExtraWindow) wird ausgeblendet, nicht geschlossen; willClose feuert nie.
+Neu: "resign" (NSWindow.didResignKeyNotification) und "hide" (NSWindow.didChangeOcclusionStateNotification,
+nur wenn das Panel danach nicht sichtbar ist), eigener Beobachter ohne applyDockPolicy (AC-4 unverändert).
+
+--- python3 scripts/test_menubar_panel_log.py ---
+............
+----------------------------------------------------------------------
+Ran 12 tests in 0.048s
+
+OK
+
+--- ./scripts/sim.sh mac-build, Endzeilen ---
+Build Succeeded
+[sim] macOS-Build erfolgreich.
+
+--- ./scripts/sim.sh build (iOS), Endzeilen ---
+Build Succeeded
+[sim] Build erfolgreich.
