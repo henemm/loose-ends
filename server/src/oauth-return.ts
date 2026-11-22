@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type pg from "pg";
-import { admit } from "./accounts.ts";
+import { admit, type Door } from "./accounts.ts";
 import { type AppleConfig, type KeyLookup, verifyIdentityToken } from "./apple.ts";
 import { appleReturnUrl, redeemCode } from "./apple-client.ts";
 import { encryptToken, storeRefreshToken } from "./apple-vault.ts";
@@ -12,7 +12,7 @@ import { PgAdapter } from "./oauth-adapter.ts";
 export type ReturnHandler = (req: IncomingMessage, res: ServerResponse) => Promise<void>;
 export type AppleReturnDeps = {
   pool: pg.Pool; config: AppleConfig; publicUrl: string; now: () => Date; fetch: typeof fetch; keys: KeyLookup;
-  log: (event: string) => void; allowedSubs?: ReadonlySet<string>;
+  log: (event: string) => void; allowedSubs?: Door;
 };
 export type Ticket = { uid: string; accountId: string } | { uid: string; error: "access_denied" | "temporarily_unavailable" };
 type Fields = { state: string; code?: string; error?: string };
