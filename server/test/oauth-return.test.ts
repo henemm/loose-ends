@@ -571,6 +571,34 @@ test("rueckweg: fremde sub auf der liste kommt bis zum ticket mit konto und web-
   assert.equal(await countOf(running.pool, "apple_tokens", `account_id = '${second}' AND client_id = '${WEB}'`), 1);
 });
 
+// #625 S5a, AC-10: the open door with a cap on the web way.
+const withOpen = (t: T, apple: Apple) => withApple(t, apple, { auth: { config: withWeb, fetch: apple.fetch, allowedSubs: { open: true, perDay: 1 } } } as never);
+
+test("rueckweg: offene tuer, grenze ergibt access_denied ohne konto und ohne token", async (t) => {
+  const apple = fakeApple();
+  const running = await withOpen(t, apple);
+  apple.sub = "apple-sub-2";
+  const first = await through(running, apple);
+  const firstRow = await ticketRow(running.pool, ticketOf(first.answer, first.at, "erste sub"));
+  const firstId = await accountOf(running.pool, "apple-sub-2");
+  note(firstId);
+  assert.equal(firstRow.account_id, firstId, "Ticket ohne Konto-ID");
+  assert.equal(await countOf(running.pool, "apple_tokens", `account_id = '${firstId}' AND client_id = '${WEB}'`), 1, "Web-Token nicht abgelegt");
+
+  apple.sub = "apple-sub-3";
+  const from = lines.length;
+  const { at, answer } = await through(running, apple);
+  const row = await ticketRow(running.pool, ticketOf(answer, at, "an der grenze"));
+  assert.deepEqual(row.payload, { uid: at.uid, error: "access_denied" });
+  assert.equal(row.account_id, null);
+  assert.equal(await countOf(running.pool, "accounts"), 1, "zweites Konto");
+  assert.equal(await countOf(running.pool, "accounts", "apple_sub = 'apple-sub-3'"), 0);
+  assert.deepEqual((await tokensOf(running.pool)).map((r) => r.account_id), [firstId], "Web-Token der zweiten sub abgelegt");
+  assert.deepEqual(lines.slice(from).map((line) => line.slice(25)), ["account refused"]);
+  for (const line of lines.slice(from)) assert.ok(!line.includes("apple-sub-3") && !line.includes(firstId), "sub oder Konto im Protokoll");
+  assertQuiet();
+});
+
 test("rueckweg: konto beim ablegen geloescht ergibt access_denied ohne konto-id", async (t) => {
   const apple = fakeApple();
   const logged: string[] = [];

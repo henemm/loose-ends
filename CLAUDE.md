@@ -70,6 +70,8 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
 - **Color budget.** Accent = tappable (incl. AI tint), red = time pressure, grey = hierarchy, green = the completion moment.
 - **The app never proposes the Knäuel or a bead** (Henning, 2026-10-26, #648 dropped): no row, no preselected menu
   entry, no notification suggests a task as the Knäuel or as a bead. Both are set by the user alone.
+- **The service is open to every Apple account, with a daily cap on new accounts** (Henning, 2026-11-22, #625): existing
+  accounts are never refused by the cap; the cap is an operating value, not code. Reason: Apple's reviewer needs access (2.1).
 - **No server of its own** (Henning, 2026-11-21, #966 not planned): „Alles soll auf meinem Server bei Hetzner laufen.“ The service
   for Claude stays on `rennwienix`, also once external users come (#625). Never propose or order another server or paid infrastructure
   unless Henning asks for it.

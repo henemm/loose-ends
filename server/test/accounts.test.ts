@@ -244,9 +244,10 @@ test("AC-12: the account functions write nothing to the console, and an error na
 });
 
 // #621 S6a: the door. Read through the module so the file runs before admit exists.
+type DoorValue = ReadonlySet<string> | { open: true; perDay: number };
 type Door = {
-  admit: (pool: pg.Pool, appleSub: string, allowed?: ReadonlySet<string>) => Promise<string | null>;
-  allowedSubsFromEnv: (env: NodeJS.ProcessEnv) => ReadonlySet<string> | undefined;
+  admit: (pool: pg.Pool, appleSub: string, door?: DoorValue) => Promise<string | null>;
+  doorFromEnv: (env: NodeJS.ProcessEnv) => DoorValue | undefined;
   ACCOUNT_LOCK_ID: number;
 };
 const door = accountsModule as unknown as Door;
@@ -300,20 +301,131 @@ test("tuer: liste entscheidet, auch ueber vorhandene konten", async (t) => {
   assert.equal(await accountCount(pool), 2);
 });
 
-test("tuer: allowedSubsFromEnv liest streng und nennt nie den wert", () => {
+test("tuer: doorFromEnv liest die liste streng und nennt nie den wert", () => {
   for (const value of [undefined, "", "   ", "\t\n"]) {
     const env = value === undefined ? {} : { ALLOWED_APPLE_SUBS: value };
-    assert.equal(door.allowedSubsFromEnv(env), undefined, JSON.stringify(value));
+    assert.equal(door.doorFromEnv(env), undefined, JSON.stringify(value));
   }
-  assert.deepEqual(door.allowedSubsFromEnv({ ALLOWED_APPLE_SUBS: "a, b ,c" }), new Set(["a", "b", "c"]));
-  assert.deepEqual(door.allowedSubsFromEnv({ ALLOWED_APPLE_SUBS: "a" }), new Set(["a"]));
+  assert.deepEqual(door.doorFromEnv({ ALLOWED_APPLE_SUBS: "a, b ,c" }), new Set(["a", "b", "c"]));
+  assert.deepEqual(door.doorFromEnv({ ALLOWED_APPLE_SUBS: "a" }), new Set(["a"]));
   for (const value of ["sub-geheim,,b", "sub-geheim,", ",sub-geheim", " , ", ","]) {
-    assert.throws(() => door.allowedSubsFromEnv({ ALLOWED_APPLE_SUBS: value }), (error: Error) => {
+    assert.throws(() => door.doorFromEnv({ ALLOWED_APPLE_SUBS: value }), (error: Error) => {
       assert.equal(error.message, "ALLOWED_APPLE_SUBS", value);
       assert.ok(!String(error.stack).includes("sub-geheim"), `${value}: Wert im Stack`);
       return true;
     }, value);
   }
+});
+
+// #625 S5a: the open door with a daily cap of new accounts.
+const open = (perDay: number) => ({ open: true as const, perDay });
+async function ageAll(pool: pg.Pool, age: string): Promise<void> {
+  await pool.query(`UPDATE accounts SET created_at = now() - interval '${age}'`);
+}
+
+test("tuer offen: neue konten bis zur grenze", async (t) => {
+  const pool = await migrated(t);
+  const ids = [];
+  for (const sub of ["sub-1", "sub-2", "sub-3"]) ids.push(await door.admit(pool, sub, open(3)));
+  for (const id of ids) assert.equal(typeof id, "string");
+  assert.equal(new Set(ids).size, 3);
+  assert.equal(await accountCount(pool), 3);
+});
+
+test("tuer offen: bestandskonto ueber der grenze kommt herein", async (t) => {
+  const pool = await migrated(t);
+  const first = await door.admit(pool, "sub-1", open(3));
+  await door.admit(pool, "sub-2", open(3));
+  await door.admit(pool, "sub-3", open(3));
+  assert.equal(await door.admit(pool, "sub-1", open(3)), first);
+  assert.equal(await accountCount(pool), 3);
+  assert.equal(await door.admit(pool, "sub-4", open(3)), null);
+  assert.equal(await accountCount(pool), 3);
+});
+
+test("tuer offen: ablehnung schreibt nichts und gibt die verbindung frei", async (t) => {
+  const pool = await migrated(t);
+  for (const sub of ["sub-1", "sub-2"]) await door.admit(pool, sub, open(2));
+  const before = (await pool.query("SELECT * FROM accounts ORDER BY id")).rows;
+  for (let i = 0; i < 3; i++) assert.equal(await door.admit(pool, `sub-neu-${i}`, open(2)), null);
+  assert.deepEqual((await pool.query("SELECT * FROM accounts ORDER BY id")).rows, before);
+  assert.equal((await pool.query("SELECT count(*)::int AS n FROM accounts WHERE apple_sub LIKE 'sub-neu-%'")).rows[0].n, 0);
+  const client = await pool.connect();
+  try {
+    const { rows } = await client.query("SELECT now() = statement_timestamp() AS outside");
+    assert.equal(rows[0].outside, true, "kein hängendes BEGIN auf der Verbindung");
+  } finally {
+    client.release();
+  }
+  assert.equal(pool.waitingCount, 0);
+  assert.equal(pool.idleCount, pool.totalCount, "jede Verbindung zurück im Pool");
+});
+
+test("tuer offen: gleitendes fenster von 24 stunden", async (t) => {
+  const pool = await migrated(t);
+  await findOrCreate(pool, "sub-alt-1");
+  await findOrCreate(pool, "sub-alt-2");
+  await ageAll(pool, "25 hours");
+  assert.equal(typeof (await door.admit(pool, "sub-neu-1", open(2))), "string", "alte Konten zählen nicht");
+  await ageAll(pool, "23 hours");
+  await pool.query("DELETE FROM accounts WHERE apple_sub = 'sub-alt-1'");
+  await pool.query("UPDATE accounts SET created_at = now() - interval '25 hours' WHERE apple_sub = 'sub-alt-2'");
+  assert.equal((await pool.query("SELECT count(*)::int AS n FROM accounts WHERE created_at > now() - interval '24 hours'")).rows[0].n, 1);
+  assert.equal(typeof (await door.admit(pool, "sub-neu-2", open(2))), "string");
+  await pool.query("UPDATE accounts SET created_at = now() - interval '23 hours' WHERE apple_sub LIKE 'sub-neu-%'");
+  assert.equal(await door.admit(pool, "sub-neu-3", open(2)), null, "zwei Konten in den letzten 23 Stunden");
+  await pool.query("UPDATE accounts SET created_at = now() - interval '25 hours' WHERE apple_sub LIKE 'sub-neu-%'");
+  assert.equal(typeof (await door.admit(pool, "sub-neu-3", open(2))), "string", "zurückdatiert zählen sie nicht mehr");
+});
+
+test("tuer offen: gleichzeitige neue konten ergeben genau die grenze", async (t) => {
+  const pool = await migrated(t);
+  (pool as unknown as { options: { max: number } }).options.max = 16;
+  const subs = Array.from({ length: 12 }, (_, i) => `sub-${i}`);
+  const results = await Promise.all(subs.map((sub) => door.admit(pool, sub, open(5))));
+  assert.equal(results.filter((id) => typeof id === "string").length, 5, `Ergebnisse: ${JSON.stringify(results)}`);
+  assert.equal(results.filter((id) => id === null).length, 7);
+  assert.equal(await accountCount(pool), 5);
+
+  const fresh = await migrated(t);
+  (fresh as unknown as { options: { max: number } }).options.max = 16;
+  const same = await Promise.all(Array.from({ length: 8 }, () => door.admit(fresh, "sub-gleich", open(5))));
+  assert.equal(new Set(same).size, 1);
+  assert.equal(typeof same[0], "string");
+  assert.equal(await accountCount(fresh), 1);
+});
+
+test("tuer: doorFromEnv liest streng und nennt nie den wert", () => {
+  const read = (subs?: string, perDay?: string) => {
+    const env: NodeJS.ProcessEnv = {};
+    if (subs !== undefined) env.ALLOWED_APPLE_SUBS = subs;
+    if (perDay !== undefined) env.NEW_ACCOUNTS_PER_DAY = perDay;
+    return door.doorFromEnv(env);
+  };
+  const refuses = (variable: string, subs?: string, perDay?: string) => {
+    assert.throws(() => read(subs, perDay), (error: Error) => {
+      assert.equal(error.message, variable, `${subs} / ${perDay}`);
+      for (const part of [subs, perDay]) {
+        const secret = part?.replaceAll(/[\s,*]/g, "");
+        if (secret) assert.ok(!String(error.stack).includes(secret), `${subs} / ${perDay}: Wert im Stack`);
+      }
+      return true;
+    }, `${subs} / ${perDay}`);
+  };
+  assert.equal(read(), undefined);
+  assert.equal(read("", ""), undefined);
+  assert.equal(read("  ", undefined), undefined);
+  assert.deepEqual(read("a, b ,c"), new Set(["a", "b", "c"]));
+  assert.deepEqual(read("*"), { open: true, perDay: 20 });
+  assert.deepEqual(read(" * "), { open: true, perDay: 20 });
+  assert.deepEqual(read("*", "7"), { open: true, perDay: 7 });
+  assert.deepEqual(read("*", ""), { open: true, perDay: 20 });
+  assert.deepEqual(read("*", "10000"), { open: true, perDay: 10000 });
+  for (const perDay of ["0", "-1", "1.5", "abc", "10001", "1e2", " 5x"]) refuses("NEW_ACCOUNTS_PER_DAY", "*", perDay);
+  for (const subs of ["*,a", "a,*", "a,,b", "a,", ","]) refuses("ALLOWED_APPLE_SUBS", subs);
+  refuses("NEW_ACCOUNTS_PER_DAY", undefined, "5");
+  refuses("NEW_ACCOUNTS_PER_DAY", "", "5");
+  refuses("NEW_ACCOUNTS_PER_DAY", "sub-a", "5");
 });
 
 // Session expiry (#615 S4a): last_used_at is set by SQL, the database clock decides.
