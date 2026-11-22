@@ -176,3 +176,4 @@ Mac-UI-Tests laufen nur im CI-Job „Mac Gallery (macOS)“ (macOS 27, App Sandb
 ## Changelog
 
 - 2026-11-22: Initiale Spec für #978 Schnitt 1 (Ernte der Ursache im echten Mac-Galerie-Job).
+- 2026-11-22 (Phase 7): Zusätzlich das Prüfskript `scripts/test_menubar_panel_log.py` (Testcode aus Phase 4, TDD-RED; prüft Diff und Panel-Log). AC-6 meint App- und Konfigurationsdateien; Testcode zählt nach Scoping-Regel nicht mit. App-Code tatsächlich +68/−3 statt ~30 (resign/hide-Zeilen aus Adversary-Runde 3).

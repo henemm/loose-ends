@@ -273,7 +273,7 @@ The job `ui-smoke-lang` runs `InboxDrawerSmokeTests` and `StartNumberTests` once
 If the label goes away or is renamed, follow `docs/reference/testflight.md` and adjust `runs-on` in
 `ci.yml`, `speech-stress.yml` and `testflight.yml`.
 The job „Mac Gallery (macOS)“ photographs the Mac app (`MacGalleryTests`, start page, New, detail, light and dark) and
-uploads the pictures `mac-gallery-*` as the artifact `MacGallery` (#511); Mac pictures come only from there, never from
+uploads the pictures `mac-gallery-*` as the artifact `MacGallery` (#511) and the panel's log lines as `MacGalleryPanelLog` (#978); Mac pictures come only from there, never from
 Henning's Mac. The same job runs `MacDetailClickTests` (#544) in the **App Sandbox of the real app**: it builds, re-signs the
 app with the sandbox keys of `project.yml` (`scripts/mac_ci_entitlements.py`, minus what needs a profile) and tests without
 rebuilding. Each test starts fresh, opens the detail from Loose ends or the start page and clicks the visible words: title,
@@ -473,7 +473,7 @@ not scope creep on the current one.
   `--ui-testing` a fixed fix, `--ui-testing-location-here` on the Altona hit, `--ui-testing-location-refused`). The rules
   (`isAlreadyThere`: haversine ≤ 150 m + accuracy, accuracy over 100 m or negative = unknown; the note order not watched >
   location off > Mac) live in `PlaceEditing`. `./scripts/sim.sh location <lat> <lon>` fakes the simulator's location
-- `LooseEnds/Mac` — `MenuBarCapture` (Mac only, #356): the menu bar panel with the same `CaptureView`, Dock icon only
+- `LooseEnds/Mac` — `MenuBarCapture` (Mac only, #356; logs panel key/resign/hide/close at notice level, category `MenuBarPanel`, #978): the menu bar panel with the same `CaptureView`, Dock icon only
   while a list window is open (`DockPolicy`), login item via `SMAppService` (on from the first start, never under tests);
   `MenuBarThreadImage` (#366): the menu bar symbol is the logo's thread, drawn from `ThreadShape.curvePoints` into a
   template `NSImage` (18 pt, 1x/2x, black on transparent; the raster in `MenuBarThreadRaster` is platform-neutral and unit-tested);
