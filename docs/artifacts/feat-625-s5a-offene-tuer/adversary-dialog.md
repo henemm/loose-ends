@@ -13,8 +13,8 @@ Datum: 2026-11-22 07:49
 - [x] **AC-8:** Ein ungültiger Wert stoppt den Prozess vor Pool und Port: GIVEN der gestartete Prozess (`main.ts`, Muster der Start-Tests) mit `ALLOWED_APPLE_SUBS=sub-a,,sub-geheim-4711` WHEN er startet THEN Exit 1, die Ausgabe enthält `door invalid: ALLOWED_APPLE_SUBS`, weder `sub-geheim-4711` noch `sub-a`, und keinen offenen Port; GIVEN `ALLOWED_APPLE_SUBS=*` und `NEW_ACCOUNTS_PER_DAY=zwanzig` THEN Exit 1 mit `door invalid: NEW_ACCOUNTS_PER_DAY` ohne den Wert. Test: `server/test/main.test.ts` „start: ungueltige tuer stoppt vor pool und port, ohne den wert zu nennen“ (ersetzt den Test mit der alten Meldung).
 - [x] **AC-9:** Die offene Tür gilt für die App über `POST /auth/apple`: GIVEN `authRoutes` mit Fake-Apple und der Tür `{ open: true, perDay: 1 }` WHEN eine fremde `sub` anmeldet THEN 200 mit Sitzungstoken und ein Konto; WHEN eine zweite, andere `sub` anmeldet (Grenze erreicht) THEN ein bares 401 (leerer Körper, `no-store`), keine Zeile in `accounts`, `sessions` und `apple_tokens` für sie, das Protokoll genau `["account refused"]`, die `sub` in keiner Antwort und keiner Zeile; WHEN die erste `sub` nochmals anmeldet THEN 200. Test: `server/test/auth.test.ts` „auth: offene tuer, fremde sub kommt herein, an der grenze 401“.
 - [x] **AC-10:** Die offene Tür gilt für den claude.ai-Rückweg: GIVEN der Rückweg (`service` über `start`, Fake-Apple, `through`) mit der Tür `{ open: true, perDay: 1 }` WHEN eine erste `sub` den Weg durchläuft THEN trägt das Ticket eine Konto-ID und das Web-Token ist abgelegt; WHEN eine zweite `sub` ihn durchläuft THEN antwortet er 303 auf `finish`, das Ticket ist `{ uid, error: "access_denied" }` mit `account_id` NULL, es gibt kein zweites Konto, kein abgelegtes Web-Token für sie, das Protokoll enthält genau `account refused` ohne `sub` oder Konto-ID. Test: `server/test/oauth-return.test.ts` „rueckweg: offene tuer, grenze ergibt access_denied ohne konto und ohne token“.
-- [ ] **AC-11:** Gesamtlauf: GIVEN der fertige Schnitt WHEN `./server/scripts/test-local.sh` (typecheck + alle Tests) läuft THEN ist er grün und räumt auf, ohne neue Abhängigkeit in `server/package.json` und ohne neue Migration; die CI `server.yml` ist auf dem PR grün (Beleg `green.txt`). Funktionslänge (höchstens 50 Zeilen) und Dateiliste belegt `/60-validate`, nicht ein Test.
-- [ ] **AC-12:** Ausgerollt mit unveränderter Betriebs-Tür: GIVEN der Merge-Commit WHEN `scripts/deploy-loose-ends.sh` (henemm-infra) auf rennwienix an genau diesem Commit läuft, die `.env` unverändert (Liste bleibt gesetzt, `NEW_ACCOUNTS_PER_DAY` nicht gesetzt) THEN antwortet `/health` mit 200, und Hennings Konto kommt weiter herein, belegt durch einen Aufruf von `get_now` über den claude.ai-Konnektor, der eine Antwort mit `nowCount` liefert. Der Beleg (`rollout.txt`: Commit-Kennung, `/health`-Status, Satz zur `get_now`-Antwort ohne `sub`, Token oder Listeninhalt) liegt im Belegordner.
+- [x] **AC-11:** Gesamtlauf: GIVEN der fertige Schnitt WHEN `./server/scripts/test-local.sh` (typecheck + alle Tests) läuft THEN ist er grün und räumt auf, ohne neue Abhängigkeit in `server/package.json` und ohne neue Migration; die CI `server.yml` ist auf dem PR grün (Beleg `green.txt`). Funktionslänge (höchstens 50 Zeilen) und Dateiliste belegt `/60-validate`, nicht ein Test.
+- [x] **AC-12:** Ausgerollt mit unveränderter Betriebs-Tür: GIVEN der Merge-Commit WHEN `scripts/deploy-loose-ends.sh` (henemm-infra) auf rennwienix an genau diesem Commit läuft, die `.env` unverändert (Liste bleibt gesetzt, `NEW_ACCOUNTS_PER_DAY` nicht gesetzt) THEN antwortet `/health` mit 200, und Hennings Konto kommt weiter herein, belegt durch einen Aufruf von `get_now` über den claude.ai-Konnektor, der eine Antwort mit `nowCount` liefert. Der Beleg (`rollout.txt`: Commit-Kennung, `/health`-Status, Satz zur `get_now`-Antwort ohne `sub`, Token oder Listeninhalt) liegt im Belegordner.
 - [x] **AC-13:** Dokumentation: GIVEN `CLAUDE.md` WHEN der `server/`-Abschnitt, Absatz `src/accounts.ts`, gelesen wird THEN beschreibt er `admit` mit den drei Zweigen (Liste, erstes Konto, offen mit Tagesgrenze), `doorFromEnv` mit `*` und `NEW_ACCOUNTS_PER_DAY` (Vorgabe 20, 24 Stunden gleitend, Bestandskonten nie abgewiesen, gelöschtes Konto zählt nicht mehr), die Meldung `door invalid: <VARIABLE>`, und der Satz „the rule goes with #625“ ist durch den Stand ersetzt; die Grundregel „The service is open to every Apple account …“ steht weiter im Abschnitt „Ground rules“ (Beleg: Lesen, Diff).
 
 ## Dialog
@@ -28,6 +28,10 @@ Fragen: (a) Was, wenn ROLLBACK selbst wirft (tote Verbindung)? (b) Leerraum-Wert
 ### Runde 2
 **Adversary:** `doorFromEnv` direkt mit Grenzfällen gefahren: `*`+`" 5 "` → Fehler `NEW_ACCOUNTS_PER_DAY` (Spec: „nur Ziffern“, also streng, schlägt zu, öffnet nie); `"007"` → 7; 400 Neunen → Fehler; Zeilenumbruch+5 → Fehler; `" * "` und `*`+`" "` → 20; `*,a` → `ALLOWED_APPLE_SUBS`; leer+`5` und `a`+`5` → `NEW_ACCOUNTS_PER_DAY`; 10000 ok, 10001 Fehler. Jede Fehlermeldung ist genau der Variablenname, `error.stack` ist `Error: <NAME>` ohne Frames (Helfer `invalid`). `main.ts` schreibt `door invalid: ${message}`; Test (main.test.ts:550) prüft beide Fälle, kein Wert, kein Pool, kein Port; im Gesamtlauf grün. Beide Anmeldewege: auth.test.ts:152 (200, dann 401, Protokoll `["account refused"]`, erneut 200) und oauth-return.test.ts:577 (`access_denied`, kein Konto, kein Token) im Gesamtlauf grün. CLAUDE.md-Absatz nennt drei Zweige, `*`, `NEW_ACCOUNTS_PER_DAY` (20, 1–10000, 24 h gleitend, Bestand nie abgewiesen, gelöscht zählt nicht), `door invalid: <VARIABLE>`; „the rule goes with #625“ kommt nicht mehr vor; Grundregel in „Ground rules“ (Zeile 73) steht. ADR-21-Nachtrag eine Zeile vorhanden. Keine Änderung an package.json und Migrationen. Offen: AC-11 (CI `server.yml`, Beleg heißt `test-green-output.txt`, nicht `green.txt`) und AC-12 (Rollout) sind vor dem Commit nicht belegbar.
 **Implementierer:** Beides ist nachgelagert (PR, CI, Rollout); lokal nichts offen.
+
+### Runde 3
+**Adversary:** AC-11: `gh pr view 983` liefert Kopf `da010c3fd979beedebb1d25a1529a4be7e2a8852`, Check „Server (Node 26, Postgres 18)“ SUCCESS (auch „Image (Docker, Postgres 18)“ und alle weiteren Checks in `green.txt` SUCCESS, `green.txt` nennt denselben Kopf). `git diff da010c3 bf1fccf -- server` ist leer, der Squash-Commit `bf1fccf` trägt also denselben Server-Stand wie der geprüfte PR-Kopf (der Rest des Gesamtdiffs ist Drift von `main`, Merge-Basis 47a0273). `git diff bf1fccf^ bf1fccf -- server/package.json server/migrations` leer: keine neue Abhängigkeit, keine Migration. F001 (ein roter Lokallauf von drei): die CI auf dem PR-Kopf war grün, der Fehler trat nicht wieder auf; er hängt nicht an der Tür, F001 bleibt als Hinweis ohne Blockade. AC-12: `rollout.txt` nennt `bf1fccf03ac88993752cb1aabf7db645728af7f0`, Deploy Exit 0, Betriebs-Umgebung unverändert (Liste, kein `*`, Grenze nicht gesetzt), `/health` intern und öffentlich 200, `get_now`-Satz. Selbst geprüft: `curl https://loose-ends.henemm.com/health` ergibt 200 `{"status":"ok","db":"up","migrated":true,...}`; `docker inspect loose-ends-server` ergibt `loose-ends-server:bf1fccf running`. Die Umgebungsdatei des Servers habe ich nicht gelesen. `rollout.txt` enthält weder `sub` noch Token noch Listeninhalt (Durchsicht und Mustersuche ohne Treffer). `get_now` über den claude.ai-Konnektor (Orchestrator, nach dem Rollout): Antwort mit `nowCount` 1, `generatedAt` 2026-11-22T15:47:43Z; das belegt, dass die Bearer-Prüfung auf dem neuen Image Hennings Konto weiter durchlässt. Einschränkung: den Aufruf selbst konnte ich nicht wiederholen, ich stütze mich auf die Angabe des Orchestrators; Image, Gesundheit und Beleg sind unabhängig geprüft.
+**Implementierer:** Nichts offen.
 
 ## Findings
 
@@ -89,7 +93,17 @@ Confirmation:
   Evidence: CLAUDE.md-Absatz und ADR-21-Nachtrag im Diff gelesen, alle geforderten Inhalte vorhanden, Satz „the rule goes with #625“ entfernt, Grundregel Zeile 73 erhalten.
   Status: CONFIRMED
 
-Offen, nicht abgehakt: AC-11 (nur der lokale Teil belegt: typecheck + 512 Tests grün in zwei von drei Läufen; CI `server.yml` auf dem PR und `green.txt` fehlen) und AC-12 (Rollout auf rennwienix, `rollout.txt`, `/health`, `get_now`).
+Confirmation:
+  AC: AC-11
+  Code reference: server/src/main.ts:264
+  Evidence: CI-Check „Server (Node 26, Postgres 18)“ SUCCESS auf PR-Kopf da010c3 (gh pr view, green.txt); `git diff da010c3 bf1fccf -- server` leer, `server/package.json` und `server/migrations/` im Merge-Commit unverändert.
+  Status: CONFIRMED
+
+Confirmation:
+  AC: AC-12
+  Code reference: server/src/accounts.ts:100
+  Evidence: `/health` öffentlich 200 ok migrated, Container `loose-ends-server:bf1fccf running`, rollout.txt ohne sub/Token/Listeninhalt, Betriebs-Umgebung unverändert laut Beleg; `get_now` über den Konnektor lieferte nowCount (Angabe des Orchestrators).
+  Status: CONFIRMED
 
 ## Herkunft der Vorbedingungen
 
@@ -97,8 +111,8 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
 ## Verdict
 
-VERDICT: AMBIGUOUS
-Lokal belegt: AC-1 bis AC-10 und AC-13 sowie der lokale Teil von AC-11. Offen und nicht belegbar vor dem Commit: AC-11 (CI `server.yml` grün auf dem PR) und AC-12 (Rollout mit unveränderter Betriebs-Umgebung). Ein Lauf von drei war rot (F001, nicht reproduzierbar, unabhängig von der Tür).
+VERDICT: VERIFIED
+Alle 13 Punkte belegt; AC-11 (CI grün auf dem PR-Kopf, Server-Stand im Merge identisch, keine neue Abhängigkeit oder Migration) und AC-12 (Rollout bf1fccf, /health 200, Image läuft, get_now über den Konnektor) in Runde 3 ergänzt. F001 war ein einmaliger Lokal-Flake, die CI blieb grün.
 Tests: 512 bestanden, 0 fehlgeschlagen, 0 übersprungen (Läufe 2 und 3); Lauf 1: 511 bestanden, 1 fehlgeschlagen.
 
 ## Geprüfte Dateien
@@ -110,22 +124,7 @@ Tests: 512 bestanden, 0 fehlgeschlagen, 0 übersprungen (Läufe 2 und 3); Lauf 1
 
 ## Prüfbasis
 
-- base: 47a0273e24e23732bbbe6040cd5086f8e0be43a1
-- blob:2b2fc88c6853ee3cfd397985417733b14f15cb55  server/src/accounts.ts
-- blob:7f59a02216e48a1e1cd89c63288e881bac0d1b0f  server/src/auth.ts
-- blob:6650a6fc22ef0131ed3545a3c573270c43769a56  server/src/main.ts
-- blob:fed831ee766eb36c8ae803a7d817091bc239343a  server/src/oauth-return.ts
-
-## Geprüfte Dateien
-
-- sha256:13716c2c141125a114c807c75f43aed71a81e5e98cf4ae7414e2ae66822aa92b  server/src/accounts.ts
-- sha256:03256ec7a50a1ca52cbd591a1aa8d11b627f38b101dded6b8a9acaaab2765581  server/src/auth.ts
-- sha256:50daaaf94a8ad2d59e6d14314d87d90fb0affd95ea6de9a50b823694ab709bdc  server/src/main.ts
-- sha256:7da0438f6ccfcdd2767ab0b6f4da1bc8f9d9f0ea9b6624432178472b8cb5ee2a  server/src/oauth-return.ts
-
-## Prüfbasis
-
-- base: 47a0273e24e23732bbbe6040cd5086f8e0be43a1
+- base: bf1fccf03ac88993752cb1aabf7db645728af7f0
 - blob:2b2fc88c6853ee3cfd397985417733b14f15cb55  server/src/accounts.ts
 - blob:7f59a02216e48a1e1cd89c63288e881bac0d1b0f  server/src/auth.ts
 - blob:6650a6fc22ef0131ed3545a3c573270c43769a56  server/src/main.ts
