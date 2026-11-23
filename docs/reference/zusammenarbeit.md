@@ -106,6 +106,11 @@ Alltagsgerät: Messungen laufen in Scheiben in der Labor-App, die er selbst anti
   es dessen letztes Teil war; ans Boardende schieben reicht nicht (#30).
 - **Termine merkt sich Claude**, nicht Henning (#796): Auslöser gefahrlos vorziehen und die Abweichung im Beleg nennen,
   sonst den Schritt mit Datum im Issue festhalten und selbst nachholen.
+- **Kein „erst sammeln, dann auswerten“** (Henning, 2026-11-23, #978: „ich mag solche Issues nicht, wo du erst etwas
+  sammeln musst, das klappt meistens nicht“): Ein Issue bekommt keinen Stichtag „nach N Läufen“ als Plan. Zuerst wird
+  ausgewertet, was schon da ist (CI-Verlauf samt roter Läufe, Artefakte, Logs); fehlen Fälle, führt Claude sie selbst
+  herbei (gezielte Wiederholungsläufe, Nachstellen unter Last) und arbeitet dann in derselben Sitzung weiter. Anlass:
+  #978 sollte bis 2026-11-30 Panel-Logs sammeln, obwohl der rote main-Lauf vom 2026-11-23 schon einen Fall mit Log enthielt.
 - Ein dauerhafter Test prüft nie `git diff origin/main` (flacher CI-Checkout, nach dem Merge leer); Dateigrenzen
   werden einmalig in `/60-validate` belegt (#621).
 
