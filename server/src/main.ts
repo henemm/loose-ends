@@ -7,7 +7,7 @@ import { pipeline } from "node:stream/promises";
 import { setTimeout as sleep } from "node:timers/promises";
 import type { ReadableStream as NodeReadableStream } from "node:stream/web";
 import pg from "pg";
-import { allowedSubsFromEnv } from "./accounts.ts";
+import { type Door, doorFromEnv } from "./accounts.ts";
 import { type AppleConfig, type KeyLookup, loadAppleConfig } from "./apple.ts";
 import { createJwks } from "./apple-jwks.ts";
 import { type ApnsConfig, apnsConfigFromEnv, type ApnsRequest, type ApnsResponse, createWaker } from "./apns.ts";
@@ -28,7 +28,7 @@ export type Route = (request: Request) => Promise<Response>;
 export type StartOptions = {
   databaseUrl: string; port: number; host?: string; migrationsDir: string; retryMs?: number; maxAttempts?: number;
   now?: () => number; applicationName?: string; extraRoutes?: Record<string, Route>;
-  auth?: { config?: AppleConfig; fetch?: typeof fetch; allowedSubs?: ReadonlySet<string> };
+  auth?: { config?: AppleConfig; fetch?: typeof fetch; allowedSubs?: Door };
   oauth?: { publicUrl?: string; verifier?: OAuthTokenVerifier; keys?: OAuthKeys; fetch?: typeof fetch; interaction?: Interaction;
     appleReturn?: ReturnHandler;
   };
@@ -261,12 +261,12 @@ async function shutdown(server: http.Server, pool: pg.Pool, closeMcp: () => Prom
   await closeMcp().catch(() => logError("mcp close failed"));
 }
 
-// The door's list; an invalid value stops the process before pool and port, never naming the value.
-function allowedSubsOrExit(): ReadonlySet<string> | undefined {
+// The door; an invalid value stops the process before pool and port, the message names only the variable.
+function allowedSubsOrExit(): Door | undefined {
   try {
-    return allowedSubsFromEnv(process.env);
-  } catch {
-    logError("allowed subs invalid: ALLOWED_APPLE_SUBS");
+    return doorFromEnv(process.env);
+  } catch (error) {
+    logError(`door invalid: ${(error as Error).message}`);
     process.exit(1);
   }
 }

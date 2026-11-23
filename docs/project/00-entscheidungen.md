@@ -328,6 +328,7 @@ Der Rückfall „Supabase Pro“ für den OAuth-Teil entfällt: Supabase Auth ka
 zertifizierten Bibliothek. CIMD ist ein Entwurf (draft-02); ein Update der Bibliothek nur bewusst, mit dem Durchlauf-Test aus S3.
 Verworfen: Eigenbau auf dem MCP-SDK (es hat keinen Aussteller, kippt „nie selbst schreiben“), Supabase Auth (kippt die Ablage aus
 #621 S2 und Weg B aus #612).
+**Nachtrag 2026-11-22 (#625 S5a, Entscheidung Henning):** Die Tür kann offen laufen (`ALLOWED_APPLE_SUBS=*`): jedes Apple-Konto bekommt ein Konto, neue höchstens `NEW_ACCOUNTS_PER_DAY` (Vorgabe 20) in 24 Stunden gleitend, Bestandskonten nie abgewiesen; geöffnet wird erst im Store-Schnitt (S5d), bis dahin bleibt die Liste.
 
 **ADR-17 Ergänzte Screens nach Lückenprüfung.** Als nächstes (manuell sortiert), Neu (Eingang),
 Feld-Picker statt Formular, Wisch- und Halten-Gesten mit Verschieben (Morgen, Wochenende, nächste Woche,

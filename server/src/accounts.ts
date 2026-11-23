@@ -16,16 +16,48 @@ export async function findOrCreate(pool: pg.Pool, appleSub: string): Promise<str
 // Advisory lock for the first account (#621 S6a); distinct from MIGRATE_LOCK_ID.
 export const ACCOUNT_LOCK_ID = 7_960_613_002;
 
-// The door (#621 S6a): with a list only its subs get in, existing accounts too; without one only the first account is
-// created, after that only existing subs get in. null = refused, nothing written.
-export async function admit(pool: pg.Pool, appleSub: string, allowed?: ReadonlySet<string>): Promise<string | null> {
-  if (allowed === undefined) return admitFirst(pool, appleSub);
-  if (!allowed.has(appleSub)) return null;
+// The door: a list of subs, open with a cap on new accounts per day (#625 S5a), or undefined (first account only).
+export type Door = ReadonlySet<string> | { open: true; perDay: number };
+
+// With a list only its subs get in, existing accounts too; open: existing subs always, new ones up to perDay in 24 hours;
+// without a door only the first account is created, after that only existing subs get in. null = refused, nothing written.
+export async function admit(pool: pg.Pool, appleSub: string, door?: Door): Promise<string | null> {
+  if (door === undefined) return admitFirst(pool, appleSub);
+  if ("open" in door) return admitOpen(pool, appleSub, door.perDay);
+  if (!door.has(appleSub)) return null;
   const result = await pool.query(
     "INSERT INTO accounts (apple_sub) VALUES ($1) ON CONFLICT (apple_sub) DO UPDATE SET apple_sub = EXCLUDED.apple_sub RETURNING id",
     [appleSub],
   );
   return result.rows[0].id;
+}
+
+// One transaction under ACCOUNT_LOCK_ID: an existing sub gets its account, also over the cap; a new one only while fewer
+// than perDay accounts were created in the last 24 hours (database clock). A deleted account no longer counts.
+async function admitOpen(pool: pg.Pool, appleSub: string, perDay: number): Promise<string | null> {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    await client.query("SELECT pg_advisory_xact_lock($1)", [ACCOUNT_LOCK_ID]);
+    const found = await client.query("SELECT id FROM accounts WHERE apple_sub = $1", [appleSub]);
+    if (found.rowCount === 1) {
+      await client.query("COMMIT");
+      return found.rows[0].id;
+    }
+    const counted = await client.query("SELECT count(*)::int AS n FROM accounts WHERE created_at > now() - interval '24 hours'");
+    if (counted.rows[0].n >= perDay) {
+      await client.query("ROLLBACK");
+      return null;
+    }
+    const created = await client.query("INSERT INTO accounts (apple_sub) VALUES ($1) RETURNING id", [appleSub]);
+    await client.query("COMMIT");
+    return created.rows[0].id;
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
 }
 
 // One transaction under ACCOUNT_LOCK_ID: an existing sub gets its account, a new one only while accounts is empty.
@@ -55,13 +87,33 @@ async function admitFirst(pool: pg.Pool, appleSub: string): Promise<string | nul
   }
 }
 
-// ALLOWED_APPLE_SUBS: missing or blank → undefined (no list); else comma-separated, trimmed, no empty entry.
-// The error names only the variable, never its value.
-export function allowedSubsFromEnv(env: NodeJS.ProcessEnv): ReadonlySet<string> | undefined {
+// An error that carries only the variable's name: its stack holds no frames, so no fragment of the value can show up there.
+function invalid(variable: string): Error {
+  const error = new Error(variable);
+  error.stack = `Error: ${variable}`;
+  return error;
+}
+
+// ALLOWED_APPLE_SUBS: missing or blank → undefined (first account only); exactly "*" → open with NEW_ACCOUNTS_PER_DAY
+// (default 20, digits only, 1 to 10000); else comma-separated, trimmed, no empty entry, no "*". NEW_ACCOUNTS_PER_DAY set
+// without "*" is an error. The error names only the variable, never its value.
+export function doorFromEnv(env: NodeJS.ProcessEnv): Door | undefined {
   const raw = env.ALLOWED_APPLE_SUBS;
-  if (raw === undefined || raw.trim() === "") return undefined;
+  const cap = env.NEW_ACCOUNTS_PER_DAY;
+  const capSet = cap !== undefined && cap.trim() !== "";
+  if (raw === undefined || raw.trim() === "") {
+    if (capSet) throw invalid("NEW_ACCOUNTS_PER_DAY");
+    return undefined;
+  }
+  if (raw.trim() === "*") {
+    if (!capSet) return { open: true, perDay: 20 };
+    const perDay = /^[0-9]+$/.test(cap) ? Number(cap) : Number.NaN;
+    if (!(perDay >= 1 && perDay <= 10000)) throw invalid("NEW_ACCOUNTS_PER_DAY");
+    return { open: true, perDay };
+  }
   const subs = raw.split(",").map((entry) => entry.trim());
-  if (subs.some((entry) => entry === "")) throw new Error("ALLOWED_APPLE_SUBS");
+  if (subs.some((entry) => entry === "" || entry === "*")) throw invalid("ALLOWED_APPLE_SUBS");
+  if (capSet) throw invalid("NEW_ACCOUNTS_PER_DAY");
   return new Set(subs);
 }
 

@@ -444,7 +444,7 @@ test("einhaengen: weiche apple env", async () => {
 const MAIN = join(import.meta.dirname, "../src/main.ts");
 function child(env: Record<string, string>) {
   const base = Object.fromEntries(Object.entries(process.env)
-    .filter(([k]) => !k.startsWith("APPLE_") && !k.startsWith("OAUTH_") && !k.startsWith("APNS_") && k !== "ALLOWED_APPLE_SUBS" && k !== "NODE_TEST_CONTEXT"));
+    .filter(([k]) => !k.startsWith("APPLE_") && !k.startsWith("OAUTH_") && !k.startsWith("APNS_") && k !== "ALLOWED_APPLE_SUBS" && k !== "NEW_ACCOUNTS_PER_DAY" && k !== "NODE_TEST_CONTEXT"));
   const proc = spawn(process.execPath, [MAIN], { env: { ...base, HOST: "127.0.0.1", ...env }, stdio: ["ignore", "pipe", "pipe"] });
   let output = "";
   proc.stdout.on("data", (chunk) => { output += chunk; });
@@ -546,19 +546,25 @@ test("main: ungueltige oauth schluessel brechen start ab", async (t) => {
   }
 });
 
-// #621 S6a, AC-5: an invalid list stops the process before pool and listen, naming only the variable.
-test("start: ungueltige ALLOWED_APPLE_SUBS stoppt vor pool und port, ohne den wert zu nennen", async (t) => {
+// #625 S5a, AC-8 (replaces #621 S6a AC-5): an invalid door stops the process before pool and listen, naming only the variable.
+test("start: ungueltige tuer stoppt vor pool und port, ohne den wert zu nennen", async (t) => {
   const dbHits: number[] = [];
   const fakeDb = createServer((socket) => { dbHits.push(1); socket.destroy(); });
   await new Promise<void>((done) => fakeDb.listen(0, "127.0.0.1", done));
   t.after(() => new Promise<void>((done) => fakeDb.close(() => done())));
   const dbUrl = `postgres://postgres@127.0.0.1:${(fakeDb.address() as { port: number }).port}/postgres`;
-  const run = child({ ALLOWED_APPLE_SUBS: "sub-a,,sub-geheim-4711", DATABASE_URL: dbUrl, PORT: String(await freePort()) });
-  const code = await within(run.exited, 5000, () => run.proc.kill("SIGKILL"));
-  assert.equal(code, 1, `Exit-Code: ${run.output()}`);
-  assert.ok(run.output().includes("allowed subs invalid: ALLOWED_APPLE_SUBS"), run.output());
-  for (const value of ["sub-geheim-4711", "sub-a"]) assert.ok(!run.output().includes(value), `Wert in der Ausgabe: ${value}`);
-  assert.doesNotMatch(run.output(), /listening/);
+  const cases: [Record<string, string>, string, string[]][] = [
+    [{ ALLOWED_APPLE_SUBS: "sub-a,,sub-geheim-4711" }, "door invalid: ALLOWED_APPLE_SUBS", ["sub-geheim-4711", "sub-a"]],
+    [{ ALLOWED_APPLE_SUBS: "*", NEW_ACCOUNTS_PER_DAY: "zwanzig" }, "door invalid: NEW_ACCOUNTS_PER_DAY", ["zwanzig"]],
+  ];
+  for (const [vars, line, secrets] of cases) {
+    const run = child({ ...vars, DATABASE_URL: dbUrl, PORT: String(await freePort()) });
+    const code = await within(run.exited, 5000, () => run.proc.kill("SIGKILL"));
+    assert.equal(code, 1, `Exit-Code: ${run.output()}`);
+    assert.ok(run.output().includes(line), run.output());
+    for (const value of secrets) assert.ok(!run.output().includes(value), `Wert in der Ausgabe: ${value}`);
+    assert.doesNotMatch(run.output(), /listening/);
+  }
   assert.equal(dbHits.length, 0, "Pool geöffnet");
 });
 

@@ -1,15 +1,15 @@
 import type pg from "pg";
-import { admit, createSession, type Deletion, deleteAccount, endSession, resolveSession } from "./accounts.ts";
+import { admit, createSession, type Door, type Deletion, deleteAccount, endSession, resolveSession } from "./accounts.ts";
 import { type AppleConfig, type KeyLookup, verifyIdentityToken } from "./apple.ts";
 import { redeemCode, revokeToken } from "./apple-client.ts";
 import { decryptToken, encryptToken, storeRefreshToken } from "./apple-vault.ts";
 import type { Route } from "./main.ts";
 
 // log gets only the fixed events "account refused", "apple revoke skipped" and "apple revoke failed"; silent without it.
-// allowedSubs: the door's list (admit); without it only the first account is created.
+// allowedSubs: the door (admit): a list or open with a daily cap; without it only the first account is created.
 export type AuthDeps = {
   pool: pg.Pool; config?: AppleConfig; keys?: KeyLookup; fetch: typeof fetch; now: () => number; log?: (event: string) => void;
-  allowedSubs?: ReadonlySet<string>;
+  allowedSubs?: Door;
 };
 type Login = { identityToken: string; nonce: string; code: string };
 

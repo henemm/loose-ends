@@ -148,6 +148,39 @@ test("auth: fremde sub wird abgewiesen, kein konto, keine sitzung, kein token", 
   assert.deepEqual(lines, ["account refused"]);
 });
 
+// #625 S5a, AC-9: the open door with a cap; at the cap a new sub gets the same bare 401 as a list refusal.
+test("auth: offene tuer, fremde sub kommt herein, an der grenze 401", async (t) => {
+  const pool = await migrated(t);
+  const lines: string[] = [];
+  const opened = { log: (event: string) => void lines.push(event), allowedSubs: { open: true, perDay: 1 } } as unknown as Partial<AuthDeps>;
+  const first = `${SUB}.erst`;
+  const second = `${SUB}.zweit`;
+  const as = (sub: string) => login({ identityToken: jwt({ sub }) });
+
+  const admitted = await rig(pool, appleOk(first), opened).routes["/auth/apple"](as(first));
+  assert.equal(admitted.status, 200, "fremde sub bei offener Tür");
+  const { sessionToken } = (await admitted.json()) as { sessionToken: string };
+  assert.notEqual(await resolveSession(pool, sessionToken), null);
+  assert.equal(await count(pool, "accounts"), 1);
+
+  const res = await rig(pool, appleOk(second), opened).routes["/auth/apple"](as(second));
+  assert.equal(res.status, 401, "an der Grenze");
+  assert.equal(res.headers.get("cache-control"), "no-store");
+  const body = await res.text();
+  assert.equal(body, "");
+  assert.equal(await count(pool, "accounts"), 1);
+  assert.equal((await pool.query("SELECT count(*)::int AS n FROM accounts WHERE apple_sub = $1", [second])).rows[0].n, 0);
+  assert.equal(await count(pool, "sessions"), 1, "keine Sitzung für die zweite sub");
+  assert.equal(await count(pool, "apple_tokens"), 1, "kein Token für die zweite sub");
+  assert.deepEqual(lines, ["account refused"]);
+  for (const text of [...lines, body, JSON.stringify([...res.headers])]) assert.ok(!text.includes(second), "sub in Antwort oder Protokoll");
+
+  const again = await rig(pool, appleOk(first), opened).routes["/auth/apple"](as(first));
+  assert.equal(again.status, 200, "Bestandskonto über der Grenze");
+  assert.equal(await count(pool, "accounts"), 1);
+  assert.deepEqual(lines, ["account refused"]);
+});
+
 const BIG ="x".repeat(16 * 1024 + 1);
 const JSON_H = { "content-type": "application/json" };
 const INPUT: [string, () => Request, number][] = [
