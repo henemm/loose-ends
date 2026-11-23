@@ -12,6 +12,7 @@ Geprüft wird mit festen Eingaben:
 import importlib.util
 import json
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -258,12 +259,63 @@ class WorkflowExpectedTests(unittest.TestCase):
 class CallersTests(unittest.TestCase):
     """F003: nur die führenden Rahmen des Beobachters fallen weg, tiefere bleiben."""
 
+    AFTER_OBSERVER = r"nonisolated static func afterObserver\(_ frames: \[String\]\) -> ArraySlice<String> \{.*?\n    \}\n"
+
+    def after_observer_source(self):
+        body = re.search(self.AFTER_OBSERVER, CAPTURE.read_text(), re.S)
+        self.assertIsNotNone(body, "afterObserver fehlt in MenuBarCapture.swift")
+        return body.group(0)
+
     def test_callers_drops_only_leading_frames(self):
         text = CAPTURE.read_text()
-        body = re.search(r"static func callers\(\).*?\n    \}\n", text, re.S)
-        self.assertIsNotNone(body)
-        self.assertIn("drop(while:", body.group(0))
-        self.assertNotIn(".filter", body.group(0))
+        callers = re.search(r"static func callers\(\).*?\n    \}\n", text, re.S)
+        self.assertIsNotNone(callers)
+        self.assertIn("afterObserver(", callers.group(0))
+        body = self.after_observer_source()
+        self.assertIn("drop(while:", body)
+        self.assertNotIn(".filter", body)
+
+    def test_after_observer_behaviour(self):
+        """F101: der echte Rumpf von `afterObserver`, mit swiftc gebaut und an festen Stapeln ausgeführt."""
+        swiftc = shutil.which("swiftc")
+        if swiftc is None:
+            self.skipTest("swiftc fehlt")
+        body = self.after_observer_source()
+        cases = {
+            "ci": [
+                "$sxs5Error_pIgrzo_xsAA_pIegrzo_s8SendableRzlTR + 24",
+                "$sScM14assumeIsolated_x + 424",
+                "$s9LooseEnds14MacAppDelegateC14observeWindows_x",
+                "$s10Foundation12NotificationVIeghn_So14NSNotificationCIeyBhy_TR + 184",
+                "-[NSWindow becomeKeyWindow] + 856",
+            ],
+            "none": ["a", "b", "c"],
+            "deeper": ["t", "MacAppDelegate a", "MenuBarPanelLog b", "y", "MacAppDelegate z"],
+            "empty": [],
+        }
+        main = "\n".join(
+            f"print(\"{name}\\t\" + Array(P.afterObserver({json.dumps(frames)} as [String])).joined(separator: \"\\u{{1F}}\"))"
+            for name, frames in cases.items()
+        )
+        source = "import Foundation\n\nenum P {\n" + body + "}\n\n" + main + "\n"
+        with tempfile.TemporaryDirectory() as tmp:
+            src = Path(tmp) / "main.swift"
+            exe = Path(tmp) / "probe"
+            src.write_text(source)
+            build = subprocess.run([swiftc, "-swift-version", "6", str(src), "-o", str(exe)],
+                                   capture_output=True, text=True)
+            self.assertEqual(build.returncode, 0, build.stderr)
+            run = subprocess.run([str(exe)], capture_output=True, text=True, check=True)
+        out = {}
+        for line in run.stdout.splitlines():
+            name, _, rest = line.partition("\t")
+            out[name] = rest.split("\x1f") if rest else []
+        self.assertEqual(out["ci"], cases["ci"][3:])
+        self.assertTrue(out["ci"][0].startswith("$s10Foundation12Notification"))
+        self.assertEqual(len(out["ci"]), 2)
+        self.assertEqual(out["none"], cases["none"])
+        self.assertEqual(out["deeper"], ["y", "MacAppDelegate z"])
+        self.assertEqual(out["empty"], [])
 
 
 class SourceCheck(unittest.TestCase):

@@ -127,14 +127,20 @@ enum MenuBarPanelLog {
         if event == "key" { startMonitors() }
     }
 
-    /// Up to 40 frames from the first one outside this observer: only the leading frames of `MenuBarPanelLog` and
-    /// `MacAppDelegate` are skipped, so the first one shown is who keyed or closed the panel and deeper ones stay.
+    /// Up to 40 frames from the first one outside this observer (see `afterObserver`).
     private static func callers() -> String {
-        Thread.callStackSymbols
+        let frames = Thread.callStackSymbols
             .map { $0.split(separator: " ", omittingEmptySubsequences: true).dropFirst(3).joined(separator: " ") }
-            .drop(while: { $0.contains("MenuBarPanelLog") || $0.contains("MacAppDelegate") })
-            .prefix(40)
-            .joined(separator: " | ")
+        return afterObserver(frames).prefix(40).joined(separator: " | ")
+    }
+
+    /// The frames after the first run of observer frames (`MenuBarPanelLog` or `MacAppDelegate`): the Swift thunks and
+    /// `assumeIsolated` frames before it and the run itself are dropped, so the first one shown is who keyed or closed
+    /// the panel; deeper `MacAppDelegate` frames stay. Without any observer frame the whole stack stays.
+    nonisolated static func afterObserver(_ frames: [String]) -> ArraySlice<String> {
+        let isObserver = { (frame: String) in frame.contains("MenuBarPanelLog") || frame.contains("MacAppDelegate") }
+        guard let first = frames.firstIndex(where: isObserver) else { return frames[...] }
+        return frames[first...].drop(while: isObserver)
     }
 
     /// Only fields every CGEvent carries; `cgEvent` can be nil.

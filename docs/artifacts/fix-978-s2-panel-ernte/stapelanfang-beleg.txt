@@ -1,0 +1,8 @@
+# Stapelanfang: afterObserver gegen echtes MacGalleryPanelLog (CI-Lauf 45215511311, alle panel-Zeilen)
+# Funktion wörtlich aus LooseEnds/Mac/MenuBarCapture.swift extrahiert, swiftc -swift-version 6
+panel key wi: vorher[0]=$sxs5Error_pIgrzo_xsAA_pIegrzo_s8SendableRzlTR + 24 -> nachher[0]=$s10Foundation12NotificationVIeghn_So14NSNotificationCIeyBhy_TR + 184, [1]=__CFNOTIFICATIONCENTER_IS_CALLING_OUT_TO_AN_OBSERVER__ + 128
+panel resign: vorher[0]=$sxs5Error_pIgrzo_xsAA_pIegrzo_s8SendableRzlTR + 24 -> nachher[0]=$s10Foundation12NotificationVIeghn_So14NSNotificationCIeyBhy_TR + 184, [1]=__CFNOTIFICATIONCENTER_IS_CALLING_OUT_TO_AN_OBSERVER__ + 128
+panel hide w: vorher[0]=$sxs5Error_pIgrzo_xsAA_pIegrzo_s8SendableRzlTR + 24 -> nachher[0]=$s10Foundation12NotificationVIeghn_So14NSNotificationCIeyBhy_TR + 184, [1]=__CFNOTIFICATIONCENTER_IS_CALLING_OUT_TO_AN_OBSERVER__ + 128
+Zeilen: 51, Beobachter-Rahmen vorn nach Auswahl: 0, unverändert (kein Beobachter gefunden): 0
+Ohne Beobachter bleibt alles: true
+Tieferer MacAppDelegate bleibt: true
