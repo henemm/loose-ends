@@ -1,0 +1,11 @@
+          account_switch() { # Info.plist; LEAccountEnabled muss Bool true sein, an der Quelle seit #625 S5b
+            local type value
+            type=$(plutil -type LEAccountEnabled "$1" 2>/dev/null || true)
+            value=$(plutil -extract LEAccountEnabled raw "$1" 2>/dev/null || true)
+            if [ "$type" = bool ] && [ "$value" = true ]; then
+              row "| LEAccountEnabled | bool $value | OK |"
+            else
+              row "| LEAccountEnabled | ${type:-fehlt} $value | FEHLER |"
+              echo "::error::LEAccountEnabled is '${type:-missing} $value', expected bool true (#625)"; fail=1
+            fi
+          }
