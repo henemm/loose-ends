@@ -83,10 +83,11 @@ def check_required(locale, values):
 def check_section(locale, values):
     """Pflichtfelder und Grenzen; Verstoß nennt Locale, Feld, Ist- und Soll-Zahl."""
     check_required(locale, values)
+    # Schlüsselwörter in Zeichen, nicht Bytes: Apple hält für de-DE seit 1.0 100 Zeichen = 101 Bytes („Fällig“, #984).
     limits = (("description", len(values.get("description", "")), 4000, "Zeichen"),
               ("promotionalText", len(values.get("promotionalText", "")), 170, "Zeichen"),
               ("whatsNew", len(values.get("whatsNew", "")), 4000, "Zeichen"),
-              ("keywords", len(values.get("keywords", "").encode("utf-8")), 100, "Bytes"))
+              ("keywords", len(values.get("keywords", "")), 100, "Zeichen"))
     for field, count, limit, unit in limits:
         if count > limit:
             raise Fatal(f"{locale} {LABELS[field]} hat {count} {unit}, erlaubt höchstens {limit}")

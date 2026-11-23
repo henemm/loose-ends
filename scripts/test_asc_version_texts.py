@@ -206,7 +206,7 @@ class VersionTextsTests(unittest.TestCase):
             (text_file(drop=("Support-URL",)), ("en-US", "Support-URL")),
             (text_file(description="x" * 4001), ("en-US", "Beschreibung", "4001", "4000")),
             (text_file(promo="p" * 171), ("en-US", "Werbetext", "171", "170")),
-            (text_file(keywords="é" * 50 + "a"), ("en-US", "Schlüsselwörter", "101", "100")),
+            (text_file(keywords="é" * 101), ("en-US", "Schlüsselwörter", "101", "100")),
             (text_file(keywords="to-do, todo"), ("en-US", "Schlüsselwörter", "Leerzeichen")),
             (text_file(support="http://www.henemm.com/contact/"), ("en-US", "Support-URL", "https://")),
             (text_file(close=False), ("en-US", "Beschreibung")),
@@ -240,18 +240,19 @@ class VersionTextsTests(unittest.TestCase):
         german = wanted["de-DE"]
         self.assertTrue(german["promotionalText"].strip())
         self.assertLessEqual(len(german["promotionalText"]), 170)
-        self.assertNotIn("description", german)
         for locale in wanted:
             self.assertTrue(wanted[locale]["whatsNew"].strip(), locale)
             self.assertLessEqual(len(wanted[locale]["whatsNew"]), 4000, locale)
-        values = wanted["en-US"]
-        self.assertTrue(values["description"].strip())
-        self.assertLessEqual(len(values["description"]), 4000)
-        self.assertTrue(values["keywords"])
-        self.assertLessEqual(len(values["keywords"].encode("utf-8")), 100)
-        self.assertNotIn(", ", values["keywords"])
-        self.assertLessEqual(len(values.get("promotionalText") or ""), 170)
-        self.assertTrue(values["supportUrl"].startswith("https://"))
+        # Seit #984 trägt auch de-DE die volle Beschreibung.
+        for values in wanted.values():
+            self.assertTrue(values["description"].strip())
+            self.assertLessEqual(len(values["description"]), 4000)
+            self.assertTrue(values["keywords"])
+            self.assertLessEqual(len(values["keywords"]), 100)
+            self.assertNotIn(", ", values["keywords"])
+            self.assertNotIn("claude", values["keywords"].lower())
+            self.assertLessEqual(len(values.get("promotionalText") or ""), 170)
+            self.assertTrue(values["supportUrl"].startswith("https://"))
 
     # AC-3
     def test_selects_only_editable_version_per_platform(self):
