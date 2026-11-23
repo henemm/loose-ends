@@ -682,3 +682,21 @@ jobs:
             mac-keyboard.log
             mac-click-build.log
           if-no-files-found: warn
+      # #978: the app's panel lines (key, close; stack, event, front app, policy) over the job's run time
+      # (timeout 40 min), so a rare self-closing panel leaves its cause behind. Never turns the job red.
+      - name: Collect panel log (#978)
+        if: always()
+        continue-on-error: true
+        timeout-minutes: 5
+        run: |
+          log show --last 60m --style compact \
+            --predicate 'subsystem == "com.henning.looseends" AND category == "MenuBarPanel"' > mac-panel.log || true
+          echo "panel lines: $(grep -c 'MenuBarPanel' mac-panel.log || true)"
+      - name: Upload panel log (#978)
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: MacGalleryPanelLog
+          path: mac-panel.log
+          if-no-files-found: warn

@@ -100,6 +100,35 @@ enum MacWindows {
     }
 }
 
+/// The menu bar panel's own record (#978): one notice line when the panel becomes key, resigns key, is
+/// hidden (SwiftUI orders its panel out instead of closing it) and when it closes, always on, so a panel that closes by itself leaves its cause behind (stack, current event, front app,
+/// activation policy). No title, no task text: only names the system gives.
+@MainActor
+enum MenuBarPanelLog {
+    private static let panelLogger = Logger(subsystem: "com.henning.looseends", category: "MenuBarPanel")
+
+    /// `event` is `key`, `resign`, `hide` or `close`; `kind` is the window's class name only, never its title.
+    static func record(_ event: String, kind: String) {
+        // Frame 0 is this function; the next ones show who closed or keyed the panel.
+        let stack = Thread.callStackSymbols.dropFirst().prefix(12)
+            .map { $0.split(separator: " ", omittingEmptySubsequences: true).dropFirst(3).joined(separator: " ") }
+            .joined(separator: " | ")
+        let current = NSApp.currentEvent.map { "\($0.type.rawValue) \(String(describing: $0.type))" } ?? "nil"
+        let front = NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "nil"
+        let policy = policyName(NSApp.activationPolicy())
+        panelLogger.notice("panel \(event, privacy: .public) window=\(kind, privacy: .public) event=\(current, privacy: .public) front=\(front, privacy: .public) policy=\(policy, privacy: .public) stack=\(stack, privacy: .public)")
+    }
+
+    private static func policyName(_ policy: NSApplication.ActivationPolicy) -> String {
+        switch policy {
+        case .regular: "regular"
+        case .accessory: "accessory"
+        case .prohibited: "prohibited"
+        @unknown default: "unknown \(policy.rawValue)"
+        }
+    }
+}
+
 /// Launch at login (#356): on by default from the first start, switchable in the settings. Never
 /// under tests, which host this app on the Mac.
 @MainActor
@@ -152,14 +181,50 @@ final class MacAppDelegate: NSObject, NSApplicationDelegate {
                 }
             }
         }
+        observeWindows()
+        MacWindows.applyDockPolicy()
+    }
+
+    /// Key and close keep the Dock policy current; resign and hide only leave a line (#978), so the
+    /// policy runs exactly as often as before.
+    private func observeWindows() {
         let center = NotificationCenter.default
-        for name in [NSWindow.didBecomeKeyNotification, NSWindow.willCloseNotification] {
-            observers.append(center.addObserver(forName: name, object: nil, queue: .main) { _ in
+        let events: [(Notification.Name, String)] = [
+            (NSWindow.didBecomeKeyNotification, "key"), (NSWindow.willCloseNotification, "close"),
+        ]
+        for (name, event) in events {
+            observers.append(center.addObserver(forName: name, object: nil, queue: .main) { note in
+                // At the moment it happens, so stack and current event are the cause's (#978).
+                // Every NSPanel (the menu bar panel, but also open panels and alerts), so the line names the
+                // window's class; only that string goes into the main actor, never the window.
+                if let panel = note.object as? NSPanel {
+                    let kind = String(describing: type(of: panel))
+                    MainActor.assumeIsolated { MenuBarPanelLog.record(event, kind: kind) }
+                }
                 // After the close has gone through, not before.
                 DispatchQueue.main.async { MainActor.assumeIsolated { MacWindows.applyDockPolicy() } }
             })
         }
-        MacWindows.applyDockPolicy()
+        observePanelHiding(center)
+    }
+
+    /// SwiftUI's menu bar panel is ordered out, never closed, so `willClose` stays silent when it vanishes
+    /// (CI run 44994038524). Resign key is the moment of the cause; hide only once the panel is no longer visible.
+    private func observePanelHiding(_ center: NotificationCenter) {
+        observers.append(center.addObserver(forName: NSWindow.didResignKeyNotification, object: nil,
+                                            queue: .main) { note in
+            guard let panel = note.object as? NSPanel else { return }
+            let kind = String(describing: type(of: panel))
+            MainActor.assumeIsolated { MenuBarPanelLog.record("resign", kind: kind) }
+        })
+        observers.append(center.addObserver(forName: NSWindow.didChangeOcclusionStateNotification, object: nil,
+                                            queue: .main) { note in
+            guard let panel = note.object as? NSPanel else { return }
+            let kind = String(describing: type(of: panel))
+            let hidden = MainActor.assumeIsolated { !panel.isVisible || !panel.occlusionState.contains(.visible) }
+            guard hidden else { return }
+            MainActor.assumeIsolated { MenuBarPanelLog.record("hide", kind: kind) }
+        })
     }
 
     /// A menu bar app stays when its last window closes.
