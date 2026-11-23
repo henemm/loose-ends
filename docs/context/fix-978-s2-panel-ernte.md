@@ -42,3 +42,4 @@ selbst per Wiederholungsläufe herbeiführen, ohne Sammel-Stichtag (PO 2026-11-2
 
 ## Laufende Wiederholungen
 - 2026-11-23: Mac-Galerie-Job von main-Lauf 45138541451 neu gestartet (Versuch 2). In /20-analyse Ergebnis und Panel-Log holen (`gh run download 45138541451 -n MacGalleryPanelLog` lädt den neuesten Versuch), weitere Versuche nach Bedarf.
+- Offen nebenher: Doku-PR #989 (Regel „kein Sammeln, dann Auswerten“) mergen, sobald seine CI grün ist (Auto-Merge im Repo aus).
