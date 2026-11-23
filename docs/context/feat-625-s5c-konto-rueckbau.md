@@ -30,7 +30,43 @@ ein normaler Lauf (Hand oder Tag) für TestFlight und App Store ohne Sonderweg d
 - Upstream: `project.yml` (S5b: `LEAccountEnabled: true`), `LooseEnds/PrivacyInfo.xcprivacy` (drei Typen).
 - Downstream: `asc-store-version.yml aktion=anlegen` (S5d ordnet den 1.0.2-Bau zu), jeder TestFlight-Lauf.
 
-## Analyse (Summe 3: Kontext und Analyse in einem Durchgang)
+## Analysis
+
+### Type
+Feature (Rückbau einer Liefer-Mechanik; kein Fehler im Produkt, aber ein heute scheiternder `v*`-Tag-Lauf).
+
+### Befund am Code (2026-11-23 gegengeprüft)
+- `testflight.yml`: Eingabe `konto` (Z. 21–24, Vorgabe `true`), Kopfkommentar Z. 34–35, `env.ACCOUNT_BUILD` Z. 38,
+  Schritt „Set the account switch“ Z. 119–124 (`upload`) und Z. 456–461 (`upload-mac`), `account_switch` mit
+  `want="${ACCOUNT_BUILD:-false}"` Z. 233–241 / 538–546, Manifestprüfung Z. 268–274 / 567–571. Kein anderer Workflow liest `konto`.
+- `asc_what_to_test.py` Z. 153: Marke nur bei `ACCOUNT_BUILD=true`; `asc_store_version.py` `build_lock` Z. 141–152 sperrt
+  markierte Bauten (`konto`) und unlesbare Texte.
+- Tests, die angepasst werden: `test_asc_what_to_test.py`, `test_privacy_manifest.py`, `test_aps_environment.py`
+  (Hash der Prüfblöcke), `test_asc_store_version.py` (bleibt inhaltlich, liest weiter die Marke).
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `.github/workflows/testflight.yml` | MODIFY | Eingabe `konto`, `ACCOUNT_BUILD`, Kommentar, beide Schalter-Schritte weg; Prüfungen fest auf Bool `true` und `--account true` |
+| `scripts/asc_what_to_test.py` | MODIFY | keine Marke mehr anhängen (`mark_account_build`, Lesen von `ACCOUNT_BUILD` weg); Marke und `is_account_build` bleiben |
+| `scripts/asc_store_version.py` | MODIFY | nur Docstring: Sperre gilt den alten markierten Bauten |
+| `scripts/test_asc_what_to_test.py`, `test_privacy_manifest.py`, `test_aps_environment.py` | MODIFY | Erwartungen umdrehen (RED zuerst), Hash bewusst neu |
+| `docs/reference/testflight.md`, `CLAUDE.md` | MODIFY | Konto-Absatz und Sitzungsregel „`konto` on“ |
+
+### Scope Assessment
+- Dateien: 3 Liefer-/Skriptdateien + Tests + 2 Doku; App-Code (Swift): keiner
+- Geschätzte LoC: `testflight.yml` ~-35/+6, Skripte ~-12/+2; Tests ~60 (zählen nicht)
+- Risk Level: LOW — nur Liefer-Weg; der Wächter auf den Quellwert bleibt; kein Pfad der Geräteliste → Stufe 3 entfällt
+
+### Technical Approach
+Empfehlung wie im Plan unten. Nachweis nach dem Merge: ein TestFlight-Lauf von Hand ohne `konto` (die Eingabe gibt es
+dann nicht mehr) läuft durch beide Archivprüfungen, und „Was testen“ trägt keine Marke.
+
+### Dependencies
+Upstream S5b (Quelle `true`, Manifest mit drei Typen). Downstream S5d: der 1.0.2-Bau für den Store muss nach S5c gebaut sein.
+
+### Open Questions
+- keine (reine Liefer-Mechanik, keine Produktentscheidung)
 
 ### Plan (Empfehlung)
 1. `testflight.yml`: Eingabe `konto`, `env.ACCOUNT_BUILD`, Kopfkommentar und beide Schritte „Set the account switch“ entfallen.
