@@ -1,0 +1,8 @@
+Rollout #625 S5a (offene Tür mit Tagesgrenze), 2026-11-23 06:45 UTC
+Merge-Commit loose-ends: bf1fccf03ac88993752cb1aabf7db645728af7f0
+henemm-infra: PR #485 gemergt (f99fa0e), LE_COMMIT=bf1fccf03ac88993752cb1aabf7db645728af7f0
+Deploy: bash scripts/deploy-loose-ends.sh auf rennwienix, Exit 0, Image loose-ends-server:bf1fccf running
+.env unverändert (ALLOWED_APPLE_SUBS = Liste, kein *, NEW_ACCOUNTS_PER_DAY nicht gesetzt); Log ohne "door invalid"
+/health intern: 200 {"status":"ok","db":"up","migrated":true}
+/health öffentlich https://loose-ends.henemm.com/health: 200
+get_now über den claude.ai-Konnektor (OAuth, Hennings Konto) nach dem Rollout: Antwort mit nowCount geliefert, das Konto kommt weiter herein.
