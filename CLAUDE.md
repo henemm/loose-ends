@@ -40,6 +40,9 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
   Sagt Henning, etwas soll nicht mehr kommen, wird das Issue sofort als „not planned“ geschlossen.
 - **Henning merkt sich keine Termine:** wartet ein Nachweis auf später, wird der Auslöser vorgezogen oder der offene
   Schritt mit Datum im Issue festgehalten und von Claude selbst nachgeholt.
+- **Kein „erst sammeln, dann auswerten“** (Henning, 2026-11-23: „das klappt meistens nicht“): ein Issue wartet nie auf
+  Läufe oder Fälle, die erst noch anfallen sollen. Vorhandenes zuerst auswerten (CI-Verlauf, Artefakte, Logs), fehlende
+  Fälle selbst herbeiführen (gezielte Wiederholungsläufe, Nachstellen), dann sofort weiter; kein Stichtag als Plan.
 - **Präferenzen landen im Repo:** äußert Henning eine dauerhafte Vorgabe, steht sie in derselben Antwort hier oder in
   der Doku, nicht nur im lokalen Gedächtnis (Cloud-Sitzungen sehen nur das Repo).
 - **Jede Übergabe löst herdr aus** (Henning, 2026-11-17): Stand auf der Platte, dann `workflow.py autoclear` (setzt die
