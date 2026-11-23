@@ -39,3 +39,6 @@ selbst per Wiederholungsläufe herbeiführen, ohne Sammel-Stichtag (PO 2026-11-2
 - Seltenes Ereignis: Wiederholungen nötig; Runner-Minuten (macOS) teuer, je Lauf ~35 min.
 - Ein Testumbau darf den Nutzerweg nicht verwässern (DoD: prüft den Nutzerweg).
 - Event 21 könnte von XCTest (synthetisierte Ereignisse) stammen → Prüfwerkzeug; nicht belegt, bis mehr Fälle da sind.
+
+## Laufende Wiederholungen
+- 2026-11-23: Mac-Galerie-Job von main-Lauf 45138541451 neu gestartet (Versuch 2). In /20-analyse Ergebnis und Panel-Log holen (`gh run download 45138541451 -n MacGalleryPanelLog` lädt den neuesten Versuch), weitere Versuche nach Bedarf.
