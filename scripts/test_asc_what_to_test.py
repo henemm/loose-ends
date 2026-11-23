@@ -277,13 +277,13 @@ class AccountBuildSourceTests(unittest.TestCase):
         self.assertEqual(plistlib.loads(APP_ENTITLEMENTS.read_bytes()).get(APPLESIGNIN), ["Default"])
 
     # AC-2
-    def test_account_switch_is_a_false_bool(self):
+    def test_account_switch_is_a_true_bool(self):  # #625 S5b AC-1, AC-2: Schalter an der Quelle
         properties = app_target("info", "LooseEnds/Info.plist")
-        self.assertIs(properties.get("LEAccountEnabled"), False)
+        self.assertIs(properties.get("LEAccountEnabled"), True)
         self.assertNotIn("LEServiceURL", properties)
         info = plistlib.loads(APP_INFO.read_bytes())
         self.assertIn("LEAccountEnabled", info)
-        self.assertIs(info["LEAccountEnabled"], False)
+        self.assertIs(info["LEAccountEnabled"], True)
         self.assertNotIn("LEServiceURL", info)
 
 

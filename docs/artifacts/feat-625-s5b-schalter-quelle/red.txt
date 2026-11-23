@@ -1,0 +1,36 @@
+# RED #625 S5b — 2026-11-23 — gegen die alte Quelle (origin/main 04f697f): LEAccountEnabled false, Manifest-Quelle leer
+$ cd scripts && python3 -m unittest -v test_privacy_manifest.CheckTests.test_source_carries_the_three_types_and_passes_only_with_account test_asc_what_to_test.AccountBuildSourceTests.test_account_switch_is_a_true_bool
+
+test_source_carries_the_three_types_and_passes_only_with_account (test_privacy_manifest.CheckTests.test_source_carries_the_three_types_and_passes_only_with_account) ... FAIL
+test_account_switch_is_a_true_bool (test_asc_what_to_test.AccountBuildSourceTests.test_account_switch_is_a_true_bool) ... FAIL
+
+======================================================================
+FAIL: test_source_carries_the_three_types_and_passes_only_with_account (test_privacy_manifest.CheckTests.test_source_carries_the_three_types_and_passes_only_with_account)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_privacy_manifest.py", line 110, in test_source_carries_the_three_types_and_passes_only_with_account
+    self.assertEqual(source.get("NSPrivacyCollectedDataTypes"), ACCOUNT_TYPES)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != [{'NSPrivacyCollectedDataType': 'NSPrivacy[709 chars]y']}]
+
+Second list contains 3 additional elements.
+First extra element 0:
+{'NSPrivacyCollectedDataType': 'NSPrivacyCollectedDataTypeUserID', 'NSPrivacyCollectedDataTypeLinked': True, 'NSPrivacyCollectedDataTypeTracking': False, 'NSPrivacyCollectedDataTypePurposes': ['NSPrivacyCollectedDataTypePurposeAppFunctionality']}
+
+Diff is 806 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_account_switch_is_a_true_bool (test_asc_what_to_test.AccountBuildSourceTests.test_account_switch_is_a_true_bool)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_what_to_test.py", line 282, in test_account_switch_is_a_true_bool
+    self.assertIs(properties.get("LEAccountEnabled"), True)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not True
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.018s
+
+FAILED (failures=2)
+
+exit=1

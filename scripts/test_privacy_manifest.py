@@ -103,10 +103,18 @@ class ApplyTests(ManifestCase):
 
 
 class CheckTests(ManifestCase):
-    def test_source_is_empty_and_passes_only_without_account(self):  # AC-3, AC-7
-        self.assertEqual(self.load(SOURCE).get("NSPrivacyCollectedDataTypes", []), [])
-        self.assertEqual(run("check", str(SOURCE), "--account", "false").returncode, 0)
-        self.assertRefused(run("check", str(SOURCE), "--account", "true"), *sorted(TYPES))
+    def test_source_carries_the_three_types_and_passes_only_with_account(self):  # S5b AC-3, AC-4
+        source = self.load(SOURCE)
+        sys.path.insert(0, str(SCRIPTS))
+        from privacy_manifest import ACCOUNT_TYPES  # die eine Quelle, Reihenfolge wie apply sie schreibt
+        self.assertEqual(source.get("NSPrivacyCollectedDataTypes"), ACCOUNT_TYPES)
+        self.assertIs(source["NSPrivacyTracking"], False)
+        reasons = source["NSPrivacyAccessedAPITypes"][0]["NSPrivacyAccessedAPITypeReasons"]
+        self.assertEqual(reasons, ["CA92.1"])
+        self.assertEqual(run("check", str(SOURCE), "--account", "true").returncode, 0)
+        self.assertRefused(run("check", str(SOURCE), "--account", "false"), "NSPrivacyCollectedDataTypes")
+        self.assertEqual(run("apply", str(self.copy)).returncode, 0)  # die Quelle ist schon das Erzeugnis von apply
+        self.assertEqual(self.load(), source)
 
     def test_filled_manifest_fails_without_account(self):  # AC-4
         self.write(full())
