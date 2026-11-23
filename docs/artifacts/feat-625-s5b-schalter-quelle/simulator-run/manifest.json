@@ -1,0 +1,17 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "A61A8E65-A60B-4A83-97AC-FDBCA9DB35D3.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "einstellungen-claude_0_DE94104C-0416-49D5-ADBA-444DD22DBA39.png",
+        "timestamp" : 1795437048.266
+      }
+    ],
+    "testIdentifier" : "S5bSettingsProbeTests/testSettingsShowClaudeGroupWithoutUITesting()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/S5bSettingsProbeTests/testSettingsShowClaudeGroupWithoutUITesting"
+  }
+]

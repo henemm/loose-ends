@@ -183,7 +183,7 @@ Der Datenschutztext liegt in `docs/reference/datenschutz-entwurf.md` (Freigabe H
 unter https://www.henemm.com/legal/loose-ends/privacy-policy/ (Website-Repo `henemm/henemm-website`, `content/legal/loose-ends/`),
 bei Apple gesetzt über die Repo-Variable `ASC_PRIVACY_POLICY_URL` (en-US: Konstante `PRIVACY_URL_EN` im Skript, englische Seite `…/privacy-policy-en/`, #763) und `asc-beta.yml` `aktion=einrichten` (#705; `aktion=einreichen` reicht zum Beta-Review ein, nur nach Hennings Wort). Eine Änderung
 am Text gilt erst, wenn auch die Website-Seite angepasst ist. Seit 2026-11-10 enthält der Text den Konto-Teil (Verbindung zu Claude,
-`docs/specs/feat-615-schnitt-4e-datenschutz.md`); der Store-Schalter `LEAccountEnabled` bleibt bis #625 aus, die Sicherungsfrist des Dienstes beträgt 30 Tage.
+`docs/specs/feat-615-schnitt-4e-datenschutz.md`); der Schalter `LEAccountEnabled` ist seit #625 S5b an der Quelle an, im Store erst mit der Einreichung (#625 S5d), die Sicherungsfrist des Dienstes beträgt 30 Tage.
 Seit 2026-11-17 beschreibt der Text auch die Abschrift der offenen Aufgaben und die Kennung dieser Installation
 (`docs/specs/feat-625-schnitt-1-datenschutztext.md`).
 Seit 2026-11-21 beschreibt der Text auch den Weckruf (Gerätetoken, stille Mitteilung; `docs/specs/feat-625-schnitt-4-weckruf-datenschutz.md`).
@@ -292,7 +292,7 @@ TestFlight (manual run or a `v*` tag). Setup for the account owner: `docs/refere
 Since #174 it runs on the `xcode-27` preview image with Xcode 27.0 pinned and never lowers the
 deployment targets; a step before the upload checks every target in the archive (27 SDK, minimum 27.0,
 version, dSYM, privacy strings) and stops the upload on any mismatch.
-The input `konto` (off by default, never on a tag) switches the account group on in the archive (`LEAccountEnabled`, proven as Bool with `applesignin` in both archive checks), marks the build in „Was testen“, and `scripts/asc_store_version.py` never assigns a marked or unreadable build to a store version (#615 S4c-2a).
+The input `konto` (on by default, never on a tag) has no effect on the content since #625 S5b, where `LEAccountEnabled` and the three manifest types moved into the source; until it is removed in #625 S5c it still demands them in both archive checks (as Bool, with `applesignin`), marks the build in „Was testen“, and `scripts/asc_store_version.py` never assigns a marked or unreadable build to a store version (#615 S4c-2a).
 
 **Every TestFlight build says what to test (Henning, 2026-10-12, #347).** A manual run requires the
 input `what_to_test`; a `v*` tag uses the tagged commit's message. After Apple reports the build as
@@ -499,7 +499,7 @@ not scope creep on the current one.
   (`Ending`/`Stop`, only case names in the log), a 409 on a result is dropped; one pass of each kind at a time (`busy`); called by `ClaudeSyncTrigger` (S3b-1).
   #795 S3b-1: `ClaudeSyncTrigger` (process-wide like `WidgetReload`, `start()` once in `LooseEndsApp` via `forApp`, only with an account, silent under tests): start and `didBecomeActive` (UIKit/AppKit, no `scenePhase`) send then pull; `ModelContext.didSave` and a finished import only send, 2 s debounced; never pulls on a save; sends never overlap, one queued resend at most.
   `AccountWiring` (S4c-1): `forApp` builds the one `AccountState` in `LooseEndsApp` (main window and Mac settings window), only
-  when `isEnabled`: Info `LEAccountEnabled` as Bool (`project.yml` holds `false`; only the TestFlight input `konto` sets it true in the archive, #615 S4c-2a), fallback **off** (missing or another type hides the group in every real build);
+  when `isEnabled`: Info `LEAccountEnabled` as Bool (`project.yml` holds `true`, switch on at the source, #625 S5b; the privacy manifest carries the three `ACCOUNT_TYPES`), fallback **off** (missing or another type still hides the group);
   `serviceURL` reads Info `LEServiceURL`: https with a host, http only to `localhost`/`127.0.0.1` in a Debug build, anything else
   the fallback `https://loose-ends.henemm.com` (S4c-2b); under `--ui-testing` always on, store in memory
   and the stand-in `UITestTransport` (no network; `--ui-testing-account-not-allowed` 401, `--ui-testing-account-retry-later` 503,

@@ -1,0 +1,100 @@
+# AC-9 Simulator-Durchlauf (Stufe 2), 2026-11-23 — belegt (Nachtrag unten: Wegwerf-UI-Test öffnet die Einstellungen)
+
+$ ./scripts/sim.sh build
+Build Succeeded / [sim] Build erfolgreich. exit=0
+$ /usr/libexec/PlistBuddy -c "Print :LEAccountEnabled" <DerivedData>/Debug-iphonesimulator/LooseEnds.app/Info.plist
+true
+
+# Start 1, ohne jedes Argument (kein --ui-testing):
+$ ./scripts/sim.sh launch
+com.henning.looseends: 88592
+$ xcrun simctl spawn <iPhone 17> launchctl list | grep looseends
+88592	0	UIKitApplication:com.henning.looseends[0143][rb-legacy]
+Bild: Onboarding „Erfassen, ohne die App zu öffnen“ (Überspringen / Weiter) – App läuft, kein Absturz.
+
+# Start 2, nur mit dem Benutzer-Vorgabe-Argument -onboardingDone YES (Argument-Domäne, wie die UI-Tests ohne
+# --ui-testing es tun; kein --ui-testing):
+$ ./scripts/sim.sh launch -onboardingDone YES          # 13:25:30
+com.henning.looseends: 92257
+$ sleep 12; xcrun simctl spawn <iPhone 17> launchctl list | grep looseends     # 13:26:01
+92257	0	UIKitApplication:com.henning.looseends[3bd0][rb-legacy]
+Bild: start-ohne-ui-testing.png – Startseite „Alles verknotet.“, Montag 23. Nov., Zahnrad oben links, Plus oben
+rechts, „Jetzt 0“, Inhaltsliste (Als nächstes, Fällig, Neu, Etiketten 6, Lose Enden, Erledigt). Prozess lebt nach
+über 30 s, kein Absturz beim Start mit LEAccountEnabled = true (AccountState mit KeychainSessionStore gebaut).
+
+# Einstellungen öffnen: nicht erreicht.
+- Die App kennt keinen Start-Parameter und keinen Link für die Einstellungen (nur `showsSettings` per Zahnrad-Tipp;
+  onOpenURL kennt nur looseends://capture).
+- simctl hat keinen Tipp-/Touch-Befehl; idb, axe, cliclick sind nicht installiert.
+- Xcode 27.2 liefert kein Simulator.app mehr (Contents/Applications: Accessibility Inspector, Create ML, DeviceHub,
+  FileMerge, Icon Composer, Instruments). DeviceHub per `open -g` gestartet: kein Fenster über System Events lesbar,
+  wieder beendet.
+- Ein vorhandener UI-Test, der ohne --ui-testing die Einstellungen im abgemeldeten Zustand öffnet, existiert nicht
+  (AccountLocalServiceTests braucht den lokalen Dienst und meldet an). App- oder Testcode wurde nicht geändert.
+- Nebenbefund: der iPhone-17-Simulator wurde zweimal von außen heruntergefahren (andere Sitzung, iPhone 17 Pro
+  gebootet); kein Absturz der App, sondern Simulator-Shutdown.
+
+=> einstellungen-claude.png fehlt; der Rest von AC-9 (Start ohne --ui-testing ohne Absturz) ist belegt.
+
+# --- Nachtrag 13:31: Einstellungen per Wegwerf-UI-Test (danach entfernt, nicht im Diff) ---
+$ ./scripts/sim.sh generate
+$ ./scripts/sim.sh test-proof S5bSettingsProbeTests
+  Lauf 1 (13:27): Failed, kein Testergebnis: "Failed to install or launch the test runner (Mach error -308 - (ipc/mig)
+  server died)" – Simulator von außen heruntergefahren (siehe oben), Test lief nie an.
+  Lauf 2 (13:31): ** TEST SUCCEEDED **, 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen, iPhone 17, iOS 27.2
+  Beleg des Skripts: simulator-run.txt, simulator-run/ (summary.json, manifest.json, Screenshot; run.xcresult gitignored)
+$ cp simulator-run/A61A8E65-A60B-4A83-97AC-FDBCA9DB35D3.png einstellungen-claude.png   # Anhang "einstellungen-claude"
+
+Bild einstellungen-claude.png: Blatt „Einstellungen“ mit „Fertig“. Oben Mitteilungs-Zeilen (Uhrzeit am Abend 20:00,
+„Morgens: lose Enden ansehen“ an, Uhrzeit am Morgen 09:00). Darunter Gruppe „iCloud“ (iCloud-Abgleich: „Nur auf diesem
+Gerät“, durchgestrichene Wolke – Simulator ohne iCloud). Direkt darunter Gruppe „Claude“ mit dem schwarzen Apple-Knopf
+„ Mit Apple anmelden“ (echter SignInWithAppleButton, nicht der Testknopf) und dem Text „Melde dich mit Apple an, damit
+Claude deine offenen Aufgaben lesen und neue anlegen kann. Ohne Anmeldung verlässt nichts dieses Gerät.“ Darunter
+„Kalender“. Abgemeldet, nichts angetippt außer dem Zahnrad; App im Vordergrund (Assertion runningForeground grün).
+
+Wegwerf-Test, danach entfernt (LooseEndsUITests/S5bSettingsProbeTests.swift gelöscht, ./scripts/sim.sh generate erneut).
+Quelltext:
+> import XCTest
+> 
+> /// Wegwerf-Probe für #625 S5b, AC-9 (wird nicht committet): ohne --ui-testing, Einstellungen öffnen,
+> /// die Gruppe „Claude“ mit „Mit Apple anmelden“ muss unter iCloud stehen.
+> final class S5bSettingsProbeTests: XCTestCase {
+>     override func setUp() {
+>         continueAfterFailure = false
+>     }
+> 
+>     @MainActor
+>     private func element(_ app: XCUIApplication, _ id: String) -> XCUIElement {
+>         app.descendants(matching: .any).matching(identifier: id).firstMatch
+>     }
+> 
+>     @MainActor
+>     private func shoot(_ app: XCUIApplication, _ name: String) {
+>         let attachment = XCTAttachment(screenshot: app.screenshot())
+>         attachment.name = name
+>         attachment.lifetime = .keepAlways
+>         add(attachment)
+>     }
+> 
+>     @MainActor
+>     func testSettingsShowClaudeGroupWithoutUITesting() throws {
+>         let app = XCUIApplication()
+>         app.launchArguments = ["-onboardingDone", "YES"]   // bewusst ohne --ui-testing
+>         app.launch()
+> 
+>         let gear = app.buttons["settingsButton"]
+>         XCTAssertTrue(gear.waitForExistence(timeout: 15), "Kein Zahnrad auf dem Startbildschirm")
+>         gear.tap()
+> 
+>         XCTAssertTrue(element(app, "iCloudSyncRow").waitForExistence(timeout: 10), "Einstellungen zeigen keine iCloud-Zeile")
+>         let apple = element(app, "accountAppleButton")
+>         for _ in 0..<6 {
+>             if apple.waitForExistence(timeout: 1), apple.isHittable { break }
+>             app.swipeUp(velocity: .slow)
+>         }
+>         shoot(app, "einstellungen-claude")
+>         XCTAssertTrue(apple.exists, "Kein Anmelde-Eintrag (accountAppleButton) in den Einstellungen")
+>         XCTAssertTrue(apple.isHittable, "Anmelde-Eintrag nicht sichtbar")
+>         XCTAssertEqual(app.state, .runningForeground, "Die App läuft nicht mehr")
+>     }
+> }

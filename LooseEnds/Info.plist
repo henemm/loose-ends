@@ -61,7 +61,7 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LEAccountEnabled</key>
-	<false/>
+	<true/>
 	<key>LEAppGroup</key>
 	<string>group.com.henning.looseends$(BUNDLE_ID_SUFFIX)</string>
 	<key>LEApsEnvironment</key>

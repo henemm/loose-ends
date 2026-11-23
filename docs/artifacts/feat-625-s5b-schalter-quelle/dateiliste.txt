@@ -1,0 +1,26 @@
+$ git diff --name-only origin/main...HEAD   (2026-11-23, committet)
+docs/artifacts/feat-625-s5b-schalter-quelle/red.txt
+docs/briefings/feat-625-s5b-schalter-quelle.md
+docs/context/feat-625-s5b-schalter-quelle.md
+docs/specs/feat-625-schnitt-5b-schalter-quelle.md
+scripts/test_asc_what_to_test.py
+scripts/test_privacy_manifest.py
+
+$ git status --porcelain   (noch nicht committet)
+ M CLAUDE.md
+ M LooseEnds/Info.plist
+ M LooseEnds/PrivacyInfo.xcprivacy
+ M docs/artifacts/feat-625-s5b-schalter-quelle/red.txt
+ M project.yml
+ M scripts/privacy_manifest.py
+?? .claude/
+?? docs/artifacts/feat-625-s5b-schalter-quelle/apply.txt
+?? docs/artifacts/feat-625-s5b-schalter-quelle/claude-md.txt
+?? docs/artifacts/feat-625-s5b-schalter-quelle/generate.txt
+?? docs/artifacts/feat-625-s5b-schalter-quelle/green.txt
+?? docs/artifacts/feat-625-s5b-schalter-quelle/launch.txt
+?? docs/artifacts/feat-625-s5b-schalter-quelle/start-ohne-ui-testing.png
+?? docs/artifacts/feat-625-s5b-schalter-quelle/test-green-output.txt
+?? docs/artifacts/feat-625-s5b-schalter-quelle/unit.txt
+
+# .claude/ ist Arbeitszustand des Workflows und wird nicht committet. Keine Swift-Datei, kein .github/workflows/testflight.yml.

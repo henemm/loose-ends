@@ -34,3 +34,6 @@ Ran 2 tests in 0.018s
 FAILED (failures=2)
 
 exit=1
+
+# Gegenprobe Gesamtlauf (cd scripts && python3 -m unittest discover -s . -p "test_*.py"), gleicher Stand:
+# Ran 806 tests — FAILED (failures=2, skipped=1): genau die beiden umgedrehten Tests rot; der eine Skip besteht schon vor S5b.
