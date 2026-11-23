@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loose Ends 1.0.2 Veröffentlichungstexte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Prüfseite für Henning: links Erklärung, darunter Apple-Texte (Heute/Entwurf), dann Website-Entwurf im henemm-Stil */
+:root{
+  --bg:#F4F5F0; --card:#FFFFFF; --ink:#16201A; --soft:#5C645F; --rule:#DEE1DD;
+  --accent:#4C9722; --mark:#EFF7E5; --markline:#65B42E; --old:#9AA19C;
+  --f-display:"Space Grotesk",system-ui,sans-serif; --f-sans:"IBM Plex Sans",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111613; --card:#1A211C; --ink:#E9ECE6; --soft:#A2A8A4; --rule:#2F3832;
+  --accent:#8DCB52; --mark:#22331A; --markline:#65B42E; --old:#6E7570; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#111613; --card:#1A211C; --ink:#E9ECE6; --soft:#A2A8A4; --rule:#2F3832;
+  --accent:#8DCB52; --mark:#22331A; --markline:#65B42E; --old:#6E7570; color-scheme:dark;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--f-sans)}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 20px 80px;display:grid;gap:48px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+h1{font-size:34px;line-height:1.15}
+h2{font-size:24px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
+h3{font-size:17px}
+p{margin:0;max-width:68ch}
+.intro{display:grid;gap:14px}
+.lead{font-size:18px}
+.note{color:var(--soft);font-size:14px}
+section{display:grid;gap:20px}
+.langs{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:20px;display:grid;gap:16px;align-content:start}
+.field{display:grid;gap:6px}
+.label{font:500 12px/1.3 var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--soft);display:flex;justify-content:space-between;gap:8px}
+.old{color:var(--old);text-decoration:line-through;text-decoration-thickness:1px}
+.new{background:var(--mark);border-left:3px solid var(--markline);padding:8px 10px;border-radius:4px}
+.same{color:var(--soft)}
+pre{white-space:pre-wrap;font:14px/1.5 var(--f-sans);margin:0}
+.desc{max-height:none}
+.badge{display:inline-block;font:500 11px var(--f-mono);color:var(--accent);border:1px solid var(--accent);border-radius:99px;padding:0 6px;margin-left:6px;vertical-align:middle}
+.why{display:grid;gap:8px;font-size:14px;color:var(--soft)}
+.why li{margin-bottom:4px}
+
+/* Website-Entwurf */
+.toggle{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.toggle button{font:500 14px var(--f-sans);border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:99px;padding:6px 14px;cursor:pointer}
+.toggle button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.toggle button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.browser{border:1px solid var(--rule);border-radius:12px;overflow:hidden;background:var(--card)}
+.bar{display:flex;gap:6px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--rule);font:13px var(--f-mono);color:var(--soft)}
+.bar i{width:10px;height:10px;border-radius:50%;background:var(--rule);display:inline-block}
+.bar span{margin-left:10px}
+
+.site{--p:#F7F8F3;--i:#0E1611;--m:#5C6460;--r:#DEE1DD;--g:#65B42E;--gd:#36771B;--s:#FFFFFF;--chip:#EFF7E5;
+  background:var(--p);color:var(--i);font:17px/1.6 var(--f-sans)}
+.site.dark{--p:#0E1611;--i:#ECEEEA;--m:#A2A8A4;--r:#2A322B;--g:#8DCB52;--gd:#A9D87B;--s:#161E18;--chip:#1C2A15}
+.site a{color:var(--gd)}
+.s-nav{display:flex;justify-content:space-between;align-items:center;padding:18px 32px;border-bottom:1px solid var(--r);font:500 14px var(--f-sans);color:var(--m);gap:16px;flex-wrap:wrap}
+.s-nav b{font:700 18px var(--f-display);color:var(--i);letter-spacing:.02em}
+.s-nav nav{display:flex;gap:18px;flex-wrap:wrap}
+.s-main{max-width:960px;margin:0 auto;padding:48px 32px 56px;display:grid;gap:56px}
+.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center}
+@media (max-width:760px){.hero{grid-template-columns:1fr}.s-main{padding:32px 18px}.s-nav{padding:14px 18px}}
+.eyebrow{font:500 13px var(--f-mono);color:var(--m);letter-spacing:.04em}
+.hero h4{font:700 56px/1.02 var(--f-display);margin:10px 0 6px;letter-spacing:-.01em}
+.claim{font:500 24px/1.3 var(--f-display);color:var(--gd);margin-bottom:14px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.btn{display:inline-block;padding:11px 20px;border-radius:8px;font:600 15px var(--f-sans);text-decoration:none}
+.btn.p{background:var(--i);color:var(--p)!important}
+.btn.s{border:1px solid var(--r);color:var(--i)!important}
+.phone{justify-self:center;width:min(260px,100%);border-radius:30px;border:6px solid var(--i);overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.18)}
+.phone img{display:block;width:100%}
+.s-h{font:600 30px/1.2 var(--f-display);margin:0 0 14px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media (max-width:760px){.steps{grid-template-columns:1fr}}
+.step{border-top:2px solid var(--g);padding-top:14px;display:grid;gap:6px}
+.step .n{font:500 13px var(--f-mono);color:var(--m)}
+.step h5{font:600 19px var(--f-display);margin:0}
+.step p{font-size:16px;color:var(--m)}
+.shots{display:grid;grid-template-columns:1fr 1fr 2.2fr;gap:16px;align-items:end}
+.shots img{width:100%;display:block;border-radius:12px;border:1px solid var(--r)}
+@media (max-width:760px){.shots{grid-template-columns:1fr 1fr}.shots .wide{grid-column:1/-1}}
+.claude{background:var(--s);border:1px solid var(--r);border-radius:14px;padding:28px;display:grid;gap:16px}
+.claude .tag{font:500 12px var(--f-mono);color:var(--gd);background:var(--chip);border-radius:99px;padding:2px 10px;justify-self:start}
+.claude ol{margin:0;padding-left:22px;display:grid;gap:8px}
+code{font:14px var(--f-mono);background:var(--chip);padding:1px 6px;border-radius:4px;word-break:break-all}
+.ask{font:500 20px var(--f-display);border-left:3px solid var(--g);padding-left:14px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;font-size:15px}
+.facts div{border-top:1px solid var(--r);padding-top:10px}
+.facts b{display:block;font:500 12px var(--f-mono);color:var(--m);letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
+.callout{border-left:3px solid var(--g);background:var(--chip);padding:14px 18px;border-radius:6px;font-size:15px}
+.s-foot{border-top:1px solid var(--r);padding:20px 32px;font:14px var(--f-sans);color:var(--m);display:flex;gap:18px;flex-wrap:wrap}
+
+/* Alternative B */
+.altb{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:760px){.altb{grid-template-columns:1fr}}
+.mini{font-size:15px}
+.mini .s-main{padding:28px 24px;gap:18px;max-width:640px}
+.mini h4{font:700 32px var(--f-display);margin:0}
+.mini p{color:var(--i)}
+.listcard{display:grid;grid-template-columns:90px 1fr;gap:14px;border:1px solid var(--r);border-radius:10px;padding:12px;background:var(--s)}
+.listcard .thumb{background:var(--chip);border-radius:8px;display:grid;place-items:center;font:700 22px var(--f-display);color:var(--gd)}
+.listcard h6{font:600 17px var(--f-display);margin:0}
+.listcard p{font-size:14px;color:var(--m)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="intro">
+  <p class="note">Loose Ends · Veröffentlichung 1.0.2 mit Claude · Entwurf vom 23. November 2026</p>
+  <h1>Texte für Apple und die neue Seite auf henemm.com</h1>
+  <p class="lead">Mit 1.0.2 kann jeder Loose Ends mit Claude verbinden. Die Texte im App Store sagen dazu bisher nichts, und ein Satz stimmt dann nicht mehr: „Deine Aufgaben liegen nicht auf fremden Servern.“ Hier steht, was ich ändern würde, und wie die eigene Seite auf henemm.com aussehen könnte.</p>
+  <p class="note">Grün hinterlegt ist neu oder geändert, durchgestrichen fällt weg, grau bleibt wie heute. Name, Untertitel und Suchwörter bleiben unverändert.</p>
+</header>
+
+<section aria-labelledby="apple">
+  <h2 id="apple">1 · App Store</h2>
+  <div class="langs">
+
+    <article class="card" lang="de">
+      <h3>Deutsch</h3>
+      <div class="field">
+        <div class="label"><span>Werbetext (über der Beschreibung)</span><span>145 / 170</span></div>
+        <p class="old">Sag es in einem Satz. Loose Ends erkennt Datum, Dauer und Kontext direkt auf deinem Gerät und zeigt dir später genau das, was gerade passt.</p>
+        <p class="new">Sag es in einem Satz. Loose Ends ordnet es auf deinem Gerät und zeigt es dir ruhig wie eine Seite im Notizbuch. Neu: Plane deinen Tag mit Claude.</p>
+      </div>
+      <div class="field">
+        <div class="label"><span>Neu in dieser Version</span><span>502 / 4000</span></div>
+        <p class="new">Loose Ends arbeitet jetzt mit Claude zusammen. Melde dich in den Einstellungen unter „Claude“ mit Apple an und füge Loose Ends in Claude als Connector hinzu. Dann kann Claude deine Aufgaben lesen, neue anlegen, abhaken und deinen Tag mit dir planen. Jede Änderung läuft auf deinem Gerät, löschen kann Claude nichts.<br><br>Außerdem: Getippte Aufgaben behalten genau deinen Titel. Das Widget ist aktuell, sobald du die App öffnest. Auf dem Mac öffnet sich das Fenster in der Menüleiste wieder mit einem Klick.</p>
+      </div>
+      <div class="field">
+        <div class="label"><span>Beschreibung · nur die geänderten Teile</span><span>ca. 2650 / 4000</span></div>
+        <p class="same">Sag es in einem Satz – Loose Ends kümmert sich um den Rest.<br>Aufgaben entstehen unterwegs … was gerade zu deiner Situation passt.</p>
+        <p class="new">Und sie sieht dabei aus wie eine Seite aus einem guten Notizbuch: ruhig, klar und mit Sorgfalt gestaltet.</p>
+        <pre class="new">SCHÖN WIE EIN NOTIZBUCH
+• Papier statt Formular: Deine Aufgaben stehen in ruhiger Schrift auf der Seite, die Zeit am Rand wie im Tagebuch
+• Wenige Farben, jede mit Bedeutung: Rot nur bei Zeitdruck, Grün nur im Moment des Erledigens
+• Über dem Tag steht ein Satz. Kein Lob, keine Serien, kein Druck
+• Beim Erledigen zieht sich ein kleiner Knoten zu
+• Hell und dunkel, auf jedem Gerät dieselbe Seite</pre>
+        <p class="same">ERFASSEN IN EINEM SATZ … bis „Termine optional im Kalender“ bleibt wie heute</p>
+        <pre class="new">MIT CLAUDE, WENN DU WILLST
+• Melde dich in den Einstellungen mit Apple an und füge Loose Ends in Claude als Connector hinzu
+• Frag Claude, was heute ansteht, plane mit Claude deinen Tag oder lass eine Mail in Aufgaben zerlegen
+• Claude legt an, hakt ab, verschiebt und ergänzt Teilschritte. Löschen kann Claude nichts
+• Jede Änderung läuft auf deinem Gerät, und du siehst an der Aufgabe, was Claude geändert hat</pre>
+        <p class="same">ÜBERALL DABEI … bleibt wie heute</p>
+        <pre class="old">PRIVAT
+Die Auswertung läuft auf deinem Gerät. Deine Aufgaben liegen in deiner iCloud, nicht auf fremden Servern.</pre>
+        <pre class="new">PRIVAT
+Die Auswertung läuft auf deinem Gerät. Deine Aufgaben liegen in deiner iCloud. Nur wenn du Claude verbindest, liegt eine Abschrift deiner offenen Aufgaben auf unserem Server in Deutschland: Titel und Angaben, nie dein Originalsatz, deine Notizen oder Anhänge. „Konto löschen“ in der App entfernt sie.</pre>
+      </div>
+    </article>
+
+    <article class="card" lang="en">
+      <h3>English</h3>
+      <div class="field">
+        <div class="label"><span>Promotional text</span><span>148 / 170</span></div>
+        <p class="old">Say it in one sentence. Loose Ends recognizes date, duration and tag right on your device and later shows you just what fits.</p>
+        <p class="new">Say it in one sentence. Loose Ends sorts it on your device and shows it to you on a calm page, like a good notebook. New: plan your day with Claude.</p>
+      </div>
+      <div class="field">
+        <div class="label"><span>What's new in this version</span><span>444 / 4000</span></div>
+        <p class="new">Loose Ends now works with Claude. Sign in with Apple under Settings › Claude and add Loose Ends to Claude as a connector. Claude can then read your tasks, capture new ones, complete them and plan your day with you. Every change runs on your device, and Claude cannot delete anything.<br><br>Also: tasks you type keep exactly your title. The widget is up to date as soon as you open the app. On the Mac, the menu bar window opens again with one click.</p>
+      </div>
+      <div class="field">
+        <div class="label"><span>Description · changed parts only</span><span>ca. 2400 / 4000</span></div>
+        <p class="same">Say it in one sentence – Loose Ends takes care of the rest.<br>Tasks show up on the go … just what fits your situation right now.</p>
+        <p class="new">And it looks like a page from a good notebook: calm, clear and made with care.</p>
+        <pre class="new">BEAUTIFUL LIKE A NOTEBOOK
+• Paper, not a form: your tasks sit on the page in calm type, the time in the margin like a diary
+• Few colors, each with a meaning: red only for time pressure, green only at the moment you complete
+• One sentence sits above your day. No praise, no streaks, no pressure
+• Completing a task ties a small knot
+• Light and dark, the same page on every device</pre>
+        <p class="same">CAPTURE IN ONE SENTENCE … unchanged up to “Optionally add dates to your calendar”</p>
+        <pre class="new">WITH CLAUDE, IF YOU LIKE
+• Sign in with Apple in Settings and add Loose Ends to Claude as a connector
+• Ask Claude what's on today, plan your day together or turn an email into tasks
+• Claude captures, completes, reschedules and adds steps. It cannot delete anything
+• Every change runs on your device, and the task shows you what Claude changed</pre>
+        <p class="same">EVERYWHERE YOU ARE … unchanged</p>
+        <pre class="old">PRIVATE
+Analysis runs on your device. Your tasks live in your iCloud, not on someone else's servers.</pre>
+        <pre class="new">PRIVATE
+Analysis runs on your device. Your tasks live in your iCloud. Only if you connect Claude is a copy of your open tasks kept on our server in Germany: titles and fields, never your original sentence, notes or attachments. "Delete account" in the app removes it.</pre>
+      </div>
+    </article>
+  </div>
+
+  <div class="card why">
+    <h3 style="color:var(--ink)">Warum so</h3>
+    <ul>
+      <li>Die Gestaltung steht jetzt vorn: im Werbetext, im Einleitungsabsatz und als eigener zweiter Abschnitt, mit dem, was die App wirklich ausmacht (Papier, Randspalte, Farbbudget, Knoten), nicht als Floskel.</li>
+      <li>Der alte Satz „nicht auf fremden Servern“ wäre mit Claude-Verbindung falsch. Der neue Absatz sagt dasselbe wie die Datenschutzerklärung, nur kürzer: Abschrift nur mit Verbindung, Server in Deutschland, ohne Originalsatz, Notizen und Anhänge.</li>
+      <li>Claude steht im Werbetext, weil man den jederzeit ohne neue Prüfung durch Apple ändern kann. In den Suchwörtern steht Claude nicht: Apple verbietet fremde Marken dort und lehnt eine Version deswegen ab.</li>
+      <li>„Löschen kann Claude nichts“ und „läuft auf deinem Gerät“ beantworten die erste Sorge, die man bei einem Assistenten mit Schreibrechten hat.</li>
+    </ul>
+  </div>
+</section>
+
+<section aria-labelledby="web">
+  <h2 id="web">2 · Eigene Seite auf henemm.com</h2>
+  <p>Entwurf A: eine eigene Produktseite unter <b>henemm.com/loose-ends</b>, auf Englisch wie der Rest der Website, in deren Farben und Schriften. Sie taugt auch als Marketing-Adresse im App Store und als Link, den du weitergibst. Unter „AI native Dev“ verweist ein kurzer Eintrag dorthin, wie bei FocusBlox.</p>
+  <div class="toggle" role="group" aria-label="Darstellung der Website">
+    <button id="t-light" aria-pressed="true" type="button">Hell</button>
+    <button id="t-dark" aria-pressed="false" type="button">Dunkel</button>
+  </div>
+
+  <div class="browser">
+    <div class="bar"><i></i><i></i><i></i><span>henemm.com/loose-ends/</span></div>
+    <div class="site" id="siteA" lang="en">
+      <div class="s-nav"><b>HENEMM</b><nav><span>About Me</span><span>AI native Dev</span><span>Blog</span><span>Products &amp; Offerings</span><span>Contact</span></nav></div>
+      <div class="s-main">
+
+        <div class="hero">
+          <div>
+            <div class="eyebrow">iPhone · iPad · Mac · Apple Watch · Free</div>
+            <h4>Loose Ends</h4>
+            <div class="claim">Say it. Clear your head.</div>
+            <p>Tasks show up while you are busy with something else. Loose Ends takes them in one sentence, sorts them on your device and lays them out like a page in a good notebook: calm, clear, made with care.</p>
+            <div class="cta"><a class="btn p" href="https://apps.apple.com/app/loose-ends/id6813060126">Download on the App Store</a><a class="btn s" href="#claude-a">Connect Claude</a></div>
+          </div>
+          <div class="phone"><img src="img/iphone-01-start.png" alt="Loose Ends start page on iPhone: today's sentence, the writing line and two tasks under Now"></div>
+        </div>
+
+        <div>
+          <div class="s-h">Why I built it</div>
+          <p>I built it for two reasons. The first: the tasks I lose are the ones that occur to me on the way, on a walk, at the checkout, halfway through an email. By the time I had opened a to-do app and picked a date, a list and a priority, the thought was gone. So Loose Ends asks for one sentence and nothing else, keeps it exactly as I said it and works out the rest by itself.</p>
+          <p style="margin-top:12px">The second: every to-do app I tried looked like a database. Rows, boxes, badges, a dozen colors shouting at me. I open my task list many times a day, and I wanted to enjoy looking at it. A list I like to open is a list I actually use.</p>
+        </div>
+
+        <div>
+          <div class="s-h">Made to be looked at</div>
+          <p>So I cared as much about how Loose Ends looks as about what it does. It should feel like a good notebook: paper instead of cards, type you want to read, the time in the margin like a diary, and color only where it means something. Red is time pressure, green is the moment you finish. When you complete a task, a small knot ties itself. That is all the celebration it needs.</p>
+        </div>
+
+        <div>
+          <div class="s-h">How it works</div>
+          <div class="steps">
+            <div class="step"><span class="n">1</span><h5>Say it</h5><p>Type or dictate one sentence: in the app, on Apple Watch, from a widget, the Action button or the share sheet.</p></div>
+            <div class="step"><span class="n">2</span><h5>It sorts itself</h5><p>Due date, duration, importance and tag come from your sentence. Fixed rules first, Apple Intelligence on your device only where language needs understanding.</p></div>
+            <div class="step"><span class="n">3</span><h5>It shows up when it fits</h5><p>“Now” holds what fits this moment. Reminders come on the due day, or when you arrive at a place.</p></div>
+          </div>
+        </div>
+
+        <div class="shots">
+          <img src="img/iphone-02-erfassen.png" alt="Capturing a task in one sentence">
+          <img src="img/iphone-04-detail.png" alt="A task with the fields recognized from the sentence">
+          <img class="wide" src="img/mac-start.png" alt="Loose Ends on the Mac">
+        </div>
+
+        <div class="claude" id="claude-a">
+          <span class="tag">New in 1.0.2</span>
+          <div class="s-h" style="margin:0">Loose Ends and Claude</div>
+          <p>Ask Claude what's on today, plan your day together, or turn an email into tasks. Claude works only with what Loose Ends allows: it reads, captures, completes, reschedules and adds steps. It cannot delete anything. Every change runs on your own device, and the task shows you what Claude changed.</p>
+          <ol>
+            <li>In Loose Ends, open <b>Settings › Claude</b> and sign in with Apple.</li>
+            <li>In Claude, open <b>Settings › Connectors › Add custom connector</b>. Name it <b>Loose Ends</b> and enter <code>https://loose-ends.henemm.com/mcp</code>.</li>
+            <li>Sign in with Apple once more and choose <b>Allow access</b>.</li>
+          </ol>
+          <div class="ask">“What's on for today?”</div>
+        </div>
+
+        <div>
+          <div class="s-h">Private by design</div>
+          <p>Analysis runs on your device, and your tasks live in your own iCloud. Only if you connect Claude is a copy of your open tasks kept on our server in Germany: titles and fields, never your original sentence, notes or attachments. “Delete account” in Settings › Claude removes it. <a href="https://www.henemm.com/legal/loose-ends/privacy-policy-en/">Privacy policy</a></p>
+        </div>
+
+        <div class="facts">
+          <div><b>Devices</b>iPhone, iPad, Mac, Apple Watch</div>
+          <div><b>Requires</b>iOS, iPadOS, macOS and watchOS 27</div>
+          <div><b>Languages</b>English, German</div>
+          <div><b>Price</b>Free</div>
+        </div>
+
+        <div class="callout">Built without being able to read a line of the code. If you want to work this way on your own project, that's what I do: <a href="https://www.henemm.com/products-offerings/ai-native-dev-sparring/">AI-native dev sparring →</a></div>
+      </div>
+      <div class="s-foot"><span>Contact</span><span>Imprint</span><span>Privacy policy</span></div>
+    </div>
+  </div>
+
+  <h3>Alternative B: nur ein Projekteintrag wie FocusBlox</h3>
+  <p>Kein eigener Auftritt, sondern ein Beitrag in der Reihe „AI native Dev“: Fließtext in deiner Stimme, ein Bild, Links. Weniger Arbeit, wirkt aber wie ein Werkstattbericht und weniger wie ein Produkt, das man empfiehlt. Als Marketing-Adresse bei Apple taugt er kaum.</p>
+  <div class="altb">
+    <div class="browser">
+      <div class="bar"><i></i><i></i><i></i><span>…/ai-native-software-development/</span></div>
+      <div class="site mini" lang="en"><div class="s-main">
+        <div class="listcard"><div class="thumb">FB</div><div><h6>FocusBlox</h6><p>iOS timeboxing app with prioritized backlog, focus sessions, and weekly reviews.</p></div></div>
+        <div class="listcard"><div class="thumb">LE</div><div><h6>Loose Ends</h6><p>Say it in one sentence. Task capture that sorts itself on your device, now with Claude.</p></div></div>
+      </div></div>
+    </div>
+    <div class="browser">
+      <div class="bar"><i></i><i></i><i></i><span>…/ai-native-software-development/loose-ends/</span></div>
+      <div class="site mini" lang="en"><div class="s-main">
+        <h4>Loose Ends</h4>
+        <p>Loose Ends is my newest app. I built it for two reasons: catching tasks in one sentence, and a list I enjoy looking at …</p>
+        <p>(Text wie in A, als durchgehender Fließtext, ohne Schritte und Bildleiste)</p>
+        <p><a href="https://apps.apple.com/app/loose-ends/id6813060126">App Store</a> · <a href="https://www.henemm.com/legal/loose-ends/privacy-policy-en/">Privacy policy</a></p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="next">
+  <h2 id="next">3 · Wie es weitergeht</h2>
+  <p>Nach deiner Freigabe trage ich die Texte ein; bei Apple erscheinen sie mit dem Update 1.0.2, zusammen mit dem Einschalten der Claude-Verbindung. Die Seite auf henemm.com stelle ich selbst online, sobald das Update im Store ist, damit sie nichts verspricht, was man noch nicht laden kann.</p>
+</section>
+
+</div>
+<script>
+(function(){
+  var a=document.getElementById('siteA'),l=document.getElementById('t-light'),d=document.getElementById('t-dark');
+  function set(dark){a.classList.toggle('dark',dark);l.setAttribute('aria-pressed',String(!dark));d.setAttribute('aria-pressed',String(dark));}
+  l.addEventListener('click',function(){set(false)});d.addEventListener('click',function(){set(true)});
+})();
+</script>
+</body>
+</html>
