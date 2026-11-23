@@ -163,6 +163,109 @@ class SummaryTests(unittest.TestCase):
         self.assertNotIn("stack=", text)
 
 
+def write_how_export(folder: Path, clicks: list[tuple[str, float, bool, str]]) -> None:
+    """Wie `write_export`, aber der Anhang trägt die Zeile `how:` wie `assertSymbolOpensPanelWithOneClick`."""
+    folder.mkdir(parents=True, exist_ok=True)
+    tests = {}
+    for index, (label, at, opened, how) in enumerate(clicks):
+        file_name = f"{index:04d}-click.txt"
+        lines = click_text(at, opened).splitlines()
+        (folder / file_name).write_text("\n".join([lines[0], f"how: {how}", *lines[1:]]) + "\n")
+        tests.setdefault(f"MacGalleryTests/test-{label}()", []).append({
+            "exportedFileName": file_name,
+            "suggestedHumanReadableName": f"mac-gallery-{label}-click_0_{index:04d}.txt",
+        })
+    manifest = [{"testIdentifier": k, "attachments": v} for k, v in tests.items()]
+    (folder / "manifest.json").write_text(json.dumps(manifest))
+
+
+class ExpectedAndHowTests(unittest.TestCase):
+    """F001: Nenner gegen die Iterationszahl; F004: Klickweg je Arm."""
+
+    def setUp(self):
+        self.summary = load_summary()
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.base = Path(self.tmp.name)
+
+    def run_script(self, *extra):
+        log = self.base / "panel.log"
+        log.write_text("")
+        out = self.base / "summary.md"
+        result = subprocess.run(
+            [sys.executable, str(SCRIPT), "--raw", str(self.base / "raw"), "--log", str(log), "--out", str(out),
+             *extra], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        return out.read_text()
+
+    def test_expected_flags_short_active_arm(self):
+        write_export(self.base / "raw", [("reopen-return", 1.0, True)] * 3 + [("reopen-open-app", 2.0, True)] * 2
+                     + [("reopen-return-control", 3.0, True)] * 3)
+        text = self.run_script("--expected", "3")
+        self.assertIn("open-app: erwartet 3, gezählt 2", text)
+        self.assertNotIn("return: erwartet", text)
+        self.assertNotIn("control: erwartet", text)
+
+    def test_expected_ignores_inactive_control_arm(self):
+        write_export(self.base / "raw", [("reopen-return", 1.0, True)] * 2 + [("reopen-open-app", 2.0, True)] * 2)
+        text = self.run_script("--expected", "2")
+        self.assertNotIn("erwartet", text)
+
+    def test_expected_flags_named_arm_without_clicks(self):
+        write_export(self.base / "raw", [("reopen-return", 1.0, True)] * 2 + [("reopen-open-app", 2.0, True)] * 2)
+        text = self.run_script("--expected", "2", "--arms", "return,open-app,control")
+        self.assertIn("control: erwartet 2, gezählt 0", text)
+
+    def test_mandatory_arms_flagged_even_without_clicks(self):
+        write_export(self.base / "raw", [("reopen-return", 1.0, True)] * 2)
+        text = self.run_script("--expected", "2")
+        self.assertIn("open-app: erwartet 2, gezählt 0", text)
+        self.assertNotIn("control: erwartet", text)
+
+    def test_without_expected_no_check_line(self):
+        write_export(self.base / "raw", [("reopen-return", 1.0, True)])
+        self.assertNotIn("erwartet", self.run_script())
+
+    def test_how_counted_per_arm(self):
+        write_how_export(self.base / "raw", [
+            ("reopen-return-control", 1.0, True, "control: CGEvent at 1200,12"),
+            ("reopen-return-control", 2.0, True, "control: CGEvent at 1200,12"),
+            ("reopen-return-control", 3.0, False, "control: XCUICoordinate fallback"),
+            ("reopen-return", 4.0, True, "user: statusItem.click()"),
+        ])
+        how = self.summary.count_how([self.base / "raw"])
+        self.assertEqual(how["control"], {"cgevent": 2, "xcuicoordinate": 1})
+        self.assertEqual(how["return"], {"statusitem": 1})
+        self.assertEqual(how["open-app"], {})
+        text = self.run_script()
+        self.assertIn("control: cgevent 2, xcuicoordinate 1", text)
+        self.assertIn("return: statusitem 1", text)
+
+    def test_attachment_without_how_counts_as_unknown(self):
+        write_export(self.base / "raw", [("reopen-return", 1.0, True)])
+        self.assertEqual(self.summary.count_how([self.base / "raw"])["return"], {"unbekannt": 1})
+
+
+class WorkflowExpectedTests(unittest.TestCase):
+    """F001: der Workflow übergibt die Iterationszahl und die aktiven Arme."""
+
+    def test_workflow_passes_expected_and_arms(self):
+        text = WORKFLOW.read_text()
+        for needle in ('--expected "$ITERATIONS"', "--arms"):
+            self.assertTrue(needle in text, f"fehlt: {needle}")
+
+
+class CallersTests(unittest.TestCase):
+    """F003: nur die führenden Rahmen des Beobachters fallen weg, tiefere bleiben."""
+
+    def test_callers_drops_only_leading_frames(self):
+        text = CAPTURE.read_text()
+        body = re.search(r"static func callers\(\).*?\n    \}\n", text, re.S)
+        self.assertIsNotNone(body)
+        self.assertIn("drop(while:", body.group(0))
+        self.assertNotIn(".filter", body.group(0))
+
+
 class SourceCheck(unittest.TestCase):
     """Prüft einen Quelltext; Meldungen nennen nur das Gesuchte, nie den ganzen Text."""
 
