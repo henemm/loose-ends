@@ -11,10 +11,11 @@ nur als „vermutlich“ da. Der Wortlaut ist Grundlage einer Rechtsaussage und 
 ## Stand heute
 
 Das Store-Etikett lautet „Data Not Collected“ (vermutlich deutsch „Keine Daten erhoben“). Das Etikett gilt app-weit,
-für alle Plattformen und Versionen zugleich, und es stimmt, solange der Konto-Schalter `LEAccountEnabled` aus ist
-(`project.yml` hält `false`). Store-Bauten haben ein leeres Manifest (`NSPrivacyCollectedDataTypes` leer) und senden
-nichts an den Dienst: Ohne Konto gibt es keinen Verkehr zu `loose-ends.henemm.com`. Nur der TestFlight-Lauf mit dem
-Eingang `konto` schaltet die Gruppe „Claude“ ein und schreibt die drei Typen unten ins Manifest (#625 S2).
+für alle Plattformen und Versionen zugleich, und es stimmt, solange der Konto-Schalter `LEAccountEnabled` aus ist.
+Seit #625 S5b steht er an der Quelle an (`project.yml` hält `true`) und das Manifest trägt die drei Typen unten; das
+Etikett „Data Not Collected“ gilt damit nur noch für Bauten vor S5b und muss mit der Einreichung (#625 S5d) auf die
+Typen unten umgestellt werden. Früher (#625 S2) hatten Store-Bauten ein leeres Manifest und nur der TestFlight-Lauf mit dem
+Eingang `konto` schaltete die Gruppe „Claude“ ein; Rückbau dieser CI-Mechanik in S5c.
 
 ## Antworten mit Konto
 

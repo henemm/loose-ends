@@ -70,8 +70,8 @@ targets:
         # com.apple.developer.aps-environment; Xcode silently drops the iOS key there (#795 S5c-2b2).
         aps-environment: development
         com.apple.developer.aps-environment: development
-        # Sign in with Apple for the account group "Claude" (#615 S4c-2a). In every build, without effect while
-        # LEAccountEnabled is off; the App ID has had the capability since #621 S6b.
+        # Sign in with Apple for the account group "Claude" (#615 S4c-2a). In every build; the group is on at the
+        # source (#625 S5b). The App ID has had the capability since #621 S6b.
         com.apple.developer.applesignin: [Default]
     info:
       path: LooseEnds/Info.plist
@@ -81,9 +81,9 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         LEAppGroup: group.com.henning.looseends$(BUNDLE_ID_SUFFIX)
         LECloudContainer: iCloud.com.henning.looseends$(BUNDLE_ID_SUFFIX)
-        # Account group "Claude" (#615 S4c-2a): off by default, a real Bool. Only a TestFlight run with the
-        # input `konto` switches it on (plutil after generate). LEServiceURL stays unset: the fallback is the one service.
-        LEAccountEnabled: false
+        # Account group "Claude" (#615 S4c-2a): on at the source (#625 S5b), a real Bool, in every build.
+        # LEServiceURL stays unset: the fallback is the one service.
+        LEAccountEnabled: true
         # APNs environment the app reports to the service (#795 S5c-2b): sandbox by default; only the TestFlight
         # run sets production (plutil after generate) and checks it in the archive.
         LEApsEnvironment: sandbox

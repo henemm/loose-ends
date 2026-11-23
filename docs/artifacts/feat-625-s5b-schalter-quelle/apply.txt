@@ -1,0 +1,23 @@
+# AC-5: Manifest-Quelle nur per apply neu geschrieben (2026-11-23)
+
+$ python3 scripts/privacy_manifest.py apply LooseEnds/PrivacyInfo.xcprivacy
+LooseEnds/PrivacyInfo.xcprivacy: 3 collected data types set
+exit=0
+
+$ git diff --stat -- LooseEnds/PrivacyInfo.xcprivacy
+ LooseEnds/PrivacyInfo.xcprivacy | 49 ++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 43 insertions(+), 6 deletions(-)
+
+Die 6 Löschzeilen sind keine inhaltliche Änderung: plistlib schreibt die Schlüssel sortiert, so wandern
+NSPrivacyTracking und NSPrivacyTrackingDomains ans Ende (dieselbe Byte-Form erzeugt der Konto-Lauf in CI).
+Plist-Vergleich alt gegen neu, ohne NSPrivacyCollectedDataTypes:
+andere Schluessel gleich: True ['NSPrivacyAccessedAPITypes', 'NSPrivacyCollectedDataTypes', 'NSPrivacyTracking', 'NSPrivacyTrackingDomains']
+
+$ python3 scripts/privacy_manifest.py check LooseEnds/PrivacyInfo.xcprivacy --account true
+LooseEnds/PrivacyInfo.xcprivacy: matches account=true
+exit=0
+$ python3 scripts/privacy_manifest.py check LooseEnds/PrivacyInfo.xcprivacy --account false
+LooseEnds/PrivacyInfo.xcprivacy: NSPrivacyCollectedDataTypes must be empty for a build without the account, found 3 entries
+exit=1
+
+Durch apply geändert: nur LooseEnds/PrivacyInfo.xcprivacy.

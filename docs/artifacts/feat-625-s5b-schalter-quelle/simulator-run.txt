@@ -1,0 +1,18 @@
+# Simulator-Beleg
+erzeugt: 2026-11-23T13:31:06+0100
+befehl: scripts/sim.sh test-proof S5bSettingsProbeTests
+workflow: feat-625-s5b-schalter-quelle
+head: efb212f1db7ab03ab997ef42ce1e6430a4a39989
+basis: 04f697f4d2fd427b21a87f0946ce3c383c2561a4 (merge-base origin/main HEAD)
+testklasse: S5bSettingsProbeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1795436917.193  ende: 1795437056.067
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-625-s5b-schalter-quelle/simulator-run/summary.json  sha256:e34998375a6181a252c92c83a651403bb61a0e27950846c11bc01d0e933881d8
+xcresult: docs/artifacts/feat-625-s5b-schalter-quelle/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-625-s5b-schalter-quelle/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+- sha256:47657084783bb386669938cf8bb4b368c3c18d2d524558c952a9e2f3fb31abae  LooseEndsUITests/S5bSettingsProbeTests.swift

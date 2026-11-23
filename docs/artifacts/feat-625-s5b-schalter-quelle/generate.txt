@@ -1,0 +1,31 @@
+# AC-2: generate schreibt Info.plist als Abbild von project.yml und ist idempotent (2026-11-23, Arbeitsstand vor Commit)
+
+$ ./scripts/sim.sh generate            # erster Lauf nach project.yml LEAccountEnabled: true
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at .../LooseEnds.xcodeproj
+[sim] Projekt erzeugt.
+
+$ git status --porcelain LooseEnds/
+ M LooseEnds/Info.plist
+
+$ git diff -- LooseEnds/Info.plist
+@@ -61,7 +61,7 @@
+ 	<key>ITSAppUsesNonExemptEncryption</key>
+ 	<false/>
+ 	<key>LEAccountEnabled</key>
+-	<false/>
++	<true/>
+ 	<key>LEAppGroup</key>
+
+$ ./scripts/sim.sh generate            # zweiter und dritter Lauf
+exit=0
+$ git diff -- LooseEnds/Info.plist | cmp - <Diff nach erstem Lauf>
+dritter Lauf: Diff identisch
+$ git status --porcelain LooseEnds/
+ M LooseEnds/Info.plist
+
+Ergebnis: generate ändert nur LooseEnds/Info.plist (die eine gewollte Zeile <false/> -> <true/>, kein LEServiceURL),
+keine .entitlements- oder andere Datei unter LooseEnds/. Weitere Läufe hinterlassen keinen zusätzlichen Diff; nach dem
+Commit ist `git status --porcelain LooseEnds/` damit leer (CI-Schritt „Generate leaves the tree clean“).

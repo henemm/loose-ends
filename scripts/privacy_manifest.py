@@ -1,8 +1,9 @@
 """Das Datenschutz-Manifest folgt dem Konto-Schalter (#625 Schnitt 2).
 
-Store-Bauten (`LEAccountEnabled` aus) erheben nichts: `NSPrivacyCollectedDataTypes` bleibt leer. Bauten mit `konto`
-an senden die Apple-Kennung (`apple_sub`), die Abschrift der offenen Aufgaben und die Kennung der Installation
-(`X-Device`) an den Dienst; ihr Manifest bekommt im CI genau diese drei Typen. Die Liste hier ist die eine Quelle.
+Seit #625 S5b ist `LEAccountEnabled` an der Quelle an: Die App sendet die Apple-Kennung (`apple_sub`), die Abschrift
+der offenen Aufgaben und die Kennung der Installation (`X-Device`) an den Dienst, und die Manifest-Quelle trägt genau
+diese drei Typen (geschrieben mit `apply`). Die Liste hier ist die eine Quelle. `check --account` prüft weiter beide
+Zustände: `true` verlangt genau die drei Typen, `false` eine leere `NSPrivacyCollectedDataTypes`.
 
     python3 scripts/privacy_manifest.py apply <manifest>
     python3 scripts/privacy_manifest.py check <manifest> --account true|false
