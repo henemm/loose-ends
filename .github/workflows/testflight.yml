@@ -18,10 +18,6 @@ on:
         description: Zertifikate nur auflisten, nichts widerrufen
         type: boolean
         default: false
-      konto:
-        description: Konto-Bau – schaltet die Gruppe „Claude“ ein, nie für den App Store (#615); Vorgabe an, damit kein Testbau sie abschaltet (2026-11-15)
-        type: boolean
-        default: true
   push:
     tags: ['v*']
 
@@ -31,11 +27,8 @@ concurrency:
 
 # Jeder Build sagt in TestFlight, was zu testen ist (#347): beim Start von Hand das Eingabefeld,
 # bei einem v*-Tag die Nachricht des getaggten Commits.
-# Konto-Bau (#615 S4c-2a): nur die Eingabe `konto` schaltet LEAccountEnabled im Archiv ein; ein v*-Tag-Lauf ist nie
-# einer. asc_what_to_test.py kennzeichnet ihn in „Was testen“, asc_store_version.py ordnet ihn nie einer Store-Version zu.
 env:
   WHAT_TO_TEST: ${{ inputs.what_to_test || github.event.head_commit.message }}
-  ACCOUNT_BUILD: ${{ inputs.konto == true && 'true' || 'false' }}
 
 jobs:
   # TestFlight talks to CloudKit Production, which never creates a schema by itself. Before anything is
@@ -115,13 +108,6 @@ jobs:
 
       - name: Set the APNs environment
         run: plutil -replace LEApsEnvironment -string production LooseEnds/Info.plist   # jeder Lauf hier lädt hoch, auch v*-Tags (#795 S5c-2b)
-
-      - name: Set the account switch
-        if: env.ACCOUNT_BUILD == 'true'
-        run: |
-          plutil -replace LEAccountEnabled -bool YES LooseEnds/Info.plist   # generate schrieb die Datei eben neu
-          # Konto-Bauten erheben Apple-Kennung, Abschrift und Installationskennung: Manifest mit drei Typen (#625 S2)
-          python3 scripts/privacy_manifest.py apply LooseEnds/PrivacyInfo.xcprivacy
 
       - name: Store the App Store Connect API key
         run: |
@@ -228,17 +214,17 @@ jobs:
           entitled com.henning.looseends com.apple.developer.applesignin
           # Push (#795 S5c-2b): nur Vorhandensein; das Archiv trägt development, production setzt erst der Export.
           entitled com.henning.looseends aps-environment
-          # Schalter der Konto-Gruppe (#615 S4c-2a): Typ Bool und Wert gleich der Eingabe konto, auch bei „aus“.
+          # Schalter der Konto-Gruppe: Typ Bool und Wert true, an der Quelle seit #625 S5b, Eingabe konto entfernt in #625 S5c.
           # account-switch-check:begin
-          account_switch() { # Info.plist; LEAccountEnabled muss ein Bool sein und der Eingabe konto gleichen (#615 S4c-2a)
-            local type value want="${ACCOUNT_BUILD:-false}"
+          account_switch() { # Info.plist; LEAccountEnabled muss Bool true sein, an der Quelle seit #625 S5b
+            local type value
             type=$(plutil -type LEAccountEnabled "$1" 2>/dev/null || true)
             value=$(plutil -extract LEAccountEnabled raw "$1" 2>/dev/null || true)
-            if [ "$type" = bool ] && [ "$value" = "$want" ]; then
+            if [ "$type" = bool ] && [ "$value" = true ]; then
               row "| LEAccountEnabled | bool $value | OK |"
             else
               row "| LEAccountEnabled | ${type:-fehlt} $value | FEHLER |"
-              echo "::error::LEAccountEnabled is '${type:-missing} $value', expected bool $want (#615)"; fail=1
+              echo "::error::LEAccountEnabled is '${type:-missing} $value', expected bool true (#625)"; fail=1
             fi
           }
           # account-switch-check:end
@@ -265,13 +251,12 @@ jobs:
           row "|-----------|------|----------|"
           account_switch "$app_info"
           aps_environment "$app_info"
-          # Datenschutz-Manifest der App folgt dem Schalter (#625 S2): leer ohne konto, drei Typen mit konto.
-          : "${ACCOUNT_BUILD:=false}"
+          # Datenschutz-Manifest der App: drei Typen, an der Quelle seit #625 S5b.
           manifest="${app_info%/Info.plist}/PrivacyInfo.xcprivacy"
           res=OK
-          [ -n "$app_info" ] && python3 scripts/privacy_manifest.py check "$manifest" --account "$ACCOUNT_BUILD" || { res=FEHLER; fail=1; }
-          row "| NSPrivacyCollectedDataTypes | konto $ACCOUNT_BUILD | $res |"
-          [ "$res" = OK ] || echo "::error::PrivacyInfo.xcprivacy of com.henning.looseends does not match konto=$ACCOUNT_BUILD (#625)"
+          [ -n "$app_info" ] && python3 scripts/privacy_manifest.py check "$manifest" --account true || { res=FEHLER; fail=1; }
+          row "| NSPrivacyCollectedDataTypes | konto true | $res |"
+          [ "$res" = OK ] || echo "::error::PrivacyInfo.xcprivacy of com.henning.looseends does not carry the account types (#625)"
           # Deutsche Texte in jedem iOS-Bundle mit eigenem String Catalog (#323): Widget und Kontrollzentrum
           # blieben auf einem deutschen iPhone englisch, ohne dass ein Schritt es bemerkte.
           row ""
@@ -453,13 +438,6 @@ jobs:
       - name: Set the APNs environment
         run: plutil -replace LEApsEnvironment -string production LooseEnds/Info.plist   # jeder Lauf hier lädt hoch, auch v*-Tags (#795 S5c-2b)
 
-      - name: Set the account switch
-        if: env.ACCOUNT_BUILD == 'true'
-        run: |
-          plutil -replace LEAccountEnabled -bool YES LooseEnds/Info.plist   # generate schrieb die Datei eben neu
-          # Konto-Bauten erheben Apple-Kennung, Abschrift und Installationskennung: Manifest mit drei Typen (#625 S2)
-          python3 scripts/privacy_manifest.py apply LooseEnds/PrivacyInfo.xcprivacy
-
       - name: Store the App Store Connect API key
         run: |
           mkdir -p "$HOME/private_keys"
@@ -533,17 +511,17 @@ jobs:
             if printf '%s' "$ents" | grep -qF "<key>$key</key>"; then row "| $key | vorhanden | OK |"
             else row "| $key | FEHLT | FEHLER |"; echo "::error::macOS app is not signed with $key"; fail=1; fi
           done
-          # Schalter der Konto-Gruppe (#615 S4c-2a), wie in der iOS-Prüfung.
+          # Schalter der Konto-Gruppe (#625 S5c), wie in der iOS-Prüfung.
           # account-switch-check:begin
-          account_switch() { # Info.plist; LEAccountEnabled muss ein Bool sein und der Eingabe konto gleichen (#615 S4c-2a)
-            local type value want="${ACCOUNT_BUILD:-false}"
+          account_switch() { # Info.plist; LEAccountEnabled muss Bool true sein, an der Quelle seit #625 S5b
+            local type value
             type=$(plutil -type LEAccountEnabled "$1" 2>/dev/null || true)
             value=$(plutil -extract LEAccountEnabled raw "$1" 2>/dev/null || true)
-            if [ "$type" = bool ] && [ "$value" = "$want" ]; then
+            if [ "$type" = bool ] && [ "$value" = true ]; then
               row "| LEAccountEnabled | bool $value | OK |"
             else
               row "| LEAccountEnabled | ${type:-fehlt} $value | FEHLER |"
-              echo "::error::LEAccountEnabled is '${type:-missing} $value', expected bool $want (#615)"; fail=1
+              echo "::error::LEAccountEnabled is '${type:-missing} $value', expected bool true (#625)"; fail=1
             fi
           }
           # account-switch-check:end
@@ -563,12 +541,11 @@ jobs:
           # aps-environment-check:end
           account_switch "$P"
           aps_environment "$P"
-          # Datenschutz-Manifest der App folgt dem Schalter (#625 S2), wie in der iOS-Prüfung.
-          : "${ACCOUNT_BUILD:=false}"
+          # Datenschutz-Manifest der App, wie in der iOS-Prüfung.
           res=OK
-          python3 scripts/privacy_manifest.py check "$APP/Contents/Resources/PrivacyInfo.xcprivacy" --account "$ACCOUNT_BUILD" || { res=FEHLER; fail=1; }
-          row "| NSPrivacyCollectedDataTypes | konto $ACCOUNT_BUILD | $res |"
-          [ "$res" = OK ] || echo "::error::macOS PrivacyInfo.xcprivacy does not match konto=$ACCOUNT_BUILD (#625)"
+          python3 scripts/privacy_manifest.py check "$APP/Contents/Resources/PrivacyInfo.xcprivacy" --account true || { res=FEHLER; fail=1; }
+          row "| NSPrivacyCollectedDataTypes | konto true | $res |"
+          [ "$res" = OK ] || echo "::error::macOS PrivacyInfo.xcprivacy does not carry the account types (#625)"
           [ "$fail" = 0 ]
 
       - name: Write export options

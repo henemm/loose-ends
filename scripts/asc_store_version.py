@@ -140,6 +140,7 @@ def pick_build(config, app_id, platform, target):
 
 def build_lock(config, build_id):
     """Grund, einen Bau nie zuzuordnen (#615 S4c-2a), sonst None; fail-closed: Unlesbares sperrt.
+    Die Sperre gilt alten markierten Konto-Bauten (die Marke wird seit #625 S5c nicht mehr gesetzt) und unlesbaren Texten:
     „konto“: ein Text „Was testen“ trägt die Marke; „texte nicht lesbar“: GET gescheitert, Liste leer, Text leer."""
     try:
         texts = [attributes(item).get("whatsNew")

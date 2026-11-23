@@ -354,25 +354,22 @@ Schritt „Script tests") vergleicht `project.yml` typgenau mit allen eingecheck
 `entitled` der Archivprüfung liest die signierten Berechtigungen der Haupt-App per `codesign` und stoppt
 den Upload, wenn der Schlüssel fehlt.
 
-**Konto-Bau (#615 S4c-2a).** Die Haupt-App trägt in jedem Bau die Berechtigung `com.apple.developer.applesignin`
-(„Mit Apple anmelden“), und `LEAccountEnabled` steht in `project.yml` als echtes Bool (seit #625 S5b an der Quelle auf `true`; Rückbau der CI-Mechanik unten in S5c, bis dahin gelten die Sätze zu `konto` unverändert). Früherer Stand: `false`, die Gruppe „Claude“ in
-den Einstellungen blieb verborgen. Nur die Eingabe `konto` (Run workflow → Haken „Konto-Bau“, Standard aus; ein `v*`-Tag-Lauf
-ist nie einer) setzt `ACCOUNT_BUILD=true`; dann schreibt der Schritt „Set the account switch“ in beiden Jobs nach „Generate
-project“ und vor dem Archiv `LEAccountEnabled` auf `true`. Beide Archivprüfungen belegen am fertigen Archiv, dass
-`LEAccountEnabled` vom Typ Bool ist und der Eingabe gleicht (auch „aus“ bei jedem gewöhnlichen Bau), und dass die signierte App
-`com.apple.developer.applesignin` trägt; jede Abweichung stoppt den Upload. `confirm` und `confirm-mac` hängen bei einem
-Konto-Bau eine feste Kennzeichnung an jede Fassung von „Was testen“ an (Wortlaut nur in `scripts/asc_what_to_test.py`).
-`scripts/asc_store_version.py` liest vor jeder Zuordnung die „Was testen“-Texte des Baus und ordnet einen gekennzeichneten
-Bau (`übersprungen: konto`) oder einen mit unlesbaren oder leeren Texten (`übersprungen: texte nicht lesbar`) nie einer
-Store-Version zu. Regel: ein Konto-Bau wird nie einem Store-Bau zugeordnet und nie eingereicht, solange der Konto-Teil des
-Datenschutztextes nicht online steht. Die Kennzeichnung ist in App Store Connect von Hand überschreibbar; der Beleg am Archiv
-bleibt deshalb die eigentliche Prüfung.
+**Konto-Schalter an der Quelle (#615 S4c-2a, #625 S5b, #625 S5c).** Die Haupt-App trägt in jedem Bau die Berechtigung
+`com.apple.developer.applesignin` („Mit Apple anmelden“), und `LEAccountEnabled` steht seit #625 S5b in `project.yml` als
+echtes Bool `true` an der Quelle (früher `false`, die Gruppe „Claude“ in den Einstellungen blieb verborgen). Die Eingabe
+`konto`, die Variable `ACCOUNT_BUILD`, die Schritte „Set the account switch“ und die Kennzeichnung in „Was testen“ sind seit
+#625 S5c entfernt: Hand- und `v*`-Tag-Lauf bauen dasselbe. Beide Archivprüfungen belegen am fertigen Archiv, dass
+`LEAccountEnabled` vom Typ Bool und `true` ist und dass die signierte App `com.apple.developer.applesignin` trägt; jede
+Abweichung stoppt den Upload. `scripts/asc_store_version.py` liest vor jeder Zuordnung weiter die „Was testen“-Texte des
+Baus und ordnet einen alten, noch gekennzeichneten Konto-Bau (`übersprungen: konto`) oder einen mit unlesbaren oder leeren
+Texten (`übersprungen: texte nicht lesbar`) nie einer Store-Version zu; die Kennzeichnung selbst steht nur noch in
+`scripts/asc_what_to_test.py` (`ACCOUNT_BUILD_MARK`) und wird nicht mehr gesetzt.
 
-**Datenschutz-Manifest folgt dem Schalter (#625 S2).** Store-Bauten leer, Konto-Bauten drei Typen aus
-`scripts/privacy_manifest.py` (UserID, DeviceID, OtherUserContent). `LooseEnds/PrivacyInfo.xcprivacy` trägt die drei Typen seit #625 S5b an der Quelle (früher leer; CI-Rückbau in S5c);
-nur bei `konto` schreibt „Set the account switch“ in beiden Jobs mit `privacy_manifest.py apply` die drei Typen hinein.
-Beide Archivprüfungen rufen für das App-Bundle `com.henning.looseends` `privacy_manifest.py check <Manifest> --account
-"$ACCOUNT_BUILD"` auf (Watch, Share und Widgets bleiben leer und unberührt); ein Befund oder ein fehlendes Bundle stoppt den Upload.
+**Datenschutz-Manifest an der Quelle (#625 S2, #625 S5b).** `LooseEnds/PrivacyInfo.xcprivacy` trägt seit #625 S5b die drei
+Typen aus `scripts/privacy_manifest.py` (UserID, DeviceID, OtherUserContent) an der Quelle; seit #625 S5c schreibt kein
+Schritt im Lauf mehr hinein. Beide Archivprüfungen rufen für das App-Bundle `com.henning.looseends`
+`privacy_manifest.py check <Manifest> --account true` fest auf (Watch, Share und Widgets bleiben leer und unberührt); ein
+Befund oder ein fehlendes Bundle stoppt den Upload.
 
 **APNs-Umgebung als Marke (#795 S5c-2b).** Die App meldet dem Dienst mit dem Geräte-Token, ob er Apples Test- oder
 Echtbetrieb ansprechen soll (`PushEnvironment.current` liest die Info-Marke `LEApsEnvironment`). `project.yml` setzt
