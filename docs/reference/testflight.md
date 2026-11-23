@@ -355,8 +355,8 @@ Schritt „Script tests") vergleicht `project.yml` typgenau mit allen eingecheck
 den Upload, wenn der Schlüssel fehlt.
 
 **Konto-Bau (#615 S4c-2a).** Die Haupt-App trägt in jedem Bau die Berechtigung `com.apple.developer.applesignin`
-(„Mit Apple anmelden“), und `LEAccountEnabled` steht in `project.yml` als echtes Bool auf `false`: die Gruppe „Claude“ in
-den Einstellungen bleibt verborgen. Nur die Eingabe `konto` (Run workflow → Haken „Konto-Bau“, Standard aus; ein `v*`-Tag-Lauf
+(„Mit Apple anmelden“), und `LEAccountEnabled` steht in `project.yml` als echtes Bool (seit #625 S5b an der Quelle auf `true`; Rückbau der CI-Mechanik unten in S5c, bis dahin gelten die Sätze zu `konto` unverändert). Früherer Stand: `false`, die Gruppe „Claude“ in
+den Einstellungen blieb verborgen. Nur die Eingabe `konto` (Run workflow → Haken „Konto-Bau“, Standard aus; ein `v*`-Tag-Lauf
 ist nie einer) setzt `ACCOUNT_BUILD=true`; dann schreibt der Schritt „Set the account switch“ in beiden Jobs nach „Generate
 project“ und vor dem Archiv `LEAccountEnabled` auf `true`. Beide Archivprüfungen belegen am fertigen Archiv, dass
 `LEAccountEnabled` vom Typ Bool ist und der Eingabe gleicht (auch „aus“ bei jedem gewöhnlichen Bau), und dass die signierte App
@@ -369,7 +369,7 @@ Datenschutztextes nicht online steht. Die Kennzeichnung ist in App Store Connect
 bleibt deshalb die eigentliche Prüfung.
 
 **Datenschutz-Manifest folgt dem Schalter (#625 S2).** Store-Bauten leer, Konto-Bauten drei Typen aus
-`scripts/privacy_manifest.py` (UserID, DeviceID, OtherUserContent). `LooseEnds/PrivacyInfo.xcprivacy` bleibt im Repo leer;
+`scripts/privacy_manifest.py` (UserID, DeviceID, OtherUserContent). `LooseEnds/PrivacyInfo.xcprivacy` trägt die drei Typen seit #625 S5b an der Quelle (früher leer; CI-Rückbau in S5c);
 nur bei `konto` schreibt „Set the account switch“ in beiden Jobs mit `privacy_manifest.py apply` die drei Typen hinein.
 Beide Archivprüfungen rufen für das App-Bundle `com.henning.looseends` `privacy_manifest.py check <Manifest> --account
 "$ACCOUNT_BUILD"` auf (Watch, Share und Widgets bleiben leer und unberührt); ein Befund oder ein fehlendes Bundle stoppt den Upload.
