@@ -1,4 +1,5 @@
 #if os(macOS)
+import CoreGraphics
 import XCTest
 
 /// #511: photographs the Mac app, light and dark, so the Mac tickets (#477–#480) get a picture of
@@ -480,18 +481,65 @@ final class MacGalleryTests: XCTestCase {
         app.terminate()
     }
 
-    /// Clicks the symbol exactly once and expects the panel within 10 s. The time of the click and of the
-    /// answer and the hierarchy go along as attachments, so a red run in CI can be read.
+    /// #978 Schnitt 2, control arm: the same way as `testMenuBarReopensAfterReturnWithOneClick`, but the symbol
+    /// is clicked by mouse CGEvents on the middle of its frame instead of `statusItem.click()`. A failure rate
+    /// like the user arms points at app or system, rate zero at the test tool's click synthesis. Diagnosis only:
+    /// runs only with `LE_PANEL_CONTROL_ARM` set (the repeat workflow), never in the required job.
     @MainActor
-    private func assertSymbolOpensPanelWithOneClick(_ app: XCUIApplication, label: String) {
+    func testMenuBarReopensAfterReturnWithControlClick() throws {
+        guard ProcessInfo.processInfo.environment["LE_PANEL_CONTROL_ARM"] != nil else {
+            throw XCTSkip("#978 control arm runs only with LE_PANEL_CONTROL_ARM (mac-panel-repeat.yml)")
+        }
+        let app = macLaunch(dark: false)
+        guard let panel = openPanel(in: app, label: "reopen-return-control") else { return }
+        let field = macElement("captureTextField", in: panel)
+        XCTAssertTrue(field.waitForExistence(timeout: 5), "Panel shows no field")
+        field.click()
+        field.typeText("Blumen gießen")
+        field.typeText("\n")
+        let closed = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: app.buttons["menuBarOpenApp"])
+        XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 10), .completed, "Return did not close the panel")
+        assertSymbolOpensPanelWithOneClick(app, label: "reopen-return-control", click: Self.coordinateClick)
+        app.terminate()
+    }
+
+    /// Mouse down and up as CGEvents on the middle of the element's frame (screen points, top left origin,
+    /// as CGEvent takes them). Without the right to post events it falls back to `XCUICoordinate.click()`,
+    /// which uses the same synthesis as `click()`; the fallback is noted, so the finding can say so.
+    @MainActor
+    private static func coordinateClick(_ element: XCUIElement) -> String {
+        let frame = element.frame
+        let point = CGPoint(x: frame.midX, y: frame.midY)
+        guard CGPreflightPostEventAccess(),
+              let down = CGEvent(mouseEventSource: nil, mouseType: .leftMouseDown, mouseCursorPosition: point,
+                                 mouseButton: .left),
+              let up = CGEvent(mouseEventSource: nil, mouseType: .leftMouseUp, mouseCursorPosition: point,
+                               mouseButton: .left) else {
+            element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).click()
+            return "control: XCUICoordinate fallback"
+        }
+        down.post(tap: .cghidEventTap)
+        Thread.sleep(forTimeInterval: 0.05)
+        up.post(tap: .cghidEventTap)
+        return "control: CGEvent at \(Int(point.x)),\(Int(point.y))"
+    }
+
+    /// Clicks the symbol exactly once and expects the panel within 10 s. The time of the click and of the
+    /// answer and the hierarchy go along as attachments, so a red run in CI can be read. Without `click` the
+    /// symbol is clicked like a user does (`statusItem.click()`); the control arm passes its own click.
+    @MainActor
+    private func assertSymbolOpensPanelWithOneClick(_ app: XCUIApplication, label: String,
+                                                    click: (@MainActor (XCUIElement) -> String)? = nil) {
         let statusItem = app.statusItems.firstMatch
         XCTAssertTrue(statusItem.waitForExistence(timeout: 10), "No menu bar symbol")
         let clickedAt = Date()
-        statusItem.click()
+        var how = "user: statusItem.click()"
+        if let click { how = click(statusItem) } else { statusItem.click() }
         let opened = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)
         let note = XCTAttachment(string: """
             click: \(String(format: "%.3f", clickedAt.timeIntervalSince1970)) (seconds since 1970)
             after: \(String(format: "%.2f", Date().timeIntervalSince(clickedAt))) s, panel \(opened ? "open" : "not open")
+            how: \(how)
             \(app.debugDescription)
             """)
         note.name = "mac-gallery-\(label)-click"
