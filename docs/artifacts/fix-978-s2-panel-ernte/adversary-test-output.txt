@@ -30,6 +30,6 @@ test_pull_request_only_on_this_file (__main__.WorkflowTests.test_pull_request_on
 test_runs_only_reopen_tests_with_iterations (__main__.WorkflowTests.test_runs_only_reopen_tests_with_iterations) ... ok
 
 ----------------------------------------------------------------------
-Ran 29 tests in 1.350s
+Ran 29 tests in 1.086s
 
 OK

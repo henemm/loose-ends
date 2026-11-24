@@ -272,7 +272,10 @@ class CallersTests(unittest.TestCase):
         self.assertIsNotNone(callers)
         self.assertIn("afterObserver(", callers.group(0))
         body = self.after_observer_source()
-        self.assertIn("drop(while:", body)
+        # Ein zusammenhängender Block ab dem ersten Beobachterrahmen, kein Filter: tiefere Rahmen bleiben.
+        self.assertIn("frames.firstIndex(where: isObserver)", body)
+        self.assertIn("break", body)
+        self.assertIn("frames[(last + 1)...]", body)
         self.assertNotIn(".filter", body)
 
     def test_after_observer_behaviour(self):
@@ -292,6 +295,20 @@ class CallersTests(unittest.TestCase):
             "none": ["a", "b", "c"],
             "deeper": ["t", "MacAppDelegate a", "MenuBarPanelLog b", "y", "MacAppDelegate z"],
             "empty": [],
+            "real": [
+                "$s9LooseEnds15MenuBarPanelLogO7callersSSyFZ + 40",
+                "$s9LooseEnds15MenuBarPanelLogO6record_4kind5isKeyySS_SSSbSgtFZ + 120",
+                "$sxs5Error_pIgrzo_xsAA_pIegrzo_s8SendableRzlTR + 24",
+                "$sxs5Error_pIgrzo_xsAA_pIegrzo_s8SendableRzlTRTA + 40",
+                "$sScM14assumeIsolated_4file4linexxyKScMYcXE_s12StaticStringVSutKs8SendableRzlFZxxyKScMYccKXEfU_ + 28",
+                "$sScM14assumeIsolated_4file4linexxyKScMYcXE_s12StaticStringVSutKs8SendableRzlFZ + 424",
+                "$s9LooseEnds14MacAppDelegateC14observeWindows33_8D4C992FC3BD3E72A3716DA16207BEB7LLyyFy10Foundation12NotificationVYbcfU_ + 840",
+                "$s10Foundation12NotificationVIeghn_So14NSNotificationCIeyBhy_TR + 184",
+                "__CFNOTIFICATIONCENTER_IS_CALLING_OUT_TO_AN_OBSERVER__ + 128",
+                "-[NSWindow becomeKeyWindow] + 856",
+                "$s9LooseEnds14MacAppDelegateC8showMainyyF + 12",
+            ],
+            "glue": ["MenuBarPanelLog a", "$sabcTR + 4", "MacAppDelegate b", "x"],
         }
         main = "\n".join(
             f"print(\"{name}\\t\" + Array(P.afterObserver({json.dumps(frames)} as [String])).joined(separator: \"\\u{{1F}}\"))"
@@ -316,6 +333,12 @@ class CallersTests(unittest.TestCase):
         self.assertEqual(out["none"], cases["none"])
         self.assertEqual(out["deeper"], ["y", "MacAppDelegate z"])
         self.assertEqual(out["empty"], [])
+        # F102: echte Form aus dem CI-Lauf 45249742660 – eigene Rahmen, Thunks und assumeIsolated vor dem Beobachter.
+        self.assertEqual(out["real"], cases["real"][7:])
+        self.assertTrue(out["real"][0].startswith("$s10Foundation12Notification"))
+        self.assertEqual(out["real"][-1], "$s9LooseEnds14MacAppDelegateC8showMainyyF + 12")
+        # F103: Klebstoff zwischen zwei Beobachterrahmen fällt mit weg.
+        self.assertEqual(out["glue"], ["x"])
 
 
 class SourceCheck(unittest.TestCase):

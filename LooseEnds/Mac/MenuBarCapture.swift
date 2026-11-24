@@ -134,13 +134,25 @@ enum MenuBarPanelLog {
         return afterObserver(frames).prefix(40).joined(separator: " | ")
     }
 
-    /// The frames after the first run of observer frames (`MenuBarPanelLog` or `MacAppDelegate`): the Swift thunks and
-    /// `assumeIsolated` frames before it and the run itself are dropped, so the first one shown is who keyed or closed
-    /// the panel; deeper `MacAppDelegate` frames stay. Without any observer frame the whole stack stays.
+    /// The frames after the leading block of observer frames (`MenuBarPanelLog` or `MacAppDelegate`). The block starts
+    /// at the first observer frame and runs on through observer frames and glue (`assumeIsolated`, Swift thunks whose
+    /// mangled name ends in `TR`, `TRTA` or `TA`); the result starts right after the block's last observer frame, so glue
+    /// after it stays visible and the first frame shown is who keyed or closed the panel. Deeper `MacAppDelegate`
+    /// frames stay. Without any observer frame the whole stack stays.
     nonisolated static func afterObserver(_ frames: [String]) -> ArraySlice<String> {
         let isObserver = { (frame: String) in frame.contains("MenuBarPanelLog") || frame.contains("MacAppDelegate") }
+        let isGlue = { (frame: String) -> Bool in
+            if frame.contains("assumeIsolated") { return true }
+            guard frame.hasPrefix("$s") else { return false }
+            let symbol = frame.components(separatedBy: " + ").first ?? frame
+            return symbol.hasSuffix("TR") || symbol.hasSuffix("TA")
+        }
         guard let first = frames.firstIndex(where: isObserver) else { return frames[...] }
-        return frames[first...].drop(while: isObserver)
+        var last = first
+        for index in frames.indices[first...] {
+            if isObserver(frames[index]) { last = index } else if !isGlue(frames[index]) { break }
+        }
+        return frames[(last + 1)...]
     }
 
     /// Only fields every CGEvent carries; `cgEvent` can be nil.
