@@ -403,10 +403,15 @@ class ControlArmTests(SourceCheck):
         self.matches(r"XCTSkip\(")
         self.has('"reopen-return-control"')
 
-    def test_user_arms_keep_statusitem_click(self):
-        helper = re.search(r"func assertSymbolOpensPanelWithOneClick\(.*?\n    \}\n", self.text, re.S)
-        self.assertIsNotNone(helper)
-        self.assertIn("statusItem.click()", helper.group(0))
+    def test_user_arms_click_through_frontmost_root_with_statusitem_fallback(self):
+        """#978 S3 v2: Nutzerarme klicken über frontmostRootClick, dessen Rückfall ist statusItem.click().
+        Kommentare zählen nicht."""
+        def body(name):
+            match = re.search(rf"func {name}\(.*?\n    \}}\n", self.text, re.S)
+            self.assertIsNotNone(match, f"fehlt: func {name}")
+            return re.sub(r"//.*$", "", match.group(0), flags=re.M)
+        self.assertIn("frontmostRootClick(", body("assertSymbolOpensPanelWithOneClick"))
+        self.assertIn("statusItem.click()", body("frontmostRootClick"))
 
 
 class PanelLogTests(SourceCheck):

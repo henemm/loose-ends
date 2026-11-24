@@ -59,8 +59,9 @@ Keine neue externe Abhängigkeit.
 | `LooseEndsUITests/MacGalleryTests.swift` | MODIFY | Klick über `XCUICoordinate` mit Wurzel `XCUIApplication(bundleIdentifier:)` der vordersten App; Anhang mit `how:` und Klickdauer; ⌘W-Arm ohne `XCTExpectFailure`/`continueAfterFailure` |
 | `scripts/test_menubar_panel_log.py` | MODIFY | im Arbeitsbaum bereits geändert: `TestOpenAppArmIsHard` statt Erwartung eines `XCTExpectFailure` |
 | `scripts/test_mac_reopen_settle.py` | MODIFY | Quelltext-Gegenprobe für den neuen Klickweg |
+| `scripts/test_mac_panel_repeat_summary.py` | MODIFY | S2-Gegenprobe `statusItem.click()` liegt in v2 in `frontmostRootClick`; prüft beide Rümpfe ohne Kommentare (nachgetragen in Phase 6) |
 
-Unverändert: `LooseEnds/Mac/MenuBarCapture.swift`, `.github/workflows/mac-panel-repeat.yml`, `scripts/mac_panel_repeat_summary.py`, `scripts/test_mac_panel_repeat_summary.py` (nur ausgeführt).
+Unverändert: `LooseEnds/Mac/MenuBarCapture.swift`, `.github/workflows/mac-panel-repeat.yml`, `scripts/mac_panel_repeat_summary.py`.
 
 ### Estimated Changes
 
@@ -167,4 +168,5 @@ Mac-UI-Tests laufen nur in der CI (macOS 27), nie auf Hennings Mac. Der Test ist
 ## Changelog
 
 - 2026-11-24: Initiale Spec für #978 Schnitt 3 (Warten vor dem Klick).
+- 2026-11-24: Phase 6: `scripts/test_mac_panel_repeat_summary.py` in die betroffenen Dateien aufgenommen (S2-Gegenprobe auf v2).
 - 2026-11-24: v2 nach Galerie-Versuch 3: Klick über die vorderste App als Koordinatenwurzel, Mechanismus-Nachweis, v1 widerlegt.

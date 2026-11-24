@@ -462,7 +462,8 @@ final class MacGalleryTests: XCTestCase {
     /// with ⌘W, a single click on the symbol opens the panel again.
     /// #978 Schnitt 3: the click waits until the frontmost app has been quiet for 1 s (the app switch after ⌘W
     /// took the panel's key status away), the panel must still stand 3 s after it opened, and the check is
-    /// hard again, like the Return arm.
+    /// hard again, like the Return arm. v2: the click goes through the frontmost app as coordinate root
+    /// (`frontmostRootClick`), so the test tool does not activate Loose Ends before it clicks.
     @MainActor
     func testMenuBarReopensAfterOpenAppWithOneClick() throws {
         let app = macLaunch(dark: false)
@@ -549,19 +550,44 @@ final class MacGalleryTests: XCTestCase {
         return lines
     }
 
+    /// #978 Schnitt 3 v2: clicks the symbol through a coordinate whose root is the frontmost app, offset by the
+    /// symbol's middle minus the root's origin (both in screen points), so XCTest has no reason to activate
+    /// Loose Ends before the click. If Loose Ends itself is in front, the frontmost app is unknown or its frame
+    /// is empty, it clicks `statusItem.click()` as before and says so in `how`. Exactly one click, no retry.
+    @MainActor
+    private func frontmostRootClick(_ statusItem: XCUIElement, frontmost: String?) -> String {
+        guard let id = frontmost, id != "none", id != "com.henning.looseends" else {
+            statusItem.click()
+            return "user: statusItem.click() fallback (frontmost \(frontmost ?? "none"))"
+        }
+        let root = XCUIApplication(bundleIdentifier: id)
+        let rootFrame = root.frame
+        if rootFrame.isEmpty {
+            statusItem.click()
+            return "user: statusItem.click() fallback (frontmost \(id), empty frame)"
+        }
+        let item = statusItem.frame
+        let offset = CGVector(dx: item.midX - rootFrame.minX, dy: item.midY - rootFrame.minY)
+        root.coordinate(withNormalizedOffset: .zero).withOffset(offset).click()
+        return "user: frontmost root \(id)"
+    }
+
     /// Clicks the symbol exactly once, after the frontmost app has settled, and expects the panel within 10 s
     /// and still there 3 s later. The time of the click and of the decision, the frontmost app's history and
     /// the hierarchy go along as attachments, so a red run in CI can be read. Without `click` the symbol is
-    /// clicked like a user does (`statusItem.click()`); the control arm passes its own click.
+    /// clicked like a user does, since #978 S3 v2 through the frontmost app as coordinate root
+    /// (`frontmostRootClick`); the control arm passes its own click. The click's duration goes along too.
     @MainActor
     private func assertSymbolOpensPanelWithOneClick(_ app: XCUIApplication, label: String,
                                                     click: (@MainActor (XCUIElement) -> String)? = nil) {
         let statusItem = app.statusItems.firstMatch
         XCTAssertTrue(statusItem.waitForExistence(timeout: 10), "No menu bar symbol")
         let front = waitForFrontmostSettled()
+        let frontmost = NSWorkspace.shared.frontmostApplication?.bundleIdentifier
         let clickedAt = Date()
-        var how = "user: statusItem.click()"
-        if let click { how = click(statusItem) } else { statusItem.click() }
+        let how: String
+        if let click { how = click(statusItem) } else { how = frontmostRootClick(statusItem, frontmost: frontmost) }
+        let clickDuration = Date().timeIntervalSince(clickedAt)
         let appeared = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)
         var stayed = false
         if appeared {
@@ -576,6 +602,7 @@ final class MacGalleryTests: XCTestCase {
             frontmost before the click:
             \(front.joined(separator: "\n"))
             \(app.debugDescription)
+            click duration: \(String(format: "%.3f", clickDuration)) s
             after: \(String(format: "%.2f", Date().timeIntervalSince(clickedAt))) s, panel \(opened ? "open" : "not open")
             """)
         note.name = "mac-gallery-\(label)-click"
