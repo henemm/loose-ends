@@ -58,3 +58,61 @@ erklären, und offener Tür des Dienstes (`ALLOWED_APPLE_SUBS=*`, Tagesgrenze), 
 - **Review-Notizen**: Anmeldung mit Apple (eigene Kennung des Prüfers), Verbindung in claude.ai als eigener Connector (braucht Claude-Konto des Prüfers → Hinweis, wie die Funktion ohne Claude zu sehen ist), Konto löschen in der App (5.1.1(v)), Server in Deutschland.
 - **Einreichen ist nicht rücknehmbar per Werkzeug**; Bestätigung = Versionsnummer. Geräteliste (`project.yml`, Info.plist) ist seit S5b schon in TestFlight; neu ist nur der Store-Bau.
 - Neuer TestFlight-Bau nötig (nach S5c), `what_to_test` Pflicht.
+
+## Analysis
+
+### Type
+Feature (Auslieferung: Werkzeuglücken schließen, dann Betrieb und Einreichung)
+
+### Befunde (2026-11-24)
+- **Was Apple beim API-Anlegen übernimmt, ist im Repo belegt** (#842 S5a-1/S5a-2, `docs/context/feat-842-s5a2-texte.md`):
+  Mac 1.0.1 per `POST /v1/appStoreVersions` angelegt bekam die de-DE-Texte und -Bilder der Vorversion und ein Review-Detail;
+  es fehlten en-US ganz, der Werbetext und `whatsNew`. Das deckt sich mit Runway (Werbetext wird nicht übernommen) und dem
+  Apple-Forum (Bilder hängen an der Versions-Lokalisierung). Für iOS 1.0.2 ist dasselbe Bild zu erwarten; `lesen` nach dem
+  Anlegen belegt es, die vorhandenen Handläufe (`asc-version-texts`, `asc-store-images`) füllen auf.
+- **`marketingUrl` ist ein Feld der Versions-Lokalisierung** (`appStoreVersionLocalizations`), also genau der Weg von
+  `asc_version_texts.py`; dort fehlt nur das Feld.
+- **Review-Notizen**: Skript fest auf iOS „1.0“; Text sagt „no account … no server of our own“ – mit Konto falsch (Guideline 2.1/5.1.1).
+- Quellen: https://www.runway.team/blog/apply-promotional-text-and-whats-new-notes-to-new-versions-in-swift-using-the-app-store-connect-api ,
+  https://developer.apple.com/forums/thread/131966 , https://developer.apple.com/documentation/appstoreconnectapi/post-v1-appstoreversionlocalizations
+
+### Schnitt-Teilung
+- **S5d-1 Werkzeug (diese Spec):** nur Skripte, Tests, Notiztext; kein App-Code, keine Geräteliste.
+- **S5d-2 Betrieb (eigene Spec danach, kaum Code):** TestFlight-Bau 1.0.2 → `anlegen` → `lesen` → Texte/Bilder auffüllen →
+  Review-Notizen → Bildschirmaufnahme der Konto-Funktion → Tür auf `*` (Tagesgrenze 20) → Datenschutz-Etikett im ASC-Web
+  (Hennings datiertes Ja vorher) → `pruefen` → `einreichen` nur nach Hennings Wort.
+
+### Affected Files (S5d-1)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `scripts/asc_store_version.py` | MODIFY | `anlegen` legt auch die **iOS**-Version an, wenn keine bearbeitbare existiert; Nummer aus `project.yml` `MARKETING_VERSION` (eine Quelle), nur wenn sie größer ist als jede vorhandene iOS-Version; danach wie heute Mac mit derselben Nummer und Bau-Zuordnung; POST nie wiederholt, Gegenprobe im Lauf |
+| `scripts/asc_version_texts.py` | MODIFY | Zeilenfeld „Marketing-URL“ → `marketingUrl` (https-Prüfung wie `supportUrl`, optional) |
+| `scripts/asc_review_notes.py` | MODIFY | statt fest „1.0“ die eine bearbeitbare Version **je Plattform** (iOS und Mac); fehlt das Review-Detail, Abbruch mit Grund (Anlegen bleibt außen vor, Apple legt es beim Anlegen mit an) |
+| `docs/reference/app-review-notizen.md` | MODIFY | Notizen 1.0.2: Konto nur über „Mit Apple anmelden“ (eigene Apple-ID des Prüfers, keine Demo-Zugangsdaten nötig), Konto löschen in der App (5.1.1(v)), eigener Dienst auf Server in Deutschland, Verbindung zu Claude (claude.ai-Connector, braucht Claude-Konto; Aufnahme zeigt den Ablauf), App voll nutzbar ohne Konto |
+| `docs/reference/app-store-texte.md` | MODIFY | Zeile „Marketing-URL: https://www.henemm.com/loose-ends/“ in de-DE und en-US |
+| `scripts/test_asc_store_version.py`, `test_asc_version_texts.py`, `test_asc_review_notes.py` | MODIFY | Tests je Änderung (zählen nicht ins Limit) |
+
+### Scope Assessment
+- Dateien: 5 (ohne Tests); geschätzt +90/−25 LoC Skriptcode, Notiztext ~50 Zeilen ersetzt
+- Risk Level: LOW–MEDIUM – nur Handlauf-Werkzeug, kein App-Code; Risiko liegt im späteren Schreiben bei Apple
+  (doppelte Version per wiederholtem POST → ausgeschlossen durch „nie wiederholen“ und Vorab-Lesen)
+
+### Technical Approach
+`anlegen` erweitern statt neues Skript: Plan nur aus GET (Versionen beider Plattformen, Zielnummer aus `project.yml`), dann
+höchstens zwei POST (iOS, Mac) und die Bau-Zuordnung wie bisher; jede Bedingung, die nicht passt (Zielnummer ≤ vorhandene,
+schon bearbeitbare Version mit anderer Nummer), bricht vor dem ersten Schreiben ab. Texte und Notizen bleiben je eigener
+Handlauf mit Gegenprobe.
+
+### Alternativen
+- **A: iOS-Version in der ASC-Weboberfläche anlegen** (Claude im Chrome, Henning meldet sich nur an). Spart ~30 LoC, übernimmt
+  laut Apple-Hilfe mehr Metadaten. Dagegen: braucht Hennings Anmeldung, nicht wiederholbar/gegenprüfbar; fällt das Muster
+  „alles per Handlauf“ (#842 S5a-1, keine ADR-Nummer). Nicht empfohlen.
+- **B: Tür nicht öffnen, nur die sub des Prüfers zulassen.** Geht nicht: die sub des Prüfers ist vorher unbekannt; Apple lehnt
+  ohne Zugang nach 2.1 ab. PO-Entscheidung 2026-11-22 (offen mit Tagesgrenze) bleibt.
+
+### Dependencies
+S5a–S5c gemergt; #984 Texte; Marketing-Seite live (vor dem Setzen auf 200 prüfen).
+
+### Open Questions
+- [ ] (S5d-2, nicht jetzt) Hennings datiertes Ja zum Datenschutz-Etikett und zum Einreichen – beides erst im Betriebsschnitt.
+- Keine offene Frage für S5d-1.
