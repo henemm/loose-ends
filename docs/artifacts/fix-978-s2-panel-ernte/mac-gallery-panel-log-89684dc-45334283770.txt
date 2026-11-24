@@ -1,0 +1,60 @@
+# Pflicht-Job Mac Gallery (macOS), Lauf 45334283770, Commit 89684dc, Ergebnis success (2026-11-24 06:36Z)
+# Zeilenarten (Anzahl) im Artefakt MacGalleryPanelLog, 412 Zeilen
+  58 app activate
+  73 app become-active
+  32 app resign-active
+  20 monitor end
+  13 monitor global
+ 164 monitor local
+  12 panel hide
+  23 panel key
+  16 panel resign
+
+# Erste Zeilen key/resign/hide ohne Stapel
+2026-11-24 06:02:38.086 Df LooseEnds[11144:86dc] [com.henning.looseends:MenuBarPanel] panel key window=MenuBarExtraWindow<AnyView> event=13 cg=type=19,window=0,target=11144,source=0,time=546726387791 active=true keyWindow=true front=com.apple.finder policy=accessory
+2026-11-24 06:02:45.113 Df LooseEnds[11144:86dc] [com.henning.looseends:MenuBarPanel] panel resign window=MenuBarExtraWindow<AnyView> event=2 cg=type=2,window=45,target=11144,source=10816,time=553893704875 active=true keyWindow=false front=com.henning.looseends policy=accessory
+2026-11-24 06:02:47.363 Df LooseEnds[11144:86dc] [com.henning.looseends:MenuBarPanel] panel hide window=MenuBarExtraWindow<AnyView> event=8 cg=type=8,window=0,target=0,source=11144,time=556194281250 front=com.henning.looseends policy=regular
+
+# Stapel der ersten resign-Zeile (Rahmenzahl: 40)
+$s10Foundation12NotificationVIeghn_So14NSNotificationCIeyBhy_TR + 184 
+__CFNOTIFICATIONCENTER_IS_CALLING_OUT_TO_AN_OBSERVER__ + 128 
+___CFXRegistrationPost_block_invoke + 92 
+_CFXRegistrationPost + 440 
+_CFXNotificationPost + 688 
+-[NSNotificationCenter postNotificationName:object:userInfo:] + 88 
+-[NSWindow resignKeyWindow] + 636 
+-[NSPanel resignKeyWindow] + 72 
+-[NSWindow _sendResignKeyWindow] + 100 
+-[NSWindow _orderOut:calculatingKeyWithOptions:documentWindow:] + 232 
+NSPerformVisuallyAtomicChange + 128 
+-[NSWindow _reallyDoOrderWindowOutRelativeTo:] + 516 
+-[NSWindow _reallyDoOrderWindow:] + 80 
+-[NSWindow _doOrderWindow:] + 300 
+$s7SwiftUI26WindowMenuBarExtraBehaviorC4hide33_7D54D4D02B8EB250B9BD6E7FA0E06531LL7animateySb_tF + 352 
+$s7SwiftUI26WindowMenuBarExtraBehaviorC40statusItemDidEndExpandedInterfaceSession_8animatedySo08NSStatusI0C_SbtFTo + 60 
+-[NSStatusItem _endExpandedInterfaceSession:animate:] + 180 
+-[NSSceneStatusItem _endExpandedInterfaceSession:animate:] + 348 
+-[NSStatusItemExpandedInterfaceSession _cancelForReason:] + 164 
+$s7SwiftUI26WindowMenuBarExtraBehaviorC24PresentationModeLocation33_7D54D4D02B8EB250B9BD6E7FA0E06531LLV3set_11transactionyAA0hI0V_AA11TransactionVtFTf4ndn_n + 92 
+$s7SwiftUI11LocationBoxC3set_11transactiony5ValueQz_AA11TransactionVtF + 300 
+$s7SwiftUI7BindingV12wrappedValuexvsTf4gn_n + 52 
+$s7SwiftUI7BindingV12wrappedValuexvs + 32 
+$s7SwiftUI13DismissActionV14callAsFunctionyyF + 120 
+$s9LooseEnds18MenuBarCaptureViewV4bodyQrvg7SwiftUI12TupleContentVyAE0F0PAEE9fixedSize10horizontal8verticalQrSb_SbtFQOyAA0eF0V_Qo__AE08ModifiedK0VyAiEE5frame5width6height9alignmentQr12CoreGraphics7CGFloatVSg_AyE9AlignmentVtFQOyAE06_ShapeF0VyAE9RectangleVAE5ColorVG_Qo_AE31AccessibilityAttachmentModifierVGAiEE7paddingyQrAE4EdgeO3SetV_AYtFQOyAiEEA11_yQrA15__AYtFQOyAiEE15foregroundStyleyQrqd__AE0Y5StyleRd__lFQOyAiEE4fontyQrAE4FontVSgFQOyAiEE11buttonStyleyQrqd__AE20PrimitiveButtonStyleRd__lFQOyAE6HStackVyAGyAQyAE6ButtonVyAE4TextVGA9_G_AE6SpacerVA31_QPGG_AE16PlainButtonStyleVQo__Qo__AE012HierarchicalY5StyleVQo__Qo__Qo_QPGyXEfU_A34_yXEfU0_yyScMYccfU_ + 300 
+$s7SwiftUI12ButtonActionO14callAsFunctionyyFyyScMYcXEfU_TA + 32 
+$sScM14assumeIsolated_4file4linexxyKScMYcXE_s12StaticStringVSutKs8SendableRzlFZyt_Tg5 + 140 
+$s7SwiftUI12ButtonActionO14callAsFunctionyyF + 436 
+$s7SwiftUI27PlatformItemListButtonStyleV8makeBody13configurationQrAA09PrimitivefG13ConfigurationV_tFyycAGYbcfu_yycfu0_TATm + 88 
+$s7SwiftUI14ButtonBehaviorV5ended33_AEEDD090E917AC57C12008D974DC6805LLyyF + 180 
+$s7SwiftUI14ButtonBehaviorV4bodyQrvgyycACyxGYbcfu_yycfu0_TA + 88 
+$s7SwiftUI14_ButtonGestureV12internalBodyQrvgAA04_MapD0VyAA09PrimitivecD0VytGyXEfU_ySo7CGPointVSgcfU0_yyScMYcXEfU_TA + 36 
+$sScM14assumeIsolated_4file4linexxyKScMYcXE_s12StaticStringVSutKs8SendableRzlFZyt_Tg5 + 140 
+$s7SwiftUI14_ButtonGestureV12internalBodyQrvgAA04_MapD0VyAA09PrimitivecD0VytGyXEfU_ySo7CGPointVSgcfU0_ + 96 
+$s7SwiftUI31PrimitiveButtonGestureCallbacks33_2218E1141B3D7C3A65B6697591AFB638LLV8dispatch5phase5stateyycSgAA0E5PhaseOyAA0cdE4CoreACLLV5ValueVG_AA0d5PressQ0OztFyycfU0_TA + 152 
+$sIeg_ytIegr_TR + 28 
+$s7SwiftUI8MaterialVAAE12ShapeMetricsVSgIgr_AFIegr_TR + 28 
+$s7SwiftUI19SubmitTriggerSourcePAAE14dispatchUpdateyyyyXEFyyXEfU_ + 28 
+$s7SwiftUI24AppKitEventBindingBridgeC12flushActionsyyFyycfU_TA + 60 
+$s7SwiftUI11UpdateGroupC6Action33_6733BA79212FB37D3E5D979DE425452BLLV14callAsFunctionyyF + 184
+
+# Treffer token|title= im ganzen Protokoll: 0

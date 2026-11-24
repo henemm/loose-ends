@@ -1,0 +1,18 @@
+  58 app activate
+  73 app become-active
+  32 app resign-active
+  20 monitor end
+  16 monitor global
+ 189 monitor local
+  12 panel hide
+  23 panel key
+  16 panel resign
+   1 Timestamp Ty
+2026-11-23 17:00:37.403 Df LooseEnds[8127:6693] [com.henning.looseends:MenuBarPanel] panel key window=MenuBarExtraWindow<AnyView> event=13 cg=type=19,window=0,target=8127,source=0,time=368930025666 active=true keyWindow=true front=com.apple.finder policy=accessory stack=$sxs5Error_pIgrzo_xsAA_pIegrzo_s8SendableRzlTR + 24 | $sxs5Error_pIgrzo_xsAA_pIegrzo_s8SendableRzlTRTA + 40 | $sScM14assumeIsolated_4file4linexxyKScMYcXE_s12StaticStringVSutKs8SendableRzlFZxxyKScMYccKXEfU_ + 28 | $sScM14assumeIsolated_4file4linexxyKScMYcXE_s12StaticStringVSutKs8SendableRzlFZ + 424 | $s9LooseEnds14MacAppDelegate
+2026-11-23 17:00:44.274 Df LooseEnds[8127:6693] [com.henning.looseends:MenuBarPanel] panel resign window=MenuBarExtraWindow<AnyView> event=2 cg=type=2,window=43,target=8127,source=7966,time=375958543708 active=true keyWindow=false front=com.henning.looseends policy=accessory stack=$sxs5Error_pIgrzo_xsAA_pIegrzo_s8SendableRzlTR + 24 | $sxs5Error_pIgrzo_xsAA_pIegrzo_s8SendableRzlTRTA + 40 | $sScM14assumeIsolated_4file4linexxyKScMYcXE_s12StaticStringVSutKs8SendableRzlFZxxyKScMYccKXEfU_ + 28 | $sScM14assumeIsolated_4file4linexxyKScMYcXE_s12StaticStringVSutKs8SendableRzlFZ + 424 | $s9LooseEnds14Mac
+2026-11-23 17:00:45.455 Df LooseEnds[8127:6693] [com.henning.looseends:MenuBarPanel] panel hide window=MenuBarExtraWindow<AnyView> event=8 cg=type=8,window=0,target=0,source=8127,time=377209713083 front=com.henning.looseends policy=regular stack=$sxs5Error_pIgrzo_xsAA_pIegrzo_s8SendableRzlTR + 24 | $sxs5Error_pIgrzo_xsAA_pIegrzo_s8SendableRzlTRTA + 40 | $sScM14assumeIsolated_4file4linexxyKScMYcXE_s12StaticStringVSutKs8SendableRzlFZxxyKScMYccKXEfU_ + 28 | $sScM14assumeIsolated_4file4linexxyKScMYcXE_s12StaticStringVSutKs8SendableRzlFZ + 424 | $s9LooseEnds14MacAppDelegateC18observePanelHiding33_8
+2026-11-23 17:07:36.564 Df LooseEnds[24134:109b4] [com.henning.looseends:MenuBarPanel] monitor global type=2 window=5 time=788.090407
+2026-11-23 17:00:37.670 Df LooseEnds[8127:6693] [com.henning.looseends:MenuBarPanel] monitor local type=21 window=0 time=369.098072
+2026-11-23 17:00:40.553 Df LooseEnds[8127:6693] [com.henning.looseends:MenuBarPanel] monitor end
+2026-11-23 17:00:25.121 Df LooseEnds[8127:6693] [com.henning.looseends:MenuBarPanel] app activate app=com.apple.finder active=false event=13
+2026-11-23 17:00:24.960 Df LooseEnds[8127:6693] [com.henning.looseends:MenuBarPanel] app become-active active=true event=13
