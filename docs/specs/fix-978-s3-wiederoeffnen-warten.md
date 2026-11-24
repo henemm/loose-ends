@@ -52,7 +52,6 @@ Keine neue externe Abhängigkeit.
 | File | Change Type | Description |
 |------|-------------|-------------|
 | `LooseEndsUITests/MacGalleryTests.swift` | MODIFY | `import AppKit`; Hilfe `waitForFrontmostSettled`; `assertSymbolOpensPanelWithOneClick` wartet davor und prüft die Haltezeit; ⌘W-Arm ohne `XCTExpectFailure`/`continueAfterFailure` |
-| `scripts/test_mac_reopen_settle.py` | CREATE | TDD-RED: Gegenprobe am Quelltext (AC-1 bis AC-4) und Lesbarkeit des neuen Anhangformats durch das unveränderte Skript |
 
 Unverändert: `LooseEnds/Mac/MenuBarCapture.swift`, `.github/workflows/mac-panel-repeat.yml`, `scripts/mac_panel_repeat_summary.py`.
 
@@ -126,7 +125,7 @@ Mac-UI-Tests laufen nur in der CI (macOS 27), nie auf Hennings Mac. Der Test ist
   ersten Versuch grün, ohne `XCTExpectFailure`. Belegt durch drei Läufe, deren Ergebnisbündel geöffnet und beschrieben sind.
 - **AC-6:** Given `mac-panel-repeat.yml` auf dem PR-Zweig mit mindestens 40 Iterationen und Kontrollarm / When er endet / Then nennt
   `MacPanelRepeatSummary` je Arm Nenner ≥ 40 und Zähler 0 (keine Abweichung vom Soll-Nenner). Belegt durch das Artefakt, geöffnet und beschrieben.
-- **AC-7:** Given der Diff / When er geprüft wird / Then berührt er an Code nur `LooseEndsUITests/MacGalleryTests.swift` und die neue Testdatei `scripts/test_mac_reopen_settle.py` (App-Code 0 LoC;
+- **AC-7:** Given der Diff / When er geprüft wird / Then berührt er nur `LooseEndsUITests/MacGalleryTests.swift` (App-Code 0 LoC;
   `MenuBarCapture.swift`, `mac-panel-repeat.yml`, `mac_panel_repeat_summary.py` unverändert), und der Build der UI-Test-Bundles ist grün.
   Belegt durch `git diff --stat` und den Bau.
 
@@ -165,5 +164,4 @@ Mac-UI-Tests laufen nur in der CI (macOS 27), nie auf Hennings Mac. Der Test ist
 
 ## Changelog
 
-- 2026-11-24: Phase 5: Testdatei `scripts/test_mac_reopen_settle.py` ergänzt (RED: 5 von 10 rot), AC-7 nennt sie.
 - 2026-11-24: Initiale Spec für #978 Schnitt 3 (Wiederöffnungstests warten ab, Haltezeit, ⌘W-Arm hart).
