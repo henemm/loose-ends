@@ -60,3 +60,57 @@ wird erst nach Hennings Wort.
 - **Bau-Zuordnung:** `anlegen` braucht einen gültigen 1.0.2-Bau je Plattform → TestFlight-Lauf zuerst, `VALID` abwarten.
 - **en-US-Texte/Bilder** übernimmt Apple beim Anlegen nicht (#842-Befund) → `asc-version-texts` und `asc-store-images` (en, ios/mac) auffüllen.
 - Fast kein Code: Schnitt besteht aus Läufen und Belegen; Code nur, falls ein Werkzeug fehlt (Video-Anhang).
+
+## Analysis
+
+### Type
+Feature (Betriebsschnitt: Läufe, Belege, Weberfassung; kein App-Code)
+
+### Recherche (2026-11-24)
+- ASC-API kennt `POST /v1/appStoreReviewAttachments` (reservieren, hochladen, bestätigen; Anhänge für Demo-Videos):
+  https://developer.apple.com/documentation/appstoreconnectapi/app-store-review-attachments.md,
+  https://developer.apple.com/tutorials/data/documentation/appstoreconnectapi/uploading-assets-to-app-store-connect.md
+- Forenbericht: 500 beim Video-Upload über genau diesen Weg (https://developer.apple.com/forums/thread/776074) → API-Weg
+  für Videos unzuverlässig.
+- Keine öffentliche Pflicht zur Aufnahme; bei 1.0 forderte Apple sie per „Guideline 2.1 – Information Needed“ von einem
+  echten Gerät (#788). Mit Konto und Dienst ist eine Nachfrage für 1.0.2 wahrscheinlich.
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `docs/artifacts/feat-625-s5d2-store-betrieb/` | CREATE | Belege je Lauf (Lauf-Links, Zustände vorher/nachher, Etikett-Vorschau, Tür-Gegenprobe) |
+| `docs/reference/testflight.md` | MODIFY | Ablauf 1.0.2 als Betriebsnotiz (Reihenfolge, Belegstellen) |
+| henemm-infra `loose-ends/` Umgebungsdatei (Server, nicht im Repo) | MODIFY | `ALLOWED_APPLE_SUBS=*`, `NEW_ACCOUNTS_PER_DAY=20` |
+
+### Scope Assessment
+- Files: 2–3 im Repo, nur Doku/Belege
+- Estimated LoC: App-Code 0; Doku ~+80
+- Risk Level: MEDIUM — kein Code, aber drei Schritte wirken sofort öffentlich (Tür, Etikett, Einreichung).
+
+### Technical Approach (Empfehlung)
+Reihenfolge, jeder Schritt mit `lesen` vorher und Gegenprobe danach:
+1. TestFlight-Lauf 1.0.2 (iOS + Mac) mit „Was testen“ (de/en), warten bis `VALID`.
+2. `asc-store-version aktion=anlegen` (iOS, dann Mac; Bau-Zuordnung im selben Lauf), Gegenprobe `lesen`.
+3. `asc-version-texts` (de-DE/en-US, Marketing-URL) und `asc-store-images` en (ios, mac): `hochladen`, `platzieren`; de nur lesen.
+4. Henning: Bildschirmaufnahme auf seinem iPhone mit dem 1.0.2-Bau aus TestFlight (Erfassen, Detail, Einstellungen › Claude,
+   Connector in claude.ai, Konto löschen) und datiertes Ja zum Etikett.
+5. ASC-Web in Hennings Chrome (er nur Passkey): Etikett nach Vorlage eintragen, Vorschau gegen Vorlage prüfen; die Aufnahme
+   als Anhang der iOS- und Mac-Version hochladen (Web statt API: kein neues Werkzeug, API-Video-Upload laut Forum unzuverlässig).
+6. Tür öffnen auf rennwienix (`*`, 20), Deploy bei festem Commit, Gegenprobe `/health` und Startlog ohne `door invalid`.
+7. `asc-review-notes aktion=notizen` (beide Plattformen), dann `asc-store-submit aktion=pruefen` → beide `bereit`.
+8. Einreichen (`bestaetigung=1.0.2`) erst nach Hennings Wort, Gegenprobe `WAITING_FOR_REVIEW`.
+
+### Alternativen
+- **B: ohne Aufnahme einreichen**, Punkt 1 der Notizen umschreiben (Schritte statt Video). Spart Hennings Aufnahme jetzt;
+  Risiko: Apple fragt wie bei 1.0 nach, ein bis zwei Tage Verzug, und die Aufnahme kommt dann doch. Kippt keine ADR.
+- **C: Anhang per API** (`appStoreReviewAttachments`, neues Werkzeug ~150 LoC + Tests): wiederholbar ohne Web-Anmeldung, aber
+  Forenbericht über 500 bei Videos; nur sinnvoll, wenn Anhänge künftig je Version wiederkehren.
+- **D: Aufnahme im Simulator** (ohne Henning): Apple verlangte bei 1.0 ein echtes Gerät → verworfen.
+
+### Dependencies
+TestFlight `VALID` vor `anlegen`; `anlegen` vor Texten/Bildern/Notizen; Etikett und Tür direkt vor dem Einreichen; die Aufnahme
+braucht den 1.0.2-Bau auf Hennings iPhone (Aktualisierung in TestFlight macht er selbst, kein Fernzugriff durch Claude).
+
+### Open Questions
+- [x] PO: Aufnahme vor dem Einreichen (A) oder ohne (B)? → **A, mit Video** (Henning, 2026-11-24): er nimmt auf seinem iPhone auf, Claude lädt im ASC-Web hoch.
+- [ ] PO: datiertes Ja zum Etikett nach `docs/reference/app-store-datenschutzangaben.md` (kann mit der Spec-Freigabe kommen).
