@@ -1,0 +1,66 @@
+test_counts_new_format (__main__.NewFormatSummaryTests.test_counts_new_format) ... ok
+test_parse_click_new_format (__main__.NewFormatSummaryTests.test_parse_click_new_format) ... ok
+test_ac1_no_expected_failure_left (__main__.SettleSourceTests.test_ac1_no_expected_failure_left) ... FAIL
+test_ac1_open_app_arm_calls_helper_directly (__main__.SettleSourceTests.test_ac1_open_app_arm_calls_helper_directly) ... ok
+test_ac2_exactly_one_click_no_retry (__main__.SettleSourceTests.test_ac2_exactly_one_click_no_retry) ... ok
+test_ac2_hold_checks_panel_still_there (__main__.SettleSourceTests.test_ac2_hold_checks_panel_still_there) ... FAIL
+test_ac2_order_symbol_settle_click_panel_hold_attachment_assert (__main__.SettleSourceTests.test_ac2_order_symbol_settle_click_panel_hold_attachment_assert) ... FAIL
+test_ac2_settle_helper_reads_frontmost_app (__main__.SettleSourceTests.test_ac2_settle_helper_reads_frontmost_app) ... FAIL
+test_ac3_all_three_arms_use_helper (__main__.SettleSourceTests.test_ac3_all_three_arms_use_helper) ... ok
+test_ac4_after_line_is_last_and_history_before_it (__main__.SettleSourceTests.test_ac4_after_line_is_last_and_history_before_it) ... FAIL
+
+======================================================================
+FAIL: test_ac1_no_expected_failure_left (__main__.SettleSourceTests.test_ac1_no_expected_failure_left)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 63, in test_ac1_no_expected_failure_left
+    self.assertFalse("XCTExpectFailure" in self.text, "darf nicht stehen: XCTExpectFailure")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false : darf nicht stehen: XCTExpectFailure
+
+======================================================================
+FAIL: test_ac2_hold_checks_panel_still_there (__main__.SettleSourceTests.test_ac2_hold_checks_panel_still_there)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 105, in test_ac2_hold_checks_panel_still_there
+    self.assertRegex(self.helper, r'menuBarOpenApp"\]\.exists', "nach 3 s noch vorhanden")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 52, in assertRegex
+    self.assertTrue(re.search(pattern, text), msg or f"kein Treffer: {pattern}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None is not true : nach 3 s noch vorhanden
+
+======================================================================
+FAIL: test_ac2_order_symbol_settle_click_panel_hold_attachment_assert (__main__.SettleSourceTests.test_ac2_order_symbol_settle_click_panel_hold_attachment_assert)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 95, in test_ac2_order_symbol_settle_click_panel_hold_attachment_assert
+    self.assertIsNotNone(match, f"Schritt fehlt oder steht falsch: {name}")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Schritt fehlt oder steht falsch: ruhig warten
+
+======================================================================
+FAIL: test_ac2_settle_helper_reads_frontmost_app (__main__.SettleSourceTests.test_ac2_settle_helper_reads_frontmost_app)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 72, in test_ac2_settle_helper_reads_frontmost_app
+    self.assertRegex(self.text, r"(?m)^import AppKit$")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 52, in assertRegex
+    self.assertTrue(re.search(pattern, text), msg or f"kein Treffer: {pattern}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None is not true : kein Treffer: (?m)^import AppKit$
+
+======================================================================
+FAIL: test_ac4_after_line_is_last_and_history_before_it (__main__.SettleSourceTests.test_ac4_after_line_is_last_and_history_before_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 119, in test_ac4_after_line_is_last_and_history_before_it
+    self.assertTrue(lines[-1].startswith("after:"), "letzte Zeile after: … panel open|not open")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : letzte Zeile after: … panel open|not open
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.008s
+
+FAILED (failures=5)
