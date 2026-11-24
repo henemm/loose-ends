@@ -87,7 +87,7 @@ XCUIAutomation, AppKit im Testläufer (macOS-Prozess, `NSWorkspace` lesbar). Abn
 
 RED-Tests in `scripts/test_mac_reopen_settle.py` (Gegenprobe am Quelltext für AC-1 bis AC-4, neues Anhangformat durch das unveränderte Skript): 5 von 10 rot, Beleg `docs/artifacts/fix-978-s3-wiederoeffnen-warten/test-red-output.txt`. Die Datei ist Testcode und steht nicht in der Spec-Dateiliste (Spec unverändert freigegeben); AC-7 meint den Produkt- und UI-Testcode.
 
-## Analysis
+## Analysis v2 (widerlegt durch Galerie 1 v2, 2026-11-24: `XCUIApplication.frame` auf macOS immer leer)
 
 Neuansatz nach Galerie-Versuch 3 (Befund `docs/artifacts/fix-978-s3-wiederoeffnen-warten/befund-galerie-versuch3.md`).
 
@@ -147,6 +147,85 @@ Keine ADR betroffen.
 XCUIAutomation, AppKit im Testläufer; Abnehmer Pflicht-Check „Mac Gallery (macOS)“, `mac-panel-repeat.yml`.
 Zeitlimit der Galerie (40 min) ist #974 und kann die drei Pflichtläufe abbrechen; dann zählt der Lauf nicht, wird
 neu gestartet, das Ticket wartet nicht darauf.
+
+### Open Questions
+- keine (Testwerkzeug, kein Produktthema; kein Pfad der Geräteliste berührt)
+
+## Analysis
+
+Analyse v3 (2026-11-24 abends), nach dem Befund `docs/artifacts/fix-978-s3-wiederoeffnen-warten/befund-v2-galerie1.md`.
+
+### Type
+Bug (Testwerkzeug), Fortsetzung von v2. Der Gedanke von v2 bleibt (Klick über eine Wurzel der vordersten App, damit
+`click()` Loose Ends nicht aktiviert), nur die Wurzel war falsch: Ein `XCUIApplication`-Element hat auf macOS keinen
+Rahmen, also griff in beiden Armen der stille Rückfall `statusItem.click()` (Klickdauer 5–6 s) und der Lauf war grün,
+ohne den neuen Weg je zu gehen.
+
+### Beleg für die neue Wurzel (aus dem v2-Galerielauf 45464097119, Anhang `mac-gallery-reopen-open-app-click`)
+Im selben Hierarchieauszug, in dem `Application` ohne Rahmen steht, hat die Menüleiste einen echten Rahmen:
+`MenuBar, {{0.0, 0.0}, {1024.0, 30.0}}` (Hauptmenü), daneben eine zweite `MenuBar {{756.0, 3.0}, {42.0, 24.0}}` mit dem
+`StatusItem` von Loose Ends. Menüleisten-Elemente tragen also Bildschirmkoordinaten. Nicht belegt ist, dass der Finder
+seine Menüleiste in derselben Form liefert und dass `click()` auf einer Finder-Koordinate nichts aktiviert; das prüft der
+erste Schritt der Umsetzung (unten), bevor irgendetwas gezählt wird.
+
+### Recherche
+- `XCUIApplication(bundleIdentifier:)` ist ein Stellvertreter für eine fremde App; Menüleisten werden über `menuBars`
+  abgefragt (https://developer.apple.com/documentation/xcuiautomation/xcuiapplication,
+  https://developer.apple.com/forums/thread/773715).
+- XCUITest verlangt laut DTS, dass die Ziel-App aktiv und vorn ist (https://developer.apple.com/forums/thread/840965) —
+  passt zur Aktivierung in `click()`; ist die Wurzel-App schon vorn, gibt es nichts zu aktivieren (Hypothese, wird im
+  Protokoll belegt).
+- Keine Quelle zum Klick ohne Aktivierung oder zu Koordinaten über fremde Apps; der Mechanismus wird deshalb gemessen.
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| LooseEndsUITests/MacGalleryTests.swift | MODIFY | `frontmostRootClick`: Wurzel = `XCUIApplication(bundleIdentifier: vorderste).menuBars.element(boundBy: 0)`, nur wenn Rahmen nicht leer und Ursprung y = 0; Offset = Mitte Symbol − Ursprung Menüleiste; `how: user: frontmost menu bar <bundle id>`. Rückfälle mit eigenem Text: `user: statusItem.click() fallback (frontmost com.henning.looseends)` (Loose Ends vorn, nichts zu aktivieren) und `user: statusItem.click() fallback (frontmost <id>, no menu bar frame)`. ⌘W-Arm: ist eine andere App als Loose Ends vorn und fehlt ihr Menüleistenrahmen, ist der Test rot mit `how` in der Meldung (Lehre aus v2: stiller Rückfall nie grün); Loose Ends vorn bleibt zulässig, wird aber getrennt gezählt |
+| scripts/mac_panel_repeat_summary.py | MODIFY | `how_of`/`_HOW` um die Kategorie `menubar-root` und getrennte Rückfall-Kategorien (`fallback-looseends`, `fallback-noframe`) erweitern; heute landet der neue Text auf „unbekannt“ und ein Rückfall auf „statusitem“ (Gegenprüfung Punkt 2) |
+| scripts/test_mac_panel_repeat_summary.py | MODIFY | Tests für die neuen Kategorien; Rumpfprüfung (Z. 406–414) an den neuen Klickweg |
+| scripts/test_mac_reopen_settle.py | MODIFY | Gegenprobe am Quelltext: `menuBars`, Rahmen-/Ursprungsprüfung, neue `how`-Texte, harte Rückfall-Assertion im ⌘W-Arm nur bei fremder vorderster App |
+
+Unverändert: `MenuBarCapture.swift`, `mac-panel-repeat.yml`, Kontrollarm.
+
+### Scope Assessment
+- Files: 1 UI-Testdatei, 1 Auswerteskript, 2 Skripttests; App-Code 0 LoC
+- Estimated LoC: +20/-8 im UI-Test, +15/-3 im Auswerteskript
+- Risk Level: MEDIUM — Finder-Menüleiste und „keine Aktivierung“ sind erst nach dem ersten CI-Lauf belegt.
+
+### Technical Approach (Empfehlung A′)
+Reihenfolge der Nachweise, jeder Schritt kann den Ansatz widerlegen, bevor der nächste Zeit kostet:
+1. **Probe** (ein kurzer `mac-panel-repeat.yml`-Lauf, 1–2 Iterationen ohne Kontrollarm): `how` im ⌘W-Arm ist
+   `frontmost menu bar com.apple.finder`, Klickdauer < 1 s, im Testprotokoll des Klicks kein „Activate
+   com.henning.looseends“, im Panel-Protokoll `key` → Maus hoch < 0,3 s. Fällt einer davon durch: A′ widerlegt → D.
+2. Wiederholungslauf ≥ 100 je Arm (wegen 120-min-Grenze in Teilläufen, Summe zählt) ohne Fall, jeder Anhang mit neuem `how`.
+3. Drei grüne Pflichtläufe „Mac Gallery (macOS)“, je Bündel geöffnet und `how`/Klickdauer abgelesen.
+Return-Arm: ist Loose Ends vorn, ist der Rückfall zulässig (231/231 offen in S2); ist Finder vorn, läuft er wie der
+⌘W-Arm über die Menüleiste. Jeder Rückfall steht mit Grund im Anhang und wird in der Zusammenfassung je Arm gezählt.
+Beleg zählt nur, was `menubar-root` ist; Läufe mit Loose Ends vorn werden getrennt ausgewiesen, nicht als Beleg.
+Probe-Abbruchkriterien (Schritt 1): Finder-Menüleiste ohne Rahmen, `how` ≠ `frontmost menu bar` bei fremder vorderster
+App, „Activate com.henning.looseends“ im Klickprotokoll oder Klickdauer ≥ 1 s → A′ widerlegt, D. Ist die vorderste App
+weder Loose Ends noch Finder (z. B. Dock, loginwindow), gilt dieselbe Regel; die App steht im Anhang.
+
+### Gegenprüfung (analysis-challenger, 2026-11-24)
+NEEDS REVIEW mit zwei HOCH-Punkten, beide eingearbeitet: (1) harter ⌘W-Arm nur bei fremder vorderster App, sonst falsch
+rot, wenn Loose Ends nach ⌘W vorn bleibt; (2) Auswerteskript kannte den neuen `how`-Text nicht und zählte Rückfälle als
+normalen Klick → jetzt in der Dateiliste. MITTEL 3–5 (Finder-Rahmen, Aktivierung, Skripttests) in Probe und Dateiliste,
+NIEDRIG 6 (Rückfall im Return-Arm zählen) im Ansatz.
+
+### Alternativen
+| | Ursache weg | #862 sichtbar | Umfang | Urteil |
+|---|---|---|---|---|
+| A′ Wurzel = Menüleiste der vordersten App | ja, falls keine Aktivierung (Schritt 1) | ja, nutzertreu | ~15 LoC | **empfohlen** |
+| A″ Wurzel = Menüleiste der Systemoberfläche (`com.apple.controlcenter`/`systemuiserver`) | unklar, aktiviert evtl. eine Agent-App | ja | ~15 LoC | verworfen: fremder Aktivierungszustand |
+| B `app.activate()` vor dem Klick | teils | schwächer | ~10 LoC | verworfen (v2-Analyse) |
+| C CGEvent + TCC im Job | ja | am besten | Workflow + Skript, image-abhängig | verworfen (kein offizieller Weg) |
+| D Erkennen „auf und vom Host zu im Klick“ + eine Wiederholung | nein, nur Meldung | mittel | ~50 LoC + Protokoll | Rückfall, falls Schritt 1 scheitert |
+| E App-Eingriff | ja | ja | App-Code | verworfen (S2, 231/231) |
+Keine ADR betroffen.
+
+### Dependencies
+XCUIAutomation, AppKit im Testläufer; Abnehmer Pflicht-Check „Mac Gallery (macOS)“, `mac-panel-repeat.yml`. Galerie-
+Zeitlimit #974 kann Läufe abbrechen; ein abgebrochener Lauf zählt nicht und wird neu gestartet.
 
 ### Open Questions
 - keine (Testwerkzeug, kein Produktthema; kein Pfad der Geräteliste berührt)
