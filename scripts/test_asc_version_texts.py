@@ -29,6 +29,7 @@ TEXT_FILE = REPO / "docs" / "reference" / "app-store-texte.md"
 DESCRIPTION = "Say it in one sentence – Loose Ends takes care of the rest.\n\nCAPTURE\n• Type or dictate\n• Share sheet"
 KEYWORDS = "to-do,todo,reminders,dictation"
 SUPPORT = "https://www.henemm.com/footer-information/contact/"
+MARKETING = "https://www.henemm.com/loose-ends/"
 PROMO = "Say it in one sentence."
 OLD = "Old words of the store page"
 RAW_SECRET = "Roh-Antwort-Geheim-842"
@@ -555,6 +556,61 @@ class VersionTextsTests(unittest.TestCase):
         self.assertEqual(fake.requests, [])
         self.assert_ok(self.run_texts(fake, "lesen", text=text))
         self.assertEqual([m for m, _, _ in fake.requests if m != "GET"], [])
+
+    # #625 S5d-1 AC-8
+    def test_marketing_url_line_is_parsed_and_written(self):
+        from asc_version_texts import wanted_texts
+        text = text_file() + f"Marketing-URL: {MARKETING}\n"
+        self.assertEqual(wanted_texts(text)["en-US"]["marketingUrl"], MARKETING)
+        fake = self.ios_state(wanted_loc())
+        result = self.run_texts(fake, "texte", text=text)
+        self.assert_ok(result)
+        patches = [body for method, _, body in fake.writes() if method == "PATCH"]
+        self.assertEqual(len(patches), 1, fake.writes())
+        self.assertEqual(patches[0]["data"]["attributes"], {"marketingUrl": MARKETING})
+        self.assertIn("Marketing-URL", result.stdout)
+        self.assertIn("gegenprobe gleich=ja", result.stdout)
+        again = self.run_texts(fake, "texte", text=text)
+        self.assert_ok(again)
+        self.assertEqual(len([m for m, _, _ in fake.writes() if m == "PATCH"]), 1)
+
+    # #625 S5d-1 AC-8
+    def test_marketing_url_is_optional(self):
+        from asc_version_texts import wanted_texts
+        self.assertNotIn("marketingUrl", wanted_texts(text_file())["en-US"])
+        fake = self.ios_state(wanted_loc())
+        self.assert_ok(self.run_texts(fake, "texte"))
+        self.assertEqual(fake.writes(), [])
+
+    # #625 S5d-1 AC-9
+    def test_marketing_url_must_be_https_with_host(self):
+        cases = ((text_file() + "Marketing-URL: http://www.henemm.com/loose-ends/\n",
+                  ("en-US", "Marketing-URL muss mit https:// beginnen")),
+                 (text_file() + "Marketing-URL: https://\n", ("en-US", "Marketing-URL", "Host")),
+                 (text_file() + "Marketing-URL: https:///loose-ends/\n", ("en-US", "Marketing-URL", "Host")),
+                 (text_file(support="https://"), ("en-US", "Support-URL", "Host")))
+        for text, needles in cases:
+            fake = self.ios_state(EMPTY_EN)
+            result = self.run_texts(fake, "texte", text=text)
+            self.assert_failed(result)
+            for needle in needles:
+                self.assertIn(needle, result.stdout, (needle, text[-80:]))
+            self.assertEqual(fake.requests, [], text[-80:])
+
+    # #625 S5d-1 AC-10
+    def test_real_file_has_marketing_url_in_both_locales(self):
+        from asc_version_texts import wanted_texts
+        text = TEXT_FILE.read_text(encoding="utf-8")
+        line = f"Marketing-URL: {MARKETING}"
+        sections = text.split("\n## ")[1:]
+        found = {section.splitlines()[0].strip(): [row.strip() for row in section.splitlines()].count(line)
+                 for section in sections}
+        self.assertEqual(found.get("en-US"), 1, found)
+        self.assertEqual(found.get("de-DE"), 1, found)
+        wanted = wanted_texts(text)
+        for locale in ("en-US", "de-DE"):
+            self.assertEqual(wanted[locale].get("marketingUrl"), MARKETING, locale)
+
 
 class WorkflowTests(unittest.TestCase):
     # AC-15

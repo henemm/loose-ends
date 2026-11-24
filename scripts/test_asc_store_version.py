@@ -44,6 +44,19 @@ MAC_LIVE = version("V3", "MAC_OS", "READY_FOR_SALE", "1.0")
 MAC_NEW = version("V4", "MAC_OS", EDITABLE, "1.0.1")
 IOS_133 = build("BI133", "IOS", "133")
 MAC_133 = build("BM133", "MAC_OS", "133")
+# #625 S5d-1: bei Apple liegen 1.0 und 1.0.1 veröffentlicht, project.yml trägt 1.0.2
+IOS_101_LIVE = version("V5", "IOS", "READY_FOR_SALE", "1.0.1")
+MAC_101_LIVE = version("V6", "MAC_OS", "READY_FOR_SALE", "1.0.1")
+RELEASED = (IOS_LIVE, IOS_101_LIVE, MAC_LIVE, MAC_101_LIVE)
+IOS_140 = build("BI140", "IOS", "140", pre="1.0.2")
+MAC_140 = build("BM140", "MAC_OS", "140", pre="1.0.2")
+BUILDS_102 = (IOS_140, MAC_140)
+
+
+def project_yml(number):
+    """Ausschnitt aus project.yml mit der einen Quelle der Zielnummer."""
+    return ("name: LooseEnds\nsettings:\n  base:\n"
+            f"    MARKETING_VERSION: \"{number}\"\n    CURRENT_PROJECT_VERSION: \"1\"\n")
 
 
 class FakeASC:
@@ -51,7 +64,7 @@ class FakeASC:
 
     def __init__(self, versions, builds=(), assigned=None, localizations=None, sets=None, placements=None,
                  review=(), fail_on=None, write_status=None, error_code=None, ignore_assign=False,
-                 duplicate_create=False, loose_filters=False, get_fail=None, build_texts=None):
+                 duplicate_create=False, loose_filters=False, get_fail=None, build_texts=None, fail_at=None):
         self.versions = [copy.deepcopy(item) for item in versions]
         # „Was testen“ je Bau (#615 S4c-2a): Liste der Texte, None = Eintrag ohne Text; ohne Angabe ein Text ohne Marke
         self.build_texts = dict(build_texts or {})
@@ -64,6 +77,7 @@ class FakeASC:
         self.fail_on, self.write_status, self.error_code = fail_on, write_status, error_code
         self.ignore_assign, self.duplicate_create, self.loose_filters = ignore_assign, duplicate_create, loose_filters
         self.get_fail = dict(get_fail or {})  # Pfadende → HTTP-Status für GET
+        self.fail_at = fail_at  # Nummer des Schreibaufrufs (ab 0), der mit write_status scheitert; die übrigen gelingen
         self.requests = []
         fake = self
 
@@ -85,7 +99,11 @@ class FakeASC:
                 fake.requests.append((self.command, self.path, body))
                 if self.command == "GET":
                     return self.reply(*fake.read(self.path))
-                if fake.write_status and fake.fail_on in (None, self.command):
+                if fake.fail_at is not None:
+                    failing = len(fake.writes()) - 1 == fake.fail_at
+                else:
+                    failing = bool(fake.write_status) and fake.fail_on in (None, self.command)
+                if failing:
                     return self.reply(fake.write_status,
                                       {"errors": [{"status": str(fake.write_status), "detail": RAW_SECRET,
                                                    **({"code": fake.error_code} if fake.error_code else {})}]})
@@ -164,8 +182,9 @@ class FakeASC:
         data = (body or {}).get("data") or {}
         if method == "POST" and path == "/v1/appStoreVersions":
             attrs = data.get("attributes", {})
+            base = "NEW" if attrs.get("platform") == "MAC_OS" else "NEW-IOS"
             for suffix in ("", "-B")[:2 if self.duplicate_create else 1]:
-                created = version(f"NEW{suffix}", attrs.get("platform"), EDITABLE, attrs.get("versionString"))
+                created = version(f"{base}{suffix}", attrs.get("platform"), EDITABLE, attrs.get("versionString"))
                 self.versions.append(created)
             return 201, {"data": self.versions[-1]}
         parts = path.strip("/").split("/")
@@ -201,9 +220,12 @@ class StoreVersionTests(unittest.TestCase):
         self.addCleanup(fake.close)
         return fake
 
-    def run_script(self, fake, *args):
+    def run_script(self, fake, *args, project="1.0.1", project_text=None):
+        """`project` ist die Zielnummer in einer Test-project.yml (#625 S5d-1), `project_text` ersetzt die Datei ganz."""
+        project_file = Path(self.tmp.name) / "project.yml"
+        project_file.write_text(project_text if project_text is not None else project_yml(project), encoding="utf-8")
         env = dict(os.environ, ASC_KEY_ID="K", ASC_ISSUER_ID="I", ASC_KEY_FILE=str(self.key), ASC_API_BASE=fake.base,
-                   ASC_POLL_SECONDS="0", ASC_TIMEOUT_SECONDS="2")
+                   ASC_POLL_SECONDS="0", ASC_TIMEOUT_SECONDS="2", PROJECT_FILE=str(project_file))
         return subprocess.run([sys.executable, str(SCRIPT), *args], env=env, capture_output=True, text=True,
                               timeout=120)
 
@@ -257,12 +279,11 @@ class StoreVersionTests(unittest.TestCase):
         self.assert_failed(self.run_script(fake, "anlegen"), "1.0.1", "1.0.2")
         self.assertEqual(fake.writes(), [])
 
-    # AC-3
-    def test_anlegen_fails_without_or_with_several_ios_versions(self):
-        for versions in ((IOS_LIVE, MAC_LIVE), (IOS_NEW, version("V5", "IOS", EDITABLE, "1.0.2"), MAC_LIVE)):
-            fake = self.fake(versions=versions)
-            self.assert_failed(self.run_script(fake, "anlegen"), "IOS")
-            self.assertEqual(fake.writes(), [])
+    # AC-3 (seit #625 S5d-1 nur noch „mehrere“: ohne bearbeitbare iOS-Version wird sie angelegt)
+    def test_anlegen_fails_with_several_ios_versions(self):
+        fake = self.fake(versions=(IOS_NEW, version("V5", "IOS", EDITABLE, "1.0.1"), MAC_LIVE))
+        self.assert_failed(self.run_script(fake, "anlegen"), "IOS")
+        self.assertEqual(fake.writes(), [])
 
     # AC-4
     def test_build_is_picked_by_platform_version_and_valid(self):
@@ -356,22 +377,156 @@ class StoreVersionTests(unittest.TestCase):
         for secret in (WORDING[:5], RAW_SECRET):
             self.assertNotIn(secret, result.stdout + result.stderr)
 
-    # AC-10
+    # AC-10, #625 S5d-1 AC-7
     def test_never_deletes_submits_or_writes_texts(self):
-        runs = (self.fake(), self.fake(versions=(IOS_NEW, MAC_NEW)),
-                self.fake(versions=(IOS_NEW, MAC_NEW), assigned={"V2": "BI133", "V4": "BM133"}))
-        for fake in runs:
+        runs = ((self.fake(), "1.0.1", ["MAC_OS"]), (self.fake(versions=(IOS_NEW, MAC_NEW)), "1.0.1", []),
+                (self.fake(versions=(IOS_NEW, MAC_NEW), assigned={"V2": "BI133", "V4": "BM133"}), "1.0.1", []),
+                (self.fake(versions=RELEASED, builds=BUILDS_102), "1.0.2", ["IOS", "MAC_OS"]))
+        for fake, project, posted in runs:
             for _ in range(2):
-                self.assert_ok(self.run_script(fake, "anlegen"))
+                self.assert_ok(self.run_script(fake, "anlegen", project=project))
+            platforms = []
             for method, path, body in fake.writes():
                 self.assertNotIn("ubmission", path)
+                self.assertNotEqual(method, "DELETE")
                 if method == "POST":
                     self.assertEqual(path, "/v1/appStoreVersions")
-                    self.assertEqual(body["data"]["attributes"]["platform"], "MAC_OS")
+                    platforms.append(body["data"]["attributes"]["platform"])
                 else:
                     self.assertEqual(method, "PATCH")
                     self.assertRegex(path, r"^/v1/appStoreVersions/[^/]+/relationships/build$")
-        self.assertEqual(runs[2].writes(), [])
+            self.assertEqual(platforms, posted)
+        self.assertEqual(runs[2][0].writes(), [])
+
+    # --- #625 S5d-1: iOS-Version anlegen, Zielnummer aus project.yml ---
+
+    def posts(self, fake):
+        return [body["data"]["attributes"] for method, _, body in fake.writes() if method == "POST"]
+
+    # S5d-1 AC-1
+    def test_anlegen_creates_ios_then_mac_version_from_project_yml(self):
+        fake = self.fake(versions=RELEASED, builds=BUILDS_102)
+        result = self.run_script(fake, "anlegen", project="1.0.2")
+        self.assert_ok(result)
+        self.assertEqual(self.posts(fake), [{"platform": "IOS", "versionString": "1.0.2"},
+                                            {"platform": "MAC_OS", "versionString": "1.0.2"}])
+        self.assertEqual([method for method, _, _ in fake.writes()], ["POST", "POST", "PATCH", "PATCH"])
+        for _, path, body in fake.writes()[:2]:
+            self.assertEqual(path, "/v1/appStoreVersions")
+            self.assertEqual(body["data"]["relationships"]["app"]["data"], {"type": "apps", "id": "APP1"})
+        self.assertEqual(sorted(self.patches(fake)), [("NEW", "BM140"), ("NEW-IOS", "BI140")])
+        self.assertIn("version IOS 1.0.2 angelegt", result.stdout)
+        self.assertIn("version MAC_OS 1.0.2 angelegt", result.stdout)
+        self.assertIn("gegenprobe gleich=ja", result.stdout)
+
+    # S5d-1 AC-2
+    def test_anlegen_aborts_before_writing_when_target_not_greater(self):
+        for project, builds in (("1.0.1", (IOS_133, MAC_133)),
+                                ("1.0", (build("BI90", "IOS", "90", pre="1.0"),
+                                         build("BM90", "MAC_OS", "90", pre="1.0")))):
+            fake = self.fake(versions=RELEASED, builds=builds)
+            result = self.run_script(fake, "anlegen", project=project)
+            self.assert_failed(result, "nicht größer", project, "nichts geschrieben")
+            self.assertEqual(fake.writes(), [], project)
+        # numerisch je Teil: 1.0.10 ist größer als 1.0.2
+        released = (version("V7", "IOS", "READY_FOR_SALE", "1.0.2"), version("V8", "MAC_OS", "READY_FOR_SALE", "1.0.2"))
+        fake = self.fake(versions=released, builds=(build("BI150", "IOS", "150", pre="1.0.10"),
+                                                     build("BM150", "MAC_OS", "150", pre="1.0.10")))
+        self.assert_ok(self.run_script(fake, "anlegen", project="1.0.10"))
+        self.assertEqual([item["versionString"] for item in self.posts(fake)], ["1.0.10", "1.0.10"])
+
+    # S5d-1 AC-2
+    def test_anlegen_aborts_on_unreadable_marketing_version(self):
+        texts = ("name: LooseEnds\nsettings:\n  base:\n    CURRENT_PROJECT_VERSION: \"1\"\n",
+                 project_yml(""), project_yml("abc"), project_yml("1.0.2-beta"), project_yml("1..2"))
+        for text in texts:
+            fake = self.fake(versions=RELEASED, builds=BUILDS_102)
+            result = self.run_script(fake, "anlegen", project_text=text)
+            self.assert_failed(result, "MARKETING_VERSION")
+            self.assertEqual(fake.writes(), [], text)
+
+    # S5d-1 AC-3
+    def test_anlegen_aborts_on_editable_version_with_other_number(self):
+        cases = (((*RELEASED, version("V9", "IOS", EDITABLE, "1.0.3")), "IOS", "1.0.3"),
+                 ((IOS_LIVE, IOS_101_LIVE, MAC_LIVE, version("V9", "MAC_OS", EDITABLE, "1.0.1")), "MAC_OS", "1.0.1"))
+        for versions, platform, other in cases:
+            fake = self.fake(versions=versions, builds=BUILDS_102)
+            result = self.run_script(fake, "anlegen", project="1.0.2")
+            self.assert_failed(result, platform, other, "1.0.2")
+            self.assertEqual(fake.writes(), [], platform)
+
+    # S5d-1 AC-3
+    def test_anlegen_skips_existing_editable_ios_version(self):
+        fake = self.fake(versions=(*RELEASED, version("V9", "IOS", EDITABLE, "1.0.2")), builds=BUILDS_102)
+        result = self.run_script(fake, "anlegen", project="1.0.2")
+        self.assert_ok(result)
+        self.assertIn("version IOS 1.0.2 schon vorhanden, übersprungen", result.stdout)
+        self.assertEqual(self.posts(fake), [{"platform": "MAC_OS", "versionString": "1.0.2"}])
+        self.assertEqual(sorted(self.patches(fake)), [("NEW", "BM140"), ("V9", "BI140")])
+
+    # S5d-1 AC-4
+    def test_anlegen_plan_uses_only_get(self):
+        fake = self.fake(versions=RELEASED, builds=BUILDS_102)
+        self.assert_ok(self.run_script(fake, "anlegen", project="1.0.2"))
+        first_write = next(index for index, (method, _, _) in enumerate(fake.requests) if method != "GET")
+        planned = [index for index, (_, path, _) in enumerate(fake.requests)
+                   if path.startswith("/v1/builds?") or path.endswith("/betaBuildLocalizations")]
+        self.assertGreaterEqual(len(planned), 4, fake.requests)
+        self.assertTrue(all(index < first_write for index in planned), fake.requests)
+
+    # S5d-1 AC-4
+    def test_anlegen_without_matching_build_writes_nothing(self):
+        for builds, platform in (((IOS_140,), "MAC_OS"), ((MAC_140,), "IOS")):
+            fake = self.fake(versions=RELEASED, builds=builds)
+            result = self.run_script(fake, "anlegen", project="1.0.2")
+            self.assert_failed(result, f"kein gültiger Bau 1.0.2 für {platform}", "nichts geschrieben")
+            self.assertEqual(fake.writes(), [], platform)
+
+    # S5d-1 AC-5
+    def test_post_is_never_repeated(self):
+        key_body = "".join(self.key.read_text().splitlines()[1:-1])
+        for status in (403, 409, 500):
+            fake = self.fake(versions=RELEASED, builds=BUILDS_102, fail_on="POST", write_status=status)
+            result = self.run_script(fake, "anlegen", project="1.0.2")
+            self.assert_failed(result, f"HTTP {status}")
+            self.assertEqual(self.posts(fake), [{"platform": "IOS", "versionString": "1.0.2"}], status)
+            output = result.stdout + result.stderr
+            for secret in (RAW_SECRET, key_body, "PRIVATE KEY", "Bearer", "eyJ"):
+                self.assertNotIn(secret, output)
+        # halbes Ergebnis: iOS steht, Mac scheitert; nichts gelöscht, der nächste Lauf legt nur Mac an
+        fake = self.fake(versions=RELEASED, builds=BUILDS_102, fail_at=1, write_status=409)
+        self.assert_failed(self.run_script(fake, "anlegen", project="1.0.2"), "HTTP 409")
+        self.assertEqual([item["platform"] for item in self.posts(fake)], ["IOS", "MAC_OS"])
+        self.assertEqual([item["id"] for item in self.editable(fake, "IOS")], ["NEW-IOS"])
+        self.assertNotIn("DELETE", [method for method, _, _ in fake.requests])
+        fake.fail_at, fake.write_status = None, None
+        before = len(fake.writes())
+        result = self.run_script(fake, "anlegen", project="1.0.2")
+        self.assert_ok(result)
+        self.assertIn("version IOS 1.0.2 schon vorhanden, übersprungen", result.stdout)
+        later = [body["data"]["attributes"]["platform"] for method, _, body in fake.writes()[before:]
+                 if method == "POST"]
+        self.assertEqual(later, ["MAC_OS"])
+
+    # S5d-1 AC-6
+    def test_verification_covers_both_new_versions(self):
+        fake = self.fake(versions=RELEASED, builds=BUILDS_102, ignore_assign=True)
+        self.assert_failed(self.run_script(fake, "anlegen", project="1.0.2"), "Gegenprobe", "IOS", "MAC_OS")
+        fake = self.fake(versions=RELEASED, builds=BUILDS_102, duplicate_create=True)
+        self.assert_failed(self.run_script(fake, "anlegen", project="1.0.2"), "Gegenprobe", "IOS")
+        self.assertEqual([item["platform"] for item in self.posts(fake)], ["IOS"])
+
+    # S5d-1 AC-6
+    def test_anlegen_prints_gegenprobe_and_state(self):
+        fake = self.fake(versions=RELEASED, builds=BUILDS_102)
+        result = self.run_script(fake, "anlegen", project="1.0.2")
+        self.assert_ok(result)
+        tail = result.stdout[result.stdout.rindex("gegenprobe gleich=ja"):]
+        for needle in ("version IOS 1.0.2 state=PREPARE_FOR_SUBMISSION",
+                       "version MAC_OS 1.0.2 state=PREPARE_FOR_SUBMISSION",
+                       "bau IOS 1.0.2 (140)", "bau MAC_OS 1.0.2 (140)"):
+            self.assertIn(needle, tail)
+        self.assertTrue(result.stdout.rstrip().endswith("zusammenfassung geschrieben=4"), result.stdout)
 
     # AC-10
     def test_bad_usage_makes_no_call(self):
