@@ -1,0 +1,19 @@
+test_je_schritt_genau_ein_beleg (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.BelegeVorhanden.test_je_schritt_genau_ein_beleg) ... ok
+test_jeder_beleg_hat_zeit_mit_zone (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.BelegeVorhanden.test_jeder_beleg_hat_zeit_mit_zone) ... ok
+test_acht_schritte (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Betriebsnotiz.test_acht_schritte) ... ok
+test_pflichtsaetze (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Betriebsnotiz.test_pflichtsaetze) ... ok
+test_kein_app_code_keine_werkzeuge (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Diffliste.test_kein_app_code_keine_werkzeuge) ... ok
+test_genau_ein_zustand (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Einreichung.test_genau_ein_zustand) ... ok
+test_zeitstempel_halten_die_reihenfolge (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Reihenfolge.test_zeitstempel_halten_die_reihenfolge) ... ok
+test_kein_delete_und_kein_doppelter_post (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Schreibwege.test_kein_delete_und_kein_doppelter_post) ... ok
+test_keine_geheimnisse (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Schreibwege.test_keine_geheimnisse) ... ok
+test_schreibende_laeufe_lesen_vorher_und_gegenprobe (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Schreibwege.test_schreibende_laeufe_lesen_vorher_und_gegenprobe) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.091s
+
+OK
+
+## Werkzeug-Tests (AC-13): python3 -m unittest discover -s scripts -p test_*.py (2026-11-24, 22:14-22:29 Uhr MEZ)
+Ran 865 tests in 884.251s
+OK (skipped=1)

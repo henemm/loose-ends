@@ -1,0 +1,8 @@
+Lauf: https://github.com/henemm/loose-ends/actions/runs/45443311018 (nur GET), Commit c885f7a
+einreichungen IOS COMPLETE, COMPLETE
+einreichungen MAC_OS COMPLETE, COMPLETE
+IOS nicht-bereit: bearbeitbare Versionen=0 (Zustände READY_FOR_SALE, READY_FOR_SALE)
+MAC_OS nicht-bereit: bearbeitbare Versionen=0 (Zustände READY_FOR_SALE, READY_FOR_SALE)
+zusammenfassung bereit=keine nicht-bereit=ios,mac
+##[error]nicht bereit: ios,mac
+##[error]Process completed with exit code 1.
