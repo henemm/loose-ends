@@ -1,4 +1,5 @@
 #if os(macOS)
+import AppKit
 import CoreGraphics
 import XCTest
 
@@ -459,10 +460,9 @@ final class MacGalleryTests: XCTestCase {
 
     /// #862 AC-2: "Open Loose Ends" closes the panel and opens the main window; once that window is closed
     /// with ⌘W, a single click on the symbol opens the panel again.
-    /// #978 Schnitt 1: the panel closes again in 2 of 15 runs, cause open. Opening the panel, "Open Loose Ends"
-    /// and ⌘W stay hard checks; the click on the symbol, waiting for the symbol included, is an expected failure
-    /// (not strict), so a rare close shows up without turning CI red, and the app's `MenuBarPanel` lines
-    /// (artifact `MacGalleryPanelLog`) carry its cause.
+    /// #978 Schnitt 3: the click waits until the frontmost app has been quiet for 1 s (the app switch after ⌘W
+    /// took the panel's key status away), the panel must still stand 3 s after it opened, and the check is
+    /// hard again, like the Return arm.
     @MainActor
     func testMenuBarReopensAfterOpenAppWithOneClick() throws {
         let app = macLaunch(dark: false)
@@ -473,11 +473,7 @@ final class MacGalleryTests: XCTestCase {
         app.typeKey("w", modifierFlags: .command)
         let closed = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: window)
         XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 10), .completed, "⌘W did not close the main window")
-        // #978: an expected failure must not end the test here, so the app is still terminated below.
-        continueAfterFailure = true
-        XCTExpectFailure("#978: Panel schließt selten von selbst, Ursache wird geerntet", options: .nonStrict()) {
-            assertSymbolOpensPanelWithOneClick(app, label: "reopen-open-app")
-        }
+        assertSymbolOpensPanelWithOneClick(app, label: "reopen-open-app")
         app.terminate()
     }
 
@@ -524,28 +520,70 @@ final class MacGalleryTests: XCTestCase {
         return "control: CGEvent at \(Int(point.x)),\(Int(point.y))"
     }
 
-    /// Clicks the symbol exactly once and expects the panel within 10 s. The time of the click and of the
-    /// answer and the hierarchy go along as attachments, so a red run in CI can be read. Without `click` the
-    /// symbol is clicked like a user does (`statusItem.click()`); the control arm passes its own click.
+    /// #978 Schnitt 3: waits until the frontmost app has stayed the same for 1 s, polled every 0.1 s, at most
+    /// 10 s. No assumption which app must be in front. The run loop turns between polls, so AppKit can deliver
+    /// the workspace notifications that update `frontmostApplication`. Returns the history for the attachment:
+    /// one line per change (`front <s> s <bundle id>`), then `settled after <s> s` or `timeout after 10 s`.
+    @MainActor
+    private func waitForFrontmostSettled() -> [String] {
+        let start = Date()
+        let quiet: TimeInterval = 1.0
+        let limit: TimeInterval = 10.0
+        var lines: [String] = []
+        var current: String?
+        var changedAt = start
+        while Date().timeIntervalSince(start) < limit {
+            let now = Date()
+            let front = NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "none"
+            if lines.isEmpty || front != current {
+                current = front
+                changedAt = now
+                lines.append("front \(String(format: "%.2f", now.timeIntervalSince(start))) s \(front)")
+            } else if now.timeIntervalSince(changedAt) >= quiet {
+                lines.append("settled after \(String(format: "%.2f", now.timeIntervalSince(start))) s")
+                return lines
+            }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.1))
+        }
+        lines.append("timeout after 10 s")
+        return lines
+    }
+
+    /// Clicks the symbol exactly once, after the frontmost app has settled, and expects the panel within 10 s
+    /// and still there 3 s later. The time of the click and of the decision, the frontmost app's history and
+    /// the hierarchy go along as attachments, so a red run in CI can be read. Without `click` the symbol is
+    /// clicked like a user does (`statusItem.click()`); the control arm passes its own click.
     @MainActor
     private func assertSymbolOpensPanelWithOneClick(_ app: XCUIApplication, label: String,
                                                     click: (@MainActor (XCUIElement) -> String)? = nil) {
         let statusItem = app.statusItems.firstMatch
         XCTAssertTrue(statusItem.waitForExistence(timeout: 10), "No menu bar symbol")
+        let front = waitForFrontmostSettled()
         let clickedAt = Date()
         var how = "user: statusItem.click()"
         if let click { how = click(statusItem) } else { statusItem.click() }
-        let opened = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)
+        let appeared = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)
+        var stayed = false
+        if appeared {
+            let holdSeconds: TimeInterval = 3
+            RunLoop.current.run(until: Date().addingTimeInterval(holdSeconds))
+            stayed = app.buttons["menuBarOpenApp"].exists
+        }
+        let opened = appeared && stayed
         let note = XCTAttachment(string: """
             click: \(String(format: "%.3f", clickedAt.timeIntervalSince1970)) (seconds since 1970)
-            after: \(String(format: "%.2f", Date().timeIntervalSince(clickedAt))) s, panel \(opened ? "open" : "not open")
             how: \(how)
+            frontmost before the click:
+            \(front.joined(separator: "\n"))
             \(app.debugDescription)
+            after: \(String(format: "%.2f", Date().timeIntervalSince(clickedAt))) s, panel \(opened ? "open" : "not open")
             """)
         note.name = "mac-gallery-\(label)-click"
         note.lifetime = .keepAlways
         add(note)
-        XCTAssertTrue(opened, "One click on the symbol opened no panel (\(label))")
+        XCTAssertTrue(opened, appeared
+                      ? "The panel closed again within 3 s (\(label))"
+                      : "One click on the symbol opened no panel (\(label))")
     }
 }
 #endif

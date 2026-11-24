@@ -82,3 +82,7 @@ XCUIAutomation, AppKit im Testläufer (macOS-Prozess, `NSWorkspace` lesbar). Abn
 
 ### Open Questions
 - keine (reine Testwerkzeug-Arbeit, kein Produktthema; kein Pfad der Geräteliste berührt)
+
+## Phase 5 (2026-11-24)
+
+RED-Tests in `scripts/test_mac_reopen_settle.py` (Gegenprobe am Quelltext für AC-1 bis AC-4, neues Anhangformat durch das unveränderte Skript): 5 von 10 rot, Beleg `docs/artifacts/fix-978-s3-wiederoeffnen-warten/test-red-output.txt`. Die Datei ist Testcode und steht nicht in der Spec-Dateiliste (Spec unverändert freigegeben); AC-7 meint den Produkt- und UI-Testcode.

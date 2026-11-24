@@ -1,0 +1,50 @@
+test_counts_new_format (__main__.NewFormatSummaryTests.test_counts_new_format) ... ok
+test_parse_click_new_format (__main__.NewFormatSummaryTests.test_parse_click_new_format) ... ok
+test_ac1_no_expected_failure_left (__main__.SettleSourceTests.test_ac1_no_expected_failure_left) ... ok
+test_ac1_open_app_arm_calls_helper_directly (__main__.SettleSourceTests.test_ac1_open_app_arm_calls_helper_directly) ... ok
+test_ac2_exactly_one_click_no_retry (__main__.SettleSourceTests.test_ac2_exactly_one_click_no_retry) ... ok
+test_ac2_hold_checks_panel_still_there (__main__.SettleSourceTests.test_ac2_hold_checks_panel_still_there) ... ok
+test_ac2_order_symbol_settle_click_panel_hold_attachment_assert (__main__.SettleSourceTests.test_ac2_order_symbol_settle_click_panel_hold_attachment_assert) ... ok
+test_ac2_settle_helper_reads_frontmost_app (__main__.SettleSourceTests.test_ac2_settle_helper_reads_frontmost_app) ... ok
+test_ac3_all_three_arms_use_helper (__main__.SettleSourceTests.test_ac3_all_three_arms_use_helper) ... ok
+test_ac4_after_line_is_last_and_history_before_it (__main__.SettleSourceTests.test_ac4_after_line_is_last_and_history_before_it) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.006s
+
+OK
+test_after_observer_behaviour (__main__.CallersTests.test_after_observer_behaviour)
+F101: der echte Rumpf von `afterObserver`, mit swiftc gebaut und an festen Stapeln ausgeführt. ... ok
+test_callers_drops_only_leading_frames (__main__.CallersTests.test_callers_drops_only_leading_frames) ... ok
+test_control_arm_guarded_by_env (__main__.ControlArmTests.test_control_arm_guarded_by_env) ... ok
+test_user_arms_keep_statusitem_click (__main__.ControlArmTests.test_user_arms_keep_statusitem_click) ... ok
+test_attachment_without_how_counts_as_unknown (__main__.ExpectedAndHowTests.test_attachment_without_how_counts_as_unknown) ... ok
+test_expected_flags_named_arm_without_clicks (__main__.ExpectedAndHowTests.test_expected_flags_named_arm_without_clicks) ... ok
+test_expected_flags_short_active_arm (__main__.ExpectedAndHowTests.test_expected_flags_short_active_arm) ... ok
+test_expected_ignores_inactive_control_arm (__main__.ExpectedAndHowTests.test_expected_ignores_inactive_control_arm) ... ok
+test_how_counted_per_arm (__main__.ExpectedAndHowTests.test_how_counted_per_arm) ... ok
+test_mandatory_arms_flagged_even_without_clicks (__main__.ExpectedAndHowTests.test_mandatory_arms_flagged_even_without_clicks) ... ok
+test_without_expected_no_check_line (__main__.ExpectedAndHowTests.test_without_expected_no_check_line) ... ok
+test_activation_and_space_lines (__main__.PanelLogTests.test_activation_and_space_lines) ... ok
+test_cg_event_fields_without_subtype_or_data1 (__main__.PanelLogTests.test_cg_event_fields_without_subtype_or_data1) ... ok
+test_monitors_return_event_unchanged (__main__.PanelLogTests.test_monitors_return_event_unchanged) ... ok
+test_no_print_no_try_optional (__main__.PanelLogTests.test_no_print_no_try_optional) ... ok
+test_stack_up_to_40_frames (__main__.PanelLogTests.test_stack_up_to_40_frames) ... ok
+test_arm_of_maps_labels (__main__.SummaryTests.test_arm_of_maps_labels) ... ok
+test_arm_without_attachments_is_zero_not_missing (__main__.SummaryTests.test_arm_without_attachments_is_zero_not_missing) ... ok
+test_counts_every_iteration_per_arm (__main__.SummaryTests.test_counts_every_iteration_per_arm) ... ok
+test_parse_click (__main__.SummaryTests.test_parse_click) ... ok
+test_parse_panel_log_reads_event_and_source (__main__.SummaryTests.test_parse_panel_log_reads_event_and_source) ... ok
+test_report_names_every_arm_and_only_numbers (__main__.SummaryTests.test_report_names_every_arm_and_only_numbers) ... ok
+test_several_export_folders_add_up (__main__.SummaryTests.test_several_export_folders_add_up) ... ok
+test_timeline_of_a_failure (__main__.SummaryTests.test_timeline_of_a_failure) ... ok
+test_workflow_passes_expected_and_arms (__main__.WorkflowExpectedTests.test_workflow_passes_expected_and_arms) ... ok
+test_dispatch_with_inputs (__main__.WorkflowTests.test_dispatch_with_inputs) ... ok
+test_log_from_job_start_and_uploads (__main__.WorkflowTests.test_log_from_job_start_and_uploads) ... ok
+test_pull_request_only_on_this_file (__main__.WorkflowTests.test_pull_request_only_on_this_file) ... ok
+test_runs_only_reopen_tests_with_iterations (__main__.WorkflowTests.test_runs_only_reopen_tests_with_iterations) ... ok
+
+----------------------------------------------------------------------
+Ran 29 tests in 1.685s
+
+OK
