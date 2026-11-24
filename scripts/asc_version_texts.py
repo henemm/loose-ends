@@ -3,7 +3,7 @@
 Aufruf: asc_version_texts.py lesen|texte
 Umgebung wie asc_wait_build.py plus VERSION_TEXTS_FILE (Standard docs/reference/app-store-texte.md, je Locale ein
 Abschnitt `## <Locale>` mit `Beschreibung:` im Markerblock und den Zeilen `Schlüsselwörter:`, `Support-URL:`, optional
-`Werbetext:` und `Neu in dieser Version:`). Ein Abschnitt ohne `Beschreibung:` trägt nur Werbetext und/oder Neu in
+`Marketing-URL:`, `Werbetext:` und `Neu in dieser Version:`). Ein Abschnitt ohne `Beschreibung:` trägt nur Werbetext und/oder Neu in
 dieser Version und gilt nur für eine Sprache, die es bei Apple schon gibt (5a-2). `lesen` schreibt nichts und zeigt
 auch den Werbetext der veröffentlichten Version (READY_FOR_SALE); `texte` schreibt je Plattform nur in die eine Version im Zustand
 PREPARE_FOR_SUBMISSION, nur Locales aus der Datei, nur bei Abweichung, und prüft danach gegen. Es wird nichts
@@ -11,6 +11,7 @@ eingereicht. Die Store-Texte sind öffentlich und dürfen in der Ausgabe stehen;
 """
 import os
 import sys
+import urllib.parse
 from pathlib import Path
 
 from asc_beta_probe import attributes, records
@@ -22,12 +23,13 @@ EDITABLE = "PREPARE_FOR_SUBMISSION"
 PLATFORMS = ("IOS", "MAC_OS")
 FENCE = "```"
 PUBLISHED = "READY_FOR_SALE"
-LINE_FIELDS = {"Schlüsselwörter": "keywords", "Support-URL": "supportUrl", "Werbetext": "promotionalText",
-               "Neu in dieser Version": "whatsNew"}
+LINE_FIELDS = {"Schlüsselwörter": "keywords", "Support-URL": "supportUrl", "Marketing-URL": "marketingUrl",
+               "Werbetext": "promotionalText", "Neu in dieser Version": "whatsNew"}
 LABELS = {"description": "Beschreibung", "keywords": "Schlüsselwörter", "supportUrl": "Support-URL",
-          "promotionalText": "Werbetext", "whatsNew": "Neu in dieser Version"}
+          "marketingUrl": "Marketing-URL", "promotionalText": "Werbetext", "whatsNew": "Neu in dieser Version"}
 REQUIRED = ("description", "keywords", "supportUrl")
 OPTIONAL = ("promotionalText", "whatsNew")
+URL_FIELDS = ("supportUrl", "marketingUrl")  # Marketing-URL optional (#625 S5d-1)
 PLACEHOLDER = "PLATZHALTER"
 DEFAULT_FILE = Path(__file__).resolve().parent.parent / "docs" / "reference" / "app-store-texte.md"
 
@@ -94,12 +96,21 @@ def check_section(locale, values):
     spaces = values.get("keywords", "").count(", ")
     if spaces:
         raise Fatal(f"{locale} Schlüsselwörter: {spaces} Leerzeichen nach Komma, erlaubt 0")
-    if "supportUrl" in values and not values["supportUrl"].startswith("https://"):
-        raise Fatal(f"{locale} Support-URL muss mit https:// beginnen")
+    for field in URL_FIELDS:
+        if field in values:
+            check_url(locale, field, values[field])
+
+
+def check_url(locale, field, value):
+    """https:// am Anfang und ein nicht leerer Host (#625 S5d-1)."""
+    if not value.startswith("https://"):
+        raise Fatal(f"{locale} {LABELS[field]} muss mit https:// beginnen")
+    if not urllib.parse.urlparse(value).hostname:
+        raise Fatal(f"{locale} {LABELS[field]} braucht einen Host")
 
 
 def wanted_texts(text):
-    """{Locale: {description?, keywords?, supportUrl?, promotionalText?, whatsNew?}}; geprüft vor jeder Anfrage."""
+    """{Locale: {description?, keywords?, supportUrl?, marketingUrl?, promotionalText?, whatsNew?}}; geprüft vor jeder Anfrage."""
     sections = parse_sections(text)
     if not sections:
         raise Fatal("Die Textdatei hat keinen Abschnitt ## <Locale>")

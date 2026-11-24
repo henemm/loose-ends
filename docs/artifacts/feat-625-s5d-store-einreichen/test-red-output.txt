@@ -1,0 +1,599 @@
+test_anlegen_never_assigns_account_build (test_asc_store_version.AccountBuildLockTests.test_anlegen_never_assigns_account_build) ... ok
+test_pick_build_fail_closed_on_empty (test_asc_store_version.AccountBuildLockTests.test_pick_build_fail_closed_on_empty) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/parser.py:49: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 54061)>
+  feedparser = FeedParser(self._class, policy=self.policy)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/email/parser.py:49: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 54108)>
+  feedparser = FeedParser(self._class, policy=self.policy)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_pick_build_fail_closed_on_unreadable (test_asc_store_version.AccountBuildLockTests.test_pick_build_fail_closed_on_unreadable) ... ok
+test_pick_build_nothing_left_writes_nothing (test_asc_store_version.AccountBuildLockTests.test_pick_build_nothing_left_writes_nothing) ... ok
+test_pick_build_skips_account_builds (test_asc_store_version.AccountBuildLockTests.test_pick_build_skips_account_builds) ... ok
+test_pick_build_unchanged_without_marks (test_asc_store_version.AccountBuildLockTests.test_pick_build_unchanged_without_marks) ... ok
+test_404_on_build_lookup_is_fatal_and_never_reassigns (test_asc_store_version.StoreVersionTests.test_404_on_build_lookup_is_fatal_and_never_reassigns) ... ok
+test_anlegen_aborts_before_writing_when_target_not_greater (test_asc_store_version.StoreVersionTests.test_anlegen_aborts_before_writing_when_target_not_greater) ... FAIL
+test_anlegen_aborts_on_editable_version_with_other_number (test_asc_store_version.StoreVersionTests.test_anlegen_aborts_on_editable_version_with_other_number) ... FAIL
+test_anlegen_aborts_on_unreadable_marketing_version (test_asc_store_version.StoreVersionTests.test_anlegen_aborts_on_unreadable_marketing_version) ... FAIL
+test_anlegen_creates_ios_then_mac_version_from_project_yml (test_asc_store_version.StoreVersionTests.test_anlegen_creates_ios_then_mac_version_from_project_yml) ... FAIL
+test_anlegen_creates_mac_version_with_ios_number (test_asc_store_version.StoreVersionTests.test_anlegen_creates_mac_version_with_ios_number) ... ok
+test_anlegen_does_not_create_second_mac_version (test_asc_store_version.StoreVersionTests.test_anlegen_does_not_create_second_mac_version) ... ok
+test_anlegen_fails_on_mac_version_mismatch (test_asc_store_version.StoreVersionTests.test_anlegen_fails_on_mac_version_mismatch) ... ok
+test_anlegen_fails_with_several_ios_versions (test_asc_store_version.StoreVersionTests.test_anlegen_fails_with_several_ios_versions) ... ok
+test_anlegen_plan_uses_only_get (test_asc_store_version.StoreVersionTests.test_anlegen_plan_uses_only_get) ... FAIL
+test_anlegen_prints_gegenprobe_and_state (test_asc_store_version.StoreVersionTests.test_anlegen_prints_gegenprobe_and_state) ... FAIL
+test_anlegen_skips_existing_editable_ios_version (test_asc_store_version.StoreVersionTests.test_anlegen_skips_existing_editable_ios_version) ... FAIL
+test_anlegen_without_matching_build_writes_nothing (test_asc_store_version.StoreVersionTests.test_anlegen_without_matching_build_writes_nothing) ... FAIL
+test_bad_usage_makes_no_call (test_asc_store_version.StoreVersionTests.test_bad_usage_makes_no_call) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 54193)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 54216)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 54247)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 54259)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 54287)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 54315)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 54343)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 54347)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=15, family=2, type=1, proto=0, laddr=('127.0.0.1', 54352)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=16, family=2, type=1, proto=0, laddr=('127.0.0.1', 54355)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=17, family=2, type=1, proto=0, laddr=('127.0.0.1', 54362)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=18, family=2, type=1, proto=0, laddr=('127.0.0.1', 54370)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=19, family=2, type=1, proto=0, laddr=('127.0.0.1', 54376)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=20, family=2, type=1, proto=0, laddr=('127.0.0.1', 54402)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 54445)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=22, family=2, type=1, proto=0, laddr=('127.0.0.1', 54490)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=23, family=2, type=1, proto=0, laddr=('127.0.0.1', 54493)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=24, family=2, type=1, proto=0, laddr=('127.0.0.1', 54498)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=25, family=2, type=1, proto=0, laddr=('127.0.0.1', 54502)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=26, family=2, type=1, proto=0, laddr=('127.0.0.1', 54508)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/_weakrefset.py:45: ResourceWarning: unclosed <socket.socket fd=27, family=2, type=1, proto=0, laddr=('127.0.0.1', 54533)>
+  def add(self, item):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_build_highest_number_wins_and_is_logged (test_asc_store_version.StoreVersionTests.test_build_highest_number_wins_and_is_logged) ... ok
+test_build_is_picked_by_platform_version_and_valid (test_asc_store_version.StoreVersionTests.test_build_is_picked_by_platform_version_and_valid) ... ok
+test_existing_build_is_left_alone (test_asc_store_version.StoreVersionTests.test_existing_build_is_left_alone) ... ok
+test_failed_count_query_is_reported_and_run_continues (test_asc_store_version.StoreVersionTests.test_failed_count_query_is_reported_and_run_continues) ... ok
+test_lesen_reports_state_and_never_writes (test_asc_store_version.StoreVersionTests.test_lesen_reports_state_and_never_writes) ... ok
+test_never_deletes_submits_or_writes_texts (test_asc_store_version.StoreVersionTests.test_never_deletes_submits_or_writes_texts) ... FAIL
+test_no_matching_build_is_fatal_and_writes_nothing (test_asc_store_version.StoreVersionTests.test_no_matching_build_is_fatal_and_writes_nothing) ... ok
+test_post_is_never_repeated (test_asc_store_version.StoreVersionTests.test_post_is_never_repeated) ... FAIL
+test_verification_covers_both_new_versions (test_asc_store_version.StoreVersionTests.test_verification_covers_both_new_versions) ... FAIL
+test_verification_fails_on_deviation (test_asc_store_version.StoreVersionTests.test_verification_fails_on_deviation) ... ok
+test_write_errors_are_clear_without_raw_answer (test_asc_store_version.StoreVersionTests.test_write_errors_are_clear_without_raw_answer) ... ok
+test_workflow_offers_both_actions_and_hides_the_key (test_asc_store_version.WorkflowTests.test_workflow_offers_both_actions_and_hides_the_key) ... ok
+test_403_and_409_give_clear_message (test_asc_version_texts.VersionTextsTests.test_403_and_409_give_clear_message) ... ok
+test_de_section_patches_only_promo_and_whats_new (test_asc_version_texts.VersionTextsTests.test_de_section_patches_only_promo_and_whats_new) ... ok
+test_different_text_patches_once_with_changed_fields_only (test_asc_version_texts.VersionTextsTests.test_different_text_patches_once_with_changed_fields_only) ... ok
+test_empty_en_us_record_gets_all_fields_by_patch (test_asc_version_texts.VersionTextsTests.test_empty_en_us_record_gets_all_fields_by_patch) ... ok
+test_equal_values_write_nothing (test_asc_version_texts.VersionTextsTests.test_equal_values_write_nothing) ... ok
+test_invalid_text_file_aborts_before_any_request (test_asc_version_texts.VersionTextsTests.test_invalid_text_file_aborts_before_any_request) ... ok
+test_lesen_never_writes_and_prints_values (test_asc_version_texts.VersionTextsTests.test_lesen_never_writes_and_prints_values) ... ok
+test_lesen_shows_published_promotional_text_and_never_writes (test_asc_version_texts.VersionTextsTests.test_lesen_shows_published_promotional_text_and_never_writes) ... ok
+test_marketing_url_is_optional (test_asc_version_texts.VersionTextsTests.test_marketing_url_is_optional) ... ok
+test_marketing_url_line_is_parsed_and_written (test_asc_version_texts.VersionTextsTests.test_marketing_url_line_is_parsed_and_written) ... ERROR
+test_marketing_url_must_be_https_with_host (test_asc_version_texts.VersionTextsTests.test_marketing_url_must_be_https_with_host) ... FAIL
+test_missing_locale_on_mac_only_writes_nothing_on_ios_either (test_asc_version_texts.VersionTextsTests.test_missing_locale_on_mac_only_writes_nothing_on_ios_either) ... ok
+test_missing_mac_en_us_is_posted_with_all_fields_including_whats_new (test_asc_version_texts.VersionTextsTests.test_missing_mac_en_us_is_posted_with_all_fields_including_whats_new) ... ok
+test_missing_record_posts_with_locale_fields_and_relationship (test_asc_version_texts.VersionTextsTests.test_missing_record_posts_with_locale_fields_and_relationship) ... ok
+test_no_editable_version_prints_message_and_exits_zero (test_asc_version_texts.VersionTextsTests.test_no_editable_version_prints_message_and_exits_zero) ... ok
+test_only_locales_from_file_are_touched (test_asc_version_texts.VersionTextsTests.test_only_locales_from_file_are_touched) ... ok
+test_output_has_no_secrets (test_asc_version_texts.VersionTextsTests.test_output_has_no_secrets) ... /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 54541)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 54548)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=9, family=2, type=1, proto=0, laddr=('127.0.0.1', 54576)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=10, family=2, type=1, proto=0, laddr=('127.0.0.1', 54603)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=11, family=2, type=1, proto=0, laddr=('127.0.0.1', 54625)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=12, family=2, type=1, proto=0, laddr=('127.0.0.1', 54636)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=13, family=2, type=1, proto=0, laddr=('127.0.0.1', 54663)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=14, family=2, type=1, proto=0, laddr=('127.0.0.1', 54679)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=15, family=2, type=1, proto=0, laddr=('127.0.0.1', 54695)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=16, family=2, type=1, proto=0, laddr=('127.0.0.1', 54696)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=17, family=2, type=1, proto=0, laddr=('127.0.0.1', 54697)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=18, family=2, type=1, proto=0, laddr=('127.0.0.1', 54698)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=19, family=2, type=1, proto=0, laddr=('127.0.0.1', 54831)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=20, family=2, type=1, proto=0, laddr=('127.0.0.1', 54839)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=21, family=2, type=1, proto=0, laddr=('127.0.0.1', 54844)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=22, family=2, type=1, proto=0, laddr=('127.0.0.1', 54847)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=23, family=2, type=1, proto=0, laddr=('127.0.0.1', 54862)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=24, family=2, type=1, proto=0, laddr=('127.0.0.1', 54872)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=25, family=2, type=1, proto=0, laddr=('127.0.0.1', 54903)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=26, family=2, type=1, proto=0, laddr=('127.0.0.1', 54912)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=27, family=2, type=1, proto=0, laddr=('127.0.0.1', 54926)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=30, family=2, type=1, proto=0, laddr=('127.0.0.1', 54931)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=31, family=2, type=1, proto=0, laddr=('127.0.0.1', 54939)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=32, family=2, type=1, proto=0, laddr=('127.0.0.1', 54948)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=33, family=2, type=1, proto=0, laddr=('127.0.0.1', 54954)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=34, family=2, type=1, proto=0, laddr=('127.0.0.1', 54962)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=35, family=2, type=1, proto=0, laddr=('127.0.0.1', 54970)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=36, family=2, type=1, proto=0, laddr=('127.0.0.1', 54972)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=37, family=2, type=1, proto=0, laddr=('127.0.0.1', 54973)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=38, family=2, type=1, proto=0, laddr=('127.0.0.1', 54974)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=39, family=2, type=1, proto=0, laddr=('127.0.0.1', 54975)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=40, family=2, type=1, proto=0, laddr=('127.0.0.1', 54976)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=41, family=2, type=1, proto=0, laddr=('127.0.0.1', 54979)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=42, family=2, type=1, proto=0, laddr=('127.0.0.1', 54980)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=43, family=2, type=1, proto=0, laddr=('127.0.0.1', 54981)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=44, family=2, type=1, proto=0, laddr=('127.0.0.1', 54982)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=45, family=2, type=1, proto=0, laddr=('127.0.0.1', 54991)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=46, family=2, type=1, proto=0, laddr=('127.0.0.1', 54999)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=47, family=2, type=1, proto=0, laddr=('127.0.0.1', 55006)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=48, family=2, type=1, proto=0, laddr=('127.0.0.1', 55012)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=49, family=2, type=1, proto=0, laddr=('127.0.0.1', 55019)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=50, family=2, type=1, proto=0, laddr=('127.0.0.1', 55025)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=51, family=2, type=1, proto=0, laddr=('127.0.0.1', 55034)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=52, family=2, type=1, proto=0, laddr=('127.0.0.1', 55046)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=53, family=2, type=1, proto=0, laddr=('127.0.0.1', 55049)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/lib/python3.15/copy.py:241: ResourceWarning: unclosed <socket.socket fd=54, family=2, type=1, proto=0, laddr=('127.0.0.1', 55057)>
+  memo[id(memo)]=[x]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_placeholder_aborts_texte_before_any_request (test_asc_version_texts.VersionTextsTests.test_placeholder_aborts_texte_before_any_request) ... ok
+test_promotional_text_is_optional (test_asc_version_texts.VersionTextsTests.test_promotional_text_is_optional) ... ok
+test_real_file_has_marketing_url_in_both_locales (test_asc_version_texts.VersionTextsTests.test_real_file_has_marketing_url_in_both_locales) ... FAIL
+test_repo_text_file_parses_and_fits_limits (test_asc_version_texts.VersionTextsTests.test_repo_text_file_parses_and_fits_limits) ... ok
+test_second_run_writes_nothing (test_asc_version_texts.VersionTextsTests.test_second_run_writes_nothing) ... ok
+test_section_with_description_still_requires_all_three (test_asc_version_texts.VersionTextsTests.test_section_with_description_still_requires_all_three) ... ok
+test_section_without_description_for_missing_locale_is_fatal_and_writes_nothing (test_asc_version_texts.VersionTextsTests.test_section_without_description_for_missing_locale_is_fatal_and_writes_nothing) ... ok
+test_section_without_description_may_carry_only_promo_and_whats_new (test_asc_version_texts.VersionTextsTests.test_section_without_description_may_carry_only_promo_and_whats_new) ... ok
+test_selects_only_editable_version_per_platform (test_asc_version_texts.VersionTextsTests.test_selects_only_editable_version_per_platform) ... ok
+test_several_editable_versions_of_one_platform_abort (test_asc_version_texts.VersionTextsTests.test_several_editable_versions_of_one_platform_abort) ... ok
+test_text_file_parses_description_block_and_fields (test_asc_version_texts.VersionTextsTests.test_text_file_parses_description_block_and_fields) ... ok
+test_unknown_action_aborts_before_any_request (test_asc_version_texts.VersionTextsTests.test_unknown_action_aborts_before_any_request) ... ok
+test_verification_mismatch_is_error (test_asc_version_texts.VersionTextsTests.test_verification_mismatch_is_error) ... ok
+test_whats_new_line_is_parsed_and_limited (test_asc_version_texts.VersionTextsTests.test_whats_new_line_is_parsed_and_limited) ... ok
+test_writes_only_localization_paths_and_submits_nothing (test_asc_version_texts.VersionTextsTests.test_writes_only_localization_paths_and_submits_nothing) ... ok
+test_workflow_has_choice_unit_tests_and_secrets (test_asc_version_texts.WorkflowTests.test_workflow_has_choice_unit_tests_and_secrets) ... ok
+test_notes_file_has_no_placeholder_and_fits (test_asc_review_notes.NotesFileTests.test_notes_file_has_no_placeholder_and_fits) ... ok
+test_notes_have_no_false_statements (test_asc_review_notes.NotesFileTests.test_notes_have_no_false_statements) ... FAIL
+test_notes_state_account_facts (test_asc_review_notes.NotesFileTests.test_notes_state_account_facts) ... FAIL
+test_real_notes_fit_the_limit (test_asc_review_notes.NotesFileTests.test_real_notes_fit_the_limit) ... ok
+test_4001_bytes_aborts_before_any_write (test_asc_review_notes.ReviewNotesTests.test_4001_bytes_aborts_before_any_write) ... ok
+test_extracts_first_code_block (test_asc_review_notes.ReviewNotesTests.test_extracts_first_code_block) ... ok
+test_lesen_never_writes (test_asc_review_notes.ReviewNotesTests.test_lesen_never_writes) ... FAIL
+test_limit_4000_bytes_passes (test_asc_review_notes.ReviewNotesTests.test_limit_4000_bytes_passes) ... FAIL
+test_notizen_aborts_before_writing_when_one_platform_fails (test_asc_review_notes.ReviewNotesTests.test_notizen_aborts_before_writing_when_one_platform_fails) ... FAIL
+test_notizen_aborts_without_editable_version (test_asc_review_notes.ReviewNotesTests.test_notizen_aborts_without_editable_version) ... FAIL
+test_notizen_aborts_without_review_detail_and_creates_nothing (test_asc_review_notes.ReviewNotesTests.test_notizen_aborts_without_review_detail_and_creates_nothing) ... FAIL
+test_notizen_patch_is_never_repeated (test_asc_review_notes.ReviewNotesTests.test_notizen_patch_is_never_repeated) ... FAIL
+test_notizen_unchanged_when_equal (test_asc_review_notes.ReviewNotesTests.test_notizen_unchanged_when_equal) ... FAIL
+test_notizen_writes_to_editable_version_of_each_platform (test_asc_review_notes.ReviewNotesTests.test_notizen_writes_to_editable_version_of_each_platform) ... FAIL
+test_output_never_contains_notes_text_or_contacts (test_asc_review_notes.ReviewNotesTests.test_output_never_contains_notes_text_or_contacts) ... ok
+test_placeholder_aborts (test_asc_review_notes.ReviewNotesTests.test_placeholder_aborts) ... ok
+test_umlauts_count_two_bytes (test_asc_review_notes.ReviewNotesTests.test_umlauts_count_two_bytes) ... FAIL
+test_unknown_action_aborts_before_any_request (test_asc_review_notes.ReviewNotesTests.test_unknown_action_aborts_before_any_request) ... ok
+test_workflow_has_choice_unit_tests_and_secrets (test_asc_review_notes.WorkflowTests.test_workflow_has_choice_unit_tests_and_secrets) ... ok
+
+======================================================================
+ERROR: test_marketing_url_line_is_parsed_and_written (test_asc_version_texts.VersionTextsTests.test_marketing_url_line_is_parsed_and_written)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_version_texts.py", line 564, in test_marketing_url_line_is_parsed_and_written
+    self.assertEqual(wanted_texts(text)["en-US"]["marketingUrl"], MARKETING)
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+KeyError: 'marketingUrl'
+
+======================================================================
+FAIL: test_anlegen_aborts_before_writing_when_target_not_greater (test_asc_store_version.StoreVersionTests.test_anlegen_aborts_before_writing_when_target_not_greater)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 429, in test_anlegen_aborts_before_writing_when_target_not_greater
+    self.assert_failed(result, "nicht größer", project, "nichts geschrieben")
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 239, in assert_failed
+    self.assertIn(needle, result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'nicht größer' not found in 'keine bearbeitbare Version IOS (Zustände READY_FOR_SALE, READY_FOR_SALE), nichts geschrieben\n::error::keine bearbeitbare Version IOS, keine Zielversion, nichts geschrieben\n'
+
+======================================================================
+FAIL: test_anlegen_aborts_on_editable_version_with_other_number (test_asc_store_version.StoreVersionTests.test_anlegen_aborts_on_editable_version_with_other_number)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 455, in test_anlegen_aborts_on_editable_version_with_other_number
+    self.assert_failed(result, platform, other, "1.0.2")
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 239, in assert_failed
+    self.assertIn(needle, result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '1.0.2' not found in 'version IOS 1.0.3 id=V9 state=PREPARE_FOR_SUBMISSION\nkeine bearbeitbare Version MAC_OS (Zustände READY_FOR_SALE, READY_FOR_SALE), nichts geschrieben\n::error::kein gültiger Bau 1.0.3 für IOS, nichts geschrieben\n'
+
+======================================================================
+FAIL: test_anlegen_aborts_on_unreadable_marketing_version (test_asc_store_version.StoreVersionTests.test_anlegen_aborts_on_unreadable_marketing_version)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 445, in test_anlegen_aborts_on_unreadable_marketing_version
+    self.assert_failed(result, "MARKETING_VERSION")
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 239, in assert_failed
+    self.assertIn(needle, result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'MARKETING_VERSION' not found in 'keine bearbeitbare Version IOS (Zustände READY_FOR_SALE, READY_FOR_SALE), nichts geschrieben\n::error::keine bearbeitbare Version IOS, keine Zielversion, nichts geschrieben\n'
+
+======================================================================
+FAIL: test_anlegen_creates_ios_then_mac_version_from_project_yml (test_asc_store_version.StoreVersionTests.test_anlegen_creates_ios_then_mac_version_from_project_yml)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 410, in test_anlegen_creates_ios_then_mac_version_from_project_yml
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 233, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : keine bearbeitbare Version IOS (Zustände READY_FOR_SALE, READY_FOR_SALE), nichts geschrieben
+::error::keine bearbeitbare Version IOS, keine Zielversion, nichts geschrieben
+
+
+======================================================================
+FAIL: test_anlegen_plan_uses_only_get (test_asc_store_version.StoreVersionTests.test_anlegen_plan_uses_only_get)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 470, in test_anlegen_plan_uses_only_get
+    self.assert_ok(self.run_script(fake, "anlegen", project="1.0.2"))
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 233, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : keine bearbeitbare Version IOS (Zustände READY_FOR_SALE, READY_FOR_SALE), nichts geschrieben
+::error::keine bearbeitbare Version IOS, keine Zielversion, nichts geschrieben
+
+
+======================================================================
+FAIL: test_anlegen_prints_gegenprobe_and_state (test_asc_store_version.StoreVersionTests.test_anlegen_prints_gegenprobe_and_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 523, in test_anlegen_prints_gegenprobe_and_state
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 233, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : keine bearbeitbare Version IOS (Zustände READY_FOR_SALE, READY_FOR_SALE), nichts geschrieben
+::error::keine bearbeitbare Version IOS, keine Zielversion, nichts geschrieben
+
+
+======================================================================
+FAIL: test_anlegen_skips_existing_editable_ios_version (test_asc_store_version.StoreVersionTests.test_anlegen_skips_existing_editable_ios_version)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 463, in test_anlegen_skips_existing_editable_ios_version
+    self.assertIn("version IOS 1.0.2 schon vorhanden, übersprungen", result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'version IOS 1.0.2 schon vorhanden, übersprungen' not found in 'version IOS 1.0.2 id=V9 state=PREPARE_FOR_SUBMISSION\nkeine bearbeitbare Version MAC_OS (Zustände READY_FOR_SALE, READY_FOR_SALE), nichts geschrieben\nbau IOS gewählt: 140 von 1 gültigen\nbau MAC_OS gewählt: 140 von 1 gültigen\nversion MAC_OS 1.0.2 angelegt\nbau IOS zugeordnet: 140\nbau MAC_OS zugeordnet: 140\nversion IOS 1.0.2 id=V9 state=PREPARE_FOR_SUBMISSION\nversion MAC_OS 1.0.2 id=NEW state=PREPARE_FOR_SUBMISSION\ngegenprobe gleich=ja\nversion IOS 1.0 state=READY_FOR_SALE\nversion IOS 1.0.1 state=READY_FOR_SALE\nversion MAC_OS 1.0 state=READY_FOR_SALE\nversion MAC_OS 1.0.1 state=READY_FOR_SALE\nversion IOS 1.0.2 state=PREPARE_FOR_SUBMISSION\nversion MAC_OS 1.0.2 state=PREPARE_FOR_SUBMISSION\nversion IOS 1.0.2 id=V9 state=PREPARE_FOR_SUBMISSION\nbau IOS 1.0.2 (140) processingState=VALID\nreview-detail keines\nversion MAC_OS 1.0.2 id=NEW state=PREPARE_FOR_SUBMISSION\nbau MAC_OS 1.0.2 (140) processingState=VALID\nreview-detail keines\nzusammenfassung geschrieben=3\n'
+
+======================================================================
+FAIL: test_anlegen_without_matching_build_writes_nothing (test_asc_store_version.StoreVersionTests.test_anlegen_without_matching_build_writes_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 482, in test_anlegen_without_matching_build_writes_nothing
+    self.assert_failed(result, f"kein gültiger Bau 1.0.2 für {platform}", "nichts geschrieben")
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 239, in assert_failed
+    self.assertIn(needle, result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'kein gültiger Bau 1.0.2 für MAC_OS' not found in 'keine bearbeitbare Version IOS (Zustände READY_FOR_SALE, READY_FOR_SALE), nichts geschrieben\n::error::keine bearbeitbare Version IOS, keine Zielversion, nichts geschrieben\n'
+
+======================================================================
+FAIL: test_never_deletes_submits_or_writes_texts (test_asc_store_version.StoreVersionTests.test_never_deletes_submits_or_writes_texts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 387, in test_never_deletes_submits_or_writes_texts
+    self.assert_ok(self.run_script(fake, "anlegen", project=project))
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 233, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : keine bearbeitbare Version IOS (Zustände READY_FOR_SALE, READY_FOR_SALE), nichts geschrieben
+::error::keine bearbeitbare Version IOS, keine Zielversion, nichts geschrieben
+
+
+======================================================================
+FAIL: test_post_is_never_repeated (test_asc_store_version.StoreVersionTests.test_post_is_never_repeated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 491, in test_post_is_never_repeated
+    self.assert_failed(result, f"HTTP {status}")
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 239, in assert_failed
+    self.assertIn(needle, result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'HTTP 403' not found in 'keine bearbeitbare Version IOS (Zustände READY_FOR_SALE, READY_FOR_SALE), nichts geschrieben\n::error::keine bearbeitbare Version IOS, keine Zielversion, nichts geschrieben\n'
+
+======================================================================
+FAIL: test_verification_covers_both_new_versions (test_asc_store_version.StoreVersionTests.test_verification_covers_both_new_versions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 514, in test_verification_covers_both_new_versions
+    self.assert_failed(self.run_script(fake, "anlegen", project="1.0.2"), "Gegenprobe", "IOS", "MAC_OS")
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_store_version.py", line 239, in assert_failed
+    self.assertIn(needle, result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Gegenprobe' not found in 'keine bearbeitbare Version IOS (Zustände READY_FOR_SALE, READY_FOR_SALE), nichts geschrieben\n::error::keine bearbeitbare Version IOS, keine Zielversion, nichts geschrieben\n'
+
+======================================================================
+FAIL: test_marketing_url_must_be_https_with_host (test_asc_version_texts.VersionTextsTests.test_marketing_url_must_be_https_with_host)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_version_texts.py", line 595, in test_marketing_url_must_be_https_with_host
+    self.assert_failed(result)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_version_texts.py", line 196, in assert_failed
+    self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : version IOS 1.0.1 id=V2 state=PREPARE_FOR_SUBMISSION
+keine bearbeitbare Version MAC_OS (Zustände READY_FOR_SALE), nichts geschrieben
+en-US gesetzt: Beschreibung, Schlüsselwörter, Support-URL, Werbetext
+gegenprobe gleich=ja
+zusammenfassung geschrieben=1
+
+
+======================================================================
+FAIL: test_real_file_has_marketing_url_in_both_locales (test_asc_version_texts.VersionTextsTests.test_real_file_has_marketing_url_in_both_locales)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_version_texts.py", line 608, in test_real_file_has_marketing_url_in_both_locales
+    self.assertEqual(found.get("en-US"), 1, found)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : {'en-US': 0, 'de-DE': 0}
+
+======================================================================
+FAIL: test_notes_have_no_false_statements (test_asc_review_notes.NotesFileTests.test_notes_have_no_false_statements)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 355, in test_notes_have_no_false_statements
+    self.assertNotIn(false, text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: 'no account registration' unexpectedly found in '1. screen recording\nscreen recording of a physical iphone 16 pro, attached to this submission. the device runs the latest ios.\nit starts with launching the app and shows the typical flow: capture a task by voice (title, due date and tag are filled in from the spoken sentence), capture one by typing, the "new"\nlist, a task\'s detail view and the list of loose ends.\nthe app has no account registration, login or account deletion, no user-generated content that is shared with other users\n(so no reporting or blocking), and no paid content or in-app purchases.\n\n2. purpose and audience\nloose ends is a task inbox for people who think of things faster than they can file them. you say or type one sentence; the\napp turns it into a task with a title, a due date and tags. audience: anyone who keeps a to-do list on iphone, ipad, mac and\napple watch and wants capturing to cost no effort. value: nothing gets lost between "i should do that" and the list.\n\n3. how to use it\nno login and no sample files are needed. open the app, tap the capture button, and say or type for example "call the\ndentist tomorrow at 3 pm". the task appears under "new" with its due date and appears in "now" when it is due.\nmicrophone and speech recognition are asked on first use of voice capture; notifications when a task has a due date.\ncalendar, camera and location are optional and asked only when the user switches the matching feature on (calendar mirror,\nscanning a document into a task, reminder at a place).\n\n4. external services\n- apple intelligence (on-device foundation models) refines titles. it runs on the device; no task text leaves it. without\n  apple intelligence the app works fully: dates, times, tags and durations come from rules, not from the model.\n- apple speech recognition (on-device) for voice capture.\n- icloud (cloudkit, the user\'s private database) syncs tasks between the user\'s own devices. we run no server of our own\n  and have no access to the data.\n- apple mapkit for choosing a place, apple eventkit for the optional calendar mirror.\nno third-party sdks, analytics, advertising or payment services.\n\n5. regions\nthe app behaves the same in all regions. the interface and the capture rules are available in german and english. the only\ndifference is apple\'s own: apple intelligence is not offered on every device, language and region; where it is missing the\napp uses its rules and says so in a short note.\n\n6. regulated industry\nnot applicable. no regulated services, no protected third-party material.'
+
+======================================================================
+FAIL: test_notes_state_account_facts (test_asc_review_notes.NotesFileTests.test_notes_state_account_facts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 362, in test_notes_state_account_facts
+    self.assertIn(fact.lower(), text, fact)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'sign in with apple' not found in '1. screen recording\nscreen recording of a physical iphone 16 pro, attached to this submission. the device runs the latest ios.\nit starts with launching the app and shows the typical flow: capture a task by voice (title, due date and tag are filled in from the spoken sentence), capture one by typing, the "new"\nlist, a task\'s detail view and the list of loose ends.\nthe app has no account registration, login or account deletion, no user-generated content that is shared with other users\n(so no reporting or blocking), and no paid content or in-app purchases.\n\n2. purpose and audience\nloose ends is a task inbox for people who think of things faster than they can file them. you say or type one sentence; the\napp turns it into a task with a title, a due date and tags. audience: anyone who keeps a to-do list on iphone, ipad, mac and\napple watch and wants capturing to cost no effort. value: nothing gets lost between "i should do that" and the list.\n\n3. how to use it\nno login and no sample files are needed. open the app, tap the capture button, and say or type for example "call the\ndentist tomorrow at 3 pm". the task appears under "new" with its due date and appears in "now" when it is due.\nmicrophone and speech recognition are asked on first use of voice capture; notifications when a task has a due date.\ncalendar, camera and location are optional and asked only when the user switches the matching feature on (calendar mirror,\nscanning a document into a task, reminder at a place).\n\n4. external services\n- apple intelligence (on-device foundation models) refines titles. it runs on the device; no task text leaves it. without\n  apple intelligence the app works fully: dates, times, tags and durations come from rules, not from the model.\n- apple speech recognition (on-device) for voice capture.\n- icloud (cloudkit, the user\'s private database) syncs tasks between the user\'s own devices. we run no server of our own\n  and have no access to the data.\n- apple mapkit for choosing a place, apple eventkit for the optional calendar mirror.\nno third-party sdks, analytics, advertising or payment services.\n\n5. regions\nthe app behaves the same in all regions. the interface and the capture rules are available in german and english. the only\ndifference is apple\'s own: apple intelligence is not offered on every device, language and region; where it is missing the\napp uses its rules and says so in a short note.\n\n6. regulated industry\nnot applicable. no regulated services, no protected third-party material.' : Sign in with Apple
+
+======================================================================
+FAIL: test_lesen_never_writes (test_asc_review_notes.ReviewNotesTests.test_lesen_never_writes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 258, in test_lesen_never_writes
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 158, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : ::error::App Store Connect hat 4 iOS-Versionen 1.0
+
+
+======================================================================
+FAIL: test_limit_4000_bytes_passes (test_asc_review_notes.ReviewNotesTests.test_limit_4000_bytes_passes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 186, in test_limit_4000_bytes_passes
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 158, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : ::error::App Store Connect hat 4 iOS-Versionen 1.0
+
+
+======================================================================
+FAIL: test_notizen_aborts_before_writing_when_one_platform_fails (test_asc_review_notes.ReviewNotesTests.test_notizen_aborts_before_writing_when_one_platform_fails)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 304, in test_notizen_aborts_before_writing_when_one_platform_fails
+    self.assert_failed(result, "MAC_OS")
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 164, in assert_failed
+    self.assertIn(needle, result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'MAC_OS' not found in '::error::App Store Connect hat 2 iOS-Versionen 1.0\n'
+
+======================================================================
+FAIL: test_notizen_aborts_without_editable_version (test_asc_review_notes.ReviewNotesTests.test_notizen_aborts_without_editable_version)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 287, in test_notizen_aborts_without_editable_version
+    self.assert_failed(result, platform)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 164, in assert_failed
+    self.assertIn(needle, result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'IOS' not found in '::error::App Store Connect hat 2 iOS-Versionen 1.0\n'
+
+======================================================================
+FAIL: test_notizen_aborts_without_review_detail_and_creates_nothing (test_asc_review_notes.ReviewNotesTests.test_notizen_aborts_without_review_detail_and_creates_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 296, in test_notizen_aborts_without_review_detail_and_creates_nothing
+    self.assert_failed(result, platform, "keine App-Review-Informationen")
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 164, in assert_failed
+    self.assertIn(needle, result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'IOS' not found in '::error::App Store Connect hat 4 iOS-Versionen 1.0\n'
+
+======================================================================
+FAIL: test_notizen_patch_is_never_repeated (test_asc_review_notes.ReviewNotesTests.test_notizen_patch_is_never_repeated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 248, in test_notizen_patch_is_never_repeated
+    self.assert_failed(result, "IOS")
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 164, in assert_failed
+    self.assertIn(needle, result.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'IOS' not found in '::error::App Store Connect hat 4 iOS-Versionen 1.0\n'
+
+======================================================================
+FAIL: test_notizen_unchanged_when_equal (test_asc_review_notes.ReviewNotesTests.test_notizen_unchanged_when_equal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 232, in test_notizen_unchanged_when_equal
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 158, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : ::error::App Store Connect hat 4 iOS-Versionen 1.0
+
+
+======================================================================
+FAIL: test_notizen_writes_to_editable_version_of_each_platform (test_asc_review_notes.ReviewNotesTests.test_notizen_writes_to_editable_version_of_each_platform)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 210, in test_notizen_writes_to_editable_version_of_each_platform
+    self.assert_ok(result)
+    ~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 158, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : ::error::App Store Connect hat 4 iOS-Versionen 1.0
+
+
+======================================================================
+FAIL: test_umlauts_count_two_bytes (test_asc_review_notes.ReviewNotesTests.test_umlauts_count_two_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 199, in test_umlauts_count_two_bytes
+    self.assert_ok(self.run_notes(fake, "notizen", text="ä" * 2000))
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/scripts/test_asc_review_notes.py", line 158, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : ::error::App Store Connect hat 4 iOS-Versionen 1.0
+
+
+----------------------------------------------------------------------
+Ran 84 tests in 91.526s
+
+FAILED (failures=24, errors=1)

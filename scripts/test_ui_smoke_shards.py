@@ -197,7 +197,7 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(len(named), 1, "genau ein Job trägt den geschützten Namen")
         job = next(iter(named.values()))
         self.assertEqual(job["if"], "always()")
-        self.assertEqual(job["needs"], ["ui-smoke-shard"])
+        self.assertEqual(job["needs"], ["changes", "ui-smoke-shard"])  # #995
         self.assertFalse(self.jobs["ui-smoke-shard"]["strategy"]["fail-fast"])
 
     def test_ac5_six_parts_and_time_limits(self):

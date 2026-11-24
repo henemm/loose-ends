@@ -15,8 +15,29 @@ concurrency:
 # docs/reference/testflight.md and adjust runs-on here, in speech-stress.yml and in testflight.yml.
 
 jobs:
+  # #995: a pull request runs the app jobs only when it changes something they test (scripts/ci_changes.py);
+  # a push to main always runs everything. A skipped job counts as passed for the required checks.
+  changes:
+    name: Changed paths
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      app: ${{ steps.decide.outputs.app }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+      - id: decide
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT" != "pull_request" ]; then echo "app=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          git diff --name-only HEAD^1 HEAD | tee changed.txt
+          python3 scripts/ci_changes.py < changed.txt | tee -a "$GITHUB_OUTPUT"
+
   unit-tests:
     name: Unit Tests (macOS destination)
+    needs: changes
     runs-on: xcode-27
     steps:
       - uses: actions/checkout@v7
@@ -33,19 +54,23 @@ jobs:
           "$RUNNER_TEMP/script-tests/bin/pip" install --quiet 'pyyaml~=6.0' 'pillow~=12.0'
           "$RUNNER_TEMP/script-tests/bin/python" -m unittest discover -s scripts -p 'test_*.py' -v
       - name: Install XcodeGen
+        if: needs.changes.outputs.app == 'true'
         run: brew install xcodegen
       - name: Generate project
+        if: needs.changes.outputs.app == 'true'
         run: xcodegen generate
       # #499: XcodeGen rewrites every Info.plist and .entitlements from the project spec. A checked-in copy that lags
       # behind leaves a diff after every `generate`, so the tree must be clean here; the sync tests above catch
       # the same without Xcode.
       - name: Generate leaves the tree clean
+        if: needs.changes.outputs.app == 'true'
         run: |
           if ! git diff --exit-code --stat; then
             echo "::error title=generate::xcodegen generate changed checked-in files; commit the regenerated copies (#499)"
             exit 1
           fi
       - name: Build and test
+        if: needs.changes.outputs.app == 'true'
         run: |
           set -o pipefail
           xcodebuild test \
@@ -58,10 +83,10 @@ jobs:
             DEVELOPMENT_TEAM= \
             2>&1 | tee unit-tests.log | xcbeautify
       - name: Show crash and failure details
-        if: failure()
+        if: failure() && needs.changes.outputs.app == 'true'
         run: grep -n -E -i "crash|fatal error|restarting after|failed|error:" unit-tests.log | grep -v -E "^\S+:\s*$" | head -120 || true
       - name: Print measurement reports
-        if: always()
+        if: always() && needs.changes.outputs.app == 'true'
         continue-on-error: true
         # Measurement tests (Measurement/, e.g. #70) print their report to stdout between
         # `<NAME>-REPORT BEGIN` and `<NAME>-REPORT END`. xcbeautify swallows test output, and the raw
@@ -70,7 +95,7 @@ jobs:
         # list line, so a report copied from the log lost its bullets (#148).
         run: sed -n '/-REPORT BEGIN/,/-REPORT END/p' unit-tests.log | sed -E 's/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:.]+Z //'
       - name: Report skipped measurements
-        if: always()
+        if: always() && needs.changes.outputs.app == 'true'
         # Measurement suites gated on personal data are skipped here and still read as passed
         # (#149); the job summary says which ones did not measure. The two latency tests of #274 cancel
         # themselves without a speech model and read as passed too (#419): the summary names each one,
@@ -79,7 +104,7 @@ jobs:
           python3 scripts/measurement_status.py --markdown --latency-log unit-tests.log >> "$GITHUB_STEP_SUMMARY"
           python3 scripts/measurement_status.py --latency-warning --latency-log unit-tests.log
       - name: Upload test results
-        if: always()
+        if: always() && needs.changes.outputs.app == 'true'
         uses: actions/upload-artifact@v7
         with:
           name: TestResults
@@ -90,6 +115,8 @@ jobs:
 
   ios-build:
     name: Build (iOS Simulator)
+    needs: changes
+    if: needs.changes.outputs.app == 'true'
     runs-on: xcode-27
     steps:
       - uses: actions/checkout@v7
@@ -114,6 +141,8 @@ jobs:
   # new class can never fall out of the run. #939: a class over the target size is split by method. Each part runs on its own runner and simulator (#228: never two in one job).
   ui-smoke-plan:
     name: UI Smoke plan
+    needs: changes
+    if: needs.changes.outputs.app == 'true'
     runs-on: xcode-27
     timeout-minutes: 10
     outputs:
@@ -372,7 +401,7 @@ jobs:
   # cancelled or skipped part (or a failed plan) turns it red, so no red part can slip through as "skipped".
   ui-smoke:
     name: UI Smoke (iOS Simulator)
-    needs: [ui-smoke-shard]
+    needs: [changes, ui-smoke-shard]
     if: always()
     runs-on: xcode-27
     timeout-minutes: 10
@@ -383,8 +412,13 @@ jobs:
       - name: All parts green
         env:
           RESULT: ${{ needs.ui-smoke-shard.result }}
+          APP: ${{ needs.changes.outputs.app }}
         run: |
-          echo "ui-smoke-shard: $RESULT"
+          echo "ui-smoke-shard: $RESULT, app: $APP"
+          if [ "$APP" = "false" ] && [ "$RESULT" = "skipped" ]; then
+            echo "No app path changed (#995): the parts were not needed."
+            exit 0
+          fi
           if [ "$RESULT" != "success" ]; then
             echo "::error::UI Smoke parts ended with '$RESULT', not 'success'"
             exit 1
@@ -408,7 +442,8 @@ jobs:
   # LOOSEENDS_UI_LANG (LooseEndsUITests/LaunchLanguage.swift); screenshots carry `-<lang>` in their name.
   ui-smoke-lang:
     name: ui-smoke-lang
-    needs: languages
+    needs: [changes, languages]
+    if: needs.changes.outputs.app == 'true'
     runs-on: xcode-27
     timeout-minutes: 40
     strategy:
@@ -475,6 +510,8 @@ jobs:
   # The other UI jobs run on an iPhone only, where these tests skip themselves; pictures as the artifact `ui-ipad`.
   ui-ipad:
     name: UI iPad (iOS Simulator)
+    needs: changes
+    if: needs.changes.outputs.app == 'true'
     runs-on: xcode-27
     timeout-minutes: 45
     steps:
@@ -537,8 +574,12 @@ jobs:
   # An experiment: whether the xcode-27 runner allows Mac UI automation is shown by the first run.
   mac-gallery:
     name: Mac Gallery (macOS)
+    needs: changes
+    if: needs.changes.outputs.app == 'true'
     runs-on: xcode-27
-    timeout-minutes: 40
+    # #974: measured 36–41 min per run (gallery 16–21, click build 3–4, click 5–6, keyboard 10–12);
+    # 40 cancelled every second run without a test failure. 60 keeps a quarter in reserve.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
       - name: Select Xcode 27.0
