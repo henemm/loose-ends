@@ -69,6 +69,7 @@ Analysis runs on your device. Your tasks live in your iCloud. Only if you connec
 
 Schlüsselwörter: to-do,todo,reminders,dictation,list,GTD,context,notes,planner,inbox,watch,projects,due,capture
 Support-URL: https://www.henemm.com/footer-information/contact/
+Marketing-URL: https://www.henemm.com/loose-ends/
 Werbetext: Say it in one sentence. Loose Ends sorts it on your device and shows it to you on a calm page, like a good notebook. New: plan your day with Claude.
 Neu in dieser Version: Loose Ends now works with Claude. Sign in with Apple under Settings › Claude and add Loose Ends to Claude as a connector. Claude can then read your tasks, capture new ones, complete them and plan your day with you. Every change runs on your device, and Claude cannot delete anything. Also: tasks you type keep exactly your title. The widget is up to date as soon as you open the app. On the Mac, the menu bar window opens again with one click.
 
@@ -127,5 +128,6 @@ Die Auswertung läuft auf deinem Gerät. Deine Aufgaben liegen in deiner iCloud.
 
 Schlüsselwörter: Aufgaben,To-do,Todo,Erinnerungen,Diktat,Liste,GTD,Kontext,Notizen,Planer,Inbox,Watch,Projekte,Fällig
 Support-URL: https://www.henemm.com/footer-information/contact/
+Marketing-URL: https://www.henemm.com/loose-ends/
 Werbetext: Sag es in einem Satz. Loose Ends ordnet es auf deinem Gerät und zeigt es dir ruhig wie eine Seite im Notizbuch. Neu: Plane deinen Tag mit Claude.
 Neu in dieser Version: Loose Ends arbeitet jetzt mit Claude zusammen. Melde dich in den Einstellungen unter „Claude“ mit Apple an und füge Loose Ends in Claude als Connector hinzu. Dann kann Claude deine Aufgaben lesen, neue anlegen, abhaken und deinen Tag mit dir planen. Jede Änderung läuft auf deinem Gerät, löschen kann Claude nichts. Außerdem: Getippte Aufgaben behalten genau deinen Titel. Das Widget ist aktuell, sobald du die App öffnest. Auf dem Mac öffnet sich das Fenster in der Menüleiste wieder mit einem Klick.

@@ -3,22 +3,30 @@
 Aufruf: asc_store_version.py lesen|anlegen
 Umgebung wie asc_wait_build.py. `lesen` schreibt nichts: je Version Zustand, für die bearbeitbare je Plattform Bau,
 Zeichenzahlen je Feld (nie der Wortlaut), Bildsätze, Bilder, Platzierungen und ob ein Review-Detail existiert.
-`anlegen` plant zuerst nur mit GET, legt dann höchstens die eine Mac-Version mit der Nummer der bearbeitbaren
-iOS-Version an und ordnet je Plattform einen gültigen Bau zu, wo noch keiner hängt (höchste Buildnummer, nie
-umgehängt), prüft im selben Lauf gegen und gibt den Stand wie `lesen` aus. Es wird nie eingereicht und nie gelöscht.
+`anlegen` nimmt die Zielnummer aus `project.yml` (`MARKETING_VERSION`, Pfad per PROJECT_FILE überschreibbar, #625
+S5d-1), plant zuerst nur mit GET, legt dann je Plattform die fehlende Version an (iOS zuerst, dann Mac, je ein POST, nie
+wiederholt) und ordnet je Plattform einen gültigen Bau zu, wo noch keiner hängt (höchste Buildnummer, nie umgehängt),
+prüft im selben Lauf gegen und gibt den Stand wie `lesen` aus. Es wird nie eingereicht und nie gelöscht.
 """
+import json
+import os
 import re
 import sys
 import time
+import urllib.error
 import urllib.parse
+import urllib.request
+from pathlib import Path
 
 from asc_beta_probe import attributes, records
 from asc_version_texts import EDITABLE, PLATFORMS, app_versions, editable_version, localizations
-from asc_wait_build import Fatal, find_app_id, get_json, read_config
-from asc_what_to_test import ATTEMPTS, get_data, is_account_build, send_json
+from asc_wait_build import Fatal, find_app_id, get_json, make_token, read_config
+from asc_what_to_test import ATTEMPTS, error_codes, get_data, is_account_build
 
 ACTIONS = ("lesen", "anlegen")
 FIELDS = ("description", "keywords", "promotionalText", "whatsNew", "supportUrl")
+NUMBER = r"\d+(\.\d+)*"
+PROJECT_FILE = Path(__file__).resolve().parent.parent / "project.yml"
 BUILD_HINT = ": der Bau muss gültig, nicht abgelaufen und zu Plattform und Version passend sein"
 
 
@@ -103,17 +111,41 @@ def read_state(config, versions):
             report_version(config, platform, chosen["id"])
 
 
-def plan_mac_version(versions):
-    """(Zielversion, bearbeitbare iOS-Version, bearbeitbare Mac-Version oder None); jede Abweichung → Fatal, bevor geschrieben wird."""
-    ios = editable_version(versions, "IOS")
-    if ios is None:
-        raise Fatal("keine bearbeitbare Version IOS, keine Zielversion, nichts geschrieben")
-    target = attributes(ios).get("versionString") or "?"
-    mac = editable_version(versions, "MAC_OS")
-    if mac is not None and attributes(mac).get("versionString") != target:
-        raise Fatal(f"bearbeitbare Version MAC_OS {attributes(mac).get('versionString')} weicht von IOS {target} ab, "
-                    "nichts geschrieben")
-    return target, ios, mac
+def target_version():
+    """Zielnummer aus `MARKETING_VERSION` in project.yml; fehlt sie oder ist sie keine Nummer → Fatal ohne Dateiinhalt."""
+    path = Path(os.environ.get("PROJECT_FILE") or PROJECT_FILE)
+    try:
+        text = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as error:
+        raise Fatal(f"project.yml nicht lesbar ({type(error).__name__}), MARKETING_VERSION unbekannt")
+    found = re.search(r'^\s*MARKETING_VERSION:\s*"?([^"\n]*?)"?\s*$', text, re.MULTILINE)
+    if found is None or not re.fullmatch(NUMBER, found.group(1)):
+        raise Fatal("MARKETING_VERSION in project.yml fehlt oder ist keine Nummer, nichts geschrieben")
+    return found.group(1)
+
+
+def numeric(number):
+    return [int(part) for part in number.split(".")] if re.fullmatch(NUMBER, number or "") else []
+
+
+def plan_versions(versions, target):
+    """{Plattform: bearbeitbare Version oder None}; andere Nummer, mehrere oder Ziel nicht größer → Fatal vor dem Schreiben."""
+    chosen = {}
+    for platform in PLATFORMS:
+        found = editable_version(versions, platform)
+        if found is not None and attributes(found).get("versionString") != target:
+            raise Fatal(f"bearbeitbare Version {platform} {attributes(found).get('versionString')} weicht von der "
+                        f"Zielnummer {target} ab, nichts geschrieben")
+        if found is None:
+            numbers = [attributes(item).get("versionString") or "?" for item in versions
+                       if attributes(item).get("platform") == platform]
+            # unlesbare Nummer sperrt (fail-closed)
+            higher = [number for number in numbers if not numeric(number) or numeric(number) >= numeric(target)]
+            if higher:
+                raise Fatal(f"Zielnummer {target} ist nicht größer als {platform} {', '.join(higher)}, "
+                            "nichts geschrieben")
+        chosen[platform] = found
+    return chosen
 
 
 def pick_build(config, app_id, platform, target):
@@ -154,10 +186,26 @@ def build_lock(config, build_id):
     return None
 
 
-def send(config, method, path, payload, hint=""):
-    """Schreibaufruf; 403 und 409 werden zu einer klaren Meldung ohne Apples Rohantwort."""
+def send_once(config, method, path, payload):
+    """Genau ein Schreibaufruf, nie wiederholt (#625 S5d-1); Fehler als Fatal mit Status und Apples Codes, ohne Rohantwort."""
+    token = make_token(config["key_id"], config["issuer"], config["key_file"])
+    request = urllib.request.Request(config["base"] + path, data=json.dumps(payload).encode(), method=method,
+                                     headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"})
     try:
-        send_json(config, method, path, payload)
+        with urllib.request.urlopen(request, timeout=30):
+            return
+    except urllib.error.HTTPError as error:
+        codes = error_codes(error)
+        raise Fatal(f"Apple antwortet HTTP {error.code} für {method} {path.split('?')[0]}, nicht wiederholt"
+                    + (f" (codes: {', '.join(codes)})" if codes else ""))
+    except (urllib.error.URLError, TimeoutError, OSError) as error:
+        raise Fatal(f"keine Antwort von Apple für {method} ({type(error).__name__}), nicht wiederholt")
+
+
+def send(config, method, path, payload, hint=""):
+    """Schreibaufruf (einmal); 403 und 409 werden zu einer klaren Meldung ohne Apples Rohantwort."""
+    try:
+        send_once(config, method, path, payload)
     except Fatal as error:
         if "HTTP 403" in str(error):
             raise Fatal(f"Apple lehnt {method} ab (HTTP 403): Schlüssel ohne Recht oder Version gesperrt")
@@ -173,23 +221,21 @@ def assign_build(config, version_id, build_id):
          {"data": {"type": "builds", "id": build_id}}, BUILD_HINT)
 
 
-def the_mac_version(versions, target):
-    mine = [item for item in versions if attributes(item).get("platform") == "MAC_OS"
+def the_version(versions, platform, target):
+    mine = [item for item in versions if attributes(item).get("platform") == platform
             and attributes(item).get("appStoreState") == EDITABLE]
     if len(mine) != 1 or attributes(mine[0]).get("versionString") != target:
         found = ", ".join(attributes(item).get("versionString") or "?" for item in mine) or "keine"
-        raise Fatal(f"Gegenprobe: MAC_OS Soll genau eine bearbeitbare Version {target}, Ist {found}")
+        raise Fatal(f"Gegenprobe: {platform} Soll genau eine bearbeitbare Version {target}, Ist {found}")
     return mine[0]
 
 
 def verify(config, app_id, target):
-    """Gegenprobe: genau eine bearbeitbare Mac-Version, beide bearbeitbaren Versionen mit Bau der Zielversion."""
+    """Gegenprobe: je Plattform genau eine bearbeitbare Version mit Zielnummer und ein Bau der Zielnummer."""
     versions = app_versions(config, app_id)
-    the_mac_version(versions, target)
     wrong = []
     for platform in PLATFORMS:
-        chosen = editable_version(versions, platform)
-        pre = current_build(config, chosen["id"])[1] if chosen else None
+        pre = current_build(config, the_version(versions, platform, target)["id"])[1]
         if pre != target:
             wrong.append(f"{platform} Soll Bau {target}, Ist {pre or 'kein Bau'}")
     if wrong:
@@ -198,10 +244,9 @@ def verify(config, app_id, target):
     return versions
 
 
-def anlegen(config, app_id):
-    """Plan nur mit GET, dann Mac-Version und fehlende Bau-Zuordnungen; gibt die Zahl der Schreibaufrufe zurück."""
-    target, ios, mac = plan_mac_version(app_versions(config, app_id))
-    plan, chosen = {}, {"IOS": ios, "MAC_OS": mac}
+def plan_builds(config, app_id, chosen, target):
+    """Nur GET: je Plattform ohne zugeordneten Bau der gewählte Bau (für eine neue Version nur nach Plattform und Ziel)."""
+    plan = {}
     for platform in PLATFORMS:
         present = current_build(config, chosen[platform]["id"])[0] if chosen[platform] else None
         if present is not None:
@@ -209,16 +254,31 @@ def anlegen(config, app_id):
                   flush=True)
         else:
             plan[platform] = pick_build(config, app_id, platform, target)
+    return plan
+
+
+def create_versions(config, app_id, chosen, target):
+    """Legt fehlende Versionen an, iOS zuerst, je ein POST, nie wiederholt; gibt die Zahl der Schreibaufrufe zurück."""
     written = 0
-    if mac is None:
+    for platform in PLATFORMS:
+        if chosen[platform] is not None:
+            print(f"version {platform} {target} schon vorhanden, übersprungen", flush=True)
+            continue
         send(config, "POST", "/v1/appStoreVersions", {"data": {
-            "type": "appStoreVersions", "attributes": {"platform": "MAC_OS", "versionString": target},
+            "type": "appStoreVersions", "attributes": {"platform": platform, "versionString": target},
             "relationships": {"app": {"data": {"type": "apps", "id": app_id}}}}})
         written += 1
-        chosen["MAC_OS"] = the_mac_version(app_versions(config, app_id), target)
-        print(f"version MAC_OS {target} angelegt", flush=True)
-    else:
-        print(f"version MAC_OS {target} schon vorhanden, übersprungen", flush=True)
+        chosen[platform] = the_version(app_versions(config, app_id), platform, target)
+        print(f"version {platform} {target} angelegt", flush=True)
+    return written
+
+
+def anlegen(config, app_id):
+    """Plan nur mit GET, dann fehlende Versionen und Bau-Zuordnungen; gibt die Zahl der Schreibaufrufe zurück."""
+    target = target_version()
+    chosen = plan_versions(app_versions(config, app_id), target)
+    plan = plan_builds(config, app_id, chosen, target)
+    written = create_versions(config, app_id, chosen, target)
     for platform, found in plan.items():
         assign_build(config, chosen[platform]["id"], found["id"])
         written += 1
