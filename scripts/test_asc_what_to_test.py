@@ -237,7 +237,6 @@ PROJECT = ROOT / "project.yml"
 APP_ENTITLEMENTS = ROOT / "LooseEnds" / "LooseEnds.entitlements"
 APP_INFO = ROOT / "LooseEnds" / "Info.plist"
 APPLESIGNIN = "com.apple.developer.applesignin"
-SWITCH_LINE = "plutil -replace LEAccountEnabled -bool YES LooseEnds/Info.plist"
 CHECK_BEGIN, CHECK_END = "# account-switch-check:begin", "# account-switch-check:end"
 
 
@@ -295,30 +294,34 @@ class AccountBuildWorkflowTests(unittest.TestCase):
         if member not in container:
             self.fail(f"{member!r} fehlt{f' ({msg})' if msg else ''}")
 
-    # AC-3
-    # 2026-11-15: Vorgabe an, ein Testbau von Hand schaltet die Gruppe „Claude“ nicht mehr ab; ein v*-Tag bleibt ohne
-    def test_workflow_has_konto_input_default_true(self):
-        inputs = self.workflow[self.workflow.index("    inputs:\n"):self.workflow.index("  push:\n")]
-        found = re.search(r"\n      konto:\n((?:        .*\n)+)", inputs)
-        self.assertIsNotNone(found, "Eingabe konto fehlt")
-        self.assertIn("type: boolean", found.group(1))
-        self.assertIn("default: true", found.group(1))
-        top_env = self.workflow[self.workflow.index("\nenv:\n"):self.workflow.index("\njobs:\n")]
-        self.assertIn("ACCOUNT_BUILD: ${{ inputs.konto == true && 'true' || 'false' }}", top_env)
-        self.assertEqual(self.workflow.count("inputs.konto"), 1)
+    # #625 S5c AC-1: der Schalter steht an der Quelle (S5b), der Lauf kennt keine Eingabe konto mehr
+    def test_workflow_has_no_konto_input(self):
+        import yaml
+        flow = yaml.safe_load(self.workflow)
+        on = flow.get("on", flow.get(True))  # PyYAML liest den Schlüssel `on` als True
+        inputs = on["workflow_dispatch"]["inputs"]
+        self.assertNotIn("konto", inputs)
+        self.assertIn("what_to_test", inputs)
+        self.assertIn("cleanup_dry_run", inputs)
+        self.assertEqual(on["push"]["tags"], ["v*"])
+        self.assertNotIn("ACCOUNT_BUILD", self.workflow)
+        self.assertNotIn("inputs.konto", self.workflow)
+        head = self.workflow[: self.workflow.index("\njobs:\n")]
+        self.assertNotIn("Konto-Bau", head)
 
-    # AC-4
-    def test_switch_step_is_conditional_and_between_generate_and_archive(self):
-        self.assertEqual(self.workflow.count(SWITCH_LINE), 2)
-        for name, archive in (("upload", "Archive"), ("upload-mac", "Archive (macOS)")):
+    # #625 S5c AC-2
+    def test_no_account_switch_step(self):
+        self.assertNotIn("- name: Set the account switch\n", self.workflow)
+        self.assertNotIn("plutil -replace LEAccountEnabled", self.workflow)
+        self.assertNotIn("privacy_manifest.py apply", self.workflow)
+        for name in ("upload", "upload-mac"):
             text = job(self.workflow, name)
-            switch = step(text, "Set the account switch")
-            self.assertIn("if: env.ACCOUNT_BUILD == 'true'", switch, name)
-            self.assertIn(SWITCH_LINE, switch, name)
-            self.assertLess(text.index("- name: Generate project\n"), text.index("- name: Set the account switch\n"), name)
-            self.assertLess(text.index("- name: Set the account switch\n"), text.index(f"- name: {archive}\n"), name)
+            aps = step(text, "Set the APNs environment")
+            self.assertNotIn("if:", aps, name)
+            self.assertLess(text.index("- name: Generate project\n"), text.index("- name: Set the APNs environment\n"),
+                            name)
 
-    # AC-5
+    # AC-5, #625 S5c AC-4
     def test_archive_checks_prove_switch_type_and_value(self):
         for name, check in (("upload", "Verify the archive is built against the iOS 27 SDK"),
                             ("upload-mac", "Verify the macOS archive")):
@@ -326,29 +329,52 @@ class AccountBuildWorkflowTests(unittest.TestCase):
             for needle in ("LEAccountEnabled", "plutil -type", CHECK_BEGIN, CHECK_END):
                 self.assertIn(needle, text, name)
             self.assertIn("account_switch ", text[text.index(CHECK_END):], name)
+            self.assertIn("privacy_manifest.py check", text, name)
+            self.assertNotIn("ACCOUNT_BUILD", text, name)
 
-    # AC-5: der Prüfausschnitt selbst, gegen Beispiel-Plists ausgeführt (4 Fälle × 2 Eingaben)
+    # #625 S5c AC-3: der Prüfausschnitt selbst, gegen Beispiel-Plists ausgeführt (5 Fälle × 2 Umgebungswerte);
+    # nur Bool true besteht, ACCOUNT_BUILD in der Umgebung ändert nichts
     def test_switch_check_logic(self):
         snippets = re.findall(re.escape(CHECK_BEGIN) + r"\n(.*?)\n\s*" + re.escape(CHECK_END), self.workflow, re.S)
         self.assertEqual(len(snippets), 2, "Prüfausschnitt fehlt in der iOS- oder Mac-Prüfung")
-        cases = {"bool true": "<true/>", "bool false": "<false/>", "string YES": "<string>YES</string>", "fehlt": ""}
-        expected = {("bool true", "true"): 0, ("bool true", "false"): 1, ("bool false", "true"): 1,
-                    ("bool false", "false"): 0, ("string YES", "true"): 1, ("string YES", "false"): 1,
-                    ("fehlt", "true"): 1, ("fehlt", "false"): 1}
+        self.assertEqual(snippets[0], snippets[1], "die beiden Prüfausschnitte sind nicht gleich")
+        cases = {"bool true": "<true/>", "bool false": "<false/>", "string YES": "<string>YES</string>",
+                 "string true": "<string>true</string>", "fehlt": ""}
+        expected = {(case, env): 0 if case == "bool true" else 1 for case in cases for env in ("true", "false")}
         with tempfile.TemporaryDirectory() as folder:
             for index, snippet in enumerate(snippets):
+                self.assertNotIn("ACCOUNT_BUILD", snippet, f"Prüfausschnitt {index}")
                 results = {}
                 for case, value in cases.items():
                     plist = Path(folder) / f"{index}-{case.replace(' ', '-')}.plist"
                     entry = f"<key>LEAccountEnabled</key>{value}" if value else ""
                     plist.write_text('<?xml version="1.0" encoding="UTF-8"?>\n<plist version="1.0"><dict>'
                                      f"<key>CFBundleIdentifier</key><string>x</string>{entry}</dict></plist>\n")
-                    for wanted in ("true", "false"):
+                    for env in ("true", "false"):
                         script = f'row() {{ :; }}\nfail=0\n{snippet}\naccount_switch "$1"\n[ "$fail" = 0 ]\n'
                         run = subprocess.run(["bash", "-c", script, "check", str(plist)], capture_output=True,
-                                             text=True, env=dict(os.environ, ACCOUNT_BUILD=wanted))
-                        results[(case, wanted)] = 0 if run.returncode == 0 else 1
+                                             text=True, env=dict(os.environ, ACCOUNT_BUILD=env))
+                        results[(case, env)] = 0 if run.returncode == 0 else 1
                 self.assertEqual(results, expected, f"Prüfausschnitt {index}")
+
+    # #625 S5c AC-8: Hand- und Tag-Lauf gehen durch dieselben Prüfungen
+    def test_tag_run_has_no_special_path(self):
+        for needle in ("github.ref", "github.event_name", "startsWith(github.ref, 'refs/tags"):
+            for line in self.workflow.splitlines():
+                if needle in line:
+                    self.assertNotRegex(line, r"LEAccountEnabled|account|konto|privacy_manifest", line)
+        for name, check in (("upload", "Verify the archive is built against the iOS 27 SDK"),
+                            ("upload-mac", "Verify the macOS archive")):
+            text = step(job(self.workflow, name), check)
+            self.assertIsNone(re.search(r"^\s*if:", text, re.M), f"{name}: Archivprüfung hängt an einer Bedingung")
+
+    # #625 S5c AC-10: die Quelle bleibt, wie S5b sie gesetzt hat
+    def test_source_files_unchanged_in_marker_set(self):
+        self.assertIs(app_target("info", "LooseEnds/Info.plist").get("LEAccountEnabled"), True)
+        from privacy_manifest import ACCOUNT_TYPES
+        manifest = plistlib.loads((ROOT / "LooseEnds" / "PrivacyInfo.xcprivacy").read_bytes())
+        found = [entry["NSPrivacyCollectedDataType"] for entry in manifest.get("NSPrivacyCollectedDataTypes", [])]
+        self.assertEqual(sorted(found), sorted(t["NSPrivacyCollectedDataType"] for t in ACCOUNT_TYPES))
 
     # AC-6
     def test_archive_checks_prove_applesignin_entitlement(self):
@@ -377,69 +403,65 @@ class AccountBuildMarkTests(unittest.TestCase):
             if saved is not None:
                 os.environ["ACCOUNT_BUILD"] = saved
 
-    # AC-7
-    def test_mark_is_added_to_every_section(self):
-        marked = asc_what_to_test.mark_account_build({"de-DE": "Deutsch", "en-US": "English"})
-        self.assertEqual(marked, {"de-DE": f"Deutsch\n{mark()}", "en-US": f"English\n{mark()}"})
-        self.assertEqual(asc_what_to_test.mark_account_build(marked), marked)
+    # #625 S5c AC-5: keine Marke mehr, auch nicht mit ACCOUNT_BUILD=true in der Umgebung
+    def test_mark_never_added(self):
+        mark()
+        self.assertFalse(hasattr(asc_what_to_test, "mark_account_build"))
         self.assertTrue(asc_what_to_test.is_account_build(["frei", f"x\n{mark()}"]))
         self.assertFalse(asc_what_to_test.is_account_build(["frei", "auch frei"]))
-        self.assertFalse(asc_what_to_test.is_account_build([]))
-
-    # AC-7
-    def test_mark_not_added_when_off(self):
-        mark()
-        for account in (None, "false", "TRUE", "1", "yes"):
-            fake = FakeASC([{"id": "L1", "attributes": {"locale": "de-DE"}}])
+        for account in (None, "true", "false"):
+            fake = FakeASC([{"id": "L2", "attributes": {"locale": "de-DE"}}])
             self.addCleanup(fake.close)
-            result = self.run_with(fake, TEXT, account)
+            result = self.run_with(fake, "de: Deutsch\nen: English", account)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            self.assertEqual([body["data"]["attributes"]["whatsNew"] for _, _, body in fake.writes], [TEXT, TEXT],
-                             account)
+            sent = {method: body["data"]["attributes"]["whatsNew"] for method, _, body in fake.writes}
+            self.assertEqual(sent, {"PATCH": "Deutsch", "POST": "English"}, account)
 
-    # AC-7
-    def test_mark_respects_length_limit(self):
+    # #625 S5c AC-5
+    def test_no_length_surcharge(self):
         fake = FakeASC([{"id": "L1", "attributes": {"locale": "de-DE"}}])
         self.addCleanup(fake.close)
         result = self.run_with(fake, "x" * 3990, "true")
-        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-        self.assertIn("at most 4000", result.stdout)
-        self.assertEqual(fake.writes, [])
-        fake = FakeASC([{"id": "L1", "attributes": {"locale": "de-DE"}}])
-        self.addCleanup(fake.close)
-        self.assertEqual(self.run_with(fake, "x" * 3990, "false").returncode, 0)
-
-    # AC-7
-    def test_mark_in_every_written_localization(self):
-        fake = FakeASC([{"id": "L2", "attributes": {"locale": "de-DE"}}])
-        self.addCleanup(fake.close)
-        result = self.run_with(fake, "de: Deutsch\nen: English", "true")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        sent = {method: body["data"]["attributes"]["whatsNew"] for method, _, body in fake.writes}
-        self.assertEqual(sent, {"PATCH": f"Deutsch\n{mark()}", "POST": f"English\n{mark()}"})
+        self.assertEqual([body["data"]["attributes"]["whatsNew"] for _, _, body in fake.writes][0], "x" * 3990)
 
-    # AC-8
+    # AC-8, #625 S5c AC-5
     def test_mark_defined_once(self):
         wording = mark()
+        script = SCRIPT.read_text(encoding="utf-8")
         store = (SCRIPTS / "asc_store_version.py").read_text(encoding="utf-8")
-        self.assertEqual(SCRIPT.read_text(encoding="utf-8").count(wording), 1)
+        self.assertEqual(script.count(wording), 1)
+        self.assertNotIn("ACCOUNT_BUILD\"", script)
+        self.assertNotIn("'ACCOUNT_BUILD'", script)
+        self.assertNotIn("mark_account_build", script)
         self.assertEqual(store.count(wording), 0)
         self.assertRegex(store, r"from asc_what_to_test import [^\n]*(ACCOUNT_BUILD_MARK|is_account_build)")
         self.assertEqual(WORKFLOW.read_text(encoding="utf-8").count(wording), 0)
 
-    # AC-12
-    def test_docs_name_account_build(self):
+    # #625 S5c AC-6
+    def test_store_lock_docstring_names_old_builds(self):
+        import asc_store_version
+        doc = asc_store_version.build_lock.__doc__ or ""
+        self.assertIn("alte", doc)
+        self.assertNotIn("Eingabe konto", doc)
+        self.assertNotIn("Eingabe `konto`", doc)
+
+    # #625 S5c AC-9
+    def test_docs_describe_removed_mechanism(self):
         wording = mark()
         guide = (ROOT / "docs" / "reference" / "testflight.md").read_text(encoding="utf-8")
-        for needle in ("konto", APPLESIGNIN, "LEAccountEnabled"):
-            self.assertIn(needle, guide)
         claude = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
         ship = claude[claude.index("\n## Ship\n") + 1:]
         ship = ship[: ship.index("\n## ")]
-        self.assertIn("konto", ship)
-        self.assertNotIn(wording, guide)
-        self.assertNotIn(wording, claude)
-
+        for text in (guide, ship):
+            for needle in ("#625 S5b", "#625 S5c", "--account true", "asc_store_version.py"):
+                self.assertIn(needle, text)
+        for text in (guide, claude):
+            for gone in ("`konto` on", "Haken „Konto-Bau“", "until it is removed in #625 S5c",
+                         "bis dahin gelten die Sätze zu `konto` unverändert", wording):
+                self.assertNotIn(gone, text)
+        self.assertIn("manual runs carry over the previous build's open test points", claude)
+        self.assertNotIn("manual runs keep the account group", claude)
 
 if __name__ == "__main__":
     unittest.main()

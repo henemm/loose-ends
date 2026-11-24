@@ -180,26 +180,28 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(len(found), 1, f"{job}: Schritt '{name}' fehlt oder doppelt")
         return found[0]
 
-    def test_apply_only_in_the_account_steps(self):  # AC-9
+    def test_apply_not_in_workflow(self):  # #625 S5c AC-2: der Schalter steht an der Quelle, kein Schritt schreibt ihn
         for job in ("upload", "upload-mac"):
-            switch = self.step(job, "Set the account switch")
-            self.assertEqual(switch["if"], "env.ACCOUNT_BUILD == 'true'")
-            self.assertIn(APPLY, switch["run"])
             names = [s.get("name") for s in self.steps(job)]
-            self.assertLess(names.index("Generate project"), names.index("Set the account switch"))
-        self.assertEqual(self.text.count("privacy_manifest.py apply"), 2)
+            self.assertNotIn("Set the account switch", names, job)
+            self.assertIn("Set the APNs environment", names, job)
+        self.assertNotIn("privacy_manifest.py apply", self.text)
+        self.assertNotIn(APPLY, self.text)
+        self.assertNotIn("plutil -replace LEAccountEnabled", self.text)
 
-    def test_archive_checks_call_check_with_the_switch(self):  # AC-10
+    def test_archive_checks_call_check_with_account_true(self):  # #625 S5c AC-4
         ios = [s["run"] for s in self.steps("upload") if CHECK in s.get("run", "")]
         mac = [s["run"] for s in self.steps("upload-mac") if CHECK in s.get("run", "")]
         self.assertEqual(len(ios), 1)
         self.assertEqual(len(mac), 1)
-        self.assertIn('--account "$ACCOUNT_BUILD"', ios[0])
-        self.assertIn('--account "$ACCOUNT_BUILD"', mac[0])
         self.assertIn('"$APP/Contents/Resources/PrivacyInfo.xcprivacy"', mac[0])
         for body in (ios[0], mac[0]):
             line = next(l for l in body.splitlines() if CHECK in l)
+            self.assertIn("--account true", line)
             self.assertIn("fail=1", line)
+            self.assertNotIn("ACCOUNT_BUILD", body)
+            self.assertNotIn("--account false", body)
+            self.assertNotIn('--account "$', body)
 
     def test_ios_check_targets_only_the_app_bundle(self):  # AC-10
         body = next(s["run"] for s in self.steps("upload") if CHECK in s.get("run", ""))

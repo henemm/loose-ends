@@ -295,7 +295,7 @@ TestFlight (manual run or a `v*` tag). Setup for the account owner: `docs/refere
 Since #174 it runs on the `xcode-27` preview image with Xcode 27.0 pinned and never lowers the
 deployment targets; a step before the upload checks every target in the archive (27 SDK, minimum 27.0,
 version, dSYM, privacy strings) and stops the upload on any mismatch.
-The input `konto` (on by default, never on a tag) has no effect on the content since #625 S5b, where `LEAccountEnabled` and the three manifest types moved into the source; until it is removed in #625 S5c it still demands them in both archive checks (as Bool, with `applesignin`), marks the build in „Was testen“, and `scripts/asc_store_version.py` never assigns a marked or unreadable build to a store version (#615 S4c-2a).
+The TestFlight run has no input `konto` any more (#625 S5c): `LEAccountEnabled` and the three manifest types sit in the source since #625 S5b, both archive checks demand `LEAccountEnabled` as Bool `true` (with `applesignin`) and run `privacy_manifest.py check … --account true`, a hand run and a `v*` tag build the same, and „Was testen“ carries no mark; `scripts/asc_store_version.py` still never assigns an old marked or unreadable build to a store version (#615 S4c-2a).
 
 **Every TestFlight build says what to test (Henning, 2026-10-12, #347).** A manual run requires the
 input `what_to_test`; a `v*` tag uses the tagged commit's message. After Apple reports the build as
@@ -357,7 +357,7 @@ priority (2026-10-12: #355 moved to the top). Raw notes from him (no body yet) g
 `#N` with its sub-issues, or `#N` alone if it has none (an Epic or a single issue cut out of one). Whatever another session carries as its
 leading `#N` is left out (the more specific number wins), and two sessions starting with the same `#N` get no proposal (`NEXT=unknown`);
 check `herdr workspace list` before naming a session. Shared things belong to the session holding the Epic: deploying the service and
-starting TestFlight builds (manual runs keep the account group, `konto` on, and carry over the previous build's open test points).
+starting TestFlight builds (manual runs carry over the previous build's open test points).
 `scripts/next-ticket.sh` proposes the next free lowest-level issue of that scope: it skips In
 progress/In review, an open PR (`Closes/Fixes/Refs #N` or branch name), a live session lock (phase below `phase8_complete`)
 and an open "blocked by"; order is Priority, then board order; it reports hotspot overlap (`project.yml`, schema,

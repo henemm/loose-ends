@@ -26,8 +26,9 @@ SET_LINE = "plutil -replace LEApsEnvironment -string production"
 STEP = "Set the APNs environment"
 APS_BEGIN, APS_END = "# aps-environment-check:begin", "# aps-environment-check:end"
 ACCOUNT_BEGIN, ACCOUNT_END = "# account-switch-check:begin", "# account-switch-check:end"
-# SHA-256 der beiden account-switch-check-Blöcke vor diesem Schnitt (#615 S4c-2a); beide sind gleich
-ACCOUNT_BLOCK_SHA = "61a92665763135516a59c8583f71c6577e93aa8d98e591e171af777a6d8427d9"
+# SHA-256 der beiden account-switch-check-Blöcke seit #625 S5c (Bool true fest, kein ACCOUNT_BUILD); beide sind gleich.
+# Stand vor #625 S5c: 61a92665763135516a59c8583f71c6577e93aa8d98e591e171af777a6d8427d9
+ACCOUNT_BLOCK_SHA = "de7cec37b519554b0bb65ce46b27f828d06d25b45c22477c0849d53671f4b263"
 JOBS = (("upload", "Archive", "Verify the archive is built against the iOS 27 SDK"),
         ("upload-mac", "Archive (macOS)", "Verify the macOS archive"))
 
@@ -120,15 +121,20 @@ class WorkflowTests(WorkflowBase):
                 self.assertEqual(results, expected, f"Prüfausschnitt {index}")
 
     # AC-7
-    def test_account_switch_blocks_untouched(self):
+    def test_account_switch_blocks_pinned(self):  # #625 S5c AC-7: bewusst neu gesetzt, nicht mitgezogen
         blocks = re.findall(re.escape(ACCOUNT_BEGIN) + r"\n(.*?)" + re.escape(ACCOUNT_END), self.text, re.S)
         self.assertEqual(len(blocks), 2)
+        own = Path(__file__).read_text(encoding="utf-8")
+        old_sha = re.search(r"^# Stand vor #625 S5c: ([0-9a-f]{64})$", own, re.M).group(1)
+        self.assertEqual(own.count(old_sha), 1)  # nur noch als Kommentar
         for block in blocks:
-            self.assertEqual(hashlib.sha256(block.encode()).hexdigest(), ACCOUNT_BLOCK_SHA)
+            digest = hashlib.sha256(block.encode()).hexdigest()
+            self.assertNotEqual(digest, old_sha)
+            self.assertEqual(digest, ACCOUNT_BLOCK_SHA)
             self.assertNotIn(KEY, block)
-        for job, _, _ in JOBS:
-            self.assertEqual(self.step(job, "Set the account switch")["if"], "env.ACCOUNT_BUILD == 'true'")
-        self.assertEqual(self.text.count("plutil -replace LEAccountEnabled"), 2)
+            self.assertNotIn("ACCOUNT_BUILD", block)
+            self.assertIn('[ "$value" = true ]', block)
+        self.assertEqual(self.text.count("plutil -replace LEAccountEnabled"), 0)
 
 
 def app_entitlement_properties():

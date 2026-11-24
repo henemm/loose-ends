@@ -15,7 +15,7 @@ für alle Plattformen und Versionen zugleich, und es stimmt, solange der Konto-S
 Seit #625 S5b steht er an der Quelle an (`project.yml` hält `true`) und das Manifest trägt die drei Typen unten; das
 Etikett „Data Not Collected“ gilt damit nur noch für Bauten vor S5b und muss mit der Einreichung (#625 S5d) auf die
 Typen unten umgestellt werden. Früher (#625 S2) hatten Store-Bauten ein leeres Manifest und nur der TestFlight-Lauf mit dem
-Eingang `konto` schaltete die Gruppe „Claude“ ein; Rückbau dieser CI-Mechanik in S5c.
+Eingang `konto` schaltete die Gruppe „Claude“ ein; diese CI-Mechanik ist seit #625 S5c zurückgebaut.
 
 ## Antworten mit Konto
 
