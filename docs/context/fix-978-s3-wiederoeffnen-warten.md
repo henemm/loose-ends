@@ -42,7 +42,7 @@ abgeklungen ist, und prüfen das Panel nach einer Ruhezeit. Danach fällt `XCTEx
 - Grenze: Die Wartezeit verdeckt einen App-Fehler nur für Klicks genau während des Fensterwechsels; Nutzerbetroffenheit
   ist im Issue als nicht belegt vermerkt.
 
-## Analysis
+## Analysis v1 (widerlegt durch Galerie-Versuch 3, 2026-11-24)
 
 ### Type
 Bug (Testwerkzeug): der Pflicht-Check „Mac Gallery (macOS)“ trägt seit #978 S1 ein `XCTExpectFailure` am ⌘W-Arm.
@@ -86,3 +86,67 @@ XCUIAutomation, AppKit im Testläufer (macOS-Prozess, `NSWorkspace` lesbar). Abn
 ## Phase 5 (2026-11-24)
 
 RED-Tests in `scripts/test_mac_reopen_settle.py` (Gegenprobe am Quelltext für AC-1 bis AC-4, neues Anhangformat durch das unveränderte Skript): 5 von 10 rot, Beleg `docs/artifacts/fix-978-s3-wiederoeffnen-warten/test-red-output.txt`. Die Datei ist Testcode und steht nicht in der Spec-Dateiliste (Spec unverändert freigegeben); AC-7 meint den Produkt- und UI-Testcode.
+
+## Analysis
+
+Neuansatz nach Galerie-Versuch 3 (Befund `docs/artifacts/fix-978-s3-wiederoeffnen-warten/befund-galerie-versuch3.md`).
+
+### Type
+Bug (Testwerkzeug). Die Aktivierung der Ziel-App passiert **in** `statusItem.click()` („Open/Activate
+com.henning.looseends“), nicht davor; danach holt sich Finder die Aktivierung zurück, die Klicksynthese zieht sich
+(5,6 s), das Maus-hoch kommt 0,897 s nach `panel key` (sonst 0,10–0,23 s, 231/231 offen) und der Statusobjekt-Host
+beendet die Sitzung. Warten vor dem Klick (v1) kann das nicht verhindern. Nur der ⌘W-Arm ist betroffen, weil nur dort
+die App beim Klick nicht vorn ist (`.accessory`, Finder vorn).
+
+### Recherche
+- Kein offizieller Weg, dem `xctrunner` auf gehosteten Runnern das Recht `kTCCServicePostEvent` zu geben; System-TCC.db
+  per sqlite ist codesign- und image-abhängig (https://developer.apple.com/forums/thread/834560,
+  https://circleci.com/docs/guides/test/testing-macos/index.md, https://github.com/DevExpress/testcafe/issues/6789,
+  actions/runner-images#7269). Der Kontrollarm fällt deshalb auf `XCUICoordinate` zurück (`CGPreflightPostEventAccess` false).
+- XCUITest klickt Statusobjekte über `menuBars.statusItems`, Agent-Apps verhalten sich dabei anders
+  (https://developer.apple.com/forums/thread/773715). Keine Quelle zum Aktivieren einer fremden Wurzel-App.
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| LooseEndsUITests/MacGalleryTests.swift | MODIFY | neuer Klick `frontmostRootClick`: Wurzel ist `XCUIApplication(bundleIdentifier:)` der vordersten App (nach `waitForFrontmostSettled`), Klick per `coordinate(withNormalizedOffset: .zero).withOffset(statusItem.frame.mid − Wurzelrahmen.origin)`; ⌘W-Arm (und Return-Arm, gleiche Hilfe) nutzt ihn; Anhang nennt `how: user: frontmost root <bundle id>` und die Dauer von `click()`; ⌘W-Arm hart |
+| scripts/test_menubar_panel_log.py | MODIFY | bereits im Arbeitsbaum: `TestOpenAppArmIsHard` statt `XCTExpectFailure`-Erwartung (Versuch-3-Befund) |
+| scripts/test_mac_reopen_settle.py | MODIFY | Gegenprobe am Quelltext für den neuen Klickweg |
+
+Unverändert: `MenuBarCapture.swift` (kein App-Eingriff), `mac-panel-repeat.yml`, `scripts/mac_panel_repeat_summary.py`
+(letzte Anhangzeile bleibt `… panel open|not open`).
+
+### Scope Assessment
+- Files: 1 App-Testdatei + 2 Skripttests; App-Code 0 LoC
+- Estimated LoC: +35/-10 im UI-Test
+- Risk Level: MEDIUM — ob XCTest beim Klick über eine fremde Wurzel ebenfalls aktiviert, ist unbelegt; deshalb wird der
+  Mechanismus belegt, nicht nur die Rate.
+
+### Technical Approach (Empfehlung A)
+Klick über die vorderste App als Koordinatenwurzel: Die vorderste App ist schon aktiv, XCTest muss nichts aktivieren,
+der Nutzerzustand „Finder vorn, Loose Ends accessory“ bleibt beim Klick erhalten (#862 bleibt sichtbar: zeigt der erste
+Klick nichts, ist der Test rot). Haltezeit 3 s bleibt. Fällt die Wurzel weg (keine vorderste App lesbar), klickt der
+Test wie bisher und vermerkt es im Anhang.
+
+**Nachweis über den Mechanismus statt nur über die Rate** (Basisrate im Wiederholungslauf ~0,5 %, 0 Fälle in N belegt nur
+< 3/N): im Testprotokoll des Klicks kein „Activate com.henning.looseends“, Dauer von `click()` im Normalbereich
+(< 1 s), Abstand `panel key` → Maus hoch < 0,3 s im Panel-Protokoll; dazu Wiederholungslauf ≥ 100 je Arm ohne Fall
+und drei grüne Pflichtläufe „Mac Gallery“. Taucht die Aktivierung trotz fremder Wurzel auf, ist A widerlegt → Rückfall D.
+
+### Alternativen
+| | Ursache weg | #862 sichtbar | Umfang | Urteil |
+|---|---|---|---|---|
+| A Wurzel = vorderste App | ja, falls keine Aktivierung | ja, nutzertreu | ~35 LoC, 1 Datei | **empfohlen** |
+| B `app.activate()` vor dem Klick | teils (Finder holt zurück) | schwächer (anderer Ausgangszustand) | ~10 LoC | verworfen |
+| C CGEvent + TCC-Eintrag im Job | ja | am besten | Workflow + Skript + Test, image-abhängig | fragil, verworfen |
+| D Erkennen „auf und vom Host zu im Klick“ + eine Wiederholung | nein, nur Meldung | mittel | ~50 LoC + Protokoll-Schnittstelle der App | Rückfall |
+| E App-Eingriff | ja | ja | App-Code | verworfen (S2, Nutzer nicht betroffen: 231/231) |
+Keine ADR betroffen.
+
+### Dependencies
+XCUIAutomation, AppKit im Testläufer; Abnehmer Pflicht-Check „Mac Gallery (macOS)“, `mac-panel-repeat.yml`.
+Zeitlimit der Galerie (40 min) ist #974 und kann die drei Pflichtläufe abbrechen; dann zählt der Lauf nicht, wird
+neu gestartet, das Ticket wartet nicht darauf.
+
+### Open Questions
+- keine (Testwerkzeug, kein Produktthema; kein Pfad der Geräteliste berührt)

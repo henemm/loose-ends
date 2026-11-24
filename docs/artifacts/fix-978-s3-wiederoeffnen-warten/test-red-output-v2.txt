@@ -1,0 +1,89 @@
+FFFFFF....F.F............................................
+======================================================================
+FAIL: test_ac1_fallback_when_own_app_unreadable_or_empty_frame (scripts.test_mac_reopen_settle.FrontmostRootClickTests.test_ac1_fallback_when_own_app_unreadable_or_empty_frame)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 137, in setUp
+    self.root_click = function_body(self.text, "frontmostRootClick")
+                      ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 36, in function_body
+    raise AssertionError(f"fehlt: func {name}")
+AssertionError: fehlt: func frontmostRootClick
+
+======================================================================
+FAIL: test_ac1_offset_is_item_middle_minus_root_origin (scripts.test_mac_reopen_settle.FrontmostRootClickTests.test_ac1_offset_is_item_middle_minus_root_origin)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 137, in setUp
+    self.root_click = function_body(self.text, "frontmostRootClick")
+                      ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 36, in function_body
+    raise AssertionError(f"fehlt: func {name}")
+AssertionError: fehlt: func frontmostRootClick
+
+======================================================================
+FAIL: test_ac1_root_is_frontmost_app (scripts.test_mac_reopen_settle.FrontmostRootClickTests.test_ac1_root_is_frontmost_app)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 137, in setUp
+    self.root_click = function_body(self.text, "frontmostRootClick")
+                      ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 36, in function_body
+    raise AssertionError(f"fehlt: func {name}")
+AssertionError: fehlt: func frontmostRootClick
+
+======================================================================
+FAIL: test_ac2_click_duration_line_before_after_line (scripts.test_mac_reopen_settle.FrontmostRootClickTests.test_ac2_click_duration_line_before_after_line)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 137, in setUp
+    self.root_click = function_body(self.text, "frontmostRootClick")
+                      ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 36, in function_body
+    raise AssertionError(f"fehlt: func {name}")
+AssertionError: fehlt: func frontmostRootClick
+
+======================================================================
+FAIL: test_ac2_how_names_frontmost_root (scripts.test_mac_reopen_settle.FrontmostRootClickTests.test_ac2_how_names_frontmost_root)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 137, in setUp
+    self.root_click = function_body(self.text, "frontmostRootClick")
+                      ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 36, in function_body
+    raise AssertionError(f"fehlt: func {name}")
+AssertionError: fehlt: func frontmostRootClick
+
+======================================================================
+FAIL: test_ac2_user_arms_click_through_root_control_arm_its_own (scripts.test_mac_reopen_settle.FrontmostRootClickTests.test_ac2_user_arms_click_through_root_control_arm_its_own)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 137, in setUp
+    self.root_click = function_body(self.text, "frontmostRootClick")
+                      ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 36, in function_body
+    raise AssertionError(f"fehlt: func {name}")
+AssertionError: fehlt: func frontmostRootClick
+
+======================================================================
+FAIL: test_ac2_exactly_one_click_no_retry (scripts.test_mac_reopen_settle.SettleSourceTests.test_ac2_exactly_one_click_no_retry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 104, in test_ac2_exactly_one_click_no_retry
+    self.assertEqual(len(re.findall(r"\bfrontmostRootClick\(", self.helper)), 1, "genau ein Nutzerklick")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : genau ein Nutzerklick
+
+======================================================================
+FAIL: test_ac2_order_symbol_settle_click_panel_hold_attachment_assert (scripts.test_mac_reopen_settle.SettleSourceTests.test_ac2_order_symbol_settle_click_panel_hold_attachment_assert)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 99, in test_ac2_order_symbol_settle_click_panel_hold_attachment_assert
+    self.assertIsNotNone(match, f"Schritt fehlt oder steht falsch: {name}")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Schritt fehlt oder steht falsch: Klick über die vorderste App
+
+----------------------------------------------------------------------
+Ran 57 tests in 2.918s
+
+FAILED (failures=8)

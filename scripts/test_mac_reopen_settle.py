@@ -1,5 +1,8 @@
 """Tests für #978 Schnitt 3: Wiederöffnungstests warten den App-Wechsel ab, prüfen eine Haltezeit, ⌘W-Arm hart.
 
+v2 (nach Galerie-Versuch 3): Der Nutzerklick läuft über eine `XCUICoordinate`, deren Wurzel die vorderste App ist
+(`frontmostRootClick`), damit `click()` Loose Ends nicht aktiviert; Rückfall `statusItem.click()`, Klickdauer im Anhang.
+
 Aufruf: python3 scripts/test_mac_reopen_settle.py
 Die CI fährt die Datei mit `unittest discover -s scripts -p 'test_*.py'`.
 
@@ -40,7 +43,8 @@ def new_format_click(clicked_at: float, opened: bool, settled: bool = True) -> s
                if settled else "front 0.00 s com.apple.dt.xctest.tool\ntimeout after 10 s\n")
     return (
         f"click: {clicked_at:.3f} (seconds since 1970)\n"
-        "how: user: statusItem.click()\n"
+        "how: user: frontmost root com.apple.finder\n"
+        "click duration: 0.412 s\n"
         f"{history}"
         "Attributes: Application, pid: 4711, label: 'Loose Ends'\n"
         f"after: {3.4 if opened else 10.02:.2f} s, panel {'open' if opened else 'not open'}\n"
@@ -83,7 +87,7 @@ class SettleSourceTests(unittest.TestCase):
         steps = [
             ("Symbol existiert", r"statusItem\.waitForExistence\(timeout: 10\)"),
             ("ruhig warten", r"waitForFrontmostSettled\("),
-            ("Klick", r"statusItem\.click\(\)"),
+            ("Klick über die vorderste App", r"frontmostRootClick\("),
             ("Panel binnen 10 s", r'buttons\["menuBarOpenApp"\]\.waitForExistence\(timeout: 10\)'),
             ("Haltezeit 3 s", r"\b3(\.0)?\b"),
             ("Anhang", r"add\(note\)"),
@@ -96,8 +100,8 @@ class SettleSourceTests(unittest.TestCase):
             position = match.end()
 
     def test_ac2_exactly_one_click_no_retry(self):
-        # Der Text "user: statusItem.click()" im Anhang zählt nicht, nur der Aufruf.
-        self.assertEqual(len(re.findall(r'statusItem\.click\(\)(?!")', self.helper)), 1, "genau ein Klick")
+        # Nutzerarme: genau ein Aufruf des Klickwegs; Kontrollarm: genau ein Aufruf seines eigenen Klicks.
+        self.assertEqual(len(re.findall(r"\bfrontmostRootClick\(", self.helper)), 1, "genau ein Nutzerklick")
         self.assertEqual(len(re.findall(r"\bclick\(statusItem\)", self.helper)), 1)
         self.assertNotRegex(self.helper, r"\b(for|while|repeat)\b", "keine Wiederholung im Klickweg")
 
@@ -110,6 +114,7 @@ class SettleSourceTests(unittest.TestCase):
         control = function_body(self.text, "testMenuBarReopensAfterReturnWithControlClick")
         self.assertIn("LE_PANEL_CONTROL_ARM", control)
         self.assertIn("XCTSkip(", control)
+        self.assertIn("click: Self.coordinateClick", control, "Kontrollarm unverändert (AC-4 v2)")
 
     def test_ac4_after_line_is_last_and_history_before_it(self):
         literal = re.search(r'XCTAttachment\(string: """\n(.*?)"""', self.helper, re.S)
@@ -121,6 +126,50 @@ class SettleSourceTests(unittest.TestCase):
         history = [i for i, line in enumerate(lines) if "settle" in line or "front" in line]
         self.assertTrue(history, "Verlauf der vordersten App fehlt im Anhang")
         self.assertLess(max(history), len(lines) - 1)
+
+
+class FrontmostRootClickTests(unittest.TestCase):
+    """v2 AC-1, AC-2: Klick über die vorderste App als Koordinatenwurzel, Rückfall, Klickdauer im Anhang."""
+
+    def setUp(self):
+        self.text = GALLERY_TESTS.read_text()
+        self.helper = function_body(self.text, "assertSymbolOpensPanelWithOneClick")
+        self.root_click = function_body(self.text, "frontmostRootClick")
+
+    def test_ac1_root_is_frontmost_app(self):
+        self.assertIn("XCUIApplication(bundleIdentifier:", self.root_click)
+        self.assertIn("coordinate(withNormalizedOffset: .zero)", self.root_click)
+        self.assertIn(".withOffset(", self.root_click)
+
+    def test_ac1_offset_is_item_middle_minus_root_origin(self):
+        for name in ("midX", "midY"):
+            self.assertIn(name, self.root_click, f"Mitte des Symbols: {name}")
+        self.assertTrue(re.search(r"\.(origin\.x|minX)\b", self.root_click), "Ursprung des Wurzelrahmens x")
+        self.assertTrue(re.search(r"\.(origin\.y|minY)\b", self.root_click), "Ursprung des Wurzelrahmens y")
+
+    def test_ac1_fallback_when_own_app_unreadable_or_empty_frame(self):
+        self.assertIn('"com.henning.looseends"', self.root_click, "Loose Ends selbst vorn → Rückfall")
+        self.assertIn(".isEmpty", self.root_click, "leerer Wurzelrahmen → Rückfall")
+        self.assertTrue(re.search(r"\b\w+\.click\(\)", self.root_click), "Rückfall wie bisher: .click()")
+        self.assertIn("fallback", self.root_click, "Rückfall im Anhang vermerkt")
+        self.assertFalse(re.search(r"\b(for|while|repeat)\b", self.root_click), "keine Wiederholung im Klick")
+
+    def test_ac2_how_names_frontmost_root(self):
+        self.assertIn("user: frontmost root ", self.root_click)
+
+    def test_ac2_user_arms_click_through_root_control_arm_its_own(self):
+        self.assertTrue(re.search(r"if let click \{[^}]*click\(statusItem\)[^}]*\} else \{[^}]*frontmostRootClick\(",
+                                  self.helper, re.S), "Nutzerarme über frontmostRootClick, Kontrollarm über click")
+
+    def test_ac2_click_duration_line_before_after_line(self):
+        literal = re.search(r'XCTAttachment\(string: """\n(.*?)"""', self.helper, re.S)
+        self.assertIsNotNone(literal, "Anhangtext fehlt")
+        lines = [line.strip() for line in literal.group(1).splitlines() if line.strip()]
+        duration = [i for i, line in enumerate(lines) if line.startswith("click duration:")]
+        self.assertTrue(duration, "Zeile „click duration: <s> s“ fehlt")
+        self.assertIn(" s", lines[duration[0]])
+        self.assertTrue(lines[-1].startswith("after:"), "letzte Zeile bleibt after: … panel open|not open")
+        self.assertLess(duration[0], len(lines) - 1)
 
 
 class NewFormatSummaryTests(unittest.TestCase):
