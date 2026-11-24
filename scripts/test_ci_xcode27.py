@@ -94,6 +94,8 @@ class SelectXcodeAction(unittest.TestCase):
 class Workflows(unittest.TestCase):
     def test_every_job_runs_on_xcode_27_with_the_action(self):
         for name, key, job in jobs():
+            if (name, key) == ("ci.yml", "changes"):
+                continue  # #995: only reads the diff with git and Python, no Xcode
             self.assertEqual(job["runs-on"], "xcode-27", f"{name}:{key}")
             uses = [s.get("uses") for s in job["steps"]]
             self.assertIn(ACTION_REF, uses, f"{name}:{key}")
@@ -164,7 +166,7 @@ class Workflows(unittest.TestCase):
         names = [s.get("name") for s in job["steps"]]
         step = step_named(job, "Print measurement reports")
         self.assertTrue(step.get("continue-on-error"), "Der Bericht darf den Lauf nie abbrechen")
-        self.assertEqual(step.get("if"), "always()")
+        self.assertEqual(step.get("if"), "always() && needs.changes.outputs.app == 'true'")  # #995
         self.assertIn("-REPORT BEGIN", step["run"])
         self.assertIn("-REPORT END", step["run"])
         self.assertGreater(names.index(step["name"]), names.index("Build and test"))
