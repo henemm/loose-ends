@@ -187,6 +187,11 @@ class MacGallery(unittest.TestCase):
         self.assertIn(ACTION_REF, [s.get("uses") for s in job["steps"]])
         self.assertNotIn("continue-on-error", job, "Eine still scheiternde Galerie ist kein Nachweis")
 
+    def test_job_limit_keeps_a_quarter_in_reserve(self):
+        # #974: gemessen 2026-11-23/24 auf main und #993: 36,0–41,3 min je Lauf, also ≥ 56 min Limit
+        # für höchstens 75 % Auslastung; mit 40 min brach jeder zweite Lauf ohne Testfehler ab.
+        self.assertGreaterEqual(self.job()["timeout-minutes"], 56)
+
     def test_runs_only_the_mac_gallery_on_the_mac_with_ad_hoc_signing(self):
         run = step_named(self.job(), "Run Mac gallery")["run"]
         self.assertIn("-destination 'platform=macOS'", run)

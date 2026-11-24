@@ -538,7 +538,9 @@ jobs:
   mac-gallery:
     name: Mac Gallery (macOS)
     runs-on: xcode-27
-    timeout-minutes: 40
+    # #974: measured 36–41 min per run (gallery 16–21, click build 3–4, click 5–6, keyboard 10–12);
+    # 40 cancelled every second run without a test failure. 60 keeps a quarter in reserve.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
       - name: Select Xcode 27.0
