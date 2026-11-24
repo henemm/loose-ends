@@ -10,6 +10,8 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
 - **Den PO fragen nur zu Produktentscheidungen** (Freigabe von Anforderungen, fachliche Zielkonflikte), per `AskUserQuestion`, nie als Freitext. Tooling, Git, Hooks, Server-Mechanik klärt Claude selbst.
 - **Aufgaben nur als GitHub-Issues** in diesem Repo; ein Issue erst schließen, wenn es end-to-end erledigt ist.
 - **Form der Antworten an den Product Owner** (jede Antwort, auch nach langer Arbeit): Das Ergebnis steht zuerst, in ein bis zwei Sätzen, danach nur, was er entscheiden oder tun muss. Keine Dateinamen, Commit- oder PR-Nummern, Testzahlen, Werkzeug- oder Funktionsnamen, außer er fragt danach. Was nicht geklappt hat, in einem Satz mit dem nächsten Schritt. Kurze Absätze, keine langen Listen und Tabellen; Fachwörter, die sich nicht vermeiden lassen, in einem Halbsatz erklären. Technische Einzelheiten gehören in das Issue oder den Pull Request, nicht in den Chat.
+- **Uhrzeiten immer mit Zeitzone** (Henning, 2026-11-24): jede Uhrzeit an ihn in seiner Ortszeit mit Kürzel („07:45 Uhr MEZ“,
+  im Sommer „MESZ“), nie nackt und nie nur UTC/„Weltzeit“; Zeiten aus GitHub oder Logs vorher umrechnen.
 - **Frage nach einer Nummer → nur die Nummer** (Henning, 2026-11-13): „Welches Issue als Nächstes?“ wird mit `#N` und höchstens dem Kurztitel beantwortet; Begründung und Alternativen nur auf Nachfrage.
 
 ## Feste Arbeitsregeln (Kurzfassung, Begründungen in `docs/reference/zusammenarbeit.md`)
@@ -287,6 +289,7 @@ The helpers both share live in `MacUITestSupport.swift` (`mac` prefix). Every fe
 `macAssertWindowFitsScreen` (#593): a window wider than the screen, or past its right or bottom edge, fails the test with
 both sizes; the gallery notes `mac-gallery-*-window-size` name window and screen size, and `testWindowFromMenuBarFitsScreen`
 opens the window through the menu bar on every run.
+`gh workflow run mac-panel-repeat.yml -f iterationen=N [-f sandbox=true] [-f kontrollarm=false]` repeats the menu bar panel test N times (default 20; control arm `testMenuBarReopensAfterReturnWithControlClick` on by default, needs `LE_PANEL_CONTROL_ARM`, else skipped) and uploads `MacPanelRepeatLog`, `MacPanelRepeatResults` and `MacPanelRepeatSummary`; `scripts/mac_panel_repeat_summary.py` counts denominator, numerator and rate per arm and lists a timeline per failing case (#978 S2).
 
 ## Ship
 
@@ -478,7 +481,7 @@ not scope creep on the current one.
   `--ui-testing` a fixed fix, `--ui-testing-location-here` on the Altona hit, `--ui-testing-location-refused`). The rules
   (`isAlreadyThere`: haversine ≤ 150 m + accuracy, accuracy over 100 m or negative = unknown; the note order not watched >
   location off > Mac) live in `PlaceEditing`. `./scripts/sim.sh location <lat> <lon>` fakes the simulator's location
-- `LooseEnds/Mac` — `MenuBarCapture` (Mac only, #356; logs panel key/resign/hide/close at notice level, category `MenuBarPanel`, #978): the menu bar panel with the same `CaptureView`, Dock icon only
+- `LooseEnds/Mac` — `MenuBarCapture` (Mac only, #356; logs panel key/resign/hide/close at notice level, category `MenuBarPanel`, #978; S2, diagnosis only: at key/resign/hide a stack of up to 40 frames from the first frame outside its own observer, CGEvent fields (type, window, target/source PID, time, or "nil"), `NSApp.isActive`/`isKeyWindow`, lines for did(Become|Resign)Active, didHide, didActivateApplication (bundle id only) and Space changes, and for 3 s after key a local and a global (mouse only) event monitor): the menu bar panel with the same `CaptureView`, Dock icon only
   while a list window is open (`DockPolicy`), login item via `SMAppService` (on from the first start, never under tests);
   `MenuBarThreadImage` (#366): the menu bar symbol is the logo's thread, drawn from `ThreadShape.curvePoints` into a
   template `NSImage` (18 pt, 1x/2x, black on transparent; the raster in `MenuBarThreadRaster` is platform-neutral and unit-tested);

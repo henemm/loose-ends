@@ -1,0 +1,146 @@
+# #978 Schnitt 2: brings the rare self-closing menu bar panel about instead of waiting for it in the required job.
+# Runs only the two reopen tests of MacGalleryTests and the control arm (coordinate click, LE_PANEL_CONTROL_ARM)
+# with -test-iterations, so every iteration runs, also after a failure: the rate is wanted, the denominator is
+# every reopen. Uploads the panel log (from the job's start), the result bundle and a summary per arm.
+name: Mac Panel Repeat (#978)
+
+on:
+  workflow_dispatch:
+    inputs:
+      iterationen:
+        description: Iterations per test (-test-iterations)
+        type: number
+        default: 20
+      kontrollarm:
+        description: Run the control arm (coordinate click)
+        type: boolean
+        default: true
+      sandbox:
+        description: Re-sign the app with the sandbox of the real app (as the click test, #544)
+        type: boolean
+        default: false
+  pull_request:
+    paths:
+      - '.github/workflows/mac-panel-repeat.yml'
+
+concurrency:
+  group: mac-panel-repeat-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  repeat:
+    name: Mac Panel Repeat (macOS)
+    runs-on: xcode-27
+    timeout-minutes: 120
+    env:
+      # A pull_request run has no inputs: the defaults hold (20, control arm on, sandbox off).
+      ITERATIONS: ${{ inputs.iterationen || 20 }}
+      CONTROL_ARM: ${{ github.event_name != 'workflow_dispatch' || inputs.kontrollarm }}
+      SANDBOX: ${{ github.event_name == 'workflow_dispatch' && inputs.sandbox }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Note the job's start for the panel log
+        run: echo "LOG_START=$(TZ=UTC date '+%Y-%m-%d %H:%M:%S')" >> "$GITHUB_ENV"
+      - name: Select Xcode 27.0
+        uses: ./.github/actions/select-xcode-27
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: Enable UI automation (#511)
+        run: |
+          sudo automationmodetool enable-automationmode-without-authentication
+          sudo DevToolsSecurity -enable || true
+      - name: Build for testing
+        run: |
+          set -o pipefail
+          xcodebuild build-for-testing \
+            -project LooseEnds.xcodeproj \
+            -scheme LooseEnds \
+            -destination 'platform=macOS' \
+            -derivedDataPath build/repeat \
+            CODE_SIGN_IDENTITY=- \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM= \
+            CODE_SIGN_ENTITLEMENTS= \
+            2>&1 | tee mac-repeat-build.log | xcbeautify
+      # Only with `sandbox` on: the sandbox keys of the app target, as in the required job's click test (#544).
+      - name: Sign the app with the sandbox (#544)
+        if: ${{ env.SANDBOX == 'true' }}
+        run: |
+          python3 -m venv "$RUNNER_TEMP/sandbox-venv"
+          "$RUNNER_TEMP/sandbox-venv/bin/pip" install --quiet 'pyyaml~=6.0'
+          "$RUNNER_TEMP/sandbox-venv/bin/python" scripts/mac_ci_entitlements.py "$RUNNER_TEMP/mac-sandbox.plist"
+          app=$(find build/repeat/Build/Products/Debug -maxdepth 1 -name '*.app' ! -name '*-Runner.app' | head -1)
+          if [ -z "$app" ]; then echo "::error::No app in build/repeat"; ls build/repeat/Build/Products/Debug; exit 1; fi
+          codesign --force --sign - --entitlements "$RUNNER_TEMP/mac-sandbox.plist" "$app"
+          codesign -d --entitlements - "$app"
+      - name: Run the reopen tests (-test-iterations)
+        run: |
+          set -o pipefail
+          if [ "$CONTROL_ARM" = "true" ]; then export TEST_RUNNER_LE_PANEL_CONTROL_ARM=1; fi
+          echo "iterations=$ITERATIONS control_arm=$CONTROL_ARM sandbox=$SANDBOX"
+          xcodebuild test-without-building \
+            -project LooseEnds.xcodeproj \
+            -scheme LooseEnds \
+            -destination 'platform=macOS' \
+            -derivedDataPath build/repeat \
+            -only-testing:LooseEndsUITests/MacGalleryTests/testMenuBarReopensAfterReturnWithOneClick \
+            -only-testing:LooseEndsUITests/MacGalleryTests/testMenuBarReopensAfterOpenAppWithOneClick \
+            -only-testing:LooseEndsUITests/MacGalleryTests/testMenuBarReopensAfterReturnWithControlClick \
+            -test-iterations "$ITERATIONS" \
+            -parallel-testing-enabled NO \
+            -resultBundlePath MacPanelRepeat.xcresult \
+            2>&1 | tee mac-repeat.log | xcbeautify
+      - name: Collect panel log (#978)
+        if: always()
+        continue-on-error: true
+        timeout-minutes: 10
+        run: |
+          TZ=UTC log show --start "$LOG_START" --style compact \
+            --predicate 'subsystem == "com.henning.looseends" AND category == "MenuBarPanel"' > mac-panel-repeat.log || true
+          echo "panel lines: $(grep -c 'MenuBarPanel' mac-panel-repeat.log || true)"
+      - name: Export attachments and summarize
+        if: always()
+        continue-on-error: true
+        run: |
+          mkdir -p raw-repeat summary
+          if [ -d MacPanelRepeat.xcresult ]; then
+            xcrun xcresulttool export attachments --path MacPanelRepeat.xcresult --output-path raw-repeat || true
+          fi
+          arms="return,open-app"
+          if [ "$CONTROL_ARM" = "true" ]; then arms="$arms,control"; fi
+          python3 scripts/mac_panel_repeat_summary.py --raw raw-repeat --log mac-panel-repeat.log \
+            --out summary/mac-panel-repeat-summary.md --expected "$ITERATIONS" --arms "$arms"
+          {
+            echo "iterations=$ITERATIONS control_arm=$CONTROL_ARM sandbox=$SANDBOX"
+            echo
+            cat summary/mac-panel-repeat-summary.md
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload panel log
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: MacPanelRepeatLog
+          path: mac-panel-repeat.log
+          if-no-files-found: warn
+      - name: Upload results
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: MacPanelRepeatResults
+          path: |
+            MacPanelRepeat.xcresult
+            mac-repeat.log
+            mac-repeat-build.log
+          if-no-files-found: warn
+      - name: Upload summary
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: MacPanelRepeatSummary
+          path: summary
+          if-no-files-found: warn

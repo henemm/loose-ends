@@ -103,20 +103,134 @@ enum MacWindows {
 /// The menu bar panel's own record (#978): one notice line when the panel becomes key, resigns key, is
 /// hidden (SwiftUI orders its panel out instead of closing it) and when it closes, always on, so a panel that closes by itself leaves its cause behind (stack, current event, front app,
 /// activation policy). No title, no task text: only names the system gives.
+/// Schnitt 2: the stack up to 40 frames past this observer, the current event's CGEvent fields (never `subtype` or
+/// `data1`, which throw for unknown types such as 21), activation and space lines, and for 3 s after `key` one pair
+/// of event monitors that only write and hand every event back unchanged. Diagnosis only, no behaviour.
 @MainActor
 enum MenuBarPanelLog {
-    private static let panelLogger = Logger(subsystem: "com.henning.looseends", category: "MenuBarPanel")
+    private nonisolated static let panelLogger = Logger(subsystem: "com.henning.looseends", category: "MenuBarPanel")
+    /// The one monitor pair after the last `key`; a new `key` replaces it.
+    private static var monitors: [Any] = []
+    private static var monitorRound = 0
 
     /// `event` is `key`, `resign`, `hide` or `close`; `kind` is the window's class name only, never its title.
-    static func record(_ event: String, kind: String) {
-        // Frame 0 is this function; the next ones show who closed or keyed the panel.
-        let stack = Thread.callStackSymbols.dropFirst().prefix(12)
-            .map { $0.split(separator: " ", omittingEmptySubsequences: true).dropFirst(3).joined(separator: " ") }
-            .joined(separator: " | ")
-        let current = NSApp.currentEvent.map { "\($0.type.rawValue) \(String(describing: $0.type))" } ?? "nil"
+    /// `isKey` is the panel's `isKeyWindow`, given for `key` and `resign`.
+    static func record(_ event: String, kind: String, isKey: Bool? = nil) {
+        let stack = callers()
+        let current = NSApp.currentEvent
+        let type = current.map { "\($0.type.rawValue)" } ?? "nil"
+        let cg = cgFields(current)
+        let state = isKey.map { " active=\(NSApp.isActive) keyWindow=\($0)" } ?? ""
         let front = NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "nil"
         let policy = policyName(NSApp.activationPolicy())
-        panelLogger.notice("panel \(event, privacy: .public) window=\(kind, privacy: .public) event=\(current, privacy: .public) front=\(front, privacy: .public) policy=\(policy, privacy: .public) stack=\(stack, privacy: .public)")
+        panelLogger.notice("panel \(event, privacy: .public) window=\(kind, privacy: .public) event=\(type, privacy: .public) cg=\(cg, privacy: .public)\(state, privacy: .public) front=\(front, privacy: .public) policy=\(policy, privacy: .public) stack=\(stack, privacy: .public)")
+        if event == "key" { startMonitors() }
+    }
+
+    /// Up to 40 frames from the first one outside this observer (see `afterObserver`).
+    private static func callers() -> String {
+        let frames = Thread.callStackSymbols
+            .map { $0.split(separator: " ", omittingEmptySubsequences: true).dropFirst(3).joined(separator: " ") }
+        return afterObserver(frames).prefix(40).joined(separator: " | ")
+    }
+
+    /// The frames after the leading block of observer frames (`MenuBarPanelLog` or `MacAppDelegate`). The block starts
+    /// at the first observer frame and runs on through observer frames and glue (`assumeIsolated`, Swift thunks whose
+    /// mangled name ends in `TR`, `TRTA` or `TA`); the result starts right after the block's last observer frame, so glue
+    /// after it stays visible and the first frame shown is who keyed or closed the panel. Deeper `MacAppDelegate`
+    /// frames stay. Without any observer frame the whole stack stays.
+    nonisolated static func afterObserver(_ frames: [String]) -> ArraySlice<String> {
+        let isObserver = { (frame: String) in frame.contains("MenuBarPanelLog") || frame.contains("MacAppDelegate") }
+        let isGlue = { (frame: String) -> Bool in
+            if frame.contains("assumeIsolated") { return true }
+            guard frame.hasPrefix("$s") else { return false }
+            let symbol = frame.components(separatedBy: " + ").first ?? frame
+            return symbol.hasSuffix("TR") || symbol.hasSuffix("TA")
+        }
+        guard let first = frames.firstIndex(where: isObserver) else { return frames[...] }
+        var last = first
+        for index in frames.indices[first...] {
+            if isObserver(frames[index]) { last = index } else if !isGlue(frames[index]) { break }
+        }
+        return frames[(last + 1)...]
+    }
+
+    /// Only fields every CGEvent carries; `cgEvent` can be nil.
+    private nonisolated static func cgFields(_ event: NSEvent?) -> String {
+        guard let cg = event?.cgEvent else { return "nil" }
+        let window = cg.getIntegerValueField(.mouseEventWindowUnderMousePointer)
+        let target = cg.getIntegerValueField(.eventTargetUnixProcessID)
+        let source = cg.getIntegerValueField(.eventSourceUnixProcessID)
+        return "type=\(cg.type.rawValue),window=\(window),target=\(target),source=\(source),time=\(cg.timestamp)"
+    }
+
+    /// A line for the app's own activation and hiding, the app the system activated (bundle id only) and a
+    /// space change. The caller keeps the returned observers.
+    static func observeActivation() -> [NSObjectProtocol] {
+        let center = NotificationCenter.default
+        let names: [(Notification.Name, String)] = [
+            (NSApplication.didBecomeActiveNotification, "become-active"),
+            (NSApplication.didResignActiveNotification, "resign-active"), (NSApplication.didHideNotification, "hide"),
+        ]
+        var observers = names.map { name, line in
+            center.addObserver(forName: name, object: nil, queue: .main) { _ in
+                MainActor.assumeIsolated { recordApp(line, detail: "") }
+            }
+        }
+        let workspace = NSWorkspace.shared.notificationCenter
+        observers.append(workspace.addObserver(forName: NSWorkspace.didActivateApplicationNotification,
+                                               object: nil, queue: .main) { note in
+            let app = note.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication
+            let bundle = app?.bundleIdentifier ?? "nil"
+            MainActor.assumeIsolated { recordApp("activate", detail: " app=\(bundle)") }
+        })
+        observers.append(workspace.addObserver(forName: NSWorkspace.activeSpaceDidChangeNotification,
+                                               object: nil, queue: .main) { _ in
+            MainActor.assumeIsolated { recordApp("space", detail: "") }
+        })
+        return observers
+    }
+
+    private static func recordApp(_ line: String, detail: String) {
+        let type = NSApp.currentEvent.map { "\($0.type.rawValue)" } ?? "nil"
+        panelLogger.notice("app \(line, privacy: .public)\(detail, privacy: .public) active=\(NSApp.isActive, privacy: .public) event=\(type, privacy: .public)")
+    }
+
+    /// From `key` on for 3 s: a local monitor for every event of this app and a global one for mouse events
+    /// elsewhere (no permission needed). The local one hands each event back unchanged.
+    private static func startMonitors() {
+        stopMonitors()
+        monitorRound += 1
+        let round = monitorRound
+        if let local = NSEvent.addLocalMonitorForEvents(matching: .any, handler: { event in
+            logMonitored("local", event)
+            return event
+        }) { monitors.append(local) }
+        let mouse: NSEvent.EventTypeMask = [.leftMouseDown, .leftMouseUp, .rightMouseDown, .rightMouseUp,
+                                            .otherMouseDown, .otherMouseUp]
+        if let global = NSEvent.addGlobalMonitorForEvents(matching: mouse, handler: { event in
+            logMonitored("global", event)
+        }) { monitors.append(global) }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            MainActor.assumeIsolated {
+                guard monitorRound == round else { return }
+                stopMonitors()
+                panelLogger.notice("monitor end")
+            }
+        }
+    }
+
+    private static func stopMonitors() {
+        for monitor in monitors { NSEvent.removeMonitor(monitor) }
+        monitors = []
+    }
+
+    /// Raw type, window number and timestamp only.
+    private nonisolated static func logMonitored(_ scope: String, _ event: NSEvent) {
+        let type = event.type.rawValue
+        let window = event.windowNumber
+        let time = event.timestamp
+        panelLogger.notice("monitor \(scope, privacy: .public) type=\(type, privacy: .public) window=\(window, privacy: .public) time=\(time, privacy: .public)")
     }
 
     private static func policyName(_ policy: NSApplication.ActivationPolicy) -> String {
@@ -196,16 +310,19 @@ final class MacAppDelegate: NSObject, NSApplicationDelegate {
             observers.append(center.addObserver(forName: name, object: nil, queue: .main) { note in
                 // At the moment it happens, so stack and current event are the cause's (#978).
                 // Every NSPanel (the menu bar panel, but also open panels and alerts), so the line names the
-                // window's class; only that string goes into the main actor, never the window.
+                // window's class and, for `key`, whether it is the key window; never its title.
                 if let panel = note.object as? NSPanel {
                     let kind = String(describing: type(of: panel))
-                    MainActor.assumeIsolated { MenuBarPanelLog.record(event, kind: kind) }
+                    MainActor.assumeIsolated {
+                        MenuBarPanelLog.record(event, kind: kind, isKey: event == "key" ? panel.isKeyWindow : nil)
+                    }
                 }
                 // After the close has gone through, not before.
                 DispatchQueue.main.async { MainActor.assumeIsolated { MacWindows.applyDockPolicy() } }
             })
         }
         observePanelHiding(center)
+        observers += MenuBarPanelLog.observeActivation()
     }
 
     /// SwiftUI's menu bar panel is ordered out, never closed, so `willClose` stays silent when it vanishes
@@ -215,7 +332,7 @@ final class MacAppDelegate: NSObject, NSApplicationDelegate {
                                             queue: .main) { note in
             guard let panel = note.object as? NSPanel else { return }
             let kind = String(describing: type(of: panel))
-            MainActor.assumeIsolated { MenuBarPanelLog.record("resign", kind: kind) }
+            MainActor.assumeIsolated { MenuBarPanelLog.record("resign", kind: kind, isKey: panel.isKeyWindow) }
         })
         observers.append(center.addObserver(forName: NSWindow.didChangeOcclusionStateNotification, object: nil,
                                             queue: .main) { note in

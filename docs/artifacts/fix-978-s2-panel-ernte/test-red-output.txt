@@ -1,0 +1,208 @@
+test_control_arm_guarded_by_env (__main__.ControlArmTests.test_control_arm_guarded_by_env) ... FAIL
+test_user_arms_keep_statusitem_click (__main__.ControlArmTests.test_user_arms_keep_statusitem_click) ... ok
+test_activation_and_space_lines (__main__.PanelLogTests.test_activation_and_space_lines) ... FAIL
+test_cg_event_fields_without_subtype_or_data1 (__main__.PanelLogTests.test_cg_event_fields_without_subtype_or_data1) ... FAIL
+test_monitors_return_event_unchanged (__main__.PanelLogTests.test_monitors_return_event_unchanged) ... FAIL
+test_no_print_no_try_optional (__main__.PanelLogTests.test_no_print_no_try_optional) ... ok
+test_stack_up_to_40_frames (__main__.PanelLogTests.test_stack_up_to_40_frames) ... FAIL
+test_arm_of_maps_labels (__main__.SummaryTests.test_arm_of_maps_labels) ... FAIL
+test_arm_without_attachments_is_zero_not_missing (__main__.SummaryTests.test_arm_without_attachments_is_zero_not_missing) ... FAIL
+test_counts_every_iteration_per_arm (__main__.SummaryTests.test_counts_every_iteration_per_arm) ... FAIL
+test_parse_click (__main__.SummaryTests.test_parse_click) ... FAIL
+test_parse_panel_log_reads_event_and_source (__main__.SummaryTests.test_parse_panel_log_reads_event_and_source) ... FAIL
+test_report_names_every_arm_and_only_numbers (__main__.SummaryTests.test_report_names_every_arm_and_only_numbers) ... FAIL
+test_several_export_folders_add_up (__main__.SummaryTests.test_several_export_folders_add_up) ... FAIL
+test_timeline_of_a_failure (__main__.SummaryTests.test_timeline_of_a_failure) ... FAIL
+test_dispatch_with_inputs (__main__.WorkflowTests.test_dispatch_with_inputs) ... FAIL
+test_log_from_job_start_and_uploads (__main__.WorkflowTests.test_log_from_job_start_and_uploads) ... FAIL
+test_pull_request_only_on_this_file (__main__.WorkflowTests.test_pull_request_only_on_this_file) ... FAIL
+test_runs_only_reopen_tests_with_iterations (__main__.WorkflowTests.test_runs_only_reopen_tests_with_iterations) ... FAIL
+
+======================================================================
+FAIL: test_control_arm_guarded_by_env (__main__.ControlArmTests.test_control_arm_guarded_by_env)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 224, in test_control_arm_guarded_by_env
+    self.has("LE_PANEL_CONTROL_ARM")
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 172, in has
+    self.assertTrue(needle in self.text, f"fehlt: {needle}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : fehlt: LE_PANEL_CONTROL_ARM
+
+======================================================================
+FAIL: test_activation_and_space_lines (__main__.PanelLogTests.test_activation_and_space_lines)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 253, in test_activation_and_space_lines
+    self.has(name)
+    ~~~~~~~~^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 172, in has
+    self.assertTrue(needle in self.text, f"fehlt: {needle}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : fehlt: didBecomeActiveNotification
+
+======================================================================
+FAIL: test_cg_event_fields_without_subtype_or_data1 (__main__.PanelLogTests.test_cg_event_fields_without_subtype_or_data1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 245, in test_cg_event_fields_without_subtype_or_data1
+    self.has("cgEvent")
+    ~~~~~~~~^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 172, in has
+    self.assertTrue(needle in self.text, f"fehlt: {needle}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : fehlt: cgEvent
+
+======================================================================
+FAIL: test_monitors_return_event_unchanged (__main__.PanelLogTests.test_monitors_return_event_unchanged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 258, in test_monitors_return_event_unchanged
+    self.has("addLocalMonitorForEvents")
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 172, in has
+    self.assertTrue(needle in self.text, f"fehlt: {needle}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : fehlt: addLocalMonitorForEvents
+
+======================================================================
+FAIL: test_stack_up_to_40_frames (__main__.PanelLogTests.test_stack_up_to_40_frames)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 241, in test_stack_up_to_40_frames
+    self.has("prefix(40)")
+    ~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 172, in has
+    self.assertTrue(needle in self.text, f"fehlt: {needle}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : fehlt: prefix(40)
+
+======================================================================
+FAIL: test_arm_of_maps_labels (__main__.SummaryTests.test_arm_of_maps_labels)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 83, in setUp
+    self.summary = load_summary()
+                   ~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 31, in load_summary
+    raise AssertionError(f"{SCRIPT.relative_to(ROOT)} fehlt")
+AssertionError: scripts/mac_panel_repeat_summary.py fehlt
+
+======================================================================
+FAIL: test_arm_without_attachments_is_zero_not_missing (__main__.SummaryTests.test_arm_without_attachments_is_zero_not_missing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 83, in setUp
+    self.summary = load_summary()
+                   ~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 31, in load_summary
+    raise AssertionError(f"{SCRIPT.relative_to(ROOT)} fehlt")
+AssertionError: scripts/mac_panel_repeat_summary.py fehlt
+
+======================================================================
+FAIL: test_counts_every_iteration_per_arm (__main__.SummaryTests.test_counts_every_iteration_per_arm)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 83, in setUp
+    self.summary = load_summary()
+                   ~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 31, in load_summary
+    raise AssertionError(f"{SCRIPT.relative_to(ROOT)} fehlt")
+AssertionError: scripts/mac_panel_repeat_summary.py fehlt
+
+======================================================================
+FAIL: test_parse_click (__main__.SummaryTests.test_parse_click)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 83, in setUp
+    self.summary = load_summary()
+                   ~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 31, in load_summary
+    raise AssertionError(f"{SCRIPT.relative_to(ROOT)} fehlt")
+AssertionError: scripts/mac_panel_repeat_summary.py fehlt
+
+======================================================================
+FAIL: test_parse_panel_log_reads_event_and_source (__main__.SummaryTests.test_parse_panel_log_reads_event_and_source)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 83, in setUp
+    self.summary = load_summary()
+                   ~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 31, in load_summary
+    raise AssertionError(f"{SCRIPT.relative_to(ROOT)} fehlt")
+AssertionError: scripts/mac_panel_repeat_summary.py fehlt
+
+======================================================================
+FAIL: test_report_names_every_arm_and_only_numbers (__main__.SummaryTests.test_report_names_every_arm_and_only_numbers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 83, in setUp
+    self.summary = load_summary()
+                   ~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 31, in load_summary
+    raise AssertionError(f"{SCRIPT.relative_to(ROOT)} fehlt")
+AssertionError: scripts/mac_panel_repeat_summary.py fehlt
+
+======================================================================
+FAIL: test_several_export_folders_add_up (__main__.SummaryTests.test_several_export_folders_add_up)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 83, in setUp
+    self.summary = load_summary()
+                   ~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 31, in load_summary
+    raise AssertionError(f"{SCRIPT.relative_to(ROOT)} fehlt")
+AssertionError: scripts/mac_panel_repeat_summary.py fehlt
+
+======================================================================
+FAIL: test_timeline_of_a_failure (__main__.SummaryTests.test_timeline_of_a_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 83, in setUp
+    self.summary = load_summary()
+                   ~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 31, in load_summary
+    raise AssertionError(f"{SCRIPT.relative_to(ROOT)} fehlt")
+AssertionError: scripts/mac_panel_repeat_summary.py fehlt
+
+======================================================================
+FAIL: test_dispatch_with_inputs (__main__.WorkflowTests.test_dispatch_with_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 188, in setUp
+    self.assertTrue(WORKFLOW.is_file(), f"{WORKFLOW.relative_to(ROOT)} fehlt")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : .github/workflows/mac-panel-repeat.yml fehlt
+
+======================================================================
+FAIL: test_log_from_job_start_and_uploads (__main__.WorkflowTests.test_log_from_job_start_and_uploads)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 188, in setUp
+    self.assertTrue(WORKFLOW.is_file(), f"{WORKFLOW.relative_to(ROOT)} fehlt")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : .github/workflows/mac-panel-repeat.yml fehlt
+
+======================================================================
+FAIL: test_pull_request_only_on_this_file (__main__.WorkflowTests.test_pull_request_only_on_this_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 188, in setUp
+    self.assertTrue(WORKFLOW.is_file(), f"{WORKFLOW.relative_to(ROOT)} fehlt")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : .github/workflows/mac-panel-repeat.yml fehlt
+
+======================================================================
+FAIL: test_runs_only_reopen_tests_with_iterations (__main__.WorkflowTests.test_runs_only_reopen_tests_with_iterations)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/generic-doodling-milner/scripts/test_mac_panel_repeat_summary.py", line 188, in setUp
+    self.assertTrue(WORKFLOW.is_file(), f"{WORKFLOW.relative_to(ROOT)} fehlt")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : .github/workflows/mac-panel-repeat.yml fehlt
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.003s
+
+FAILED (failures=17)

@@ -1,0 +1,53 @@
+# Fall open-app, Lauf 45334299531 (Commit 89684dc), Panel-Protokoll Zeilen 49-58, Kategorie MenuBarPanel (Stapel gekürzt)
+2026-11-24 05:40:35.669 Df LooseEnds[15306:b058] [com.henning.looseends:MenuBarPanel] app activate app=com.henning.looseends active=false event=9
+2026-11-24 05:40:35.674 Df LooseEnds[15306:b058] [com.henning.looseends:MenuBarPanel] app become-active active=true event=13
+2026-11-24 05:40:36.058 Df LooseEnds[15306:b058] [com.henning.looseends:MenuBarPanel] app activate app=com.apple.finder active=true event=8
+2026-11-24 05:40:36.060 Df LooseEnds[15306:b058] [com.henning.looseends:MenuBarPanel] app resign-active active=false event=13
+2026-11-24 05:40:36.094 Df LooseEnds[15306:b058] [com.henning.looseends:MenuBarPanel] panel key window=MenuBarExtraWindow<AnyView> event=13 cg=type=19,window=0,target=15306,source=0,time=610852508250 active=true keyWindow=true front=com.apple.finder policy=accessory
+2026-11-24 05:40:36.118 Df LooseEnds[15306:b058] [com.henning.looseends:MenuBarPanel] monitor local type=21 window=0 time=610.874359
+2026-11-24 05:40:36.805 Df LooseEnds[15306:b058] [com.henning.looseends:MenuBarPanel] monitor global type=2 window=5 time=611.597742
+2026-11-24 05:40:36.825 Df LooseEnds[15306:b058] [com.henning.looseends:MenuBarPanel] panel resign window=MenuBarExtraWindow<AnyView> event=21 cg=type=21,window=0,target=15306,source=0,time=610874359041 active=false keyWindow=false front=com.apple.finder policy=accessory
+2026-11-24 05:40:36.834 Df LooseEnds[15306:b058] [com.henning.looseends:MenuBarPanel] monitor local type=21 window=0 time=611.609791
+2026-11-24 05:40:36.881 Df LooseEnds[15306:b058] [com.henning.looseends:MenuBarPanel] panel hide window=MenuBarExtraWindow<AnyView> event=21 cg=type=21,window=0,target=15306,source=0,time=611609790625 front=com.apple.finder policy=accessory
+
+# Stapel der resign-Zeile (Zeile 56)
+$s10Foundation12NotificationVIeghn_So14NSNotificationCIeyBhy_TR + 184 
+__CFNOTIFICATIONCENTER_IS_CALLING_OUT_TO_AN_OBSERVER__ + 128 
+___CFXRegistrationPost_block_invoke + 92 
+_CFXRegistrationPost + 440 
+_CFXNotificationPost + 688 
+-[NSNotificationCenter postNotificationName:object:userInfo:] + 88 
+-[NSWindow resignKeyWindow] + 636 
+-[NSPanel resignKeyWindow] + 72 
+-[NSWindow _sendResignKeyWindow] + 100 
+-[NSWindow _orderOut:calculatingKeyWithOptions:documentWindow:] + 232 
+NSPerformVisuallyAtomicChange + 128 
+-[NSWindow _reallyDoOrderWindowOutRelativeTo:] + 516 
+-[NSWindow _reallyDoOrderWindow:] + 80 
+-[NSWindow _doOrderWindow:] + 300 
+$s7SwiftUI26WindowMenuBarExtraBehaviorC4hide33_7D54D4D02B8EB250B9BD6E7FA0E06531LL7animateySb_tF + 352 
+$s7SwiftUI26WindowMenuBarExtraBehaviorC40statusItemDidEndExpandedInterfaceSession_8animatedySo08NSStatusI0C_SbtFTo + 60 
+-[NSStatusItem _endExpandedInterfaceSession:animate:] + 180 
+-[NSSceneStatusItem _endExpandedInterfaceSession:animate:] + 348 
+__33-[NSSceneStatusItem _setupScene:]_block_invoke.30 + 248 
+__swift_closure_destructor.106 + 28520 
+__swift_closure_destructor.106 + 29144 
+-[FBSSceneObserver scene:handlePrivateActions:] + 80 
+-[FBSScene updater:didReceiveActions:forExtension:] + 736 
+__71-[FBSWorkspaceScenesClient sceneID:sendActions:toExtension:completion:]_block_invoke + 204 
+-[FBSWorkspace _calloutQueue_executeCalloutFromSource:withBlock:] + 180 
+_dispatch_client_callout + 16 
+_dispatch_block_invoke_direct + 284 
+__BSSERVICEMAINRUNLOOPQUEUE_IS_CALLING_OUT_TO_A_BLOCK__ + 48 
+BSServiceMainRunLoopSourceHandler + 232 
+__CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__ + 28 
+__CFRunLoopDoSource0 + 224 
+__CFRunLoopDoSources0 + 232 
+__CFRunLoopRun + 832 
+_CFRunLoopRunSpecificWithOptions + 536 
+RunCurrentEventLoopInMode + 320 
+ReceiveNextEventCommon + 492 
+_BlockUntilNextEventMatchingListInMode + 48 
+_DPSBlockUntilNextEventMatchingListInMode + 292 
+_DPSNextEvent + 580 
+-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:] + 780
