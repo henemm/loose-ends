@@ -1,0 +1,109 @@
+test_je_schritt_genau_ein_beleg (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.BelegeVorhanden.test_je_schritt_genau_ein_beleg) ... FAIL
+test_jeder_beleg_hat_zeit_mit_zone (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.BelegeVorhanden.test_jeder_beleg_hat_zeit_mit_zone) ... FAIL
+test_acht_schritte (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Betriebsnotiz.test_acht_schritte) ... FAIL
+test_pflichtsaetze (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Betriebsnotiz.test_pflichtsaetze) ... FAIL
+test_kein_app_code_keine_werkzeuge (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Diffliste.test_kein_app_code_keine_werkzeuge) ... ok
+test_genau_ein_zustand (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Einreichung.test_genau_ein_zustand) ... FAIL
+test_zeitstempel_halten_die_reihenfolge (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Reihenfolge.test_zeitstempel_halten_die_reihenfolge) ... FAIL
+test_kein_delete_und_kein_doppelter_post (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Schreibwege.test_kein_delete_und_kein_doppelter_post) ... ok
+test_keine_geheimnisse (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Schreibwege.test_keine_geheimnisse) ... ok
+test_schreibende_laeufe_lesen_vorher_und_gegenprobe (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Schreibwege.test_schreibende_laeufe_lesen_vorher_und_gegenprobe) ... FAIL
+
+======================================================================
+FAIL: test_je_schritt_genau_ein_beleg (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.BelegeVorhanden.test_je_schritt_genau_ein_beleg)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/docs/artifacts/feat-625-s5d2-store-betrieb/test_belege.py", line 64, in test_je_schritt_genau_ein_beleg
+    self.assertEqual(fehlend, [], f"Beleg fehlt oder ist doppelt für AC {fehlend}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] != []
+
+First list contains 10 additional elements.
+First extra element 0:
+1
+
+- [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
++ [] : Beleg fehlt oder ist doppelt für AC [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+======================================================================
+FAIL: test_jeder_beleg_hat_zeit_mit_zone (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.BelegeVorhanden.test_jeder_beleg_hat_zeit_mit_zone)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/docs/artifacts/feat-625-s5d2-store-betrieb/test_belege.py", line 68, in test_jeder_beleg_hat_zeit_mit_zone
+    self.assertEqual(ohne, [], f"keine Zeile 'Zeit:' mit Zone in AC {ohne}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] != []
+
+First list contains 10 additional elements.
+First extra element 0:
+1
+
+- [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
++ [] : keine Zeile 'Zeit:' mit Zone in AC [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+======================================================================
+FAIL: test_acht_schritte (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Betriebsnotiz.test_acht_schritte)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/docs/artifacts/feat-625-s5d2-store-betrieb/test_belege.py", line 145, in test_acht_schritte
+    schritte = re.findall(r"^\d+\.\s", self.section(), re.M)
+                                       ~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/docs/artifacts/feat-625-s5d2-store-betrieb/test_belege.py", line 141, in section
+    self.assertIsNotNone(m, "Abschnitt '## Einreichung 1.0.2' fehlt in testflight.md")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Abschnitt '## Einreichung 1.0.2' fehlt in testflight.md
+
+======================================================================
+FAIL: test_pflichtsaetze (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Betriebsnotiz.test_pflichtsaetze)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/docs/artifacts/feat-625-s5d2-store-betrieb/test_belege.py", line 149, in test_pflichtsaetze
+    s = self.section()
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/docs/artifacts/feat-625-s5d2-store-betrieb/test_belege.py", line 141, in section
+    self.assertIsNotNone(m, "Abschnitt '## Einreichung 1.0.2' fehlt in testflight.md")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Abschnitt '## Einreichung 1.0.2' fehlt in testflight.md
+
+======================================================================
+FAIL: test_genau_ein_zustand (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Einreichung.test_genau_ein_zustand)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/docs/artifacts/feat-625-s5d2-store-betrieb/test_belege.py", line 126, in test_genau_ein_zustand
+    self.assertIsNotNone(path, "Beleg AC-10 fehlt")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : Beleg AC-10 fehlt
+
+======================================================================
+FAIL: test_zeitstempel_halten_die_reihenfolge (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Reihenfolge.test_zeitstempel_halten_die_reihenfolge)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/docs/artifacts/feat-625-s5d2-store-betrieb/test_belege.py", line 76, in test_zeitstempel_halten_die_reihenfolge
+    self.assertNotIn(None, zeiten, f"Zeit fehlt in AC {gruppe}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None unexpectedly found in [None] : Zeit fehlt in AC [1]
+
+======================================================================
+FAIL: test_schreibende_laeufe_lesen_vorher_und_gegenprobe (docs.artifacts.feat-625-s5d2-store-betrieb.test_belege.Schreibwege.test_schreibende_laeufe_lesen_vorher_und_gegenprobe)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/toasty-popping-moth/docs/artifacts/feat-625-s5d2-store-betrieb/test_belege.py", line 95, in test_schreibende_laeufe_lesen_vorher_und_gegenprobe
+    self.assertEqual(fehler, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ['AC-2: kein Beleg', 'AC-3: kein Beleg', '[73 chars]leg'] != []
+
+First list contains 6 additional elements.
+First extra element 0:
+'AC-2: kein Beleg'
+
++ []
+- ['AC-2: kein Beleg',
+-  'AC-3: kein Beleg',
+-  'AC-4: kein Beleg',
+-  'AC-6: kein Beleg',
+-  'AC-7: kein Beleg',
+-  'AC-8: kein Beleg']
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.065s
+
+FAILED (failures=7)
