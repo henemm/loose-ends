@@ -23,3 +23,10 @@ Laufausgaben ohne Skript-Echo ablegen (nur die Zeilen des Skripts), nie Token, S
 `python3 -m unittest discover -s scripts -p 'test_*.py'` dauert lange (allein `test_asc_store_submit.py` > 90 s);
 im Hintergrund mit großem Zeitlimit laufen lassen. Einzeln geprüft am 2026-11-24 grün: `test_asc_store_version`,
 `test_asc_version_texts`, `test_asc_store_images`, `test_asc_review_notes`, `test_asc_store_submit` (per discover).
+
+## Stand Phase 6 (2026-11-24, 22:15 Uhr MEZ)
+
+Belegt: AC-1 bis AC-9 (`ac01` … `ac09`; Etikett app-weit veröffentlicht, Anhang an iOS und Mac, Tür offen seit
+22:08 Uhr MEZ, Notizen gesetzt, Vorprüfung `bereit` für iOS und Mac). Offen: AC-10, Einreichen nur nach Hennings
+getipptem Wort (Zustand a), sonst Zustand b. Ein Commit ist bis zum Adversary-Verdict gesperrt (`bash_gate`); die Belege
+liegen ungesichert im Arbeitsbaum dieses Worktrees.
