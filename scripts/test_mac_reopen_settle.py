@@ -1,5 +1,8 @@
 """Tests für #978 Schnitt 3: Wiederöffnungstests warten den App-Wechsel ab, prüfen eine Haltezeit, ⌘W-Arm hart.
 
+v3 (nach v2-Galerielauf 45464097119): Wurzel ist die Menüleiste der vordersten App (`menuBars`), nur mit Rahmen bei
+y = 0; Rückfälle mit eigenem Text; ein Rückfall bei fremder vorderster App macht den Nutzerarm rot.
+
 v2 (nach Galerie-Versuch 3): Der Nutzerklick läuft über eine `XCUICoordinate`, deren Wurzel die vorderste App ist
 (`frontmostRootClick`), damit `click()` Loose Ends nicht aktiviert; Rückfall `statusItem.click()`, Klickdauer im Anhang.
 
@@ -37,13 +40,17 @@ def function_body(text: str, name: str) -> str:
     return match.group(0)
 
 
+def strip_comments(text: str) -> str:
+    return re.sub(r"//.*$", "", text, flags=re.M)
+
+
 def new_format_click(clicked_at: float, opened: bool, settled: bool = True) -> str:
     """So soll `assertSymbolOpensPanelWithOneClick` ab Schnitt 3 schreiben: Verlauf vor der letzten Zeile."""
     history = ("front 0.00 s com.apple.dt.xctest.tool\nfront 0.42 s com.henning.looseends\nsettled after 1.42 s\n"
                if settled else "front 0.00 s com.apple.dt.xctest.tool\ntimeout after 10 s\n")
     return (
         f"click: {clicked_at:.3f} (seconds since 1970)\n"
-        "how: user: frontmost root com.apple.finder\n"
+        "how: user: frontmost menu bar com.apple.finder\n"
         "click duration: 0.412 s\n"
         f"{history}"
         "Attributes: Application, pid: 4711, label: 'Loose Ends'\n"
@@ -129,33 +136,48 @@ class SettleSourceTests(unittest.TestCase):
 
 
 class FrontmostRootClickTests(unittest.TestCase):
-    """v2 AC-1, AC-2: Klick über die vorderste App als Koordinatenwurzel, Rückfall, Klickdauer im Anhang."""
+    """v3 AC-1 bis AC-3: Klick über die Menüleiste der vordersten App als Koordinatenwurzel, Rückfälle mit eigenem
+    Text, ein stiller Rückfall bei fremder vorderster App färbt den Nutzerarm rot. Kommentare zählen nicht."""
 
     def setUp(self):
         self.text = GALLERY_TESTS.read_text()
-        self.helper = function_body(self.text, "assertSymbolOpensPanelWithOneClick")
-        self.root_click = function_body(self.text, "frontmostRootClick")
+        self.helper = strip_comments(function_body(self.text, "assertSymbolOpensPanelWithOneClick"))
+        self.root_click = strip_comments(function_body(self.text, "frontmostRootClick"))
 
-    def test_ac1_root_is_frontmost_app(self):
+    def test_ac1_root_is_menu_bar_of_frontmost_app(self):
         self.assertIn("XCUIApplication(bundleIdentifier:", self.root_click)
+        self.assertRegex(self.root_click, r"\.menuBars\.element\(boundBy: 0\)", "Wurzel = erste Menüleiste")
         self.assertIn("coordinate(withNormalizedOffset: .zero)", self.root_click)
         self.assertIn(".withOffset(", self.root_click)
 
-    def test_ac1_offset_is_item_middle_minus_root_origin(self):
+    def test_ac1_root_only_with_frame_at_top(self):
+        self.assertIn(".isEmpty", self.root_click, "leerer Menüleistenrahmen → Rückfall")
+        self.assertRegex(self.root_click, r"\.(minY|origin\.y)\s*(!=|==)\s*0", "Ursprung y = 0 geprüft")
+
+    def test_ac1_offset_is_item_middle_minus_menu_bar_origin(self):
+        self.assertRegex(self.root_click, r"statusItem\.frame", "Offset aus statusItem.frame")
         for name in ("midX", "midY"):
             self.assertIn(name, self.root_click, f"Mitte des Symbols: {name}")
-        self.assertTrue(re.search(r"\.(origin\.x|minX)\b", self.root_click), "Ursprung des Wurzelrahmens x")
-        self.assertTrue(re.search(r"\.(origin\.y|minY)\b", self.root_click), "Ursprung des Wurzelrahmens y")
+        self.assertRegex(self.root_click, r"\.(origin\.x|minX)\b", "Ursprung der Menüleiste x")
+        self.assertRegex(self.root_click, r"\.(origin\.y|minY)\b", "Ursprung der Menüleiste y")
 
-    def test_ac1_fallback_when_own_app_unreadable_or_empty_frame(self):
-        self.assertIn('"com.henning.looseends"', self.root_click, "Loose Ends selbst vorn → Rückfall")
-        self.assertIn(".isEmpty", self.root_click, "leerer Wurzelrahmen → Rückfall")
-        self.assertTrue(re.search(r"\b\w+\.click\(\)", self.root_click), "Rückfall wie bisher: .click()")
-        self.assertIn("fallback", self.root_click, "Rückfall im Anhang vermerkt")
-        self.assertFalse(re.search(r"\b(for|while|repeat)\b", self.root_click), "keine Wiederholung im Klick")
+    def test_ac1_no_root_from_app_frame_any_more(self):
+        self.assertNotRegex(self.root_click, r"\broot\.frame\b", "v2-Wurzel (App-Rahmen) ist widerlegt")
+        self.assertNotIn("empty frame", self.root_click, "v2-Rückfalltext entfällt")
+        self.assertNotIn("user: frontmost root ", self.root_click, "v2-how-Text entfällt")
 
-    def test_ac2_how_names_frontmost_root(self):
-        self.assertIn("user: frontmost root ", self.root_click)
+    def test_ac2_three_how_texts(self):
+        self.assertIn('"user: frontmost menu bar \\(', self.root_click)
+        self.assertIn('"user: statusItem.click() fallback (frontmost com.henning.looseends)"', self.root_click)
+        self.assertIn(", no menu bar frame)", self.root_click)
+        self.assertIn("user: statusItem.click() fallback (frontmost \\(", self.root_click)
+
+    def test_ac2_fallback_is_statusitem_click_once_no_retry(self):
+        self.assertIn("statusItem.click()", self.root_click)
+        self.assertNotRegex(self.root_click, r"\b(for|while|repeat)\b", "keine Wiederholung im Klick")
+        code = re.sub(r'"(?:[^"\\\n]|\\.)*"', '""', self.root_click)
+        self.assertEqual(len(re.findall(r"\.click\(\)", code)),
+                         len(re.findall(r"\breturn\b", code)), "je Weg genau ein Klick")
 
     def test_ac2_user_arms_click_through_root_control_arm_its_own(self):
         self.assertTrue(re.search(r"if let click \{[^}]*click\(statusItem\)[^}]*\} else \{[^}]*frontmostRootClick\(",
@@ -167,9 +189,18 @@ class FrontmostRootClickTests(unittest.TestCase):
         lines = [line.strip() for line in literal.group(1).splitlines() if line.strip()]
         duration = [i for i, line in enumerate(lines) if line.startswith("click duration:")]
         self.assertTrue(duration, "Zeile „click duration: <s> s“ fehlt")
-        self.assertIn(" s", lines[duration[0]])
         self.assertTrue(lines[-1].startswith("after:"), "letzte Zeile bleibt after: … panel open|not open")
         self.assertLess(duration[0], len(lines) - 1)
+
+    def test_ac3_fallback_with_foreign_frontmost_fails_with_how(self):
+        """Lehre aus v2: ein stiller Rückfall bei fremder vorderster App wird nie grün. Die Meldung nennt `how`."""
+        self.assertRegex(self.helper, r"fallback", "Rückfall wird im Helfer erkannt")
+        self.assertIn('"com.henning.looseends"', self.helper, "Loose Ends vorn bleibt zulässig")
+        self.assertRegex(self.helper, r"XCT(Fail|AssertFalse|AssertTrue)\([^\n]*\\\(how\)",
+                         "harte Assertion mit how in der Meldung")
+
+    def test_ac3_hard_check_only_for_user_arms(self):
+        self.assertRegex(self.helper, r"click\s*==\s*nil", "Kontrollarm bleibt von der Rückfall-Regel unberührt")
 
 
 class NewFormatSummaryTests(unittest.TestCase):

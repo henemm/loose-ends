@@ -242,6 +242,36 @@ class ExpectedAndHowTests(unittest.TestCase):
         self.assertIn("control: cgevent 2, xcuicoordinate 1", text)
         self.assertIn("return: statusitem 1", text)
 
+    def test_how_v3_categories(self):
+        """#978 S3 v3 AC-5: die drei neuen Texte, spezifische vor `statusItem.click()`."""
+        cases = {
+            "user: frontmost menu bar com.apple.finder": "menubar-root",
+            "user: statusItem.click() fallback (frontmost com.henning.looseends)": "fallback-looseends",
+            "user: statusItem.click() fallback (frontmost com.apple.finder, no menu bar frame)": "fallback-noframe",
+            "user: statusItem.click()": "statusitem",
+        }
+        for how, name in cases.items():
+            self.assertEqual(self.summary.how_of(f"click: 1.0 (seconds since 1970)\nhow: {how}\n"), name, how)
+
+    def test_how_v3_counted_and_rates_unchanged(self):
+        write_how_export(self.base / "raw", [
+            ("reopen-open-app", 1.0, True, "user: frontmost menu bar com.apple.finder"),
+            ("reopen-open-app", 2.0, True, "user: frontmost menu bar com.apple.finder"),
+            ("reopen-open-app", 3.0, False, "user: statusItem.click() fallback (frontmost com.apple.finder, no menu bar frame)"),
+            ("reopen-return", 4.0, True, "user: statusItem.click() fallback (frontmost com.henning.looseends)"),
+        ])
+        how = self.summary.count_how([self.base / "raw"])
+        self.assertEqual(how["open-app"], {"menubar-root": 2, "fallback-noframe": 1})
+        self.assertEqual(how["return"], {"fallback-looseends": 1})
+        counts = self.summary.count_arms([self.base / "raw"])
+        self.assertEqual(counts["open-app"]["n"], 3)
+        self.assertEqual(counts["open-app"]["fails"], 1)
+        self.assertAlmostEqual(counts["open-app"]["rate"], 1 / 3)
+        self.assertEqual(counts["return"], {"n": 1, "fails": 0, "rate": 0.0})
+        text = self.run_script()
+        self.assertIn("open-app: menubar-root 2, fallback-noframe 1", text)
+        self.assertIn("return: fallback-looseends 1", text)
+
     def test_attachment_without_how_counts_as_unknown(self):
         write_export(self.base / "raw", [("reopen-return", 1.0, True)])
         self.assertEqual(self.summary.count_how([self.base / "raw"])["return"], {"unbekannt": 1})
@@ -412,6 +442,7 @@ class ControlArmTests(SourceCheck):
             return re.sub(r"//.*$", "", match.group(0), flags=re.M)
         self.assertIn("frontmostRootClick(", body("assertSymbolOpensPanelWithOneClick"))
         self.assertIn("statusItem.click()", body("frontmostRootClick"))
+        self.assertIn(".menuBars.element(boundBy: 0)", body("frontmostRootClick"), "#978 S3 v3: Wurzel = Menüleiste")
 
 
 class PanelLogTests(SourceCheck):
