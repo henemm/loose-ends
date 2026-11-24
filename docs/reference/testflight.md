@@ -255,13 +255,16 @@ Text für das Feld „Notes“ der App-Review-Informationen steht im ersten Code
 `scripts/test_asc_review_notes.py` aus, dann `scripts/asc_review_notes.py`. Er reicht **nichts** ein; das erneute Einreichen
 geschieht nur nach Hennings Wort.
 
-- `lesen` schreibt nichts: `version 1.0 IOS appStoreState=…`, `notizen gesetzt bytes=…` oder `notizen leer`, je Anhang
+- Seit #625 S5d-1 arbeitet das Skript je Plattform (iOS, Mac) auf der einen bearbeitbaren Version statt fest auf 1.0; die
+  Zeilen unten tragen die Plattform als Präfix (`IOS …`, `MAC_OS …`). Der Text nennt Sign in with Apple, Konto löschen in
+  der App, Server in Deutschland und den Connector in claude.ai.
+- `lesen` schreibt nichts: `<Plattform> notizen gesetzt bytes=…` oder `notizen leer`, je Anhang
   `anhang name=… groesse=… assetDeliveryState=…` (ohne Anhang `anhang keine`), `zusammenfassung geschrieben=0`.
 - `notizen` prüft vor jedem Schreibaufruf: höchstens 4000 Byte (Apple zählt Byte, „ä“ zählt 2) und kein Platzhalter
   `<HIER_`. Gleicher Text: `notizen unverändert bytes=…`, kein Schreiben. Sonst genau ein PATCH auf `notes`,
   `notizen gesetzt bytes=…`, Gegenprobe `gegenprobe gleich=ja`, `zusammenfassung geschrieben=1`.
 - Notes-Text und Kontaktfelder stehen nie im Log (das Repo und seine Läufe sind öffentlich), nur Zustände und Bytezahlen.
-- `keine iOS-Version 1.0` oder `hat keine App-Review-Informationen`: Abbruch, das Skript legt nichts an.
+- `keine bearbeitbare Version <Plattform>` oder `hat keine App-Review-Informationen`: Abbruch vor jedem Schreiben, das Skript legt nichts an.
   `Apple lässt die Notizen im Zustand … nicht zu` (HTTP 403/409): Rückfall ist die Oberfläche von App Store Connect.
 - **Erst nach dem Merge:** `workflow_dispatch` startet erst, wenn die Workflow-Datei auf `main` liegt.
 
