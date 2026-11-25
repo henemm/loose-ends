@@ -165,3 +165,18 @@ Erfolge kurzer Klick 0,033–0,147 s oder „kein Maus-hoch“, Erfolge `click()
 
 ### Open Questions
 - Keine PO-Frage: reine Prüfwerkzeug-Arbeit, die DoD von #978 sieht „Prüfwerkzeug hält zu lange → einmal wiederholen“ vor.
+
+## Analysis v7 (2026-11-25, nach Befund v6)
+
+Befund v6 (Lauf 45658361541, Commit c800f7b): alle 40 Klickanhänge `read hold: unknown (log not readable: Connection to logd failed)`.
+Der Läufer darf `OSLogStore.local()` nicht lesen (mjtsai „OSLogStore on Monterey“, Apple-Forum 666679). Abbruchregel (a) → Rückfall A-ax.
+
+- **A-ax (Empfehlung):** Die App misst unter `--ui-testing` in `MenuBarPanelLog` dieselbe Strecke `key` → erstes Maus-hoch (3 s) und legt sie
+  als Accessibility-Wert `round=<n> <s>|short|pending` am `NSStatusBarButton` ab (per `NSApp.windows`/`NSStatusBarWindow`, Muster
+  orchetect/MenuBarExtraAccess). Der Test liest `statusItems.firstMatch.value`, das er ohnehin hält. ~25 LoC App-Code, nur unter Tests wirksam.
+- **TCP-Port unter `--ui-testing`** (Apple-DTS, Forum 130767: App Groups gehen für den Runner nicht): mehr Code, im Sandbox-Arm Netzwerk-Entitlement; nicht gewählt.
+- **SwiftUI `.accessibilityValue` am `MenuBarExtra`-Label:** Durchreichung unbelegt; nicht gewählt.
+- **D CGEvent-Klick, C Produkt:** wie v6, nicht gewählt.
+
+Unbelegt bleibt, ob XCUITest den gesetzten Wert am Statusobjekt liest → Halteprobe zuerst; liefert sie keine Werte, Stopp und neue Analyse (TCP).
+CI-Läufe (Probe, 40er-Lauf, drei Galerie-Läufe) stehen in der DoD, nicht als AC: Ein Abbruch soll keine Sperre am Gate auslösen.
