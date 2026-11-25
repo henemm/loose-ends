@@ -12,6 +12,11 @@ der erste Klick das Panel nicht, liest der Test die Haltedauer aus dem Panel-Pro
 0,4 s, „kurz“, „unbekannt“) bleibt der Test hart rot. Es gibt genau einen Retry-Pfad, gemeinsam für `openPanel` und
 `assertSymbolOpensPanelWithOneClick`.
 
+v7 (nach Befund v6, Lauf 45658361541: `OSLogStore.local()` im Läufer „Connection to logd failed“, 40 von 40): Klick,
+Retry-Pfad und Schwelle bleiben, nur die Quelle der Haltedauer wechselt. Die App misst unter `--ui-testing` die Strecke
+`key` → erstes Maus-hoch selbst und setzt sie als Accessibility-Wert des Statusobjekts (`round=<n> pending|<s>|short`);
+der Test liest die Runde vor dem Klick (`MacPanelHold.round(of:)`) und danach `MacPanelHold.read(_:after:)`.
+
 Aufruf: python3 scripts/test_mac_reopen_settle.py
 Die CI fährt die Datei mit `unittest discover -s scripts -p 'test_*.py'`.
 
@@ -25,6 +30,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+APP_CAPTURE = ROOT / "LooseEnds" / "Mac" / "MenuBarCapture.swift"
 GALLERY_TESTS = ROOT / "LooseEndsUITests" / "MacGalleryTests.swift"
 PANEL_HOLD = ROOT / "LooseEndsUITests" / "MacPanelHold.swift"
 SCRIPT = ROOT / "scripts" / "mac_panel_repeat_summary.py"
@@ -182,6 +188,18 @@ class RetryPathSourceTests(unittest.TestCase):
             self.assertEqual(len(re.findall(rf"\b{self.name}\(", self.bodies[caller])), 1,
                              f"{caller} ruft den Retry-Pfad genau einmal")
 
+    def test_every_click_way_reads_the_round_before_its_click(self):
+        """Spec v7 AC-4: jeder Klickweg liest die Runde des Statusobjekts vor dem Klick, nicht mehr eine Uhrzeit."""
+        for name, click in (("openPanel", "shortClick("), ("assertSymbolOpensPanelWithOneClick", "shortClick("),
+                            ("holdClick", ".click(forDuration: seconds")):
+            body = self.bodies[name]
+            self.assertEqual(body.count("MacPanelHold.round(of: statusItem)"), 1, f"{name} liest die Runde genau einmal")
+            self.assertLess(body.find("MacPanelHold.round(of: statusItem)"), body.find(click),
+                            f"{name}: Runde vor dem Klick lesen")
+        self.assertNotIn("since: clickedAt", self.text, "keine Zeitquelle mehr für die Haltedauer")
+        self.assertRegex(self.retry, r"MacPanelHold\.read\(statusItem, after: \w+\)", "Lesen nach der Runde vor dem Klick")
+        self.assertRegex(self.bodies["holdClick"], r"MacPanelHold\.read\(statusItem, after: \w+\)")
+
     def test_retry_reads_hold_first_then_one_short_click(self):
         read = self.retry.find("MacPanelHold.read(")
         click = self.retry.find("shortClick(")
@@ -223,36 +241,84 @@ class RetryPathSourceTests(unittest.TestCase):
 
 
 class MacPanelHoldSourceTests(unittest.TestCase):
-    """Spec v6 Test 5 und AC-3: der Helfer liest das Panel-Protokoll der App."""
+    """Spec v7 Test 1 und AC-2: der Helfer liest den Accessibility-Wert des Statusobjekts, nicht das Protokoll."""
 
     def setUp(self):
         self.assertTrue(PANEL_HOLD.is_file(), f"{PANEL_HOLD.relative_to(ROOT)} fehlt")
         self.raw = PANEL_HOLD.read_text()
         self.text = strip_comments(self.raw)
 
-    def test_macos_only_with_oslog(self):
-        self.assertTrue(self.text.lstrip().startswith("#if os(macOS)"), "nur macOS (OSLogStore.local)")
-        self.assertIn("import OSLog", self.text)
-        self.assertIn("OSLogStore.local()", self.text)
+    def test_macos_only_without_oslog(self):
+        self.assertTrue(self.text.lstrip().startswith("#if os(macOS)"), "nur macOS")
+        self.assertNotIn("import OSLog", self.text)
+        self.assertNotIn("OSLogStore", self.text)
+        self.assertIn("import XCTest", self.text)
 
-    def test_subsystem_and_category(self):
-        self.assertIn('"com.henning.looseends"', self.text)
-        self.assertIn('"MenuBarPanel"', self.text)
+    def test_reads_value_of_status_item(self):
+        self.assertRegex(self.text, r"static func round\(of statusItem: XCUIElement\) -> Int")
+        self.assertRegex(self.text, r"static func read\(_ statusItem: XCUIElement, after round: Int\) -> Reading")
+        self.assertIn("statusItem.value", self.text)
 
-    def test_pairs_first_key_with_first_mouse_up_in_3_s(self):
-        self.assertIn('"panel key', self.text)
-        self.assertIn("type=2", self.text)
-        self.assertRegex(self.text, r"window: TimeInterval = 3\b", "3-s-Fenster des Monitors")
+    def test_round_format_pending_short(self):
+        self.assertIn('"round="', self.text)
+        self.assertIn('"pending"', self.text)
+        self.assertIn('"short"', self.text)
+
+    def test_waits_at_most_4_s(self):
+        self.assertRegex(self.text, r"static let wait: TimeInterval = 4\b", "höchstens 4 s warten")
 
     def test_results_seconds_short_unknown_with_reason(self):
         self.assertRegex(self.text, r"case seconds\(TimeInterval\)")
         self.assertRegex(self.text, r"case short\b")
         self.assertRegex(self.text, r"case unknown\(String\)")
-        self.assertRegex(self.text, r"static func read\(since: Date\) -> Reading")
+        self.assertIn("var text: String", self.text)
+        self.assertGreaterEqual(self.text.count(".unknown("), 2, "Gründe: Wert fehlt/unlesbar, keine neue Runde")
 
     def test_no_try_optional_and_no_print(self):
         self.assertNotIn("try?", self.text)
         self.assertNotRegex(self.text, r"\bprint\(")
+
+
+class AppHoldValueSourceTests(unittest.TestCase):
+    """Spec v7 Test 2 und AC-3: die App setzt den Wert am Statusobjekt, nur unter `--ui-testing`."""
+
+    def setUp(self):
+        self.raw = APP_CAPTURE.read_text()
+        self.text = strip_comments(self.raw)
+        match = re.search(r"enum MenuBarPanelLog \{.*?\n\}\n", self.text, re.S)
+        self.assertIsNotNone(match, "enum MenuBarPanelLog fehlt")
+        self.log = match.group(0)
+
+    def test_set_through_status_bar_button(self):
+        self.assertIn("setAccessibilityValue(", self.log)
+        self.assertIn('"NSStatusBarWindow"', self.log)
+        self.assertIn("NSStatusBarButton", self.log)
+        self.assertIn("NSApp.windows", self.log)
+
+    def test_only_under_ui_testing(self):
+        setter = re.search(r"func showHold\(.*?\n    \}\n", self.log, re.S)
+        self.assertIsNotNone(setter, "func showHold fehlt (der eine Setzer des Werts)")
+        self.assertRegex(setter.group(0), r"guard ModelContainerFactory\.isUITesting else \{ return \}")
+        self.assertEqual(self.log.count("setAccessibilityValue("), 1, "nur showHold setzt den Wert")
+
+    def test_pending_at_key_with_uptime(self):
+        start = re.search(r"func startMonitors\(\).*?\n    \}\n", self.log, re.S).group(0)
+        self.assertIn("ProcessInfo.processInfo.systemUptime", start)
+        self.assertRegex(start, r'showHold\(round: round, "pending"\)')
+
+    def test_first_mouse_up_within_round_sets_seconds(self):
+        self.assertRegex(self.log, r"\.leftMouseUp")
+        self.assertRegex(self.log, r'String\(format: "%\.3f"')
+        self.assertGreaterEqual(len(re.findall(r"mouseUp\(", self.log)), 3, "lokal und global melden das Maus-hoch")
+
+    def test_round_end_without_mouse_up_is_short(self):
+        self.assertRegex(self.log, r'showHold\(round: round, "short"\)')
+        self.assertIn('"round=\\(round) \\(state)"', self.log)
+
+    def test_log_lines_unchanged(self):
+        for line in ('panelLogger.notice("monitor end")',
+                     'panelLogger.notice("monitor \\(scope, privacy: .public) type=\\(type, privacy: .public) window=\\(window, privacy: .public) time=\\(time, privacy: .public)")'):
+            self.assertIn(line, self.raw)
 
 
 if __name__ == "__main__":
