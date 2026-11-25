@@ -23,4 +23,4 @@ Protokoll-Abgleich von v6 (`OSLogStore`, im Läufer nicht lesbar) und betrifft d
 ## Nächste DoD-Zeilen
 
 - Nachweislauf `iterationen=40`: Lauf 45676450151, bestanden (`beleg-v7-nachweislauf.md`)
-- drei Galerie-Läufe auf demselben Commit: erster Lauf 45672535443
+- drei Galerie-Läufe auf Commit 72e7dff: Lauf 45672535443, Versuch 1, 2 und 3 grün („Mac Gallery (macOS)“, Jobs 139411492884, 139471686326, 139491988327; Versuch 3 fertig 21:09 UTC)
