@@ -151,7 +151,7 @@ neu gestartet, das Ticket wartet nicht darauf.
 ### Open Questions
 - keine (Testwerkzeug, kein Produktthema; kein Pfad der Geräteliste berührt)
 
-## Analysis
+## Analysis v3 (widerlegt durch Probelauf 45562032666, 2026-11-25: Fall ohne Aktivierung)
 
 Analyse v3 (2026-11-24 abends), nach dem Befund `docs/artifacts/fix-978-s3-wiederoeffnen-warten/befund-v2-galerie1.md`.
 
@@ -226,6 +226,91 @@ Keine ADR betroffen.
 ### Dependencies
 XCUIAutomation, AppKit im Testläufer; Abnehmer Pflicht-Check „Mac Gallery (macOS)“, `mac-panel-repeat.yml`. Galerie-
 Zeitlimit #974 kann Läufe abbrechen; ein abgebrochener Lauf zählt nicht und wird neu gestartet.
+
+### Open Questions
+- keine (Testwerkzeug, kein Produktthema; kein Pfad der Geräteliste berührt)
+
+## Analysis
+
+Analyse v4 (2026-11-25), nach `docs/artifacts/fix-978-s3-wiederoeffnen-warten/befund-v3-probelauf.md`.
+
+### Type
+Bug (Testwerkzeug). Neue Arbeitshypothese: **Haltedauer**. Der System-Host des Statusobjekts (macOS 27, expanded
+interface session) schließt das Fenster, wenn zwischen Maus-runter und Maus-hoch zu viel Zeit liegt
+(Menü-Semantik „gedrückt halten, loslassen“). XCTests Klicksynthese erzeugt das Maus-hoch gelegentlich spät.
+Die Aktivierung von Loose Ends war nicht die Ursache (v3 hat sie entfernt, Fall trotzdem).
+
+### Daten (CGEvent-Zeitstempel aus dem Panel-Log, also Erzeugungszeit, nicht Zustellzeit)
+| Lauf | key → Maus hoch | Ergebnis |
+|---|---|---|
+| 45562032666 It. 1 open-app | 0,933 s (298.736 → 299.669) | **zu**, resign 20 ms nach Maus hoch |
+| 45562032666 übrige | 0,13 / 0,175 / 0,36 s | offen |
+| S2-Fall 45334299531 | 0,71 s (1,16 s nach Klick) | **zu** |
+| S3 Galerie-Versuch 3 | 0,897 s | **zu** |
+| S2/S3 übrige Erfolge | max. 0,225 s | offen |
+
+Das Maus-hoch ist schon beim Erzeugen spät (Zeitstempel), die Lücke entsteht also in der Klicksynthese, nicht in der
+Zustellung. Datenlage dünn (3 Fälle), die Schwelle liegt zwischen 0,36 und 0,71 s.
+
+### Recherche
+- StableBar PR #904 (macOS 27.2): „holding the button down 700 ms or more makes … menu close on release“ – belegt für
+  ein Menü, nicht für den Fensterstil (https://github.com/stablebox/StableBar/pull/904).
+- macOS 27: Fensterstil-MenuBarExtra öffnet über `expandedInterfaceDelegate`/`expandedInterfaceSession`; das System,
+  nicht target/action, entscheidet; kein öffentlicher Weg, eine Sitzung programmatisch zu starten
+  (https://github.com/Heckscheibe/SimpleSimulatorManager/issues/125); echter Klick öffnet zuverlässig, AX-Press nicht
+  (https://github.com/TheRogue76/macos-harness/issues/53); DTS zu Statusobjekten in 27 (https://developer.apple.com/forums/thread/836113).
+- Ältere AppKit-Menüs: Öffnen nach Halteverzögerung schließt beim Loslassen
+  (https://lists.apple.com/archives/cocoa-dev/2011/Oct/msg00663.html).
+- Keine Quelle mit Millisekunden-Schwelle für die expanded interface session → wird gemessen.
+
+### Gegenprüfung (Plan/Sonnet, 2026-11-25)
+Tragfähig, aber Testumbau erst nach bewiesenem Mechanismus. Punkte: (1) ob ein globaler `NSEvent`-Monitor im
+Testläufer die von testmanagerd erzeugten Ereignisse sieht, ist unbelegt; (2) Haltedauer könnte nur Symptom eines trägen
+Läufers sein; (3) „≥ Schwelle → eine Wiederholung“ ist eine Setzung, die ein echtes #862 bei langem Halten verdecken
+könnte; (4) Statistik dünn. Empfehlung: zuerst reine Messung. Übernommen mit Korrektur: `press(forDuration:)` gibt es
+auf macOS nicht, dort `click(forDuration:thenDragTo:)` auf dieselbe Koordinate.
+
+### Technical Approach (Empfehlung: Schnitt S3 v4 = Haltedauer-Probe, kein Testumbau)
+1. **Reproduktion als Schalter:** neuer Test `testHoldDurationProbe` in `MacGalleryTests.swift`, nur mit
+   `LE_PANEL_HOLD_PROBE` (sonst übersprungen, wie der Kontrollarm). Je Iteration: Panel zu, Statussymbol per
+   `XCUICoordinate.click(forDuration: d, thenDragTo: dieselbe Koordinate)` mit d = 1,0 s und d = 0,1 s im Wechsel,
+   nach 3 s Panel offen/zu. Anhang je Klick: d, Ergebnis, Haltedauer des globalen Monitors im Testläufer
+   (`addGlobalMonitorForEvents([.leftMouseDown, .leftMouseUp])`, `event.timestamp`) oder „monitor sah nichts“.
+2. `mac-panel-repeat.yml`: Eingabe `halteprobe` (bool) setzt `LE_PANEL_HOLD_PROBE` und wählt nur diesen Test.
+3. `scripts/mac_panel_repeat_summary.py`: Arme `hold-1.0`/`hold-0.1` zählen (zu/offen), dazu key → Maus hoch aus dem
+   Panel-Log je Klick und ob Monitor- und Log-Dauer übereinstimmen.
+4. Lauf mit ≥ 20 je Arm. **Bestanden** (Mechanismus belegt): 1,0 s schließt in ≥ 95 %, 0,1 s in 0 %. Dann folgt
+   Schnitt S3 v5: Klickweg zurück auf `statusItem.click()` (v3-Wurzel bringt nichts und kostet 5,6 s), Haltedauer
+   messen, über der Schwelle genau eine Wiederholung mit Anhang, darunter hart rot; Schwelle aus der Probe.
+   **Durchgefallen:** Hypothese widerlegt, Rückfall D.
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| LooseEndsUITests/MacGalleryTests.swift | MODIFY | `testHoldDurationProbe` + Monitor-Hilfe, nur unter `LE_PANEL_HOLD_PROBE` |
+| .github/workflows/mac-panel-repeat.yml | MODIFY | Eingabe `halteprobe` |
+| scripts/mac_panel_repeat_summary.py | MODIFY | Halte-Arme zählen, key → Maus hoch je Klick |
+| scripts/test_mac_panel_repeat_summary.py | MODIFY | Tests dazu |
+
+Unverändert: App-Code, Pflicht-Job Mac Gallery, die drei Wiederöffnungstests (v3-Stand bleibt bis v5).
+
+### Scope Assessment
+- Files: 4; App-Code 0 LoC; Test ~+45, Workflow ~+10, Skript ~+30
+- Risk Level: LOW (Probe läuft nur auf Abruf, Pflicht-Checks unberührt)
+
+### Alternativen
+| | Ursache belegt | #862 sichtbar | Aufwand | Urteil |
+|---|---|---|---|---|
+| Probe zuerst, dann v5 (Haltedauer-Regel) | ja, per Schalter | ja, unter Schwelle hart | 2 Schnitte, klein | **empfohlen** |
+| v5 sofort (Messen + eine Wiederholung) | nein | ja | 1 Schnitt | verworfen: Umbau auf unbewiesener Ursache (Lehre v1–v3) |
+| D: auf und zu im Klick erkennen, eine Wiederholung | nein | mittel | ~50 LoC | Rückfall bei widerlegter Probe |
+| CGEvent mit festem kurzem Abstand | ja | am besten | Posten auf dem Läufer gesperrt | verworfen |
+| E App-Eingriff (Panel gegen Schließen nach Halten sperren) | ja | ja | App-Code, gegen Systemverhalten | verworfen; kippt die S2-Festlegung „kein App-Eingriff“ |
+
+Keine ADR betroffen.
+
+### Dependencies
+XCUIAutomation, AppKit im Testläufer, `mac-panel-repeat.yml`. Galerie-Zeitlimit #974 unberührt (Probe läuft nicht im Pflicht-Job).
 
 ### Open Questions
 - keine (Testwerkzeug, kein Produktthema; kein Pfad der Geräteliste berührt)
