@@ -8,8 +8,11 @@ keine Bundle-ID, keinen Stapel.
 
 Mit `--expected N` prüft es den Nenner je aktivem Arm gegen N (Iterationen je Test) und nennt jede Abweichung; aktiv sind
 die Arme aus `--arms`, ohne die Angabe Return, Open-App und jeder Arm mit mindestens einem Klickanhang. Je Arm zählt es
-den Klickweg aus der Anhangszeile `how:` (seit #978 S3 v3 menubar-root, fallback-looseends, fallback-noframe; dazu
-statusitem, cgevent, xcuicoordinate als Rückfall). Als Beleg für den Nutzerweg zählt nur menubar-root.
+den Klickweg aus der Anhangszeile `how:` (seit #978 S5 short-click; dazu statusitem, cgevent, xcuicoordinate). Als Beleg
+für den Nutzerweg zählt nur short-click.
+
+Seit #978 S5 nennt der Bericht je Wiederöffnungsklick die Haltedauer: key → Maus hoch, wenn das Maus-hoch im 3-s-Fenster
+des Monitors nach `key` liegt, sonst „kurz (kein Maus-hoch)“ (beim kurzen Klick bleibt das Ereignis beim Statusobjekt).
 
 Seit #978 S3 v4 zählt es auch die Haltedauer-Probe (`mac-gallery-hold-<d>-<n>-click`, Arme hold-1.0 und hold-0.1):
 je Arm Nenner, zu, offen und Rate, je Klick key → Maus hoch aus dem Panel-Protokoll, den Abgleich mit der Haltedauer des
@@ -30,10 +33,10 @@ HOLD_ARMS = ("hold-1.0", "hold-0.1")
 ARMS = REOPEN_ARMS + HOLD_ARMS
 # Die beiden Pflicht-Arme laufen in jedem Wiederholungslauf; der Kontrollarm nur mit `kontrollarm`.
 REQUIRED_ARMS = ("return", "open-app")
-# Klickweg aus der Zeile `how:` des Anhangs (MacGalleryTests.swift). Die genaueren Texte zuerst (#978 S3 v3);
-# als Beleg für den Nutzerweg zählt nur `menubar-root`, die beiden `fallback-*` sind Rückfälle auf statusItem.click().
-_HOW = (("frontmost menu bar", "menubar-root"), ("fallback (frontmost com.henning.looseends)", "fallback-looseends"),
-        ("no menu bar frame", "fallback-noframe"), ("statusItem.click()", "statusitem"), ("CGEvent", "cgevent"), ("XCUICoordinate", "xcuicoordinate"))
+# Klickweg aus der Zeile `how:` des Anhangs (MacGalleryTests.swift), je Eintrag ein regulärer Ausdruck. Als Beleg für
+# den Nutzerweg zählt nur `short-click` (#978 S5); die entfallenen v3-Klickwege sind `unbekannt`.
+_HOW = ((r"short click 0\.1 s", "short-click"), (r"statusItem\.click\(\)$", "statusitem"), (r"CGEvent", "cgevent"),
+        (r"XCUICoordinate", "xcuicoordinate"))
 # Der Kontrollarm zuerst, weil sein Label mit dem des Return-Arms beginnt.
 _ARM_PATTERN = re.compile(r"^mac-gallery-(reopen-return-control|reopen-return|reopen-open-app)-click(?:[_.]|$)")
 _HOLD_PATTERN = re.compile(r"^mac-gallery-hold-(1\.0|0\.1)-\d+-click(?:[_.]|$)")
@@ -47,6 +50,10 @@ AGREEMENT_SECONDS = 0.1
 _LABEL_TO_ARM = {"reopen-return-control": "control", "reopen-return": "return", "reopen-open-app": "open-app"}
 # Wie lange nach dem Klick Protokollzeilen zur Zeitachse eines Falls gehören (Warten des Tests: 10 s).
 TIMELINE_SECONDS = 15.0
+# Fenster des Monitors in der App nach `key` (MenuBarCapture: 3 s); nur ein Maus-hoch darin gehört zum Klick.
+MONITOR_SECONDS = 3.0
+# Haltedauer eines Klicks mit `key`, aber ohne Maus-hoch im Monitorfenster (#978 S5).
+SHORT = "kurz (kein Maus-hoch)"
 
 _LINE = re.compile(
     r"^(?P<stamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(?:\.\d+)?)(?P<tz>[+-]\d{4})?\s.*?"
@@ -115,8 +122,8 @@ def clicks(folders):
 def how_of(text: str) -> str:
     """Klickweg eines Anhangs aus seiner Zeile `how:`; ohne erkennbare Zeile `unbekannt`."""
     line = re.search(r"^how: (.*)$", text, re.M)
-    for needle, name in _HOW:
-        if line and needle in line.group(1):
+    for pattern, name in _HOW:
+        if line and re.search(pattern, line.group(1).strip()):
             return name
     return "unbekannt"
 
@@ -196,14 +203,30 @@ def timeline(clicked_at: float, events):
     return line
 
 
-def key_to_mouse_up(clicked_at: float, events):
-    """Sekunden von der ersten `key`-Zeile nach dem Klick bis zur ersten Maus hoch (Monitorzeile type=2) danach; sonst None."""
+def _first_key(clicked_at: float, events):
+    """Die erste `key`-Zeile bis `TIMELINE_SECONDS` nach dem Klick, sonst None."""
     window = [e for e in sorted(events, key=lambda e: e["time"]) if 0 <= e["time"] - clicked_at < TIMELINE_SECONDS]
-    key = next((e for e in window if e["kind"] == "key"), None)
+    return next((e for e in window if e["kind"] == "key"), None)
+
+
+def key_to_mouse_up(clicked_at: float, events):
+    """Sekunden von der ersten `key`-Zeile nach dem Klick bis zur ersten Maus hoch (Monitorzeile type=2) im 3-s-Fenster
+    des Monitors danach; sonst None. Ein späteres Maus-hoch gehört zu einem anderen Vorgang (#978 S5)."""
+    key = _first_key(clicked_at, events)
     if key is None:
         return None
-    up = next((e for e in window if e["time"] >= key["time"] and e["kind"].startswith("monitor") and e["event"] == 2), None)
+    up = next((e for e in sorted(events, key=lambda e: e["time"])
+               if 0 <= e["time"] - key["time"] < MONITOR_SECONDS and e["kind"].startswith("monitor") and e["event"] == 2),
+              None)
     return None if up is None else up["time"] - key["time"]
+
+
+def hold_of(clicked_at: float, events):
+    """Haltedauer eines Klicks: Sekunden key → Maus hoch, `SHORT` ohne Maus-hoch im Fenster, None ohne `key`."""
+    if _first_key(clicked_at, events) is None:
+        return None
+    seconds = key_to_mouse_up(clicked_at, events)
+    return SHORT if seconds is None else seconds
 
 
 def agreement(monitor, log) -> str:
@@ -259,6 +282,17 @@ def hold_report(folders, counts, events):
     return lines
 
 
+def reopen_hold_report(folders, events):
+    """Abschnitt „Haltedauer je Klick“: je Wiederöffnungsklick Arm, Ergebnis und Haltedauer (#978 S5)."""
+    rows = sorted((at, arm, opened) for arm, at, opened in clicks(folders) if arm in REOPEN_ARMS)
+    lines = ["", "## Haltedauer je Klick", "", "| Klick | Arm | Ergebnis | Haltedauer |", "|---|---|---|---|"]
+    for at, arm, opened in rows:
+        hold = hold_of(at, events)
+        shown = hold if isinstance(hold, str) else _seconds(hold)
+        lines.append(f"| {at:.3f} | {arm} | {'open' if opened else 'not open'} | {shown} |")
+    return lines
+
+
 def _rate(rate) -> str:
     return "–" if rate is None else f"{rate * 100:.1f} %"
 
@@ -278,12 +312,13 @@ def report(folders, log_text: str, expected=None, arms=None) -> str:
     if expected is not None:
         found = deviations(counts, expected, arms)
         lines += ["", f"Soll-Nenner je aktivem Arm: {expected}"] + (found or ["- keine Abweichung"])
-    lines += ["", "Klickweg je Arm (Beleg für den Nutzerweg nur menubar-root):"]
+    lines += ["", "Klickweg je Arm (Beleg für den Nutzerweg nur short-click):"]
     order = [name for _, name in _HOW]
     for arm, ways in count_how(folders).items():
         ranked = sorted(ways.items(), key=lambda way: (order.index(way[0]) if way[0] in order else len(order), way[0]))
         lines.append(f"- {arm}: " + (", ".join(f"{name} {n}" for name, n in ranked) or "–"))
     events = parse_panel_log(log_text)
+    lines += reopen_hold_report(folders, events)
     if hold:
         lines += hold_report(folders, counts, events)
     failures = sorted((at, arm) for arm, at, opened in clicks(folders) if not opened and arm in REOPEN_ARMS)

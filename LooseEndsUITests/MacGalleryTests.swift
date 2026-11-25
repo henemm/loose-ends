@@ -308,13 +308,13 @@ final class MacGalleryTests: XCTestCase {
         app.terminate()
     }
 
-    /// Clicks the menu bar symbol and returns the window, popover or group holding the panel. The footer
-    /// row is found directly (as `macOpenMainWindowIfNeeded` does); the hierarchy goes along as text.
+    /// Clicks the menu bar symbol briefly (`shortClick`, #978 S5) and returns the window, popover or group holding
+    /// the panel. The footer row is found directly (as `macOpenMainWindowIfNeeded` does); the hierarchy goes along as text.
     @MainActor
     private func openPanel(in app: XCUIApplication, label: String) -> XCUIElement? {
         let statusItem = app.statusItems.firstMatch
         XCTAssertTrue(statusItem.waitForExistence(timeout: 20), "No menu bar symbol")
-        statusItem.click()
+        _ = shortClick(statusItem)
         XCTAssertTrue(app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10), "The symbol opened no panel")
         let tree = XCTAttachment(string: app.debugDescription)
         tree.name = "mac-gallery-panel-\(label)-hierarchy"
@@ -460,10 +460,8 @@ final class MacGalleryTests: XCTestCase {
 
     /// #862 AC-2: "Open Loose Ends" closes the panel and opens the main window; once that window is closed
     /// with ⌘W, a single click on the symbol opens the panel again.
-    /// #978 Schnitt 3: the click waits until the frontmost app has been quiet for 1 s (the app switch after ⌘W
-    /// took the panel's key status away), the panel must still stand 3 s after it opened, and the check is
-    /// hard again, like the Return arm. v2: the click goes through the frontmost app as coordinate root
-    /// (`frontmostRootClick`), so the test tool does not activate Loose Ends before it clicks.
+    /// #978: the panel must still stand 3 s after it opened, and the check is hard, like the Return arm. Since S5 the
+    /// symbol is clicked briefly (`shortClick`), as a person does.
     @MainActor
     func testMenuBarReopensAfterOpenAppWithOneClick() throws {
         let app = macLaunch(dark: false)
@@ -585,7 +583,7 @@ final class MacGalleryTests: XCTestCase {
 
     /// Mouse down and up as CGEvents on the middle of the element's frame (screen points, top left origin,
     /// as CGEvent takes them). Without the right to post events it falls back to `XCUICoordinate.click()`,
-    /// which uses the same synthesis as `click()`; the fallback is noted, so the finding can say so.
+    /// which uses the same synthesis as `click()`; `how` says so, so the finding can name it.
     @MainActor
     private static func coordinateClick(_ element: XCUIElement) -> String {
         let frame = element.frame
@@ -596,7 +594,7 @@ final class MacGalleryTests: XCTestCase {
               let up = CGEvent(mouseEventSource: nil, mouseType: .leftMouseUp, mouseCursorPosition: point,
                                mouseButton: .left) else {
             element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).click()
-            return "control: XCUICoordinate fallback"
+            return "control: XCUICoordinate click, no right to post events"
         }
         down.post(tap: .cghidEventTap)
         Thread.sleep(forTimeInterval: 0.05)
@@ -604,80 +602,28 @@ final class MacGalleryTests: XCTestCase {
         return "control: CGEvent at \(Int(point.x)),\(Int(point.y))"
     }
 
-    /// #978 Schnitt 3: waits until the frontmost app has stayed the same for 1 s, polled every 0.1 s, at most
-    /// 10 s. No assumption which app must be in front. The run loop turns between polls, so AppKit can deliver
-    /// the workspace notifications that update `frontmostApplication`. Returns the history for the attachment:
-    /// one line per change (`front <s> s <bundle id>`), then `settled after <s> s` or `timeout after 10 s`.
+    /// #978 S5: a click like a person's: 0.1 s on the middle of the element, dragged onto the same coordinate, so the
+    /// mouse goes up where it went down. `click()` held the symbol 0.7 to 0.9 s under load, and letting go after so long
+    /// closes the panel like a system menu (hold probe v4, run 45602877961). Exactly one click, no retry.
     @MainActor
-    private func waitForFrontmostSettled() -> [String] {
-        let start = Date()
-        let quiet: TimeInterval = 1.0
-        let limit: TimeInterval = 10.0
-        var lines: [String] = []
-        var current: String?
-        var changedAt = start
-        while Date().timeIntervalSince(start) < limit {
-            let now = Date()
-            let front = NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "none"
-            if lines.isEmpty || front != current {
-                current = front
-                changedAt = now
-                lines.append("front \(String(format: "%.2f", now.timeIntervalSince(start))) s \(front)")
-            } else if now.timeIntervalSince(changedAt) >= quiet {
-                lines.append("settled after \(String(format: "%.2f", now.timeIntervalSince(start))) s")
-                return lines
-            }
-            RunLoop.current.run(until: Date().addingTimeInterval(0.1))
-        }
-        lines.append("timeout after 10 s")
-        return lines
+    private func shortClick(_ element: XCUIElement) -> String {
+        let middle = element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        middle.click(forDuration: 0.1, thenDragTo: middle)
+        return "user: short click 0.1 s"
     }
 
-    /// #978 Schnitt 3 v3: clicks the symbol through a coordinate whose root is the frontmost app's menu bar
-    /// (`menuBars.element(boundBy: 0)`), offset by the symbol's middle minus the menu bar's origin (both in screen
-    /// points), so XCTest has no reason to activate Loose Ends before the click. The menu bar counts as root only
-    /// with a frame that is not empty and starts at y = 0. If Loose Ends itself is in front, it clicks
-    /// `statusItem.click()` and says so in `how`; if the frontmost app is unknown or has no such menu bar frame,
-    /// it clicks `statusItem.click()` with "no menu bar frame" in `how`. Exactly one click, no retry.
-    @MainActor
-    private func frontmostRootClick(_ statusItem: XCUIElement, frontmost: String?) -> String {
-        guard let id = frontmost, id != "none" else {
-            statusItem.click()
-            return "user: statusItem.click() fallback (frontmost none, no menu bar frame)"
-        }
-        if id == "com.henning.looseends" {
-            statusItem.click()
-            return "user: statusItem.click() fallback (frontmost com.henning.looseends)"
-        }
-        let bar = XCUIApplication(bundleIdentifier: id).menuBars.element(boundBy: 0)
-        let barFrame = bar.exists ? bar.frame : .zero
-        if barFrame.isEmpty || barFrame.minY != 0 {
-            statusItem.click()
-            return "user: statusItem.click() fallback (frontmost \(id), no menu bar frame)"
-        }
-        let item = statusItem.frame
-        let offset = CGVector(dx: item.midX - barFrame.minX, dy: item.midY - barFrame.minY)
-        bar.coordinate(withNormalizedOffset: .zero).withOffset(offset).click()
-        return "user: frontmost menu bar \(id)"
-    }
-
-    /// Clicks the symbol exactly once, after the frontmost app has settled, and expects the panel within 10 s
-    /// and still there 3 s later. The time of the click and of the decision, the frontmost app's history and
-    /// the hierarchy go along as attachments, so a red run in CI can be read. Without `click` the symbol is
-    /// clicked like a user does, since #978 S3 v3 through the frontmost app's menu bar as coordinate root
-    /// (`frontmostRootClick`); the control arm passes its own click. The click's duration goes along too.
-    /// A user arm whose click fell back to `statusItem.click()` while another app was in front fails hard:
-    /// such a click proves nothing about the user's way.
+    /// Clicks the symbol exactly once and expects the panel within 10 s and still there 3 s later; any failure is
+    /// hard, there is no second try. The time of the click and of the decision and the hierarchy go along as an
+    /// attachment, so a red run in CI can be read. Without `click` the symbol is clicked like a user does
+    /// (`shortClick`, #978 S5); the control arm passes its own click. The click's duration goes along too.
     @MainActor
     private func assertSymbolOpensPanelWithOneClick(_ app: XCUIApplication, label: String,
                                                     click: (@MainActor (XCUIElement) -> String)? = nil) {
         let statusItem = app.statusItems.firstMatch
         XCTAssertTrue(statusItem.waitForExistence(timeout: 10), "No menu bar symbol")
-        let front = waitForFrontmostSettled()
-        let frontmost = NSWorkspace.shared.frontmostApplication?.bundleIdentifier
         let clickedAt = Date()
         let how: String
-        if let click { how = click(statusItem) } else { how = frontmostRootClick(statusItem, frontmost: frontmost) }
+        if let click { how = click(statusItem) } else { how = shortClick(statusItem) }
         let clickDuration = Date().timeIntervalSince(clickedAt)
         let appeared = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)
         var stayed = false
@@ -690,8 +636,6 @@ final class MacGalleryTests: XCTestCase {
         let note = XCTAttachment(string: """
             click: \(String(format: "%.3f", clickedAt.timeIntervalSince1970)) (seconds since 1970)
             how: \(how)
-            frontmost before the click:
-            \(front.joined(separator: "\n"))
             \(app.debugDescription)
             click duration: \(String(format: "%.3f", clickDuration)) s
             after: \(String(format: "%.2f", Date().timeIntervalSince(clickedAt))) s, panel \(opened ? "open" : "not open")
@@ -699,9 +643,6 @@ final class MacGalleryTests: XCTestCase {
         note.name = "mac-gallery-\(label)-click"
         note.lifetime = .keepAlways
         add(note)
-        if click == nil, frontmost != "com.henning.looseends", how.contains("fallback") {
-            XCTFail("Fallback click with a foreign frontmost app (\(label)): \(how)")
-        }
         XCTAssertTrue(opened, appeared
                       ? "The panel closed again within 3 s (\(label))"
                       : "One click on the symbol opened no panel (\(label))")
