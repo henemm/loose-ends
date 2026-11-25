@@ -1,21 +1,5 @@
-== scripts/test_mac_reopen_settle.py
-
+............................................................................
 ----------------------------------------------------------------------
-Ran 20 tests in 0.019s
+Ran 76 tests in 2.178s
 
 OK
-== scripts/test_mac_panel_repeat_summary.py
-
-----------------------------------------------------------------------
-Ran 31 tests in 6.967s
-
-OK
-== scripts/test_menubar_panel_log.py
-............
-----------------------------------------------------------------------
-Ran 12 tests in 0.615s
-
-OK
-== python3 -m unittest discover -s scripts -p 'test_*.py' (Zusammenfassung)
-Ran 887 tests in 684.674s
-OK (skipped=1)

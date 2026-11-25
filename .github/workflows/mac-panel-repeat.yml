@@ -2,6 +2,8 @@
 # Runs only the two reopen tests of MacGalleryTests and the control arm (coordinate click, LE_PANEL_CONTROL_ARM)
 # with -test-iterations, so every iteration runs, also after a failure: the rate is wanted, the denominator is
 # every reopen. Uploads the panel log (from the job's start), the result bundle and a summary per arm.
+# #978 S3 v4: with `halteprobe` it runs only testHoldDurationProbe (LE_PANEL_HOLD_PROBE): per iteration one click held
+# 1.0 s and one held 0.1 s, summarized as the arms hold-1.0 and hold-0.1 with the decision rule of the spec.
 name: Mac Panel Repeat (#978)
 
 on:
@@ -17,6 +19,10 @@ on:
         default: true
       sandbox:
         description: Re-sign the app with the sandbox of the real app (as the click test, #544)
+        type: boolean
+        default: false
+      halteprobe:
+        description: Run only the hold probe (1.0 s / 0.1 s, LE_PANEL_HOLD_PROBE) instead of the reopen tests
         type: boolean
         default: false
   pull_request:
@@ -37,6 +43,7 @@ jobs:
       ITERATIONS: ${{ inputs.iterationen || 20 }}
       CONTROL_ARM: ${{ github.event_name != 'workflow_dispatch' || inputs.kontrollarm }}
       SANDBOX: ${{ github.event_name == 'workflow_dispatch' && inputs.sandbox }}
+      HOLD_PROBE: ${{ github.event_name == 'workflow_dispatch' && inputs.halteprobe }}
     steps:
       - uses: actions/checkout@v7
       - name: Note the job's start for the panel log
@@ -78,16 +85,22 @@ jobs:
       - name: Run the reopen tests (-test-iterations)
         run: |
           set -o pipefail
-          if [ "$CONTROL_ARM" = "true" ]; then export TEST_RUNNER_LE_PANEL_CONTROL_ARM=1; fi
-          echo "iterations=$ITERATIONS control_arm=$CONTROL_ARM sandbox=$SANDBOX"
+          if [ "$HOLD_PROBE" = "true" ]; then
+            export TEST_RUNNER_LE_PANEL_HOLD_PROBE=1
+            tests=(-only-testing:LooseEndsUITests/MacGalleryTests/testHoldDurationProbe)
+          else
+            if [ "$CONTROL_ARM" = "true" ]; then export TEST_RUNNER_LE_PANEL_CONTROL_ARM=1; fi
+            tests=(-only-testing:LooseEndsUITests/MacGalleryTests/testMenuBarReopensAfterReturnWithOneClick
+                   -only-testing:LooseEndsUITests/MacGalleryTests/testMenuBarReopensAfterOpenAppWithOneClick
+                   -only-testing:LooseEndsUITests/MacGalleryTests/testMenuBarReopensAfterReturnWithControlClick)
+          fi
+          echo "iterations=$ITERATIONS control_arm=$CONTROL_ARM sandbox=$SANDBOX hold_probe=$HOLD_PROBE"
           xcodebuild test-without-building \
             -project LooseEnds.xcodeproj \
             -scheme LooseEnds \
             -destination 'platform=macOS' \
             -derivedDataPath build/repeat \
-            -only-testing:LooseEndsUITests/MacGalleryTests/testMenuBarReopensAfterReturnWithOneClick \
-            -only-testing:LooseEndsUITests/MacGalleryTests/testMenuBarReopensAfterOpenAppWithOneClick \
-            -only-testing:LooseEndsUITests/MacGalleryTests/testMenuBarReopensAfterReturnWithControlClick \
+            "${tests[@]}" \
             -test-iterations "$ITERATIONS" \
             -parallel-testing-enabled NO \
             -resultBundlePath MacPanelRepeat.xcresult \
@@ -110,10 +123,12 @@ jobs:
           fi
           arms="return,open-app"
           if [ "$CONTROL_ARM" = "true" ]; then arms="$arms,control"; fi
+          # Hold probe: one click per arm and iteration, so the expected denominator stays ITERATIONS.
+          if [ "$HOLD_PROBE" = "true" ]; then arms="hold-1.0,hold-0.1"; fi
           python3 scripts/mac_panel_repeat_summary.py --raw raw-repeat --log mac-panel-repeat.log \
             --out summary/mac-panel-repeat-summary.md --expected "$ITERATIONS" --arms "$arms"
           {
-            echo "iterations=$ITERATIONS control_arm=$CONTROL_ARM sandbox=$SANDBOX"
+            echo "iterations=$ITERATIONS control_arm=$CONTROL_ARM sandbox=$SANDBOX hold_probe=$HOLD_PROBE"
             echo
             cat summary/mac-panel-repeat-summary.md
           } >> "$GITHUB_STEP_SUMMARY"

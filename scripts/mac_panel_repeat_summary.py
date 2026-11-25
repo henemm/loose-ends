@@ -11,8 +11,12 @@ die Arme aus `--arms`, ohne die Angabe Return, Open-App und jeder Arm mit mindes
 den Klickweg aus der Anhangszeile `how:` (seit #978 S3 v3 menubar-root, fallback-looseends, fallback-noframe; dazu
 statusitem, cgevent, xcuicoordinate als Rückfall). Als Beleg für den Nutzerweg zählt nur menubar-root.
 
+Seit #978 S3 v4 zählt es auch die Haltedauer-Probe (`mac-gallery-hold-<d>-<n>-click`, Arme hold-1.0 und hold-0.1):
+je Arm Nenner, zu, offen und Rate, je Klick key → Maus hoch aus dem Panel-Protokoll, den Abgleich mit der Haltedauer des
+globalen Monitors im Testläufer (oder `monitor saw nothing`) und die vorab festgelegte Entscheidungsregel (Spec Punkt 6).
+
 Aufruf: python3 scripts/mac_panel_repeat_summary.py --raw <ordner> [--raw <ordner> …] --log <datei> --out <datei>
-        [--expected N] [--arms return,open-app,control]
+        [--expected N] [--arms return,open-app,control,hold-1.0,hold-0.1]
 """
 import argparse
 import json
@@ -21,7 +25,9 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-ARMS = ("return", "open-app", "control")
+REOPEN_ARMS = ("return", "open-app", "control")
+HOLD_ARMS = ("hold-1.0", "hold-0.1")
+ARMS = REOPEN_ARMS + HOLD_ARMS
 # Die beiden Pflicht-Arme laufen in jedem Wiederholungslauf; der Kontrollarm nur mit `kontrollarm`.
 REQUIRED_ARMS = ("return", "open-app")
 # Klickweg aus der Zeile `how:` des Anhangs (MacGalleryTests.swift). Die genaueren Texte zuerst (#978 S3 v3);
@@ -30,6 +36,12 @@ _HOW = (("frontmost menu bar", "menubar-root"), ("fallback (frontmost com.hennin
         ("no menu bar frame", "fallback-noframe"), ("statusItem.click()", "statusitem"), ("CGEvent", "cgevent"), ("XCUICoordinate", "xcuicoordinate"))
 # Der Kontrollarm zuerst, weil sein Label mit dem des Return-Arms beginnt.
 _ARM_PATTERN = re.compile(r"^mac-gallery-(reopen-return-control|reopen-return|reopen-open-app)-click(?:[_.]|$)")
+_HOLD_PATTERN = re.compile(r"^mac-gallery-hold-(1\.0|0\.1)-\d+-click(?:[_.]|$)")
+# Entscheidungsregel (Spec Punkt 6): je Arm mindestens 20 Klicks, 1,0 s schließt in mindestens 95 %, 0,1 s nie.
+HOLD_MIN_CLICKS = 20
+HOLD_LONG_MIN_RATE = 0.95
+# Monitor- und Log-Dauer gelten als übereinstimmend, wenn sie höchstens so weit auseinanderliegen.
+AGREEMENT_SECONDS = 0.1
 _LABEL_TO_ARM = {"reopen-return-control": "control", "reopen-return": "return", "reopen-open-app": "open-app"}
 # Wie lange nach dem Klick Protokollzeilen zur Zeitachse eines Falls gehören (Warten des Tests: 10 s).
 TIMELINE_SECONDS = 15.0
@@ -42,7 +54,10 @@ _LINE = re.compile(
 def arm_of(name: str):
     """Arm eines Anhangs nach seinem Namen, `None` für alles, was kein Klickanhang der Wiederöffnung ist."""
     match = _ARM_PATTERN.match(name)
-    return _LABEL_TO_ARM[match.group(1)] if match else None
+    if match:
+        return _LABEL_TO_ARM[match.group(1)]
+    hold = _HOLD_PATTERN.match(name)
+    return f"hold-{hold.group(1)}" if hold else None
 
 
 def parse_click(text: str):
@@ -52,6 +67,18 @@ def parse_click(text: str):
     if not at or not state:
         raise ValueError("Klickanhang ohne Zeit oder Zustand")
     return float(at.group(1)), state.group(1) == "open"
+
+
+def parse_hold(text: str):
+    """d, Klickzeit, Panel offen und Monitor-Dauer (None bei `monitor saw nothing`) aus dem Anhang von `testHoldDurationProbe`."""
+    at = re.search(r"^click: ([0-9.]+)", text, re.M)
+    d = re.search(r"^d: ([0-9.]+)", text, re.M)
+    result = re.search(r"^result: (open|closed)\s*$", text, re.M)
+    monitor = re.search(r"^monitor hold: ([0-9.]+)", text, re.M)
+    if not at or not d or not result or (not monitor and not re.search(r"^monitor saw nothing", text, re.M)):
+        raise ValueError("Halteanhang ohne Zeit, d, Ergebnis oder Monitorzeile")
+    return {"d": float(d.group(1)), "clicked_at": float(at.group(1)), "open": result.group(1) == "open",
+            "monitor": float(monitor.group(1)) if monitor else None}
 
 
 def _click_texts(folders):
@@ -68,8 +95,15 @@ def _click_texts(folders):
 
 
 def clicks(folders):
-    """Alle Klickanhänge als (Arm, Klickzeit, offen), über alle Exportordner."""
-    return [(arm, *parse_click(text)) for arm, text in _click_texts(folders)]
+    """Alle Klickanhänge als (Arm, Klickzeit, offen), über alle Exportordner; Halte-Arme mit „offen“ aus `result:`."""
+    found = []
+    for arm, text in _click_texts(folders):
+        if arm in HOLD_ARMS:
+            hold = parse_hold(text)
+            found.append((arm, hold["clicked_at"], hold["open"]))
+        else:
+            found.append((arm, *parse_click(text)))
+    return found
 
 
 def how_of(text: str) -> str:
@@ -83,8 +117,10 @@ def how_of(text: str) -> str:
 
 def count_how(folders):
     """Je Arm, wie oft jeder Klickweg vorkam (leeres dict ohne Anhang)."""
-    counts = {arm: {} for arm in ARMS}
+    counts = {arm: {} for arm in REOPEN_ARMS}
     for arm, text in _click_texts(folders):
+        if arm not in counts:
+            continue
         name = how_of(text)
         counts[arm][name] = counts[arm].get(name, 0) + 1
     return counts
@@ -154,6 +190,69 @@ def timeline(clicked_at: float, events):
     return line
 
 
+def key_to_mouse_up(clicked_at: float, events):
+    """Sekunden von der ersten `key`-Zeile nach dem Klick bis zur ersten Maus hoch (Monitorzeile type=2) danach; sonst None."""
+    window = [e for e in sorted(events, key=lambda e: e["time"]) if 0 <= e["time"] - clicked_at < TIMELINE_SECONDS]
+    key = next((e for e in window if e["kind"] == "key"), None)
+    if key is None:
+        return None
+    up = next((e for e in window if e["time"] >= key["time"] and e["kind"].startswith("monitor") and e["event"] == 2), None)
+    return None if up is None else up["time"] - key["time"]
+
+
+def agreement(monitor, log) -> str:
+    """Abgleich Monitor- gegen Log-Dauer: match, mismatch, `monitor saw nothing` oder `no log`."""
+    if monitor is None:
+        return "monitor saw nothing"
+    if log is None:
+        return "no log"
+    return "match" if abs(monitor - log) <= AGREEMENT_SECONDS else "mismatch"
+
+
+def hold_rows(folders, events):
+    """Je Halteklick: Arm, d, Klickzeit, offen, Monitor-Dauer, Log-Dauer (key → Maus hoch) und Abgleich."""
+    rows = []
+    for arm, text in _click_texts(folders):
+        if arm not in HOLD_ARMS:
+            continue
+        hold = parse_hold(text)
+        log = key_to_mouse_up(hold["clicked_at"], events)
+        rows.append({"arm": arm, **hold, "log": log, "agreement": agreement(hold["monitor"], log)})
+    return sorted(rows, key=lambda row: row["clicked_at"])
+
+
+def decision(counts) -> str:
+    """Entscheidungsregel aus Spec Punkt 6: bestanden, nicht bestanden oder zu wenig Klicks."""
+    long, short = counts["hold-1.0"], counts["hold-0.1"]
+    if long["n"] < HOLD_MIN_CLICKS or short["n"] < HOLD_MIN_CLICKS:
+        return "zu wenig Klicks"
+    return "bestanden" if long["rate"] >= HOLD_LONG_MIN_RATE and short["fails"] == 0 else "nicht bestanden"
+
+
+def _seconds(value) -> str:
+    return "–" if value is None else f"{value:.3f} s"
+
+
+def hold_report(folders, counts, events):
+    """Abschnitt der Haltedauer-Probe: zu/offen je Arm, Monitor gegen Log, Entscheidung, je Klick eine Zeile."""
+    rows = hold_rows(folders, events)
+    lines = ["", "## Haltedauer-Probe (#978 S3 v4)", "", "| Arm | Nenner | zu | offen | Rate zu |", "|---|---|---|---|---|"]
+    lines += [f"| {arm} | {counts[arm]['n']} | {counts[arm]['fails']} | {counts[arm]['n'] - counts[arm]['fails']} | "
+              f"{_rate(counts[arm]['rate'])} |" for arm in HOLD_ARMS]
+    seen = sum(1 for row in rows if row["monitor"] is not None)
+    tally = {name: sum(1 for row in rows if row["agreement"] == name)
+             for name in ("match", "mismatch", "no log", "monitor saw nothing")}
+    lines += ["", f"Monitor sah Ereignisse: {seen} von {len(rows)}", f"- monitor saw nothing: {tally['monitor saw nothing']}",
+              f"Übereinstimmung Monitor/Log: {tally['match']}", f"- Abweichung über {AGREEMENT_SECONDS:.1f} s: {tally['mismatch']}",
+              f"- ohne Log-Dauer: {tally['no log']}", "",
+              f"Entscheidung: {decision(counts)} (je Arm mindestens {HOLD_MIN_CLICKS} Klicks, hold-1.0 zu ≥ "
+              f"{HOLD_LONG_MIN_RATE * 100:.0f} %, hold-0.1 zu 0 %)", "",
+              "| Klick | Arm | Ergebnis | Monitor | key → Maus hoch | Abgleich |", "|---|---|---|---|---|---|"]
+    lines += [f"| {row['clicked_at']:.3f} | {row['arm']} | {'open' if row['open'] else 'closed'} | {_seconds(row['monitor'])} | "
+              f"{_seconds(row['log'])} | {row['agreement']} |" for row in rows]
+    return lines
+
+
 def _rate(rate) -> str:
     return "–" if rate is None else f"{rate * 100:.1f} %"
 
@@ -166,8 +265,10 @@ def _entry(entry) -> str:
 def report(folders, log_text: str, expected=None, arms=None) -> str:
     """Markdown: Ratentabelle je Arm, Nennerprüfung, Klickweg, danach je Fall die Zeitachse."""
     counts = count_arms(folders)
+    hold = any(counts[arm]["n"] for arm in HOLD_ARMS) or any(arm in HOLD_ARMS for arm in arms or ())
+    shown = ARMS if hold else REOPEN_ARMS
     lines = ["## #978 Panel-Wiederholung", "", "| Arm | Nenner | Zähler | Rate |", "|---|---|---|---|"]
-    lines += [f"| {arm} | {c['n']} | {c['fails']} | {_rate(c['rate'])} |" for arm, c in counts.items()]
+    lines += [f"| {arm} | {counts[arm]['n']} | {counts[arm]['fails']} | {_rate(counts[arm]['rate'])} |" for arm in shown]
     if expected is not None:
         found = deviations(counts, expected, arms)
         lines += ["", f"Soll-Nenner je aktivem Arm: {expected}"] + (found or ["- keine Abweichung"])
@@ -177,7 +278,9 @@ def report(folders, log_text: str, expected=None, arms=None) -> str:
         ranked = sorted(ways.items(), key=lambda way: (order.index(way[0]) if way[0] in order else len(order), way[0]))
         lines.append(f"- {arm}: " + (", ".join(f"{name} {n}" for name, n in ranked) or "–"))
     events = parse_panel_log(log_text)
-    failures = sorted((at, arm) for arm, at, opened in clicks(folders) if not opened)
+    if hold:
+        lines += hold_report(folders, counts, events)
+    failures = sorted((at, arm) for arm, at, opened in clicks(folders) if not opened and arm in REOPEN_ARMS)
     lines += ["", f"Fälle: {len(failures)}"]
     for at, arm in failures:
         lines += ["", f"### Fall {arm}, Klick {at:.3f}", ""]
@@ -191,7 +294,7 @@ def main(argv=None) -> int:
     parser.add_argument("--log", required=True, help="Panel-Protokoll aus log show")
     parser.add_argument("--out", required=True, help="Zieldatei (Markdown)")
     parser.add_argument("--expected", type=int, help="Iterationen je Test: erwarteter Nenner je aktivem Arm")
-    parser.add_argument("--arms", help="aktive Arme, kommagetrennt (return,open-app,control)")
+    parser.add_argument("--arms", help="aktive Arme, kommagetrennt (return,open-app,control,hold-1.0,hold-0.1)")
     args = parser.parse_args(argv)
     arms = None
     if args.arms is not None:

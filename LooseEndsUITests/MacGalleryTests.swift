@@ -500,6 +500,89 @@ final class MacGalleryTests: XCTestCase {
         app.terminate()
     }
 
+    /// #978 Schnitt 3 v4, hold probe: does the panel close when the mouse is held too long on the symbol? Per run one
+    /// click held 1.0 s and one held 0.1 s, each from the state of the Return arm (fresh launch, panel opened, Return
+    /// saved and closed it), on the middle of the symbol via `click(forDuration:thenDragTo:)` onto the same coordinate.
+    /// The panel's state is read 3 s after the click. A measurement, not a guard: the result goes into the attachment,
+    /// never into the test's outcome. Runs only with `LE_PANEL_HOLD_PROBE` set (mac-panel-repeat.yml, `halteprobe`).
+    @MainActor
+    func testHoldDurationProbe() throws {
+        guard ProcessInfo.processInfo.environment["LE_PANEL_HOLD_PROBE"] != nil else {
+            throw XCTSkip("#978 hold probe runs only with LE_PANEL_HOLD_PROBE (mac-panel-repeat.yml)")
+        }
+        for (n, d) in [1.0, 0.1].enumerated() {
+            holdClick(seconds: d, index: n)
+        }
+    }
+
+    /// One click of the hold probe: the Return arm's start state, a click held `seconds` on the symbol's middle, the
+    /// state 3 s later, and the attachment `mac-gallery-hold-<d>-<n>-click` with d, result and the monitor's hold.
+    @MainActor
+    private func holdClick(seconds: TimeInterval, index: Int) {
+        let label = "hold-\(String(format: "%.1f", seconds))-\(index)"
+        let app = macLaunch(dark: false)
+        guard let panel = openPanel(in: app, label: label) else { return }
+        let field = macElement("captureTextField", in: panel)
+        XCTAssertTrue(field.waitForExistence(timeout: 5), "Panel shows no field")
+        field.click()
+        field.typeText("Blumen gießen")
+        field.typeText("\n")
+        let closed = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: app.buttons["menuBarOpenApp"])
+        XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 10), .completed, "Return did not close the panel")
+        let statusItem = app.statusItems.firstMatch
+        XCTAssertTrue(statusItem.waitForExistence(timeout: 10), "No menu bar symbol")
+        let middle = statusItem.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let monitor = HoldMonitor()
+        let clickedAt = Date()
+        middle.click(forDuration: seconds, thenDragTo: middle)
+        RunLoop.current.run(until: Date().addingTimeInterval(3))
+        let open = app.buttons["menuBarOpenApp"].exists
+        let hold = monitor.stop()
+        let note = XCTAttachment(string: [
+            "click: \(String(format: "%.3f", clickedAt.timeIntervalSince1970)) (seconds since 1970)",
+            "d: \(String(format: "%.1f", seconds))",
+            "result: \(open ? "open" : "closed")",
+            hold.map { "monitor hold: \(String(format: "%.3f", $0))" } ?? "monitor saw nothing"
+        ].joined(separator: "\n") + "\n")
+        note.name = "mac-gallery-hold-\(String(format: "%.1f", seconds))-\(index)-click"
+        note.lifetime = .keepAlways
+        add(note)
+        app.terminate()
+    }
+
+    /// Global monitor in the test runner for the hold probe: the first mouse down after the start and the first mouse up
+    /// after it; `stop()` removes the monitor and returns up − down in seconds (event timestamps), nil if it saw nothing.
+    /// Whether the runner sees these events at all is open (#978 S3 v4); the attachment says so.
+    @MainActor
+    private final class HoldMonitor {
+        private var token: Any?
+        private var down: TimeInterval?
+        private var up: TimeInterval?
+
+        init() {
+            token = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .leftMouseUp]) { [weak self] event in
+                let type = event.type
+                let stamp = event.timestamp
+                MainActor.assumeIsolated { self?.note(type, at: stamp) }
+            }
+        }
+
+        private func note(_ type: NSEvent.EventType, at stamp: TimeInterval) {
+            if type == .leftMouseDown, down == nil {
+                down = stamp
+            } else if type == .leftMouseUp, down != nil, up == nil {
+                up = stamp
+            }
+        }
+
+        func stop() -> TimeInterval? {
+            if let token { NSEvent.removeMonitor(token) }
+            token = nil
+            guard let down, let up else { return nil }
+            return up - down
+        }
+    }
+
     /// Mouse down and up as CGEvents on the middle of the element's frame (screen points, top left origin,
     /// as CGEvent takes them). Without the right to post events it falls back to `XCUICoordinate.click()`,
     /// which uses the same synthesis as `click()`; the fallback is noted, so the finding can say so.
