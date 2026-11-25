@@ -112,6 +112,9 @@ enum MenuBarPanelLog {
     /// The one monitor pair after the last `key`; a new `key` replaces it.
     private static var monitors: [Any] = []
     private static var monitorRound = 0
+    /// Under `--ui-testing` (#978 S5 v7): uptime at the round's `key` and the last round whose hold is shown.
+    private static var roundStart: TimeInterval = 0
+    private static var shownRound = 0
 
     /// `event` is `key`, `resign`, `hide` or `close`; `kind` is the window's class name only, never its title.
     /// `isKey` is the panel's `isKeyWindow`, given for `key` and `resign`.
@@ -202,20 +205,31 @@ enum MenuBarPanelLog {
         stopMonitors()
         monitorRound += 1
         let round = monitorRound
+        roundStart = ProcessInfo.processInfo.systemUptime
+        showHold(round: round, "pending")
         if let local = NSEvent.addLocalMonitorForEvents(matching: .any, handler: { event in
             logMonitored("local", event)
+            if ModelContainerFactory.isUITesting, event.type == .leftMouseUp {
+                let time = event.timestamp
+                DispatchQueue.main.async { MainActor.assumeIsolated { mouseUp(round: round, at: time) } }
+            }
             return event
         }) { monitors.append(local) }
         let mouse: NSEvent.EventTypeMask = [.leftMouseDown, .leftMouseUp, .rightMouseDown, .rightMouseUp,
                                             .otherMouseDown, .otherMouseUp]
         if let global = NSEvent.addGlobalMonitorForEvents(matching: mouse, handler: { event in
             logMonitored("global", event)
+            if ModelContainerFactory.isUITesting, event.type == .leftMouseUp {
+                let time = event.timestamp
+                DispatchQueue.main.async { MainActor.assumeIsolated { mouseUp(round: round, at: time) } }
+            }
         }) { monitors.append(global) }
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             MainActor.assumeIsolated {
                 guard monitorRound == round else { return }
                 stopMonitors()
                 panelLogger.notice("monitor end")
+                if shownRound != round { showHold(round: round, "short") }
             }
         }
     }
@@ -223,6 +237,33 @@ enum MenuBarPanelLog {
     private static func stopMonitors() {
         for monitor in monitors { NSEvent.removeMonitor(monitor) }
         monitors = []
+    }
+
+    /// The first mouse up (type 2, local or global) of the running round: seconds from its `key`, as the evaluator's
+    /// `key_to_mouse_up` counts them. Later ones and those of an old round change nothing. Both monitors pass it only
+    /// under `--ui-testing` and hop to the main thread with the event's own time (`event.timestamp`, seconds since boot
+    /// like `systemUptime`), so the hop does not change the hold and no handler assumes a thread.
+    private static func mouseUp(round: Int, at time: TimeInterval) {
+        guard monitorRound == round, shownRound != round else { return }
+        let held = time - roundStart
+        showHold(round: round, String(format: "%.3f", held))
+    }
+
+    /// #978 S5 v7: the round's hold as the accessibility value of the menu bar's status item, which the UI test holds
+    /// as `statusItems.firstMatch` (`round=<n> pending|<seconds>|short`). Only under `--ui-testing`.
+    private static func showHold(round: Int, _ state: String) {
+        guard ModelContainerFactory.isUITesting else { return }
+        if state != "pending" { shownRound = round }
+        let button = NSApp.windows
+            .filter { String(describing: type(of: $0)) == "NSStatusBarWindow" }
+            .lazy.compactMap { statusButton(in: $0.contentView) }.first
+        button?.setAccessibilityValue("round=\(round) \(state)")
+    }
+
+    private static func statusButton(in view: NSView?) -> NSStatusBarButton? {
+        guard let view else { return nil }
+        if let button = view as? NSStatusBarButton { return button }
+        return view.subviews.lazy.compactMap { statusButton(in: $0) }.first
     }
 
     /// Raw type, window number and timestamp only.

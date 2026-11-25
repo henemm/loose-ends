@@ -315,12 +315,12 @@ final class MacGalleryTests: XCTestCase {
     private func openPanel(in app: XCUIApplication, label: String) -> XCUIElement? {
         let statusItem = app.statusItems.firstMatch
         XCTAssertTrue(statusItem.waitForExistence(timeout: 20), "No menu bar symbol")
-        let clickedAt = Date()
+        let before = MacPanelHold.round(of: statusItem)
         _ = shortClick(statusItem)
         var appeared = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)
         var hold = "not read (panel open)"
         if !appeared {
-            let outcome = retryAfterLongHold(statusItem, since: clickedAt)
+            let outcome = retryAfterLongHold(statusItem, after: before)
             hold = outcome.hold.text
             if let second = outcome.second {
                 let note = XCTAttachment(string: "\(second.line)\nclick: \(String(format: "%.3f", second.at.timeIntervalSince1970))\n")
@@ -546,12 +546,13 @@ final class MacGalleryTests: XCTestCase {
         XCTAssertTrue(statusItem.waitForExistence(timeout: 10), "No menu bar symbol")
         let middle = statusItem.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
         let monitor = HoldMonitor()
+        let before = MacPanelHold.round(of: statusItem)
         let clickedAt = Date()
         middle.click(forDuration: seconds, thenDragTo: middle)
         RunLoop.current.run(until: Date().addingTimeInterval(3))
         let open = app.buttons["menuBarOpenApp"].exists
         let hold = monitor.stop()
-        let read = MacPanelHold.read(since: clickedAt)
+        let read = MacPanelHold.read(statusItem, after: before)
         let note = XCTAttachment(string: [
             "click: \(String(format: "%.3f", clickedAt.timeIntervalSince1970)) (seconds since 1970)",
             "d: \(String(format: "%.1f", seconds))",
@@ -642,12 +643,12 @@ final class MacGalleryTests: XCTestCase {
     }
 
     /// The one retry path (#978 S5 v6), shared by `openPanel` and `assertSymbolOpensPanelWithOneClick`: reads the failed
-    /// click's hold from the app's panel log, and only for read seconds from `retryHold` on clicks once more, briefly.
+    /// click's hold from the status item's value (round `before`, read before the click), and only for read seconds from `retryHold` on clicks once more, briefly.
     /// Short, unknown or below the threshold: no second click, the caller stays hard red with the reading.
     @MainActor
     private func retryAfterLongHold(_ statusItem: XCUIElement,
-                                    since clickedAt: Date) -> (hold: MacPanelHold.Reading, second: SecondClick?) {
-        let hold = MacPanelHold.read(since: clickedAt)
+                                    after before: Int) -> (hold: MacPanelHold.Reading, second: SecondClick?) {
+        let hold = MacPanelHold.read(statusItem, after: before)
         guard case .seconds(let held) = hold, held >= Self.retryHold else { return (hold, nil) }
         let at = Date()
         let how = shortClick(statusItem)
@@ -689,6 +690,7 @@ final class MacGalleryTests: XCTestCase {
             note.lifetime = .keepAlways
             add(note)
         }
+        let before = MacPanelHold.round(of: statusItem)
         let clickedAt = Date()
         let how: String
         if let click { how = click(statusItem) } else { how = shortClick(statusItem) }
@@ -696,7 +698,7 @@ final class MacGalleryTests: XCTestCase {
         var hold = seen.opened ? "not read (panel open)" : "not read (control click)"
         var second: SecondClick?
         if !seen.opened, click == nil {
-            let outcome = retryAfterLongHold(statusItem, since: clickedAt)
+            let outcome = retryAfterLongHold(statusItem, after: before)
             hold = outcome.hold.text
             second = outcome.second
         }

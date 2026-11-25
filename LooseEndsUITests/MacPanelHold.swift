@@ -1,11 +1,12 @@
 #if os(macOS)
-import Foundation
-import OSLog
+import XCTest
 
-/// #978 S5 v6: how long the test's click held the menu bar symbol, read from the app's own panel log
-/// (`MenuBarCapture`, subsystem `com.henning.looseends`, category `MenuBarPanel`) through `OSLogStore.local()`.
-/// The rule is the evaluator's (`key_to_mouse_up` in `scripts/mac_panel_repeat_summary.py`): from the first
-/// `panel key` line after the click to the first mouse up (monitor line `type=2`) within the monitor's 3 s after it.
+/// #978 S5 v7: how long the test's click held the menu bar symbol, read from the accessibility value the app puts on
+/// its status item under `--ui-testing` (`MenuBarPanelLog.showHold` in `MenuBarCapture.swift`). The value is one line,
+/// `round=<n> pending` from the panel's `key`, then `round=<n> <seconds>` at the first mouse up within the monitor's
+/// 3 s, or `round=<n> short` when the round ends without one: the evaluator's rule (`key_to_mouse_up` in
+/// `scripts/mac_panel_repeat_summary.py`). The runner cannot read the app's log (v6: "Connection to logd failed").
+@MainActor
 enum MacPanelHold {
     enum Reading: Equatable {
         /// Seconds from `key` to the mouse going up.
@@ -24,46 +25,43 @@ enum MacPanelHold {
         }
     }
 
-    /// The app's monitor runs for 3 s after `key`; only a mouse up inside it belongs to the click.
-    static let window: TimeInterval = 3
-    /// How long after the click a `key` line still belongs to it (the evaluator's timeline).
-    static let keyWindow: TimeInterval = 15
+    /// How long `read` waits for a new round that is no longer pending (the app's round runs 3 s from `key`).
+    static let wait: TimeInterval = 4
 
-    /// The hold of the click made at `since`.
-    static func read(since: Date) -> Reading {
-        let lines: [(date: Date, message: String)]
-        do {
-            lines = try panelLines(since: since)
-        } catch {
-            return .unknown("log not readable: \(error.localizedDescription)")
-        }
-        return hold(in: lines, since: since)
+    /// The round the status item shows now; 0 when it carries no value or one that is not readable.
+    static func round(of statusItem: XCUIElement) -> Int {
+        parse(statusItem.value as? String)?.round ?? 0
     }
 
-    private static func panelLines(since: Date) throws -> [(date: Date, message: String)] {
-        let store = try OSLogStore.local()
-        let predicate = NSPredicate(format: "subsystem == %@ AND category == %@", "com.henning.looseends", "MenuBarPanel")
-        return try store.getEntries(at: store.position(date: since), matching: predicate)
-            .compactMap { $0 as? OSLogEntryLog }
-            .filter { $0.date >= since }
-            .map { (date: $0.date, message: $0.composedMessage) }
-            .sorted { $0.date < $1.date }
+    /// The hold of the first round after `round`, once it is no longer pending; at most `wait` seconds.
+    static func read(_ statusItem: XCUIElement, after round: Int) -> Reading {
+        let deadline = Date().addingTimeInterval(wait)
+        var value = statusItem.value as? String
+        while Date() < deadline {
+            if let shown = parse(value), shown.round > round, shown.state != "pending" {
+                return reading(shown.state)
+            }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.2))
+            value = statusItem.value as? String
+        }
+        if let shown = parse(value), shown.round > round, shown.state != "pending" { return reading(shown.state) }
+        guard let value else { return .unknown("no value on the status item") }
+        guard parse(value) != nil else { return .unknown("value not readable: \(value)") }
+        return .unknown("no finished round after \(round) within \(Int(wait)) s, value \(value)")
     }
 
-    private static func hold(in lines: [(date: Date, message: String)], since: Date) -> Reading {
-        let key = lines.first { line in
-            line.message.hasPrefix("panel key ") && line.date.timeIntervalSince(since) < keyWindow
-        }
-        guard let key else {
-            return .unknown("no panel key line within \(Int(keyWindow)) s of the click, \(lines.count) panel lines")
-        }
-        let up = lines.first { line in
-            let offset = line.date.timeIntervalSince(key.date)
-            return offset >= 0 && offset < window && line.message.hasPrefix("monitor ")
-                && line.message.split(separator: " ").contains("type=2")
-        }
-        guard let up else { return .short }
-        return .seconds(up.date.timeIntervalSince(key.date))
+    private static func parse(_ value: String?) -> (round: Int, state: String)? {
+        guard let value else { return nil }
+        let parts = value.split(separator: " ")
+        guard parts.count == 2, parts[0].hasPrefix("round="),
+              let number = Int(parts[0].dropFirst("round=".count)) else { return nil }
+        return (number, String(parts[1]))
+    }
+
+    private static func reading(_ state: String) -> Reading {
+        if state == "short" { return .short }
+        guard let seconds = TimeInterval(state) else { return .unknown("state not readable: \(state)") }
+        return .seconds(seconds)
     }
 }
 #endif

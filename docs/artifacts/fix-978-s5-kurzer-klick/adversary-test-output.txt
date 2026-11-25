@@ -1,150 +1,111 @@
-test_macos_only_with_oslog (test_mac_reopen_settle.MacPanelHoldSourceTests.test_macos_only_with_oslog) ... ok
-test_no_try_optional_and_no_print (test_mac_reopen_settle.MacPanelHoldSourceTests.test_no_try_optional_and_no_print) ... ok
-test_pairs_first_key_with_first_mouse_up_in_3_s (test_mac_reopen_settle.MacPanelHoldSourceTests.test_pairs_first_key_with_first_mouse_up_in_3_s) ... ok
-test_results_seconds_short_unknown_with_reason (test_mac_reopen_settle.MacPanelHoldSourceTests.test_results_seconds_short_unknown_with_reason) ... ok
-test_subsystem_and_category (test_mac_reopen_settle.MacPanelHoldSourceTests.test_subsystem_and_category) ... ok
-test_counts_new_format (test_mac_reopen_settle.NewFormatSummaryTests.test_counts_new_format) ... ok
-test_parse_click_new_format (test_mac_reopen_settle.NewFormatSummaryTests.test_parse_click_new_format) ... ok
-test_both_click_ways_share_the_one_retry_path (test_mac_reopen_settle.RetryPathSourceTests.test_both_click_ways_share_the_one_retry_path) ... ok
-test_failure_names_hold_or_reason (test_mac_reopen_settle.RetryPathSourceTests.test_failure_names_hold_or_reason)
+test_first_mouse_up_within_round_sets_seconds (scripts.test_mac_reopen_settle.AppHoldValueSourceTests.test_first_mouse_up_within_round_sets_seconds) ... ok
+test_log_lines_unchanged (scripts.test_mac_reopen_settle.AppHoldValueSourceTests.test_log_lines_unchanged) ... ok
+test_only_under_ui_testing (scripts.test_mac_reopen_settle.AppHoldValueSourceTests.test_only_under_ui_testing) ... ok
+test_pending_at_key_with_uptime (scripts.test_mac_reopen_settle.AppHoldValueSourceTests.test_pending_at_key_with_uptime) ... ok
+test_round_end_without_mouse_up_is_short (scripts.test_mac_reopen_settle.AppHoldValueSourceTests.test_round_end_without_mouse_up_is_short) ... ok
+test_set_through_status_bar_button (scripts.test_mac_reopen_settle.AppHoldValueSourceTests.test_set_through_status_bar_button) ... ok
+test_macos_only_without_oslog (scripts.test_mac_reopen_settle.MacPanelHoldSourceTests.test_macos_only_without_oslog) ... ok
+test_no_try_optional_and_no_print (scripts.test_mac_reopen_settle.MacPanelHoldSourceTests.test_no_try_optional_and_no_print) ... ok
+test_reads_value_of_status_item (scripts.test_mac_reopen_settle.MacPanelHoldSourceTests.test_reads_value_of_status_item) ... ok
+test_results_seconds_short_unknown_with_reason (scripts.test_mac_reopen_settle.MacPanelHoldSourceTests.test_results_seconds_short_unknown_with_reason) ... ok
+test_round_format_pending_short (scripts.test_mac_reopen_settle.MacPanelHoldSourceTests.test_round_format_pending_short) ... ok
+test_waits_at_most_4_s (scripts.test_mac_reopen_settle.MacPanelHoldSourceTests.test_waits_at_most_4_s) ... ok
+test_counts_new_format (scripts.test_mac_reopen_settle.NewFormatSummaryTests.test_counts_new_format) ... ok
+test_parse_click_new_format (scripts.test_mac_reopen_settle.NewFormatSummaryTests.test_parse_click_new_format) ... ok
+test_both_click_ways_share_the_one_retry_path (scripts.test_mac_reopen_settle.RetryPathSourceTests.test_both_click_ways_share_the_one_retry_path) ... ok
+test_every_click_way_reads_the_round_before_its_click (scripts.test_mac_reopen_settle.RetryPathSourceTests.test_every_click_way_reads_the_round_before_its_click)
+Spec v7 AC-4: jeder Klickweg liest die Runde des Statusobjekts vor dem Klick, nicht mehr eine Uhrzeit. ... ok
+test_failure_names_hold_or_reason (scripts.test_mac_reopen_settle.RetryPathSourceTests.test_failure_names_hold_or_reason)
 Hart rot mit Haltedauer oder Grund in der Meldung; der Klickanhang trägt eine Zeile `hold:`. ... ok
-test_hold_probe_writes_read_hold (test_mac_reopen_settle.RetryPathSourceTests.test_hold_probe_writes_read_hold) ... ok
-test_no_retry_elsewhere (test_mac_reopen_settle.RetryPathSourceTests.test_no_retry_elsewhere)
+test_hold_probe_writes_read_hold (scripts.test_mac_reopen_settle.RetryPathSourceTests.test_hold_probe_writes_read_hold) ... ok
+test_no_retry_elsewhere (scripts.test_mac_reopen_settle.RetryPathSourceTests.test_no_retry_elsewhere)
 Außer dem Retry-Pfad liest nur die Halteprobe die Haltedauer (für ihren Anhang, ohne zweiten Klick). ... ok
-test_retry_only_on_read_seconds_at_or_above_threshold (test_mac_reopen_settle.RetryPathSourceTests.test_retry_only_on_read_seconds_at_or_above_threshold)
+test_retry_only_on_read_seconds_at_or_above_threshold (scripts.test_mac_reopen_settle.RetryPathSourceTests.test_retry_only_on_read_seconds_at_or_above_threshold)
 Kein Retry ohne gelesene Haltedauer: „kurz“ und „unbekannt“ führen nie zum zweiten Klick. ... ok
-test_retry_reads_hold_first_then_one_short_click (test_mac_reopen_settle.RetryPathSourceTests.test_retry_reads_hold_first_then_one_short_click) ... ok
-test_vermerk_and_threshold_exactly_once (test_mac_reopen_settle.RetryPathSourceTests.test_vermerk_and_threshold_exactly_once) ... ok
-test_attachment_first_click_last_after (test_mac_reopen_settle.ShortClickSourceTests.test_attachment_first_click_last_after) ... ok
-test_control_arm_and_hold_probe_stay_behind_env (test_mac_reopen_settle.ShortClickSourceTests.test_control_arm_and_hold_probe_stay_behind_env) ... ok
-test_exactly_one_short_click_helper (test_mac_reopen_settle.ShortClickSourceTests.test_exactly_one_short_click_helper) ... ok
-test_hard_failure_without_second_try (test_mac_reopen_settle.ShortClickSourceTests.test_hard_failure_without_second_try) ... ok
-test_helper_clicks_middle_for_0_1_s_onto_same_coordinate (test_mac_reopen_settle.ShortClickSourceTests.test_helper_clicks_middle_for_0_1_s_onto_same_coordinate) ... ok
-test_helper_has_no_fallback_and_no_retry (test_mac_reopen_settle.ShortClickSourceTests.test_helper_has_no_fallback_and_no_retry) ... ok
-test_open_panel_uses_short_click (test_mac_reopen_settle.ShortClickSourceTests.test_open_panel_uses_short_click) ... ok
-test_user_arms_use_short_click_exactly_once (test_mac_reopen_settle.ShortClickSourceTests.test_user_arms_use_short_click_exactly_once) ... ok
-test_v1_v3_paths_and_fallback_rule_gone (test_mac_reopen_settle.ShortClickSourceTests.test_v1_v3_paths_and_fallback_rule_gone) ... ok
-test_after_observer_behaviour (test_mac_panel_repeat_summary.CallersTests.test_after_observer_behaviour)
+test_retry_reads_hold_first_then_one_short_click (scripts.test_mac_reopen_settle.RetryPathSourceTests.test_retry_reads_hold_first_then_one_short_click) ... ok
+test_vermerk_and_threshold_exactly_once (scripts.test_mac_reopen_settle.RetryPathSourceTests.test_vermerk_and_threshold_exactly_once) ... ok
+test_attachment_first_click_last_after (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_attachment_first_click_last_after) ... ok
+test_control_arm_and_hold_probe_stay_behind_env (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_control_arm_and_hold_probe_stay_behind_env) ... ok
+test_exactly_one_short_click_helper (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_exactly_one_short_click_helper) ... ok
+test_hard_failure_without_second_try (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_hard_failure_without_second_try) ... ok
+test_helper_clicks_middle_for_0_1_s_onto_same_coordinate (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_helper_clicks_middle_for_0_1_s_onto_same_coordinate) ... ok
+test_helper_has_no_fallback_and_no_retry (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_helper_has_no_fallback_and_no_retry) ... ok
+test_open_panel_uses_short_click (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_open_panel_uses_short_click) ... ok
+test_user_arms_use_short_click_exactly_once (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_user_arms_use_short_click_exactly_once) ... ok
+test_v1_v3_paths_and_fallback_rule_gone (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_v1_v3_paths_and_fallback_rule_gone) ... ok
+test_after_observer_behaviour (scripts.test_mac_panel_repeat_summary.CallersTests.test_after_observer_behaviour)
 F101: der echte Rumpf von `afterObserver`, mit swiftc gebaut und an festen Stapeln ausgeführt. ... ok
-test_callers_drops_only_leading_frames (test_mac_panel_repeat_summary.CallersTests.test_callers_drops_only_leading_frames) ... ok
-test_control_arm_guarded_by_env (test_mac_panel_repeat_summary.ControlArmTests.test_control_arm_guarded_by_env) ... ok
-test_user_arms_click_short_without_fallback (test_mac_panel_repeat_summary.ControlArmTests.test_user_arms_click_short_without_fallback)
+test_callers_drops_only_leading_frames (scripts.test_mac_panel_repeat_summary.CallersTests.test_callers_drops_only_leading_frames) ... ok
+test_control_arm_guarded_by_env (scripts.test_mac_panel_repeat_summary.ControlArmTests.test_control_arm_guarded_by_env) ... ok
+test_user_arms_click_short_without_fallback (scripts.test_mac_panel_repeat_summary.ControlArmTests.test_user_arms_click_short_without_fallback)
 #978 S5: Nutzerarme klicken kurz (0,1 s) über `shortClick`, ohne Rückfall auf statusItem.click(). ... ok
-test_attachment_without_how_counts_as_unknown (test_mac_panel_repeat_summary.ExpectedAndHowTests.test_attachment_without_how_counts_as_unknown) ... ok
-test_expected_flags_named_arm_without_clicks (test_mac_panel_repeat_summary.ExpectedAndHowTests.test_expected_flags_named_arm_without_clicks) ... ok
-test_expected_flags_short_active_arm (test_mac_panel_repeat_summary.ExpectedAndHowTests.test_expected_flags_short_active_arm) ... ok
-test_expected_ignores_inactive_control_arm (test_mac_panel_repeat_summary.ExpectedAndHowTests.test_expected_ignores_inactive_control_arm) ... ok
-test_how_counted_per_arm (test_mac_panel_repeat_summary.ExpectedAndHowTests.test_how_counted_per_arm) ... ok
-test_how_short_click_category (test_mac_panel_repeat_summary.ExpectedAndHowTests.test_how_short_click_category)
+test_attachment_without_how_counts_as_unknown (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_attachment_without_how_counts_as_unknown) ... ok
+test_expected_flags_named_arm_without_clicks (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_expected_flags_named_arm_without_clicks) ... ok
+test_expected_flags_short_active_arm (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_expected_flags_short_active_arm) ... ok
+test_expected_ignores_inactive_control_arm (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_expected_ignores_inactive_control_arm) ... ok
+test_how_counted_per_arm (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_how_counted_per_arm) ... ok
+test_how_short_click_category (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_how_short_click_category)
 #978 S5 Test 3: `user: short click 0.1 s` ist eine eigene Kategorie; die v3-Klickwege gibt es nicht mehr. ... ok
-test_how_short_click_counted_per_arm (test_mac_panel_repeat_summary.ExpectedAndHowTests.test_how_short_click_counted_per_arm)
+test_how_short_click_counted_per_arm (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_how_short_click_counted_per_arm)
 #978 S5 Test 3: die neue Kategorie wird je Arm gezählt, Raten unverändert. ... ok
-test_mandatory_arms_flagged_even_without_clicks (test_mac_panel_repeat_summary.ExpectedAndHowTests.test_mandatory_arms_flagged_even_without_clicks) ... ok
-test_without_expected_no_check_line (test_mac_panel_repeat_summary.ExpectedAndHowTests.test_without_expected_no_check_line) ... ok
-test_attachment_lines_and_monitor (test_mac_panel_repeat_summary.HoldProbeSourceTests.test_attachment_lines_and_monitor)
+test_mandatory_arms_flagged_even_without_clicks (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_mandatory_arms_flagged_even_without_clicks) ... ok
+test_without_expected_no_check_line (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_without_expected_no_check_line) ... ok
+test_attachment_lines_and_monitor (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_attachment_lines_and_monitor)
 AC-4: Anhang nennt d, Ergebnis und Monitor-Dauer oder `monitor saw nothing`. ... ok
-test_probe_clicks_with_duration_on_same_coordinate (test_mac_panel_repeat_summary.HoldProbeSourceTests.test_probe_clicks_with_duration_on_same_coordinate)
+test_probe_clicks_with_duration_on_same_coordinate (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_probe_clicks_with_duration_on_same_coordinate)
 AC-2: click(forDuration:thenDragTo:) mit 1,0 s und 0,1 s im Wechsel. ... ok
-test_probe_guarded_by_env (test_mac_panel_repeat_summary.HoldProbeSourceTests.test_probe_guarded_by_env)
+test_probe_guarded_by_env (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_probe_guarded_by_env)
 AC-3: ohne LE_PANEL_HOLD_PROBE übersprungen, wie der Kontrollarm. ... ok
-test_required_job_and_reopen_tests_unchanged (test_mac_panel_repeat_summary.HoldProbeSourceTests.test_required_job_and_reopen_tests_unchanged)
+test_required_job_and_reopen_tests_unchanged (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_required_job_and_reopen_tests_unchanged)
 AC-6: der Pflicht-Job setzt die Probe nie, die drei Wiederöffnungstests gibt es weiter. ... ok
-test_workflow_input_halteprobe (test_mac_panel_repeat_summary.HoldProbeSourceTests.test_workflow_input_halteprobe)
+test_workflow_input_halteprobe (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_workflow_input_halteprobe)
 AC-5: Eingabe halteprobe setzt die Variable und wählt nur den Probetest; die Reopen-Tests bleiben der Standard. ... ok
-test_arm_of_hold_labels (test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_arm_of_hold_labels) ... ok
-test_arm_of_hold_names_split_by_xcresulttool (test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_arm_of_hold_names_split_by_xcresulttool) ... ok
-test_counts_per_hold_arm (test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_counts_per_hold_arm)
+test_arm_of_hold_labels (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_arm_of_hold_labels) ... ok
+test_arm_of_hold_names_split_by_xcresulttool (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_arm_of_hold_names_split_by_xcresulttool) ... ok
+test_counts_per_hold_arm (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_counts_per_hold_arm)
 Test 1: 20 Klicks 1,0 s alle zu, 20 Klicks 0,1 s alle offen. ... ok
-test_decision_rule (test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_decision_rule)
+test_decision_rule (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_decision_rule)
 Test 4 (lokal): Regel aus Spec Punkt 6. ... ok
-test_hold_clicks_do_not_count_as_reopen (test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_hold_clicks_do_not_count_as_reopen) ... ok
-test_key_to_mouse_up_from_panel_log (test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_key_to_mouse_up_from_panel_log) ... ok
-test_monitor_against_log (test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_monitor_against_log)
+test_hold_clicks_do_not_count_as_reopen (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_hold_clicks_do_not_count_as_reopen) ... ok
+test_key_to_mouse_up_from_panel_log (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_key_to_mouse_up_from_panel_log) ... ok
+test_monitor_against_log (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_monitor_against_log)
 Test 2: Log 0,93 s gegen Monitor 0,95 s stimmt überein; ein Klick ohne Monitorwert wird ausgewiesen. ... ok
-test_parse_hold (test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_parse_hold) ... ok
-test_reopen_report_has_no_hold_section (test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_reopen_report_has_no_hold_section) ... ok
-test_activation_and_space_lines (test_mac_panel_repeat_summary.PanelLogTests.test_activation_and_space_lines) ... ok
-test_cg_event_fields_without_subtype_or_data1 (test_mac_panel_repeat_summary.PanelLogTests.test_cg_event_fields_without_subtype_or_data1) ... ok
-test_monitors_return_event_unchanged (test_mac_panel_repeat_summary.PanelLogTests.test_monitors_return_event_unchanged) ... ok
-test_no_print_no_try_optional (test_mac_panel_repeat_summary.PanelLogTests.test_no_print_no_try_optional) ... ok
-test_stack_up_to_40_frames (test_mac_panel_repeat_summary.PanelLogTests.test_stack_up_to_40_frames) ... ok
-test_parse_retry (test_mac_panel_repeat_summary.RetrySummaryTests.test_parse_retry) ... ok
-test_retry_closed_is_red (test_mac_panel_repeat_summary.RetrySummaryTests.test_retry_closed_is_red)
+test_parse_hold (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_parse_hold) ... ok
+test_reopen_report_has_no_hold_section (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_reopen_report_has_no_hold_section) ... ok
+test_activation_and_space_lines (scripts.test_mac_panel_repeat_summary.PanelLogTests.test_activation_and_space_lines) ... ok
+test_cg_event_fields_without_subtype_or_data1 (scripts.test_mac_panel_repeat_summary.PanelLogTests.test_cg_event_fields_without_subtype_or_data1) ... ok
+test_monitors_return_event_unchanged (scripts.test_mac_panel_repeat_summary.PanelLogTests.test_monitors_return_event_unchanged) ... ok
+test_no_print_no_try_optional (scripts.test_mac_panel_repeat_summary.PanelLogTests.test_no_print_no_try_optional) ... ok
+test_stack_up_to_40_frames (scripts.test_mac_panel_repeat_summary.PanelLogTests.test_stack_up_to_40_frames) ... ok
+test_parse_retry (scripts.test_mac_panel_repeat_summary.RetrySummaryTests.test_parse_retry) ... ok
+test_retry_closed_is_red (scripts.test_mac_panel_repeat_summary.RetrySummaryTests.test_retry_closed_is_red)
 Test 2: auch der zweite Klick zu → die Iteration zählt als rot, der zweite Klick steht im Bericht. ... ok
-test_retry_open_is_not_red_and_is_shown (test_mac_panel_repeat_summary.RetrySummaryTests.test_retry_open_is_not_red_and_is_shown)
+test_retry_open_is_not_red_and_is_shown (scripts.test_mac_panel_repeat_summary.RetrySummaryTests.test_retry_open_is_not_red_and_is_shown)
 Test 1: erster Klick zu, zweiter mit `retry: hold 0.616 s` offen → eine Iteration, nicht rot, ausgewiesen. ... ok
-test_without_retry_counts_unchanged (test_mac_panel_repeat_summary.RetrySummaryTests.test_without_retry_counts_unchanged)
+test_without_retry_counts_unchanged (scripts.test_mac_panel_repeat_summary.RetrySummaryTests.test_without_retry_counts_unchanged)
 Test 3: ohne `retry` keine Wiederholung, die Zähler wie bisher. ... ok
-test_click_without_key_has_no_hold (test_mac_panel_repeat_summary.ShortClickSummaryTests.test_click_without_key_has_no_hold) ... ok
-test_mouse_up_inside_window_gives_seconds (test_mac_panel_repeat_summary.ShortClickSummaryTests.test_mouse_up_inside_window_gives_seconds)
+test_click_without_key_has_no_hold (scripts.test_mac_panel_repeat_summary.ShortClickSummaryTests.test_click_without_key_has_no_hold) ... ok
+test_mouse_up_inside_window_gives_seconds (scripts.test_mac_panel_repeat_summary.ShortClickSummaryTests.test_mouse_up_inside_window_gives_seconds)
 Test 2: Maus hoch 0,93 s nach key ist die Haltedauer. ... ok
-test_no_pairing_with_late_mouse_up (test_mac_panel_repeat_summary.ShortClickSummaryTests.test_no_pairing_with_late_mouse_up)
+test_no_pairing_with_late_mouse_up (scripts.test_mac_panel_repeat_summary.ShortClickSummaryTests.test_no_pairing_with_late_mouse_up)
 Test 1: ein Maus-hoch 12 s nach key gehört nicht zum Klick. ... ok
-test_report_names_hold_per_click (test_mac_panel_repeat_summary.ShortClickSummaryTests.test_report_names_hold_per_click)
+test_report_names_hold_per_click (scripts.test_mac_panel_repeat_summary.ShortClickSummaryTests.test_report_names_hold_per_click)
 AC-5: der Bericht nennt je Wiederöffnungsklick die Haltedauer oder „kurz (kein Maus-hoch)“. ... ok
-test_arm_of_maps_labels (test_mac_panel_repeat_summary.SummaryTests.test_arm_of_maps_labels) ... ok
-test_arm_without_attachments_is_zero_not_missing (test_mac_panel_repeat_summary.SummaryTests.test_arm_without_attachments_is_zero_not_missing) ... ok
-test_counts_every_iteration_per_arm (test_mac_panel_repeat_summary.SummaryTests.test_counts_every_iteration_per_arm) ... ok
-test_parse_click (test_mac_panel_repeat_summary.SummaryTests.test_parse_click) ... ok
-test_parse_panel_log_reads_event_and_source (test_mac_panel_repeat_summary.SummaryTests.test_parse_panel_log_reads_event_and_source) ... ok
-test_report_names_every_arm_and_only_numbers (test_mac_panel_repeat_summary.SummaryTests.test_report_names_every_arm_and_only_numbers) ... ok
-test_several_export_folders_add_up (test_mac_panel_repeat_summary.SummaryTests.test_several_export_folders_add_up) ... ok
-test_timeline_of_a_failure (test_mac_panel_repeat_summary.SummaryTests.test_timeline_of_a_failure) ... ok
-test_workflow_passes_expected_and_arms (test_mac_panel_repeat_summary.WorkflowExpectedTests.test_workflow_passes_expected_and_arms) ... ok
-test_dispatch_with_inputs (test_mac_panel_repeat_summary.WorkflowTests.test_dispatch_with_inputs) ... ok
-test_log_from_job_start_and_uploads (test_mac_panel_repeat_summary.WorkflowTests.test_log_from_job_start_and_uploads) ... ok
-test_pull_request_only_on_this_file (test_mac_panel_repeat_summary.WorkflowTests.test_pull_request_only_on_this_file) ... ok
-test_runs_only_reopen_tests_with_iterations (test_mac_panel_repeat_summary.WorkflowTests.test_runs_only_reopen_tests_with_iterations) ... ok
-test_events_cover_hiding (test_menubar_panel_log.AppWritesPanelLines.test_events_cover_hiding)
-Run 44994038524: the SwiftUI panel is ordered out, never closed; resign and hide leave a line too. ... ok
-test_fields_present (test_menubar_panel_log.AppWritesPanelLines.test_fields_present) ... ok
-test_hiding_does_not_touch_dock_policy (test_menubar_panel_log.AppWritesPanelLines.test_hiding_does_not_touch_dock_policy)
-AC-4: resign and hide only log, the Dock policy runs as often as before. ... ok
-test_logger_category (test_menubar_panel_log.AppWritesPanelLines.test_logger_category) ... ok
-test_no_titles_print_or_try_optional (test_menubar_panel_log.AppWritesPanelLines.test_no_titles_print_or_try_optional) ... ok
-test_notice_level (test_menubar_panel_log.AppWritesPanelLines.test_notice_level) ... ok
-test_collect_after_gallery (test_menubar_panel_log.CiCollectsPanelLog.test_collect_after_gallery) ... ok
-test_collect_step (test_menubar_panel_log.CiCollectsPanelLog.test_collect_step) ... ok
-test_upload (test_menubar_panel_log.CiCollectsPanelLog.test_upload) ... ok
-test_click_check_is_hard (test_menubar_panel_log.TestOpenAppArmIsHard.test_click_check_is_hard) ... ok
-test_no_skip (test_menubar_panel_log.TestOpenAppArmIsHard.test_no_skip) ... ok
-test_setup_stays_hard (test_menubar_panel_log.TestOpenAppArmIsHard.test_setup_stays_hard)
-Aufbau (Open Loose Ends, ⌘W) steht vor der Klickprüfung. ... ok
-test_automation_mode_is_enabled_before_the_test (test_ci_xcode27.MacGallery.test_automation_mode_is_enabled_before_the_test) ... ok
-test_claude_md_names_the_mac_gallery (test_ci_xcode27.MacGallery.test_claude_md_names_the_mac_gallery) ... ok
-test_click_test_clicks_the_fields_and_both_pickers (test_ci_xcode27.MacGallery.test_click_test_clicks_the_fields_and_both_pickers)
-#544: the click test reaches Note, subtask, File and Photo; the gallery only photographs ("Add more" gone, #560). ... ok
-test_click_test_runs_in_the_sandbox_of_the_real_app (test_ci_xcode27.MacGallery.test_click_test_runs_in_the_sandbox_of_the_real_app)
-#544: the click test's app carries the App Sandbox of project.yml; without it the open panel opened ... ok
-test_diagnosis_export_and_upload_run_after_a_failure (test_ci_xcode27.MacGallery.test_diagnosis_export_and_upload_run_after_a_failure) ... ok
-test_export_keeps_only_mac_gallery_attachments (test_ci_xcode27.MacGallery.test_export_keeps_only_mac_gallery_attachments) ... ok
-test_gallery_source_is_mac_only (test_ci_xcode27.MacGallery.test_gallery_source_is_mac_only) ... ok
-test_job_limit_keeps_a_quarter_in_reserve (test_ci_xcode27.MacGallery.test_job_limit_keeps_a_quarter_in_reserve) ... ok
-test_job_runs_on_xcode_27_and_never_fails_silently (test_ci_xcode27.MacGallery.test_job_runs_on_xcode_27_and_never_fails_silently) ... ok
-test_runs_only_the_mac_gallery_on_the_mac_with_ad_hoc_signing (test_ci_xcode27.MacGallery.test_runs_only_the_mac_gallery_on_the_mac_with_ad_hoc_signing) ... ok
-test_ui_smoke_neither_runs_nor_exports_the_mac_gallery (test_ci_xcode27.MacGallery.test_ui_smoke_neither_runs_nor_exports_the_mac_gallery) ... ok
-test_fails_without_iphone_17_on_ios_27_0 (test_ci_xcode27.PickSimulator.test_fails_without_iphone_17_on_ios_27_0) ... ok
-test_picks_iphone_17_on_ios_27_0 (test_ci_xcode27.PickSimulator.test_picks_iphone_17_on_ios_27_0) ... ok
-test_accepts_xcode_27_0 (test_ci_xcode27.SelectXcodeAction.test_accepts_xcode_27_0) ... ok
-test_rejects_other_version (test_ci_xcode27.SelectXcodeAction.test_rejects_other_version) ... ok
-test_selects_fixed_xcode_27_app (test_ci_xcode27.SelectXcodeAction.test_selects_fixed_xcode_27_app) ... ok
-test_claude_md_describes_the_new_ci (test_ci_xcode27.Sources.test_claude_md_describes_the_new_ci) ... ok
-test_no_compiler_switch_left (test_ci_xcode27.Sources.test_no_compiler_switch_left) ... ok
-test_no_server_recognition_dialog_left_to_decline (test_ci_xcode27.SpeechStressOnXcode27.test_no_server_recognition_dialog_left_to_decline) ... ok
-test_stress_runs_skip_the_600_second_diagnostics (test_ci_xcode27.SpeechStressOnXcode27.test_stress_runs_skip_the_600_second_diagnostics) ... ok
-test_check_names_unchanged (test_ci_xcode27.Workflows.test_check_names_unchanged) ... ok
-test_every_job_runs_on_xcode_27_with_the_action (test_ci_xcode27.Workflows.test_every_job_runs_on_xcode_27_with_the_action) ... ok
-test_no_lowering_anywhere_in_github (test_ci_xcode27.Workflows.test_no_lowering_anywhere_in_github) ... ok
-test_sed_pattern_catches_every_writing_spelling (test_ci_xcode27.Workflows.test_sed_pattern_catches_every_writing_spelling) ... ok
-test_sed_pattern_ignores_reading_sed (test_ci_xcode27.Workflows.test_sed_pattern_ignores_reading_sed) ... ok
-test_ui_smoke_has_a_diagnosis_step_that_never_fails (test_ci_xcode27.Workflows.test_ui_smoke_has_a_diagnosis_step_that_never_fails) ... ok
-test_ui_smoke_lets_the_simulator_settle_and_runs_without_parallel_clones (test_ci_xcode27.Workflows.test_ui_smoke_lets_the_simulator_settle_and_runs_without_parallel_clones) ... ok
-test_unit_job_prints_measurement_reports_into_its_own_log (test_ci_xcode27.Workflows.test_unit_job_prints_measurement_reports_into_its_own_log) ... ok
-test_unit_job_runs_every_script_test (test_ci_xcode27.Workflows.test_unit_job_runs_every_script_test)
-#185: every scripts/test_*.py runs in CI, in one step, before Xcode. ... ok
-test_workflows_wait_for_the_simulator_to_finish_booting (test_ci_xcode27.Workflows.test_workflows_wait_for_the_simulator_to_finish_booting) ... ok
+test_arm_of_maps_labels (scripts.test_mac_panel_repeat_summary.SummaryTests.test_arm_of_maps_labels) ... ok
+test_arm_without_attachments_is_zero_not_missing (scripts.test_mac_panel_repeat_summary.SummaryTests.test_arm_without_attachments_is_zero_not_missing) ... ok
+test_counts_every_iteration_per_arm (scripts.test_mac_panel_repeat_summary.SummaryTests.test_counts_every_iteration_per_arm) ... ok
+test_parse_click (scripts.test_mac_panel_repeat_summary.SummaryTests.test_parse_click) ... ok
+test_parse_panel_log_reads_event_and_source (scripts.test_mac_panel_repeat_summary.SummaryTests.test_parse_panel_log_reads_event_and_source) ... ok
+test_report_names_every_arm_and_only_numbers (scripts.test_mac_panel_repeat_summary.SummaryTests.test_report_names_every_arm_and_only_numbers) ... ok
+test_several_export_folders_add_up (scripts.test_mac_panel_repeat_summary.SummaryTests.test_several_export_folders_add_up) ... ok
+test_timeline_of_a_failure (scripts.test_mac_panel_repeat_summary.SummaryTests.test_timeline_of_a_failure) ... ok
+test_workflow_passes_expected_and_arms (scripts.test_mac_panel_repeat_summary.WorkflowExpectedTests.test_workflow_passes_expected_and_arms) ... ok
+test_dispatch_with_inputs (scripts.test_mac_panel_repeat_summary.WorkflowTests.test_dispatch_with_inputs) ... ok
+test_log_from_job_start_and_uploads (scripts.test_mac_panel_repeat_summary.WorkflowTests.test_log_from_job_start_and_uploads) ... ok
+test_pull_request_only_on_this_file (scripts.test_mac_panel_repeat_summary.WorkflowTests.test_pull_request_only_on_this_file) ... ok
+test_runs_only_reopen_tests_with_iterations (scripts.test_mac_panel_repeat_summary.WorkflowTests.test_runs_only_reopen_tests_with_iterations) ... ok
 
 ----------------------------------------------------------------------
-Ran 118 tests in 5.742s
+Ran 84 tests in 13.858s
 
 OK
