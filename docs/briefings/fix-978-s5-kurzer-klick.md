@@ -1,7 +1,7 @@
 ---
 spec_file: docs/specs/fix-978-s5-kurzer-klick.md
-spec_sha256: 415740ee8398184bcd89aff1809341cd291a8b72011fdf8bce7a9582b018f39e
-spec_frozen_sha256: 972bb923eb53afee4bef4689f7662286e5463efd356e220c6959f31d9a5debe2
+spec_sha256: 5e7ef23b25197d9ca5754e6d5c604803b6f36df87af8bba584623ea10ddabc3a
+spec_frozen_sha256: a1c1805d5453876e60b168d3ed78c8829bf4fd070d01498ba22da3149b09d74e
 ---
 
 # PO-Briefing: fix-978-s5-kurzer-klick
@@ -12,20 +12,20 @@ spec_frozen_sha256: 972bb923eb53afee4bef4689f7662286e5463efd356e220c6959f31d9a5d
 
 ## Was gebaut wird
 
-Der automatische Mac-Test klickt das Menüleistensymbol kurz wie ein Mensch, sodass das Panel nicht mehr zufällig zuklappt.
+Der Mac-Prüfablauf klickt kürzer auf das Menüleistensymbol und wiederholt höchstens einmal, wenn der Prüfklick nachweislich zu lange hielt.
 
 ## Definition of Done
 
-Der Mac-Galerie-Prüflauf ist dreimal hintereinander grün, und der Nachweislauf zeigt bei 40 Klicks je Testweg kein zugeklapptes Panel.
+Der Pflicht-Check „Mac Gallery“ läuft dreimal hintereinander grün, und ein Wiederholungslauf mit je 40 Durchgängen zeigt keinen roten Fall.
 
 ## Wie geprüft wird
 
-Skripttests und ein Nachweislauf mit 40 Klicks je Weg belegen das; ob echte Nutzer das Problem erleben, wird nicht geprüft.
+Skripttests, ein Probelauf und ein 40er-Nachweislauf belegen das; die App selbst bleibt unverändert und wird nur im CI-Lauf benutzt.
 
 ## Kritische Anmerkungen
 
-- Ob der kurze Klick auch nach „Open Loose Ends“ trägt, ist ungemessen; scheitert der Nachweislauf dort, stoppt die Arbeit.
-- Ursache liegt im Prüfwerkzeug, die App bleibt unverändert; langes Gedrückthalten schließt das Panel weiterhin, wie bei Systemmenüs.
+- Ob der Testläufer das Protokoll überhaupt lesen darf, ist unbelegt; sonst Stopp und neue Spec-Fassung mit App-Änderung.
+- Der Mac-Test bleibt eine Prüfwerkzeug-Korrektur; ein Produktfehler beim Panel-Schließen wird damit nicht ausgeschlossen, nur unter 0,4 Sekunden weiter rot gemeldet.
 
 ## Freigabe-Frage
 
