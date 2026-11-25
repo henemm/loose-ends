@@ -8,7 +8,8 @@ keine Bundle-ID, keinen Stapel.
 
 Mit `--expected N` prüft es den Nenner je aktivem Arm gegen N (Iterationen je Test) und nennt jede Abweichung; aktiv sind
 die Arme aus `--arms`, ohne die Angabe Return, Open-App und jeder Arm mit mindestens einem Klickanhang. Je Arm zählt es
-den Klickweg aus der Anhangszeile `how:` (statusitem, cgevent, xcuicoordinate als Rückfall).
+den Klickweg aus der Anhangszeile `how:` (seit #978 S3 v3 menubar-root, fallback-looseends, fallback-noframe; dazu
+statusitem, cgevent, xcuicoordinate als Rückfall). Als Beleg für den Nutzerweg zählt nur menubar-root.
 
 Aufruf: python3 scripts/mac_panel_repeat_summary.py --raw <ordner> [--raw <ordner> …] --log <datei> --out <datei>
         [--expected N] [--arms return,open-app,control]
@@ -23,8 +24,10 @@ from pathlib import Path
 ARMS = ("return", "open-app", "control")
 # Die beiden Pflicht-Arme laufen in jedem Wiederholungslauf; der Kontrollarm nur mit `kontrollarm`.
 REQUIRED_ARMS = ("return", "open-app")
-# Klickweg aus der Zeile `how:` des Anhangs (MacGalleryTests.swift).
-_HOW = (("statusItem.click()", "statusitem"), ("CGEvent", "cgevent"), ("XCUICoordinate", "xcuicoordinate"))
+# Klickweg aus der Zeile `how:` des Anhangs (MacGalleryTests.swift). Die genaueren Texte zuerst (#978 S3 v3);
+# als Beleg für den Nutzerweg zählt nur `menubar-root`, die beiden `fallback-*` sind Rückfälle auf statusItem.click().
+_HOW = (("frontmost menu bar", "menubar-root"), ("fallback (frontmost com.henning.looseends)", "fallback-looseends"),
+        ("no menu bar frame", "fallback-noframe"), ("statusItem.click()", "statusitem"), ("CGEvent", "cgevent"), ("XCUICoordinate", "xcuicoordinate"))
 # Der Kontrollarm zuerst, weil sein Label mit dem des Return-Arms beginnt.
 _ARM_PATTERN = re.compile(r"^mac-gallery-(reopen-return-control|reopen-return|reopen-open-app)-click(?:[_.]|$)")
 _LABEL_TO_ARM = {"reopen-return-control": "control", "reopen-return": "return", "reopen-open-app": "open-app"}
@@ -168,9 +171,11 @@ def report(folders, log_text: str, expected=None, arms=None) -> str:
     if expected is not None:
         found = deviations(counts, expected, arms)
         lines += ["", f"Soll-Nenner je aktivem Arm: {expected}"] + (found or ["- keine Abweichung"])
-    lines += ["", "Klickweg je Arm:"]
+    lines += ["", "Klickweg je Arm (Beleg für den Nutzerweg nur menubar-root):"]
+    order = [name for _, name in _HOW]
     for arm, ways in count_how(folders).items():
-        lines.append(f"- {arm}: " + (", ".join(f"{name} {n}" for name, n in sorted(ways.items())) or "–"))
+        ranked = sorted(ways.items(), key=lambda way: (order.index(way[0]) if way[0] in order else len(order), way[0]))
+        lines.append(f"- {arm}: " + (", ".join(f"{name} {n}" for name, n in ranked) or "–"))
     events = parse_panel_log(log_text)
     failures = sorted((at, arm) for arm, at, opened in clicks(folders) if not opened)
     lines += ["", f"Fälle: {len(failures)}"]

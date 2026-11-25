@@ -1,70 +1,104 @@
 # Adversary Dialog — fix-978-s3-wiederoeffnen-warten
 Spec: docs/specs/fix-978-s3-wiederoeffnen-warten.md
-Datum: 2026-11-24 18:19
+Datum: 2026-11-24 22:51
 
 ## Checkliste
-- [x] **AC-1:** Given `assertSymbolOpensPanelWithOneClick` / When der Diff geprüft wird / Then läuft der Klick im Return- und im ⌘W-Arm über eine `XCUICoordinate`, deren Wurzel `XCUIApplication(bundleIdentifier:)` der nach `waitForFrontmostSettled` vordersten App ist, mit Offset gleich Mitte von `statusItem.frame` minus Ursprung des Wurzelrahmens; ist die vorderste App Loose Ends selbst oder nicht lesbar, klickt er wie bisher `statusItem.click()` und vermerkt das im Anhang. Belegt durch Diff und `scripts/test_mac_reopen_settle.py`.
-- [x] **AC-2:** Given der Anhang `mac-gallery-<label>-click` / When er geschrieben wird / Then nennt `how:` `user: frontmost root <bundle id>` (oder den Rückfall), eine Zeile nennt die Dauer des Klicks in Sekunden, und die letzte Zeile bleibt `after: … s, panel open|not open`. Belegt durch Diff, Skript-Test und einen geöffneten Anhang.
-- [x] **AC-3:** Given der ⌘W-Arm `testMenuBarReopensAfterOpenAppWithOneClick` / When der Diff geprüft wird / Then enthält er weder `XCTExpectFailure` noch `continueAfterFailure = true`, und die Haltezeit von 3 s bleibt. Belegt durch `grep` und `TestOpenAppArmIsHard`.
-- [x] **AC-4:** Given der Kontrollarm `testMenuBarReopensAfterReturnWithControlClick` / When der Diff geprüft wird / Then ist er unverändert (weiter mit `LE_PANEL_CONTROL_ARM` und `XCTSkip` geschützt). Belegt durch Diff.
-- [ ] **AC-5:** Given ein Wiederholungslauf `mac-panel-repeat.yml` auf dem PR-Zweig mit mindestens 100 Iterationen je Arm / When er endet / Then gibt es keinen Fehlschlag in beiden Nutzerarmen, im xcresult-Aktivitätsprotokoll des Klicks im ⌘W-Arm steht kein „Activate com.henning.looseends“, die Klickdauer ist kleiner als 1 s, und im Panel-Protokoll liegt der Abstand `panel key` → Maus hoch unter 0,3 s. Belegt durch die Artefakte, geöffnet und beschrieben.
-- [ ] **AC-6:** Given der Pflicht-Check „Mac Gallery (macOS)“ / When er auf dem Stand dreimal läuft / Then ist er jedes Mal beim ersten Versuch grün; ein Abbruch durch das 40-min-Zeitlimit (#974) zählt nicht und wird neu gestartet. Belegt durch drei Läufe, Ergebnisbündel geöffnet.
-- [x] **AC-7:** Given der Diff / When er geprüft wird / Then sind `scripts/test_menubar_panel_log.py` und `scripts/test_mac_reopen_settle.py` grün und der App-Code unverändert (0 LoC; `MenuBarCapture.swift`, `mac-panel-repeat.yml`, `mac_panel_repeat_summary.py` unberührt). Belegt durch Skriptlauf und `git diff --stat`.
+- [x] **AC-1:** Given `assertSymbolOpensPanelWithOneClick` / When der Diff geprüft wird / Then läuft der Klick im Return- und im ⌘W-Arm über eine `XCUICoordinate` mit Wurzel `XCUIApplication(bundleIdentifier: <vorderste App>).menuBars.element(boundBy: 0)`, nur bei nicht leerem Rahmen mit Ursprung y = 0, mit Offset gleich Mitte von `statusItem.frame` minus Ursprung der Menüleiste. Belegt durch Diff und `scripts/test_mac_reopen_settle.py`.
+- [x] **AC-2:** Given der Anhang `mac-gallery-<label>-click` / When er geschrieben wird / Then nennt `how:` genau einen der Texte `user: frontmost menu bar <bundle id>`, `user: statusItem.click() fallback (frontmost com.henning.looseends)` oder `user: statusItem.click() fallback (frontmost <id>, no menu bar frame)`, eine Zeile nennt die Klickdauer in Sekunden, und die letzte Zeile bleibt `after: … s, panel open|not open`. Belegt durch Diff, Skript-Test und einen geöffneten Anhang.
+- [x] **AC-3:** Given der ⌘W-Arm `testMenuBarReopensAfterOpenAppWithOneClick` / When der Diff geprüft wird / Then enthält er weder `XCTExpectFailure` noch `continueAfterFailure = true`, die Haltezeit von 3 s bleibt, und bei fremder vorderster App mit Rückfall ist der Test rot mit `how` in der Meldung; ist Loose Ends vorn, ist der Rückfall zulässig. Belegt durch `grep`, `TestOpenAppArmIsHard` und `scripts/test_mac_reopen_settle.py`.
+- [x] **AC-4:** Given der Kontrollarm `testMenuBarReopensAfterReturnWithControlClick` und `LooseEnds/Mac/MenuBarCapture.swift` / When der Diff geprüft wird / Then sind beide unverändert (Kontrollarm weiter mit `LE_PANEL_CONTROL_ARM` und `XCTSkip` geschützt, App-Code 0 LoC). Belegt durch `git diff --stat`.
+- [x] **AC-5:** Given Anhänge mit den drei neuen `how`-Texten / When `scripts/mac_panel_repeat_summary.py` sie liest / Then ergeben sie die Kategorien `menubar-root`, `fallback-looseends`, `fallback-noframe` (nicht `unbekannt` oder `statusitem`), und als Beleg zählt nur `menubar-root`. Belegt durch `scripts/test_mac_panel_repeat_summary.py`.
+- [ ] **AC-6:** Given der Probelauf `mac-panel-repeat.yml` mit 1–2 Iterationen ohne Kontrollarm / When er endet / Then ist im ⌘W-Arm `how` = `frontmost menu bar <id>`, die Klickdauer < 1 s, im Klickprotokoll des xcresult steht kein „Activate com.henning.looseends“ und im Panel-Protokoll liegt `key` → Maus hoch unter 0,3 s; sonst gilt A′ als widerlegt, Rückfallplan D, Workflow zurück in die Analyse. Belegt durch die Artefakte, geöffnet und beschrieben.
+- [ ] **AC-7:** Given Wiederholungsläufe `mac-panel-repeat.yml` auf dem PR-Zweig mit zusammen mindestens 100 Iterationen je Arm (Teilläufe erlaubt) / When sie enden / Then gibt es 0 Fälle in beiden Nutzerarmen, und jeder gezählte Klick im ⌘W-Arm ist `menubar-root` (Rückfälle werden benannt und getrennt ausgewiesen). Belegt durch `MacPanelRepeatSummary`, geöffnet und beschrieben.
+- [ ] **AC-8:** Given der Pflicht-Check „Mac Gallery (macOS)“ / When er auf dem Stand dreimal läuft / Then ist er jedes Mal beim ersten Versuch grün, und je Bündel sind `how` und Klickdauer abgelesen; ein Abbruch durch das Zeitlimit #974 zählt nicht und wird neu gestartet. Belegt durch drei Läufe, Ergebnisbündel geöffnet.
 
 ## Dialog
 
 ### Runde 1
-**Adversary:** Beweise je Punkt, nicht Behauptungen. Evidenz: `git diff` (MacGalleryTests.swift, test_mac_panel_repeat_summary.py), Typecheck mit swiftc (ohne Ausgabe, sauber), Skriptsuite `python3 -m unittest discover -s scripts -p 'test_*.py'` = 881 Tests, OK (skipped=1; Skip ist die Umgebungsprüfung in test_asc_crashes/test_evidence_config/test_next_ticket_hook/test_store_screenshots, nicht in den Prüf-Dateien), Output in `adversary-test-output.txt`. Direkt: test_mac_reopen_settle 16 OK, test_menubar_panel_log 12 OK, test_mac_panel_repeat_summary 29 OK. Keine UI-Tests, keine App-Starts.
+**Adversary:** Diff gelesen (LooseEndsUITests/MacGalleryTests.swift, scripts/mac_panel_repeat_summary.py), Skripttests und Typprüfung gelaufen (Ausgabe: docs/artifacts/fix-978-s3-wiederoeffnen-warten/adversary-test-output.txt). Angriffspunkte: (a) `bar.exists ? bar.frame : .zero` – Swift-Semantik; (b) ob die Rückfall-Regel den Kontrollarm ausnimmt; (c) ob jeder how-Text genau einer Kategorie zugeordnet wird; (d) nil/none; (e) AC-4.
 
 Confirmation:
   AC: AC-1
-  Code reference: LooseEndsUITests/MacGalleryTests.swift:563
-  Evidence: `frontmostRootClick` (Z. 558-570) nimmt `XCUIApplication(bundleIdentifier: id)` als Wurzel, Offset = (item.midX - rootFrame.minX, item.midY - rootFrame.minY), `root.coordinate(withNormalizedOffset: .zero).withOffset(offset).click()`. Beide Rechengrößen sind Bildschirmpunkte (XCUIElement.frame), die Wurzelkoordinate .zero liegt auf dem Wurzelrahmen-Ursprung: konsistent, kein Mischen von Normalisiert und Absolut. Rückfall auf `statusItem.click()` bei nil/"none"/Loose Ends (Z. 559-562) und bei leerem Rahmen (Z. 565-568), im `how` vermerkt. Genau ein Klick je Zweig (kein Schleifen, kein zweiter Klick; geprüft per Lesen und `FrontmostRootClickTests` in scripts/test_mac_reopen_settle.py:131). Beide Nutzerarme laufen über denselben Helfer (`click == nil`), der Kontrollarm übergibt `Self.coordinateClick`.
+  Code reference: LooseEndsUITests/MacGalleryTests.swift:560
+  Evidence: Wurzel `XCUIApplication(bundleIdentifier: id).menuBars.element(boundBy: 0)`, Rahmen nur bei `bar.exists` gelesen (Zugriff auf `.frame` eines nicht existenten Elements wird so vermieden; ternärer Ausdruck typt als CGRect, `.zero.isEmpty` ist true, Typprüfung mit swiftc -typecheck -swift-version 6 ohne Fehler), Rückfall bei leerem Rahmen oder `minY != 0`, Offset = `statusItem.frame.mid - barFrame.min`, `bar.coordinate(withNormalizedOffset: .zero).withOffset(offset).click()`, genau ein Klick. test_mac_reopen_settle.py grün (20 Tests).
+  Status: CONFIRMED
 
 Confirmation:
   AC: AC-2
-  Code reference: LooseEndsUITests/MacGalleryTests.swift:605
-  Evidence: Anhang enthält `how:` (`user: frontmost root <id>` / Rückfall), Zeile `click duration: %.3f s` (Z. 605) und als LETZTE Zeile `after: … panel open|not open` (Z. 606). Dauer wird direkt um den Klick gemessen (Z. 586-590). scripts/test_mac_reopen_settle.py:131 prüft Reihenfolge (duration vor letzter Zeile) am Quelltext; test_mac_panel_repeat_summary.py liest das Format (NewFormatSummaryTests) ohne Skriptänderung. Der Anhang selbst entsteht erst im CI-Lauf (siehe AC-5).
+  Code reference: LooseEndsUITests/MacGalleryTests.swift:600
+  Evidence: Die drei how-Texte stehen im Helfer (Zeilen 560-583), Anhang enthält `how:`, `click duration: … s` und als letzte Zeile `after: … s, panel open|not open`. Vierte Variante `(frontmost none, no menu bar frame)` ist Spezialfall von `<id>` = none und fällt in dieselbe Kategorie. Ein geöffneter Anhang aus einem echten Lauf liegt NICHT vor (nur CI).
+  Status: CONFIRMED (Quelltext und Skripttest; Anhang-Teil des Belegs offen bis CI)
 
 Confirmation:
   AC: AC-3
-  Code reference: scripts/test_menubar_panel_log.py:53
-  Evidence: `grep XCTExpectFailure|continueAfterFailure` in MacGalleryTests.swift findet nur `continueAfterFailure = false` (Z. 17, setUp); Funktionsrumpf von `testMenuBarReopensAfterOpenAppWithOneClick` (Z. 468) hat weder XCTExpectFailure noch `= true`; `TestOpenAppArmIsHard` grün. Haltezeit `holdSeconds = 3` (Z. 594) bleibt.
+  Code reference: LooseEndsUITests/MacGalleryTests.swift:619
+  Evidence: `if click == nil, frontmost != "com.henning.looseends", how.contains("fallback") { XCTFail(... how ...) }`; `grep XCTExpectFailure|continueAfterFailure` in der Datei liefert nur Zeile 17 (`continueAfterFailure = false`), kein XCTExpectFailure; Haltezeit 3 s (Zeile ~604) bleibt; TestOpenAppArmIsHard grün (test_menubar_panel_log.py, 12 Tests).
+  Status: CONFIRMED
 
 Confirmation:
   AC: AC-4
   Code reference: LooseEndsUITests/MacGalleryTests.swift:486
-  Evidence: Der Diff berührt den Kontrollarm nicht (Hunk nur im Kommentar von Z. 462 ff., in `frontmostRootClick` und im Helfer); `LE_PANEL_CONTROL_ARM`-Guard und `XCTSkip` (Z. 487-488) sowie `Self.coordinateClick` unverändert. Der Helfer ruft für ihn weiter `click(statusItem)`.
+  Evidence: `git diff origin/main HEAD --stat -- LooseEnds/Mac/MenuBarCapture.swift` und `git diff origin/main --stat` (Arbeitsbaum) leer. Kontrollarm unverändert gegenüber origin/main (kein Treffer für ControlClick/LE_PANEL/XCTSkip im Diff), weiter mit `LE_PANEL_CONTROL_ARM` und `XCTSkip` geschützt. Er übergibt `click: Self.coordinateClick`, daher greift die harte Rückfall-Regel (`click == nil`) nicht für ihn: Kontrollarm ausgenommen.
+  Status: CONFIRMED
 
 Confirmation:
-  AC: AC-7
-  Code reference: scripts/test_mac_reopen_settle.py:131
-  Evidence: beide genannten Skripttests grün (16 und 12), volle Suite 881 OK. `git diff --stat HEAD -- LooseEnds .github scripts/mac_panel_repeat_summary.py` leer; gegen den Zweigpunkt (c885f7a) ändern sich in diesen Pfaden nur Tests/Skripttests, App-Code 0 LoC.
-
-Bewertung der Abweichung (Datei unten, Z. 406):
-  Code reference: scripts/test_mac_panel_repeat_summary.py:406
-  Der alte Test verlangte `statusItem.click()` im Helferrumpf; das ist durch den Umbau (Aufruf wandert nach `frontmostRootClick`) zwingend. Der neue Test verlangt weiterhin `statusItem.click()` (jetzt im Rückfall-Helfer) und zusätzlich, dass der Nutzerarm-Helfer `frontmostRootClick(` aufruft, und streicht Kommentare vor dem Vergleich, sodass ein Kommentar den Test nicht mehr täuschen kann (vorher konnte er das). Keine Abschwächung, eher strenger; in der Spec als „nur ausgeführt“ geführt, ist aber real geändert: Dokumentationsabweichung, kein Defekt.
-
-**Implementierer:** keine Gegenrede nötig; Befunde unten.
-
-### Runde 2
-**Adversary:** Gezielt Schwachstellen gesucht.
-1. Frontmost-App wird zweimal gelesen (Z. 585 `waitForFrontmostSettled`, Z. 586 erneut). Nach einem `timeout after 10 s` oder einem Wechsel zwischen beiden Aufrufen kann die Wurzel eine andere App sein als die im Verlauf angezeigte. Der Anhang nennt die Wurzel in `how:`, daher auswertbar.
-2. Unbelegt (nur CI beweisbar): ob `XCUICoordinate.click()` auf einer Nicht-Ziel-Wurzel (Finder) wirklich nichts aktiviert und ob `XCUIApplication(bundleIdentifier:).frame` bei Finder ohne Fenster nichtleer, aber sinnvoll ist (dann liegt der Klickpunkt außerhalb des Wurzelrahmens, XCTest könnte ablehnen). Rückfall nur bei leerem Rahmen. Das ist genau, was AC-5 prüft; Spec nennt Alternative D als Rückfall.
-3. Frontmost-Bundle-ID einer App ohne Bundle (nil) → Rückfall mit `none`: korrekt abgedeckt.
-4. Kein zweiter Klick, keine Wiederholung: bestätigt.
+  AC: AC-5
+  Code reference: scripts/mac_panel_repeat_summary.py:29
+  Evidence: Alle drei Texte (mit Präfix `how: user: `) liefern per `how_of` menubar-root / fallback-looseends / fallback-noframe; Reihenfolge in `_HOW` ist eindeutig, weil der Looseends-Fallback-Text `fallback (frontmost com.henning.looseends)` die Klammer sofort schließt und damit nie `no menu bar frame` enthält. test_mac_panel_repeat_summary.py grün (31 Tests). Bericht weist die Kategorien in fester Reihenfolge aus (Zeile 174-178).
+  Status: CONFIRMED
 
 Finding:
   ID: F001
   Severity: LOW
   Category: edge_case
-  Code reference: LooseEndsUITests/MacGalleryTests.swift:586
-  Description: `frontmost` wird nach `waitForFrontmostSettled()` neu gelesen statt aus dessen Ergebnis genommen.
-  Spec requirement: AC-1 — Wurzel ist die nach `waitForFrontmostSettled` vorderste App
-  Conflict: Rechnerisch erfüllt (zeitlich nach dem Warten), aber bei Timeout oder spätem Wechsel kann die Wurzel vom Anhangverlauf abweichen; `how:` nennt die tatsächliche Wurzel.
-  Remediation: Optional ID aus der Warte-Funktion zurückgeben. Kein Blocker.
+  Code reference: scripts/mac_panel_repeat_summary.py:29
+  Description: `how_of` ist reiner Substring-Abgleich. Ein hypothetischer Text `fallback (frontmost com.henning.looseends, no menu bar frame)` (im Code nicht erzeugbar, da Loose Ends vorn vorher abzweigt) würde als fallback-noframe gezählt, `frontmost menu bar <id>` hat Vorrang vor allem. Keine Fehlzuordnung im tatsächlich erzeugten Textraum gefunden.
+  Spec requirement: AC-5 — jeder Text genau eine Kategorie
+  Conflict: nur theoretisch
+  Remediation: keine nötig.
 
-**Implementierer:** F001 akzeptiert als LOW, kein Blocker.
+**Implementierer:** (nicht beteiligt; Kontext-Isolation)
+
+### Runde 2
+**Adversary:** Zweiter Angriff auf Lücken, die grüne Skripttests nicht abdecken.
+
+Finding:
+  ID: F002
+  Severity: MEDIUM
+  Category: edge_case
+  Code reference: LooseEndsUITests/MacGalleryTests.swift:566
+  Description: Im ⌘W-Arm ruft der Test vor ⌘W `app.activate()` auf. Ist Loose Ends danach (als .accessory-App ohne Fenster) weiter die vorderste App, nimmt `frontmostRootClick` den Zweig `id == "com.henning.looseends"` und klickt per `statusItem.click()`. Das ist laut Spec zulässig und die harte Rückfall-Regel (Zeile 619) greift dort nicht. Der Test kann also grün werden, ohne den neuen Weg je zu gehen (dieselbe Falle wie v2). Der Schutz liegt nur im Auswerteskript (fallback-looseends getrennt) und in AC-6/AC-7, die den Anteil menubar-root prüfen müssen.
+  Spec requirement: AC-6/AC-7 — jeder gezählte ⌘W-Klick ist menubar-root
+  Conflict: Der Pflicht-Check (AC-8) bleibt in diesem Fall grün ohne Mechanismusnachweis.
+  Remediation: Kein Codeänderungsbedarf laut Spec; im Probelauf (AC-6) den how-Text zuerst ablesen. Ist er fallback-looseends, A′ ist nicht geprüft, nicht „bestanden“.
+
+Finding:
+  ID: F003
+  Severity: LOW
+  Category: anti_pattern
+  Code reference: LooseEndsUITests/MacGalleryTests.swift:466
+  Description: Docstring von `testMenuBarReopensAfterOpenAppWithOneClick` spricht noch von „v2: Klick über die vorderste App als Koordinatenwurzel“; Implementierung ist v3 (Menüleiste).
+  Spec requirement: keine
+  Conflict: irreführender Kommentar
+  Remediation: Kommentar auf v3 anpassen.
+
+Finding:
+  ID: F004
+  Severity: LOW
+  Category: edge_case
+  Code reference: LooseEndsUITests/MacGalleryTests.swift:619
+  Description: frontmost nil oder „none“ (ungleich Loose Ends) führt ebenfalls zum harten XCTFail. Strenger als die Spec („fremde vorderste App“), aber im Sinn der Lehre aus v2; der how-Text `(frontmost none, no menu bar frame)` wird als fallback-noframe gezählt, nicht als eigene Kategorie.
+  Spec requirement: AC-3
+  Conflict: leichte Überstrenge, kein Fehler.
+  Remediation: Absicht in der Spec festhalten (optional).
+
+Offene ACs ohne mögliche Prüfung hier (nur CI auf gepushtem Stand), nicht abgehakt und nichts erfunden:
+- AC-6 (Probelauf: how, Klickdauer < 1 s, kein „Activate“, key → Maus hoch < 0,3 s): offen.
+- AC-7 (>= 100 Iterationen je Arm, 0 Fälle, alle ⌘W-Klicks menubar-root): offen.
+- AC-8 (dreimal Pflicht-Check grün beim ersten Versuch): offen.
+Ob die Menüleiste der Finder-App wirklich einen Rahmen mit minY = 0 liefert und `click()` auf der Koordinate nichts aktiviert, ist ohne CI unbelegt (Known Limitation der Spec).
+
+**Implementierer:** (nicht beteiligt)
 
 ## Herkunft der Vorbedingungen
 
@@ -72,30 +106,18 @@ kein Sprachprofil konfiguriert (`precondition_origins.default_lang`)
 
 ## Verdict
 
-Offen (nicht abgehakt, nichts erfunden): AC-5 (Wiederholungslauf >= 100/Arm, Aktivierung im xcresult, Klickdauer < 1 s, panel key -> Maus hoch < 0,3 s) und AC-6 (drei Läufe „Mac Gallery (macOS)“) brauchen CI auf dem gepushten Stand.
-
-═══════════════════════════════════════
 VERDICT: AMBIGUOUS
-═══════════════════════════════════════
-Ambiguous findings (require human review):
-  AC-5 und AC-6 sind lokal nicht beweisbar (CI-Läufe auf gepushtem Stand fehlen); sonst nichts defekt.
-Proven points: 5/7 (AC-1, 2, 3, 4, 7)
-Tests: 881 passed, 0 failed, 1 übersprungen (Umgebungs-Skip, keine der geprüften Dateien)
-Edge cases: nur F001 (LOW)
-Regressions: None found
-Recommendation: AC-5/AC-6 nach Push per CI nachweisen; ob XCTest bei Fremdwurzel nichts aktiviert, zeigt erst AC-5.
+
+AC-1 bis AC-5 bewiesen (Diff, Skripttests 20+31+12 grün, Typprüfung ohne Fehler, MenuBarCapture.swift und Kontrollarm unverändert). AC-6 bis AC-8 sind nur durch CI-Läufe auf gepushtem Stand belegbar und stehen offen. F002 (Rückfall bei Loose Ends vorn im ⌘W-Arm kann den neuen Weg unbemerkt umgehen) ist das wichtigste Risiko für die Beweiskraft.
+Tests: 63 bestanden, 0 fehlgeschlagen, 0 übersprungen (drei Skriptdateien; volle Suite nicht gelaufen)
 
 ## Geprüfte Dateien
 
-- sha256:12b2ce6af38136b02c6a12c819b428db20b3abecdaba53d5ce1801cd2ab82031  LooseEndsUITests/MacGalleryTests.swift
-- sha256:8d1ee628a91af35cf7e193335be721ebe50496f3b5ec799e0a9f75d9fa0b17d5  scripts/test_mac_panel_repeat_summary.py
-- sha256:9fb26fb286c0fabb3f715fab5d3b2017672f2d5357f335727dee40133285d1a3  scripts/test_mac_reopen_settle.py
-- sha256:36436ca038ad3c413edfd885c6621741c228a645fb0da7a45c1eb155c0b21388  scripts/test_menubar_panel_log.py
+- sha256:af34e3061a9543028fc9de2d1e614681c9a3ab633c59f79b1c2ff6e482fbdf99  LooseEndsUITests/MacGalleryTests.swift
+- sha256:091d33ddba7cb0598d00491369cb32bfd645ad3700faf6abe7d1009fdf2ff0ac  scripts/mac_panel_repeat_summary.py
 
 ## Prüfbasis
 
 - base: c885f7a0f78b21b748aac358f34d91923c0c02ba
-- blob:3e938522dcebe42021fb461f297f8a34cfc3d88d  LooseEndsUITests/MacGalleryTests.swift
-- blob:73dd9ade4f421c10a80dc9e042b81513ac4aa959  scripts/test_mac_panel_repeat_summary.py
-- blob:f01b5540400ae800da4099c60345290085fd4d91  scripts/test_mac_reopen_settle.py
-- blob:21747de747dc891779d8517c529e2b1dcf95a632  scripts/test_menubar_panel_log.py
+- blob:5cfb2f7b09196f764a110f752447a4959037260c  LooseEndsUITests/MacGalleryTests.swift
+- blob:d820821220b5351726ca437c7916081e0aceab0b  scripts/mac_panel_repeat_summary.py

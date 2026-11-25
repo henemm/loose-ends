@@ -550,33 +550,41 @@ final class MacGalleryTests: XCTestCase {
         return lines
     }
 
-    /// #978 Schnitt 3 v2: clicks the symbol through a coordinate whose root is the frontmost app, offset by the
-    /// symbol's middle minus the root's origin (both in screen points), so XCTest has no reason to activate
-    /// Loose Ends before the click. If Loose Ends itself is in front, the frontmost app is unknown or its frame
-    /// is empty, it clicks `statusItem.click()` as before and says so in `how`. Exactly one click, no retry.
+    /// #978 Schnitt 3 v3: clicks the symbol through a coordinate whose root is the frontmost app's menu bar
+    /// (`menuBars.element(boundBy: 0)`), offset by the symbol's middle minus the menu bar's origin (both in screen
+    /// points), so XCTest has no reason to activate Loose Ends before the click. The menu bar counts as root only
+    /// with a frame that is not empty and starts at y = 0. If Loose Ends itself is in front, it clicks
+    /// `statusItem.click()` and says so in `how`; if the frontmost app is unknown or has no such menu bar frame,
+    /// it clicks `statusItem.click()` with "no menu bar frame" in `how`. Exactly one click, no retry.
     @MainActor
     private func frontmostRootClick(_ statusItem: XCUIElement, frontmost: String?) -> String {
-        guard let id = frontmost, id != "none", id != "com.henning.looseends" else {
+        guard let id = frontmost, id != "none" else {
             statusItem.click()
-            return "user: statusItem.click() fallback (frontmost \(frontmost ?? "none"))"
+            return "user: statusItem.click() fallback (frontmost none, no menu bar frame)"
         }
-        let root = XCUIApplication(bundleIdentifier: id)
-        let rootFrame = root.frame
-        if rootFrame.isEmpty {
+        if id == "com.henning.looseends" {
             statusItem.click()
-            return "user: statusItem.click() fallback (frontmost \(id), empty frame)"
+            return "user: statusItem.click() fallback (frontmost com.henning.looseends)"
+        }
+        let bar = XCUIApplication(bundleIdentifier: id).menuBars.element(boundBy: 0)
+        let barFrame = bar.exists ? bar.frame : .zero
+        if barFrame.isEmpty || barFrame.minY != 0 {
+            statusItem.click()
+            return "user: statusItem.click() fallback (frontmost \(id), no menu bar frame)"
         }
         let item = statusItem.frame
-        let offset = CGVector(dx: item.midX - rootFrame.minX, dy: item.midY - rootFrame.minY)
-        root.coordinate(withNormalizedOffset: .zero).withOffset(offset).click()
-        return "user: frontmost root \(id)"
+        let offset = CGVector(dx: item.midX - barFrame.minX, dy: item.midY - barFrame.minY)
+        bar.coordinate(withNormalizedOffset: .zero).withOffset(offset).click()
+        return "user: frontmost menu bar \(id)"
     }
 
     /// Clicks the symbol exactly once, after the frontmost app has settled, and expects the panel within 10 s
     /// and still there 3 s later. The time of the click and of the decision, the frontmost app's history and
     /// the hierarchy go along as attachments, so a red run in CI can be read. Without `click` the symbol is
-    /// clicked like a user does, since #978 S3 v2 through the frontmost app as coordinate root
+    /// clicked like a user does, since #978 S3 v3 through the frontmost app's menu bar as coordinate root
     /// (`frontmostRootClick`); the control arm passes its own click. The click's duration goes along too.
+    /// A user arm whose click fell back to `statusItem.click()` while another app was in front fails hard:
+    /// such a click proves nothing about the user's way.
     @MainActor
     private func assertSymbolOpensPanelWithOneClick(_ app: XCUIApplication, label: String,
                                                     click: (@MainActor (XCUIElement) -> String)? = nil) {
@@ -608,6 +616,9 @@ final class MacGalleryTests: XCTestCase {
         note.name = "mac-gallery-\(label)-click"
         note.lifetime = .keepAlways
         add(note)
+        if click == nil, frontmost != "com.henning.looseends", how.contains("fallback") {
+            XCTFail("Fallback click with a foreign frontmost app (\(label)): \(how)")
+        }
         XCTAssertTrue(opened, appeared
                       ? "The panel closed again within 3 s (\(label))"
                       : "One click on the symbol opened no panel (\(label))")
