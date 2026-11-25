@@ -242,6 +242,36 @@ class ExpectedAndHowTests(unittest.TestCase):
         self.assertIn("control: cgevent 2, xcuicoordinate 1", text)
         self.assertIn("return: statusitem 1", text)
 
+    def test_how_v3_categories(self):
+        """#978 S3 v3 AC-5: die drei neuen Texte, spezifische vor `statusItem.click()`."""
+        cases = {
+            "user: frontmost menu bar com.apple.finder": "menubar-root",
+            "user: statusItem.click() fallback (frontmost com.henning.looseends)": "fallback-looseends",
+            "user: statusItem.click() fallback (frontmost com.apple.finder, no menu bar frame)": "fallback-noframe",
+            "user: statusItem.click()": "statusitem",
+        }
+        for how, name in cases.items():
+            self.assertEqual(self.summary.how_of(f"click: 1.0 (seconds since 1970)\nhow: {how}\n"), name, how)
+
+    def test_how_v3_counted_and_rates_unchanged(self):
+        write_how_export(self.base / "raw", [
+            ("reopen-open-app", 1.0, True, "user: frontmost menu bar com.apple.finder"),
+            ("reopen-open-app", 2.0, True, "user: frontmost menu bar com.apple.finder"),
+            ("reopen-open-app", 3.0, False, "user: statusItem.click() fallback (frontmost com.apple.finder, no menu bar frame)"),
+            ("reopen-return", 4.0, True, "user: statusItem.click() fallback (frontmost com.henning.looseends)"),
+        ])
+        how = self.summary.count_how([self.base / "raw"])
+        self.assertEqual(how["open-app"], {"menubar-root": 2, "fallback-noframe": 1})
+        self.assertEqual(how["return"], {"fallback-looseends": 1})
+        counts = self.summary.count_arms([self.base / "raw"])
+        self.assertEqual(counts["open-app"]["n"], 3)
+        self.assertEqual(counts["open-app"]["fails"], 1)
+        self.assertAlmostEqual(counts["open-app"]["rate"], 1 / 3)
+        self.assertEqual(counts["return"], {"n": 1, "fails": 0, "rate": 0.0})
+        text = self.run_script()
+        self.assertIn("open-app: menubar-root 2, fallback-noframe 1", text)
+        self.assertIn("return: fallback-looseends 1", text)
+
     def test_attachment_without_how_counts_as_unknown(self):
         write_export(self.base / "raw", [("reopen-return", 1.0, True)])
         self.assertEqual(self.summary.count_how([self.base / "raw"])["return"], {"unbekannt": 1})
@@ -403,10 +433,16 @@ class ControlArmTests(SourceCheck):
         self.matches(r"XCTSkip\(")
         self.has('"reopen-return-control"')
 
-    def test_user_arms_keep_statusitem_click(self):
-        helper = re.search(r"func assertSymbolOpensPanelWithOneClick\(.*?\n    \}\n", self.text, re.S)
-        self.assertIsNotNone(helper)
-        self.assertIn("statusItem.click()", helper.group(0))
+    def test_user_arms_click_through_frontmost_root_with_statusitem_fallback(self):
+        """#978 S3 v2: Nutzerarme klicken über frontmostRootClick, dessen Rückfall ist statusItem.click().
+        Kommentare zählen nicht."""
+        def body(name):
+            match = re.search(rf"func {name}\(.*?\n    \}}\n", self.text, re.S)
+            self.assertIsNotNone(match, f"fehlt: func {name}")
+            return re.sub(r"//.*$", "", match.group(0), flags=re.M)
+        self.assertIn("frontmostRootClick(", body("assertSymbolOpensPanelWithOneClick"))
+        self.assertIn("statusItem.click()", body("frontmostRootClick"))
+        self.assertIn(".menuBars.element(boundBy: 0)", body("frontmostRootClick"), "#978 S3 v3: Wurzel = Menüleiste")
 
 
 class PanelLogTests(SourceCheck):
@@ -440,6 +476,190 @@ class PanelLogTests(SourceCheck):
     def test_no_print_no_try_optional(self):
         self.never_matches(r"\bprint\(")
         self.lacks("try?")
+
+
+# #978 S3 v4: Haltedauer-Probe. So schreibt `testHoldDurationProbe` den Anhang je Klick (Spec, Implementation Details 3).
+def hold_text(d: float, clicked_at: float, opened: bool, monitor) -> str:
+    monitor_line = "monitor saw nothing" if monitor is None else f"monitor hold: {monitor:.3f}"
+    return (f"click: {clicked_at:.3f} (seconds since 1970)\n"
+            f"d: {d:.1f}\n"
+            f"result: {'open' if opened else 'closed'}\n"
+            f"{monitor_line}\n")
+
+
+def write_hold_export(folder: Path, clicks: list[tuple[float, float, bool, object]]) -> None:
+    """Exportordner mit Halte-Anhängen `mac-gallery-hold-<d>-<n>-click` (d, Klickzeit, offen, Monitor-Dauer)."""
+    folder.mkdir(parents=True, exist_ok=True)
+    attachments = []
+    for index, (d, at, opened, monitor) in enumerate(clicks):
+        file_name = f"{index:04d}-hold.txt"
+        (folder / file_name).write_text(hold_text(d, at, opened, monitor))
+        attachments.append({"exportedFileName": file_name,
+                            "suggestedHumanReadableName": f"mac-gallery-hold-{d:.1f}-{index}-click_0_{index:04d}.txt"})
+    manifest = [{"testIdentifier": "MacGalleryTests/testHoldDurationProbe()", "attachments": attachments}]
+    (folder / "manifest.json").write_text(json.dumps(manifest))
+
+
+# Klick 1 um CLICK_FAIL: key nach 0,2 s, Maus hoch (global, type=2) nach 1,13 s → Log-Dauer key → Maus hoch 0,93 s.
+# Klick 2 um CLICK_FAIL + 10: key nach 0,1 s, Maus hoch (lokal) nach 0,2 s → 0,10 s.
+HOLD_LOG = """\
+Timestamp               Ty Process[PID:TID]
+2025-11-23 12:13:20.200 Df LooseEnds[10920:83c2] [com.henning.looseends:MenuBarPanel] panel key window=MenuBarExtraWindow<AnyView> event=1 cg=type=1,window=88,target=10920,source=0,time=1 active=true keyWindow=true front=x policy=accessory stack=a
+2025-11-23 12:13:21.130 Df LooseEnds[10920:83c2] [com.henning.looseends:MenuBarPanel] monitor global type=2 window=0 time=2
+2025-11-23 12:13:21.150 Df LooseEnds[10920:83c2] [com.henning.looseends:MenuBarPanel] panel resign window=MenuBarExtraWindow<AnyView> event=2 cg=nil active=false keyWindow=false front=x policy=accessory stack=b
+2025-11-23 12:13:30.100 Df LooseEnds[10920:83c2] [com.henning.looseends:MenuBarPanel] panel key window=MenuBarExtraWindow<AnyView> event=1 cg=nil active=true keyWindow=true front=x policy=accessory stack=c
+2025-11-23 12:13:30.200 Df LooseEnds[10920:83c2] [com.henning.looseends:MenuBarPanel] monitor local type=2 window=88 time=3
+"""
+
+
+class HoldProbeSummaryTests(unittest.TestCase):
+    """#978 S3 v4 AC-1, AC-7, AC-8: Arme hold-1.0/hold-0.1, key → Maus hoch, Monitor gegen Log, Entscheidungsregel."""
+
+    def setUp(self):
+        self.summary = load_summary()
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.base = Path(self.tmp.name)
+
+    def run_script(self, log_text="", *extra):
+        log = self.base / "panel.log"
+        log.write_text(log_text)
+        out = self.base / "summary.md"
+        result = subprocess.run(
+            [sys.executable, str(SCRIPT), "--raw", str(self.base / "raw"), "--log", str(log), "--out", str(out),
+             *extra], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        return out.read_text()
+
+    def test_arm_of_hold_labels(self):
+        self.assertEqual(self.summary.arm_of("mac-gallery-hold-1.0-3-click_0_0003.txt"), "hold-1.0")
+        self.assertEqual(self.summary.arm_of("mac-gallery-hold-0.1-4-click_0_0004.txt"), "hold-0.1")
+        self.assertIn("hold-1.0", self.summary.ARMS)
+        self.assertIn("hold-0.1", self.summary.ARMS)
+
+    def test_arm_of_hold_names_split_by_xcresulttool(self):
+        # Reale Namen aus Lauf 45602877961: xcresulttool trennt „1.0“/„0.1“ am Punkt wie eine Dateiendung.
+        arm_of = self.summary.arm_of
+        self.assertEqual(arm_of("mac-gallery-hold-1_0_CE05AC11-ACA1-40C0-82D1-B30E06E74FF7.0-0-click"), "hold-1.0")
+        self.assertEqual(arm_of("mac-gallery-hold-0_0_059B0C45-B911-4D47-A029-24FCF9285BB4.1-1-click"), "hold-0.1")
+        self.assertIsNone(arm_of("mac-gallery-panel-hold-1_0_CE05AC11-ACA1-40C0-82D1-B30E06E74FF7.0-0-hierarchy"))
+
+    def test_parse_hold(self):
+        self.assertEqual(self.summary.parse_hold(hold_text(1.0, 12.5, False, 0.95)),
+                         {"d": 1.0, "clicked_at": 12.5, "open": False, "monitor": 0.95})
+        self.assertEqual(self.summary.parse_hold(hold_text(0.1, 13.0, True, None)),
+                         {"d": 0.1, "clicked_at": 13.0, "open": True, "monitor": None})
+
+    def test_counts_per_hold_arm(self):
+        """Test 1: 20 Klicks 1,0 s alle zu, 20 Klicks 0,1 s alle offen."""
+        clicks = [(1.0, float(i), False, 1.0) for i in range(20)] + [(0.1, 100.0 + i, True, 0.1) for i in range(20)]
+        write_hold_export(self.base / "raw", clicks)
+        counts = self.summary.count_arms([self.base / "raw"])
+        self.assertEqual(counts["hold-1.0"], {"n": 20, "fails": 20, "rate": 1.0})
+        self.assertEqual(counts["hold-0.1"], {"n": 20, "fails": 0, "rate": 0.0})
+        self.assertEqual(counts["return"], {"n": 0, "fails": 0, "rate": None})
+        text = self.run_script("", "--expected", "20", "--arms", "hold-1.0,hold-0.1")
+        self.assertIn("| hold-1.0 | 20 | 20 | 100.0 % |", text)
+        self.assertIn("| hold-0.1 | 20 | 0 | 0.0 % |", text)
+        self.assertNotIn("erwartet", text)
+
+    def test_hold_clicks_do_not_count_as_reopen(self):
+        write_hold_export(self.base / "raw", [(1.0, 1.0, False, 1.0)])
+        counts = self.summary.count_arms([self.base / "raw"])
+        for arm in ("return", "open-app", "control"):
+            self.assertEqual(counts[arm]["n"], 0, arm)
+
+    def test_key_to_mouse_up_from_panel_log(self):
+        events = self.summary.parse_panel_log(HOLD_LOG)
+        self.assertAlmostEqual(self.summary.key_to_mouse_up(CLICK_FAIL, events), 0.93, places=2)
+        self.assertAlmostEqual(self.summary.key_to_mouse_up(CLICK_FAIL + 10, events), 0.10, places=2)
+        self.assertIsNone(self.summary.key_to_mouse_up(CLICK_FAIL + 100, events))
+
+    def test_monitor_against_log(self):
+        """Test 2: Log 0,93 s gegen Monitor 0,95 s stimmt überein; ein Klick ohne Monitorwert wird ausgewiesen."""
+        write_hold_export(self.base / "raw", [(1.0, CLICK_FAIL, False, 0.95), (0.1, CLICK_FAIL + 10, True, None)])
+        rows = self.summary.hold_rows([self.base / "raw"], self.summary.parse_panel_log(HOLD_LOG))
+        self.assertEqual(len(rows), 2)
+        first, second = sorted(rows, key=lambda r: r["clicked_at"])
+        self.assertEqual(first["arm"], "hold-1.0")
+        self.assertAlmostEqual(first["log"], 0.93, places=2)
+        self.assertEqual(first["monitor"], 0.95)
+        self.assertEqual(first["agreement"], "match")
+        self.assertEqual(second["agreement"], "monitor saw nothing")
+        self.assertEqual(self.summary.agreement(0.95, 0.60), "mismatch")
+        self.assertEqual(self.summary.agreement(0.95, None), "no log")
+        text = self.run_script(HOLD_LOG, "--arms", "hold-1.0,hold-0.1")
+        self.assertIn("Monitor sah Ereignisse: 1 von 2", text)
+        self.assertIn("monitor saw nothing: 1", text)
+        self.assertIn("Übereinstimmung Monitor/Log: 1", text)
+
+    def test_decision_rule(self):
+        """Test 4 (lokal): Regel aus Spec Punkt 6."""
+        def counts(n1, z1, n2, z2):
+            return {"hold-1.0": {"n": n1, "fails": z1, "rate": z1 / n1 if n1 else None},
+                    "hold-0.1": {"n": n2, "fails": z2, "rate": z2 / n2 if n2 else None}}
+        self.assertEqual(self.summary.decision(counts(20, 19, 20, 0)), "bestanden")
+        self.assertEqual(self.summary.decision(counts(20, 18, 20, 0)), "nicht bestanden")
+        self.assertEqual(self.summary.decision(counts(20, 20, 20, 1)), "nicht bestanden")
+        self.assertEqual(self.summary.decision(counts(19, 19, 20, 0)), "zu wenig Klicks")
+        write_hold_export(self.base / "raw", [(1.0, float(i), False, 1.0) for i in range(20)]
+                          + [(0.1, 100.0 + i, True, 0.1) for i in range(20)])
+        self.assertIn("Entscheidung: bestanden", self.run_script("", "--arms", "hold-1.0,hold-0.1"))
+
+    def test_reopen_report_has_no_hold_section(self):
+        write_export(self.base / "raw", [("reopen-return", 1.0, True), ("reopen-open-app", 2.0, True)])
+        text = self.run_script()
+        self.assertNotIn("Entscheidung:", text)
+
+
+class HoldProbeSourceTests(SourceCheck):
+    """#978 S3 v4 AC-2 bis AC-6 am Quelltext."""
+
+    def gallery(self):
+        self.text = GALLERY_TESTS.read_text()
+
+    def probe_body(self):
+        self.gallery()
+        match = re.search(r"func testHoldDurationProbe\(\).*?\n    \}\n", self.text, re.S)
+        self.assertIsNotNone(match, "fehlt: func testHoldDurationProbe")
+        return re.sub(r"//.*$", "", match.group(0), flags=re.M)
+
+    def test_probe_clicks_with_duration_on_same_coordinate(self):
+        """AC-2: click(forDuration:thenDragTo:) mit 1,0 s und 0,1 s im Wechsel."""
+        self.probe_body()
+        self.has("click(forDuration:")
+        self.has("thenDragTo:")
+        self.matches(r"\[\s*1\.0\s*,\s*0\.1\s*\]")
+
+    def test_probe_guarded_by_env(self):
+        """AC-3: ohne LE_PANEL_HOLD_PROBE übersprungen, wie der Kontrollarm."""
+        body = self.probe_body()
+        self.assertIn("LE_PANEL_HOLD_PROBE", body)
+        self.assertIn("XCTSkip(", body)
+
+    def test_attachment_lines_and_monitor(self):
+        """AC-4: Anhang nennt d, Ergebnis und Monitor-Dauer oder `monitor saw nothing`."""
+        self.gallery()
+        for needle in ("addGlobalMonitorForEvents", ".leftMouseDown", ".leftMouseUp", "monitor saw nothing",
+                       "monitor hold: ", '"d: ', "result: ", '"mac-gallery-hold-'):
+            self.has(needle)
+
+    def test_workflow_input_halteprobe(self):
+        """AC-5: Eingabe halteprobe setzt die Variable und wählt nur den Probetest; die Reopen-Tests bleiben der Standard."""
+        self.text = WORKFLOW.read_text()
+        for needle in ("halteprobe:", "TEST_RUNNER_LE_PANEL_HOLD_PROBE=1",
+                       "-only-testing:LooseEndsUITests/MacGalleryTests/testHoldDurationProbe", "hold-1.0,hold-0.1",
+                       "testMenuBarReopensAfterReturnWithOneClick"):
+            self.has(needle)
+
+    def test_required_job_and_reopen_tests_unchanged(self):
+        """AC-6: der Pflicht-Job setzt die Probe nie, die drei Wiederöffnungstests gibt es weiter."""
+        ci = (ROOT / ".github" / "workflows" / "ci.yml").read_text()
+        self.assertNotIn("LE_PANEL_HOLD_PROBE", ci)
+        self.gallery()
+        for name in ("testMenuBarReopensAfterReturnWithOneClick", "testMenuBarReopensAfterOpenAppWithOneClick",
+                     "testMenuBarReopensAfterReturnWithControlClick"):
+            self.has(f"func {name}(")
 
 
 if __name__ == "__main__":

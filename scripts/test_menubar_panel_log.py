@@ -50,8 +50,10 @@ def panel_log_upload():
     return uploads[0]
 
 
-class TestRunsWithExpectedFailure(unittest.TestCase):
-    """AC-1: der Test läuft wieder, nur die Klickprüfung ist als erwarteter Fehler geklammert."""
+class TestOpenAppArmIsHard(unittest.TestCase):
+    """#978 S3, AC-1: der ⌘W-Arm ist hart, ohne erwarteten Fehler und ohne Weiterlaufen nach einem Fehler."""
+
+    CHECK = "assertSymbolOpensPanelWithOneClick"
 
     def setUp(self):
         self.body = function_body(TEST.read_text(), TEST_NAME)
@@ -59,15 +61,15 @@ class TestRunsWithExpectedFailure(unittest.TestCase):
     def test_no_skip(self):
         self.assertNotIn("XCTSkip", self.body)
 
-    def test_click_check_in_non_strict_expect_failure(self):
-        match = re.search(r"XCTExpectFailure\(\s*\"#978[^\"]*\",\s*options:\s*\.nonStrict\(\)\s*\)\s*\{(.*?)\}",
-                          self.body, re.S)
-        self.assertIsNotNone(match, "XCTExpectFailure(\"#978 …\", options: .nonStrict()) { … } fehlt")
-        self.assertIn("assertSymbolOpensPanelWithOneClick", match.group(1))
+    def test_click_check_is_hard(self):
+        self.assertNotIn("XCTExpectFailure", self.body)
+        self.assertNotRegex(self.body, r"continueAfterFailure\s*=\s*true")
+        self.assertIn(self.CHECK, self.body)
 
     def test_setup_stays_hard(self):
-        """Aufbau (Open Loose Ends, ⌘W) steht außerhalb der Klammer."""
-        before = self.body.split("XCTExpectFailure", 1)[0]
+        """Aufbau (Open Loose Ends, ⌘W) steht vor der Klickprüfung."""
+        self.assertIn(self.CHECK, self.body)
+        before = self.body.split(self.CHECK, 1)[0]
         self.assertIn('"⌘W did not close the main window"', before)
         self.assertIn("menuBarOpenApp", before)
 

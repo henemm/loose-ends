@@ -1,0 +1,168 @@
+test_after_observer_behaviour (scripts.test_mac_panel_repeat_summary.CallersTests.test_after_observer_behaviour)
+F101: der echte Rumpf von `afterObserver`, mit swiftc gebaut und an festen Stapeln ausgeführt. ... ok
+test_callers_drops_only_leading_frames (scripts.test_mac_panel_repeat_summary.CallersTests.test_callers_drops_only_leading_frames) ... ok
+test_control_arm_guarded_by_env (scripts.test_mac_panel_repeat_summary.ControlArmTests.test_control_arm_guarded_by_env) ... ok
+test_user_arms_click_through_frontmost_root_with_statusitem_fallback (scripts.test_mac_panel_repeat_summary.ControlArmTests.test_user_arms_click_through_frontmost_root_with_statusitem_fallback)
+#978 S3 v2: Nutzerarme klicken über frontmostRootClick, dessen Rückfall ist statusItem.click(). ... ok
+test_attachment_without_how_counts_as_unknown (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_attachment_without_how_counts_as_unknown) ... ok
+test_expected_flags_named_arm_without_clicks (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_expected_flags_named_arm_without_clicks) ... ok
+test_expected_flags_short_active_arm (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_expected_flags_short_active_arm) ... ok
+test_expected_ignores_inactive_control_arm (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_expected_ignores_inactive_control_arm) ... ok
+test_how_counted_per_arm (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_how_counted_per_arm) ... ok
+test_how_v3_categories (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_how_v3_categories)
+#978 S3 v3 AC-5: die drei neuen Texte, spezifische vor `statusItem.click()`. ... ok
+test_how_v3_counted_and_rates_unchanged (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_how_v3_counted_and_rates_unchanged) ... ok
+test_mandatory_arms_flagged_even_without_clicks (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_mandatory_arms_flagged_even_without_clicks) ... ok
+test_without_expected_no_check_line (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_without_expected_no_check_line) ... ok
+test_attachment_lines_and_monitor (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_attachment_lines_and_monitor)
+AC-4: Anhang nennt d, Ergebnis und Monitor-Dauer oder `monitor saw nothing`. ... FAIL
+test_probe_clicks_with_duration_on_same_coordinate (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_probe_clicks_with_duration_on_same_coordinate)
+AC-2: click(forDuration:thenDragTo:) mit 1,0 s und 0,1 s im Wechsel. ... FAIL
+test_probe_guarded_by_env (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_probe_guarded_by_env)
+AC-3: ohne LE_PANEL_HOLD_PROBE übersprungen, wie der Kontrollarm. ... FAIL
+test_required_job_and_reopen_tests_unchanged (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_required_job_and_reopen_tests_unchanged)
+AC-6: der Pflicht-Job setzt die Probe nie, die drei Wiederöffnungstests gibt es weiter. ... ok
+test_workflow_input_halteprobe (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_workflow_input_halteprobe)
+AC-5: Eingabe halteprobe setzt die Variable und wählt nur den Probetest; die Reopen-Tests bleiben der Standard. ... FAIL
+test_arm_of_hold_labels (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_arm_of_hold_labels) ... FAIL
+test_counts_per_hold_arm (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_counts_per_hold_arm)
+Test 1: 20 Klicks 1,0 s alle zu, 20 Klicks 0,1 s alle offen. ... ERROR
+test_decision_rule (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_decision_rule)
+Test 4 (lokal): Regel aus Spec Punkt 6. ... ERROR
+test_hold_clicks_do_not_count_as_reopen (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_hold_clicks_do_not_count_as_reopen) ... ok
+test_key_to_mouse_up_from_panel_log (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_key_to_mouse_up_from_panel_log) ... ERROR
+test_monitor_against_log (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_monitor_against_log)
+Test 2: Log 0,93 s gegen Monitor 0,95 s stimmt überein; ein Klick ohne Monitorwert wird ausgewiesen. ... ERROR
+test_parse_hold (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_parse_hold) ... ERROR
+test_reopen_report_has_no_hold_section (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_reopen_report_has_no_hold_section) ... ok
+test_activation_and_space_lines (scripts.test_mac_panel_repeat_summary.PanelLogTests.test_activation_and_space_lines) ... ok
+test_cg_event_fields_without_subtype_or_data1 (scripts.test_mac_panel_repeat_summary.PanelLogTests.test_cg_event_fields_without_subtype_or_data1) ... ok
+test_monitors_return_event_unchanged (scripts.test_mac_panel_repeat_summary.PanelLogTests.test_monitors_return_event_unchanged) ... ok
+test_no_print_no_try_optional (scripts.test_mac_panel_repeat_summary.PanelLogTests.test_no_print_no_try_optional) ... ok
+test_stack_up_to_40_frames (scripts.test_mac_panel_repeat_summary.PanelLogTests.test_stack_up_to_40_frames) ... ok
+test_arm_of_maps_labels (scripts.test_mac_panel_repeat_summary.SummaryTests.test_arm_of_maps_labels) ... ok
+test_arm_without_attachments_is_zero_not_missing (scripts.test_mac_panel_repeat_summary.SummaryTests.test_arm_without_attachments_is_zero_not_missing) ... ok
+test_counts_every_iteration_per_arm (scripts.test_mac_panel_repeat_summary.SummaryTests.test_counts_every_iteration_per_arm) ... ok
+test_parse_click (scripts.test_mac_panel_repeat_summary.SummaryTests.test_parse_click) ... ok
+test_parse_panel_log_reads_event_and_source (scripts.test_mac_panel_repeat_summary.SummaryTests.test_parse_panel_log_reads_event_and_source) ... ok
+test_report_names_every_arm_and_only_numbers (scripts.test_mac_panel_repeat_summary.SummaryTests.test_report_names_every_arm_and_only_numbers) ... ok
+test_several_export_folders_add_up (scripts.test_mac_panel_repeat_summary.SummaryTests.test_several_export_folders_add_up) ... ok
+test_timeline_of_a_failure (scripts.test_mac_panel_repeat_summary.SummaryTests.test_timeline_of_a_failure) ... ok
+test_workflow_passes_expected_and_arms (scripts.test_mac_panel_repeat_summary.WorkflowExpectedTests.test_workflow_passes_expected_and_arms) ... ok
+test_dispatch_with_inputs (scripts.test_mac_panel_repeat_summary.WorkflowTests.test_dispatch_with_inputs) ... ok
+test_log_from_job_start_and_uploads (scripts.test_mac_panel_repeat_summary.WorkflowTests.test_log_from_job_start_and_uploads) ... ok
+test_pull_request_only_on_this_file (scripts.test_mac_panel_repeat_summary.WorkflowTests.test_pull_request_only_on_this_file) ... ok
+test_runs_only_reopen_tests_with_iterations (scripts.test_mac_panel_repeat_summary.WorkflowTests.test_runs_only_reopen_tests_with_iterations) ... ok
+
+======================================================================
+ERROR: test_counts_per_hold_arm (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_counts_per_hold_arm)
+Test 1: 20 Klicks 1,0 s alle zu, 20 Klicks 0,1 s alle offen.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 551, in test_counts_per_hold_arm
+    self.assertEqual(counts["hold-1.0"], {"n": 20, "fails": 20, "rate": 1.0})
+                     ~~~~~~^^^^^^^^^^^^
+KeyError: 'hold-1.0'
+
+======================================================================
+ERROR: test_decision_rule (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_decision_rule)
+Test 4 (lokal): Regel aus Spec Punkt 6.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 594, in test_decision_rule
+    self.assertEqual(self.summary.decision(counts(20, 19, 20, 0)), "bestanden")
+                     ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'mac_panel_repeat_summary' has no attribute 'decision'
+
+======================================================================
+ERROR: test_key_to_mouse_up_from_panel_log (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_key_to_mouse_up_from_panel_log)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 567, in test_key_to_mouse_up_from_panel_log
+    self.assertAlmostEqual(self.summary.key_to_mouse_up(CLICK_FAIL, events), 0.93, places=2)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'mac_panel_repeat_summary' has no attribute 'key_to_mouse_up'
+
+======================================================================
+ERROR: test_monitor_against_log (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_monitor_against_log)
+Test 2: Log 0,93 s gegen Monitor 0,95 s stimmt überein; ein Klick ohne Monitorwert wird ausgewiesen.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 574, in test_monitor_against_log
+    rows = self.summary.hold_rows([self.base / "raw"], self.summary.parse_panel_log(HOLD_LOG))
+           ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'mac_panel_repeat_summary' has no attribute 'hold_rows'
+
+======================================================================
+ERROR: test_parse_hold (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_parse_hold)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 541, in test_parse_hold
+    self.assertEqual(self.summary.parse_hold(hold_text(1.0, 12.5, False, 0.95)),
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'mac_panel_repeat_summary' has no attribute 'parse_hold'
+
+======================================================================
+FAIL: test_attachment_lines_and_monitor (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_attachment_lines_and_monitor)
+AC-4: Anhang nennt d, Ergebnis und Monitor-Dauer oder `monitor saw nothing`.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 638, in test_attachment_lines_and_monitor
+    self.has(needle)
+    ~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 380, in has
+    self.assertTrue(needle in self.text, f"fehlt: {needle}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : fehlt: addGlobalMonitorForEvents
+
+======================================================================
+FAIL: test_probe_clicks_with_duration_on_same_coordinate (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_probe_clicks_with_duration_on_same_coordinate)
+AC-2: click(forDuration:thenDragTo:) mit 1,0 s und 0,1 s im Wechsel.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 622, in test_probe_clicks_with_duration_on_same_coordinate
+    self.probe_body()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 617, in probe_body
+    self.assertIsNotNone(match, "fehlt: func testHoldDurationProbe")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : fehlt: func testHoldDurationProbe
+
+======================================================================
+FAIL: test_probe_guarded_by_env (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_probe_guarded_by_env)
+AC-3: ohne LE_PANEL_HOLD_PROBE übersprungen, wie der Kontrollarm.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 629, in test_probe_guarded_by_env
+    body = self.probe_body()
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 617, in probe_body
+    self.assertIsNotNone(match, "fehlt: func testHoldDurationProbe")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : fehlt: func testHoldDurationProbe
+
+======================================================================
+FAIL: test_workflow_input_halteprobe (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_workflow_input_halteprobe)
+AC-5: Eingabe halteprobe setzt die Variable und wählt nur den Probetest; die Reopen-Tests bleiben der Standard.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 646, in test_workflow_input_halteprobe
+    self.has(needle)
+    ~~~~~~~~^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 380, in has
+    self.assertTrue(needle in self.text, f"fehlt: {needle}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : fehlt: halteprobe:
+
+======================================================================
+FAIL: test_arm_of_hold_labels (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_arm_of_hold_labels)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 535, in test_arm_of_hold_labels
+    self.assertEqual(self.summary.arm_of("mac-gallery-hold-1.0-3-click_0_0003.txt"), "hold-1.0")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != 'hold-1.0'
+
+----------------------------------------------------------------------
+Ran 44 tests in 3.029s
+
+FAILED (failures=5, errors=5)

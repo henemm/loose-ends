@@ -1,0 +1,9 @@
+#978 S3 v4 AC-2: Übersetzungsprüfung UI-Test-Quelltext (kein Start, keine App ausgeführt)
+Datum: 2026-11-25 08:49 CET
+Basis: 472b4e9 plus Arbeitsstand GREEN
+Weg: scripts/sim.sh hat keinen Mac-build-for-testing-Befehl für UI-Tests; daher swiftc-Typecheck
+Befehl: xcrun --sdk macosx swiftc -typecheck -swift-version 6 -strict-concurrency=complete -target arm64-apple-macos27.0 -F <platform>/Developer/Library/Frameworks -I <platform>/Developer/usr/lib LooseEndsUITests/MacGalleryTests.swift LooseEndsUITests/MacUITestSupport.swift LooseEndsUITests/LaunchLanguage.swift
+swift-driver version: 1.168.6 Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1)
+Exit: 0
+Fehler/Warnungen: 0
+Gegenprobe: dieselbe Prüfung mit absichtlich falschem Aufruf click(forDurationX:) meldet 2 Fehler (Prüfung greift)

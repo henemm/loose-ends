@@ -1,4 +1,5 @@
 #if os(macOS)
+import AppKit
 import CoreGraphics
 import XCTest
 
@@ -459,10 +460,10 @@ final class MacGalleryTests: XCTestCase {
 
     /// #862 AC-2: "Open Loose Ends" closes the panel and opens the main window; once that window is closed
     /// with ⌘W, a single click on the symbol opens the panel again.
-    /// #978 Schnitt 1: the panel closes again in 2 of 15 runs, cause open. Opening the panel, "Open Loose Ends"
-    /// and ⌘W stay hard checks; the click on the symbol, waiting for the symbol included, is an expected failure
-    /// (not strict), so a rare close shows up without turning CI red, and the app's `MenuBarPanel` lines
-    /// (artifact `MacGalleryPanelLog`) carry its cause.
+    /// #978 Schnitt 3: the click waits until the frontmost app has been quiet for 1 s (the app switch after ⌘W
+    /// took the panel's key status away), the panel must still stand 3 s after it opened, and the check is
+    /// hard again, like the Return arm. v2: the click goes through the frontmost app as coordinate root
+    /// (`frontmostRootClick`), so the test tool does not activate Loose Ends before it clicks.
     @MainActor
     func testMenuBarReopensAfterOpenAppWithOneClick() throws {
         let app = macLaunch(dark: false)
@@ -473,11 +474,7 @@ final class MacGalleryTests: XCTestCase {
         app.typeKey("w", modifierFlags: .command)
         let closed = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: window)
         XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 10), .completed, "⌘W did not close the main window")
-        // #978: an expected failure must not end the test here, so the app is still terminated below.
-        continueAfterFailure = true
-        XCTExpectFailure("#978: Panel schließt selten von selbst, Ursache wird geerntet", options: .nonStrict()) {
-            assertSymbolOpensPanelWithOneClick(app, label: "reopen-open-app")
-        }
+        assertSymbolOpensPanelWithOneClick(app, label: "reopen-open-app")
         app.terminate()
     }
 
@@ -503,6 +500,89 @@ final class MacGalleryTests: XCTestCase {
         app.terminate()
     }
 
+    /// #978 Schnitt 3 v4, hold probe: does the panel close when the mouse is held too long on the symbol? Per run one
+    /// click held 1.0 s and one held 0.1 s, each from the state of the Return arm (fresh launch, panel opened, Return
+    /// saved and closed it), on the middle of the symbol via `click(forDuration:thenDragTo:)` onto the same coordinate.
+    /// The panel's state is read 3 s after the click. A measurement, not a guard: the result goes into the attachment,
+    /// never into the test's outcome. Runs only with `LE_PANEL_HOLD_PROBE` set (mac-panel-repeat.yml, `halteprobe`).
+    @MainActor
+    func testHoldDurationProbe() throws {
+        guard ProcessInfo.processInfo.environment["LE_PANEL_HOLD_PROBE"] != nil else {
+            throw XCTSkip("#978 hold probe runs only with LE_PANEL_HOLD_PROBE (mac-panel-repeat.yml)")
+        }
+        for (n, d) in [1.0, 0.1].enumerated() {
+            holdClick(seconds: d, index: n)
+        }
+    }
+
+    /// One click of the hold probe: the Return arm's start state, a click held `seconds` on the symbol's middle, the
+    /// state 3 s later, and the attachment `mac-gallery-hold-<d>-<n>-click` with d, result and the monitor's hold.
+    @MainActor
+    private func holdClick(seconds: TimeInterval, index: Int) {
+        let label = "hold-\(String(format: "%.1f", seconds))-\(index)"
+        let app = macLaunch(dark: false)
+        guard let panel = openPanel(in: app, label: label) else { return }
+        let field = macElement("captureTextField", in: panel)
+        XCTAssertTrue(field.waitForExistence(timeout: 5), "Panel shows no field")
+        field.click()
+        field.typeText("Blumen gießen")
+        field.typeText("\n")
+        let closed = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: app.buttons["menuBarOpenApp"])
+        XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 10), .completed, "Return did not close the panel")
+        let statusItem = app.statusItems.firstMatch
+        XCTAssertTrue(statusItem.waitForExistence(timeout: 10), "No menu bar symbol")
+        let middle = statusItem.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let monitor = HoldMonitor()
+        let clickedAt = Date()
+        middle.click(forDuration: seconds, thenDragTo: middle)
+        RunLoop.current.run(until: Date().addingTimeInterval(3))
+        let open = app.buttons["menuBarOpenApp"].exists
+        let hold = monitor.stop()
+        let note = XCTAttachment(string: [
+            "click: \(String(format: "%.3f", clickedAt.timeIntervalSince1970)) (seconds since 1970)",
+            "d: \(String(format: "%.1f", seconds))",
+            "result: \(open ? "open" : "closed")",
+            hold.map { "monitor hold: \(String(format: "%.3f", $0))" } ?? "monitor saw nothing"
+        ].joined(separator: "\n") + "\n")
+        note.name = "mac-gallery-hold-\(String(format: "%.1f", seconds))-\(index)-click"
+        note.lifetime = .keepAlways
+        add(note)
+        app.terminate()
+    }
+
+    /// Global monitor in the test runner for the hold probe: the first mouse down after the start and the first mouse up
+    /// after it; `stop()` removes the monitor and returns up − down in seconds (event timestamps), nil if it saw nothing.
+    /// Whether the runner sees these events at all is open (#978 S3 v4); the attachment says so.
+    @MainActor
+    private final class HoldMonitor {
+        private var token: Any?
+        private var down: TimeInterval?
+        private var up: TimeInterval?
+
+        init() {
+            token = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .leftMouseUp]) { [weak self] event in
+                let type = event.type
+                let stamp = event.timestamp
+                MainActor.assumeIsolated { self?.note(type, at: stamp) }
+            }
+        }
+
+        private func note(_ type: NSEvent.EventType, at stamp: TimeInterval) {
+            if type == .leftMouseDown, down == nil {
+                down = stamp
+            } else if type == .leftMouseUp, down != nil, up == nil {
+                up = stamp
+            }
+        }
+
+        func stop() -> TimeInterval? {
+            if let token { NSEvent.removeMonitor(token) }
+            token = nil
+            guard let down, let up else { return nil }
+            return up - down
+        }
+    }
+
     /// Mouse down and up as CGEvents on the middle of the element's frame (screen points, top left origin,
     /// as CGEvent takes them). Without the right to post events it falls back to `XCUICoordinate.click()`,
     /// which uses the same synthesis as `click()`; the fallback is noted, so the finding can say so.
@@ -524,28 +604,107 @@ final class MacGalleryTests: XCTestCase {
         return "control: CGEvent at \(Int(point.x)),\(Int(point.y))"
     }
 
-    /// Clicks the symbol exactly once and expects the panel within 10 s. The time of the click and of the
-    /// answer and the hierarchy go along as attachments, so a red run in CI can be read. Without `click` the
-    /// symbol is clicked like a user does (`statusItem.click()`); the control arm passes its own click.
+    /// #978 Schnitt 3: waits until the frontmost app has stayed the same for 1 s, polled every 0.1 s, at most
+    /// 10 s. No assumption which app must be in front. The run loop turns between polls, so AppKit can deliver
+    /// the workspace notifications that update `frontmostApplication`. Returns the history for the attachment:
+    /// one line per change (`front <s> s <bundle id>`), then `settled after <s> s` or `timeout after 10 s`.
+    @MainActor
+    private func waitForFrontmostSettled() -> [String] {
+        let start = Date()
+        let quiet: TimeInterval = 1.0
+        let limit: TimeInterval = 10.0
+        var lines: [String] = []
+        var current: String?
+        var changedAt = start
+        while Date().timeIntervalSince(start) < limit {
+            let now = Date()
+            let front = NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "none"
+            if lines.isEmpty || front != current {
+                current = front
+                changedAt = now
+                lines.append("front \(String(format: "%.2f", now.timeIntervalSince(start))) s \(front)")
+            } else if now.timeIntervalSince(changedAt) >= quiet {
+                lines.append("settled after \(String(format: "%.2f", now.timeIntervalSince(start))) s")
+                return lines
+            }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.1))
+        }
+        lines.append("timeout after 10 s")
+        return lines
+    }
+
+    /// #978 Schnitt 3 v3: clicks the symbol through a coordinate whose root is the frontmost app's menu bar
+    /// (`menuBars.element(boundBy: 0)`), offset by the symbol's middle minus the menu bar's origin (both in screen
+    /// points), so XCTest has no reason to activate Loose Ends before the click. The menu bar counts as root only
+    /// with a frame that is not empty and starts at y = 0. If Loose Ends itself is in front, it clicks
+    /// `statusItem.click()` and says so in `how`; if the frontmost app is unknown or has no such menu bar frame,
+    /// it clicks `statusItem.click()` with "no menu bar frame" in `how`. Exactly one click, no retry.
+    @MainActor
+    private func frontmostRootClick(_ statusItem: XCUIElement, frontmost: String?) -> String {
+        guard let id = frontmost, id != "none" else {
+            statusItem.click()
+            return "user: statusItem.click() fallback (frontmost none, no menu bar frame)"
+        }
+        if id == "com.henning.looseends" {
+            statusItem.click()
+            return "user: statusItem.click() fallback (frontmost com.henning.looseends)"
+        }
+        let bar = XCUIApplication(bundleIdentifier: id).menuBars.element(boundBy: 0)
+        let barFrame = bar.exists ? bar.frame : .zero
+        if barFrame.isEmpty || barFrame.minY != 0 {
+            statusItem.click()
+            return "user: statusItem.click() fallback (frontmost \(id), no menu bar frame)"
+        }
+        let item = statusItem.frame
+        let offset = CGVector(dx: item.midX - barFrame.minX, dy: item.midY - barFrame.minY)
+        bar.coordinate(withNormalizedOffset: .zero).withOffset(offset).click()
+        return "user: frontmost menu bar \(id)"
+    }
+
+    /// Clicks the symbol exactly once, after the frontmost app has settled, and expects the panel within 10 s
+    /// and still there 3 s later. The time of the click and of the decision, the frontmost app's history and
+    /// the hierarchy go along as attachments, so a red run in CI can be read. Without `click` the symbol is
+    /// clicked like a user does, since #978 S3 v3 through the frontmost app's menu bar as coordinate root
+    /// (`frontmostRootClick`); the control arm passes its own click. The click's duration goes along too.
+    /// A user arm whose click fell back to `statusItem.click()` while another app was in front fails hard:
+    /// such a click proves nothing about the user's way.
     @MainActor
     private func assertSymbolOpensPanelWithOneClick(_ app: XCUIApplication, label: String,
                                                     click: (@MainActor (XCUIElement) -> String)? = nil) {
         let statusItem = app.statusItems.firstMatch
         XCTAssertTrue(statusItem.waitForExistence(timeout: 10), "No menu bar symbol")
+        let front = waitForFrontmostSettled()
+        let frontmost = NSWorkspace.shared.frontmostApplication?.bundleIdentifier
         let clickedAt = Date()
-        var how = "user: statusItem.click()"
-        if let click { how = click(statusItem) } else { statusItem.click() }
-        let opened = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)
+        let how: String
+        if let click { how = click(statusItem) } else { how = frontmostRootClick(statusItem, frontmost: frontmost) }
+        let clickDuration = Date().timeIntervalSince(clickedAt)
+        let appeared = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)
+        var stayed = false
+        if appeared {
+            let holdSeconds: TimeInterval = 3
+            RunLoop.current.run(until: Date().addingTimeInterval(holdSeconds))
+            stayed = app.buttons["menuBarOpenApp"].exists
+        }
+        let opened = appeared && stayed
         let note = XCTAttachment(string: """
             click: \(String(format: "%.3f", clickedAt.timeIntervalSince1970)) (seconds since 1970)
-            after: \(String(format: "%.2f", Date().timeIntervalSince(clickedAt))) s, panel \(opened ? "open" : "not open")
             how: \(how)
+            frontmost before the click:
+            \(front.joined(separator: "\n"))
             \(app.debugDescription)
+            click duration: \(String(format: "%.3f", clickDuration)) s
+            after: \(String(format: "%.2f", Date().timeIntervalSince(clickedAt))) s, panel \(opened ? "open" : "not open")
             """)
         note.name = "mac-gallery-\(label)-click"
         note.lifetime = .keepAlways
         add(note)
-        XCTAssertTrue(opened, "One click on the symbol opened no panel (\(label))")
+        if click == nil, frontmost != "com.henning.looseends", how.contains("fallback") {
+            XCTFail("Fallback click with a foreign frontmost app (\(label)): \(how)")
+        }
+        XCTAssertTrue(opened, appeared
+                      ? "The panel closed again within 3 s (\(label))"
+                      : "One click on the symbol opened no panel (\(label))")
     }
 }
 #endif

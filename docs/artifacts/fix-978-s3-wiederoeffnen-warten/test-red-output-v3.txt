@@ -1,0 +1,163 @@
+# #978 S3 v3 RED 2026-11-24T21:18:33Z, Stand 8416330 plus geänderte Skripttests
+== scripts/test_mac_reopen_settle.py
+test_ac1_no_root_from_app_frame_any_more (__main__.FrontmostRootClickTests.test_ac1_no_root_from_app_frame_any_more) ... FAIL
+test_ac1_offset_is_item_middle_minus_menu_bar_origin (__main__.FrontmostRootClickTests.test_ac1_offset_is_item_middle_minus_menu_bar_origin) ... ok
+test_ac1_root_is_menu_bar_of_frontmost_app (__main__.FrontmostRootClickTests.test_ac1_root_is_menu_bar_of_frontmost_app) ... FAIL
+test_ac1_root_only_with_frame_at_top (__main__.FrontmostRootClickTests.test_ac1_root_only_with_frame_at_top) ... FAIL
+test_ac2_click_duration_line_before_after_line (__main__.FrontmostRootClickTests.test_ac2_click_duration_line_before_after_line) ... ok
+test_ac2_fallback_is_statusitem_click_once_no_retry (__main__.FrontmostRootClickTests.test_ac2_fallback_is_statusitem_click_once_no_retry) ... ok
+test_ac2_three_how_texts (__main__.FrontmostRootClickTests.test_ac2_three_how_texts) ... FAIL
+test_ac2_user_arms_click_through_root_control_arm_its_own (__main__.FrontmostRootClickTests.test_ac2_user_arms_click_through_root_control_arm_its_own) ... ok
+test_ac3_fallback_with_foreign_frontmost_fails_with_how (__main__.FrontmostRootClickTests.test_ac3_fallback_with_foreign_frontmost_fails_with_how)
+Lehre aus v2: ein stiller Rückfall bei fremder vorderster App wird nie grün. Die Meldung nennt `how`. ... FAIL
+test_ac3_hard_check_only_for_user_arms (__main__.FrontmostRootClickTests.test_ac3_hard_check_only_for_user_arms) ... FAIL
+test_counts_new_format (__main__.NewFormatSummaryTests.test_counts_new_format) ... ok
+test_parse_click_new_format (__main__.NewFormatSummaryTests.test_parse_click_new_format) ... ok
+test_ac1_no_expected_failure_left (__main__.SettleSourceTests.test_ac1_no_expected_failure_left) ... ok
+test_ac1_open_app_arm_calls_helper_directly (__main__.SettleSourceTests.test_ac1_open_app_arm_calls_helper_directly) ... ok
+test_ac2_exactly_one_click_no_retry (__main__.SettleSourceTests.test_ac2_exactly_one_click_no_retry) ... ok
+test_ac2_hold_checks_panel_still_there (__main__.SettleSourceTests.test_ac2_hold_checks_panel_still_there) ... ok
+test_ac2_order_symbol_settle_click_panel_hold_attachment_assert (__main__.SettleSourceTests.test_ac2_order_symbol_settle_click_panel_hold_attachment_assert) ... ok
+test_ac2_settle_helper_reads_frontmost_app (__main__.SettleSourceTests.test_ac2_settle_helper_reads_frontmost_app) ... ok
+test_ac3_all_three_arms_use_helper (__main__.SettleSourceTests.test_ac3_all_three_arms_use_helper) ... ok
+test_ac4_after_line_is_last_and_history_before_it (__main__.SettleSourceTests.test_ac4_after_line_is_last_and_history_before_it) ... ok
+
+======================================================================
+FAIL: test_ac1_no_root_from_app_frame_any_more (__main__.FrontmostRootClickTests.test_ac1_no_root_from_app_frame_any_more)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 165, in test_ac1_no_root_from_app_frame_any_more
+    self.assertNotRegex(self.root_click, r"\broot\.frame\b", "v2-Wurzel (App-Rahmen) ist widerlegt")
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex matched: 'root.frame' matches '\\broot\\.frame\\b' in 'func frontmostRootClick(_ statusItem: XCUIElement, frontmost: String?) -> String {\n        guard let id = frontmost, id != "none", id != "com.henning.looseends" else {\n            statusItem.click()\n            return "user: statusItem.click() fallback (frontmost \\(frontmost ?? "none"))"\n        }\n        let root = XCUIApplication(bundleIdentifier: id)\n        let rootFrame = root.frame\n        if rootFrame.isEmpty {\n            statusItem.click()\n            return "user: statusItem.click() fallback (frontmost \\(id), empty frame)"\n        }\n        let item = statusItem.frame\n        let offset = CGVector(dx: item.midX - rootFrame.minX, dy: item.midY - rootFrame.minY)\n        root.coordinate(withNormalizedOffset: .zero).withOffset(offset).click()\n        return "user: frontmost root \\(id)"\n    }\n' : v2-Wurzel (App-Rahmen) ist widerlegt
+
+======================================================================
+FAIL: test_ac1_root_is_menu_bar_of_frontmost_app (__main__.FrontmostRootClickTests.test_ac1_root_is_menu_bar_of_frontmost_app)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 149, in test_ac1_root_is_menu_bar_of_frontmost_app
+    self.assertRegex(self.root_click, r"\.menuBars\.element\(boundBy: 0\)", "Wurzel = erste Menüleiste")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: '\\.menuBars\\.element\\(boundBy: 0\\)' not found in 'func frontmostRootClick(_ statusItem: XCUIElement, frontmost: String?) -> String {\n        guard let id = frontmost, id != "none", id != "com.henning.looseends" else {\n            statusItem.click()\n            return "user: statusItem.click() fallback (frontmost \\(frontmost ?? "none"))"\n        }\n        let root = XCUIApplication(bundleIdentifier: id)\n        let rootFrame = root.frame\n        if rootFrame.isEmpty {\n            statusItem.click()\n            return "user: statusItem.click() fallback (frontmost \\(id), empty frame)"\n        }\n        let item = statusItem.frame\n        let offset = CGVector(dx: item.midX - rootFrame.minX, dy: item.midY - rootFrame.minY)\n        root.coordinate(withNormalizedOffset: .zero).withOffset(offset).click()\n        return "user: frontmost root \\(id)"\n    }\n' : Wurzel = erste Menüleiste
+
+======================================================================
+FAIL: test_ac1_root_only_with_frame_at_top (__main__.FrontmostRootClickTests.test_ac1_root_only_with_frame_at_top)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 155, in test_ac1_root_only_with_frame_at_top
+    self.assertRegex(self.root_click, r"\.(minY|origin\.y)\s*(!=|==)\s*0", "Ursprung y = 0 geprüft")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: '\\.(minY|origin\\.y)\\s*(!=|==)\\s*0' not found in 'func frontmostRootClick(_ statusItem: XCUIElement, frontmost: String?) -> String {\n        guard let id = frontmost, id != "none", id != "com.henning.looseends" else {\n            statusItem.click()\n            return "user: statusItem.click() fallback (frontmost \\(frontmost ?? "none"))"\n        }\n        let root = XCUIApplication(bundleIdentifier: id)\n        let rootFrame = root.frame\n        if rootFrame.isEmpty {\n            statusItem.click()\n            return "user: statusItem.click() fallback (frontmost \\(id), empty frame)"\n        }\n        let item = statusItem.frame\n        let offset = CGVector(dx: item.midX - rootFrame.minX, dy: item.midY - rootFrame.minY)\n        root.coordinate(withNormalizedOffset: .zero).withOffset(offset).click()\n        return "user: frontmost root \\(id)"\n    }\n' : Ursprung y = 0 geprüft
+
+======================================================================
+FAIL: test_ac2_three_how_texts (__main__.FrontmostRootClickTests.test_ac2_three_how_texts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 170, in test_ac2_three_how_texts
+    self.assertIn('"user: frontmost menu bar \\(', self.root_click)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '"user: frontmost menu bar \\(' not found in 'func frontmostRootClick(_ statusItem: XCUIElement, frontmost: String?) -> String {\n        guard let id = frontmost, id != "none", id != "com.henning.looseends" else {\n            statusItem.click()\n            return "user: statusItem.click() fallback (frontmost \\(frontmost ?? "none"))"\n        }\n        let root = XCUIApplication(bundleIdentifier: id)\n        let rootFrame = root.frame\n        if rootFrame.isEmpty {\n            statusItem.click()\n            return "user: statusItem.click() fallback (frontmost \\(id), empty frame)"\n        }\n        let item = statusItem.frame\n        let offset = CGVector(dx: item.midX - rootFrame.minX, dy: item.midY - rootFrame.minY)\n        root.coordinate(withNormalizedOffset: .zero).withOffset(offset).click()\n        return "user: frontmost root \\(id)"\n    }\n'
+
+======================================================================
+FAIL: test_ac3_fallback_with_foreign_frontmost_fails_with_how (__main__.FrontmostRootClickTests.test_ac3_fallback_with_foreign_frontmost_fails_with_how)
+Lehre aus v2: ein stiller Rückfall bei fremder vorderster App wird nie grün. Die Meldung nennt `how`.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 197, in test_ac3_fallback_with_foreign_frontmost_fails_with_how
+    self.assertRegex(self.helper, r"fallback", "Rückfall wird im Helfer erkannt")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: 'fallback' not found in 'func assertSymbolOpensPanelWithOneClick(_ app: XCUIApplication, label: String,\n                                                    click: (@MainActor (XCUIElement) -> String)? = nil) {\n        let statusItem = app.statusItems.firstMatch\n        XCTAssertTrue(statusItem.waitForExistence(timeout: 10), "No menu bar symbol")\n        let front = waitForFrontmostSettled()\n        let frontmost = NSWorkspace.shared.frontmostApplication?.bundleIdentifier\n        let clickedAt = Date()\n        let how: String\n        if let click { how = click(statusItem) } else { how = frontmostRootClick(statusItem, frontmost: frontmost) }\n        let clickDuration = Date().timeIntervalSince(clickedAt)\n        let appeared = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)\n        var stayed = false\n        if appeared {\n            let holdSeconds: TimeInterval = 3\n            RunLoop.current.run(until: Date().addingTimeInterval(holdSeconds))\n            stayed = app.buttons["menuBarOpenApp"].exists\n        }\n        let opened = appeared && stayed\n        let note = XCTAttachment(string: """\n            click: \\(String(format: "%.3f", clickedAt.timeIntervalSince1970)) (seconds since 1970)\n            how: \\(how)\n            frontmost before the click:\n            \\(front.joined(separator: "\\n"))\n            \\(app.debugDescription)\n            click duration: \\(String(format: "%.3f", clickDuration)) s\n            after: \\(String(format: "%.2f", Date().timeIntervalSince(clickedAt))) s, panel \\(opened ? "open" : "not open")\n            """)\n        note.name = "mac-gallery-\\(label)-click"\n        note.lifetime = .keepAlways\n        add(note)\n        XCTAssertTrue(opened, appeared\n                      ? "The panel closed again within 3 s (\\(label))"\n                      : "One click on the symbol opened no panel (\\(label))")\n    }\n' : Rückfall wird im Helfer erkannt
+
+======================================================================
+FAIL: test_ac3_hard_check_only_for_user_arms (__main__.FrontmostRootClickTests.test_ac3_hard_check_only_for_user_arms)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_reopen_settle.py", line 203, in test_ac3_hard_check_only_for_user_arms
+    self.assertRegex(self.helper, r"click\s*==\s*nil", "Kontrollarm bleibt von der Rückfall-Regel unberührt")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: 'click\\s*==\\s*nil' not found in 'func assertSymbolOpensPanelWithOneClick(_ app: XCUIApplication, label: String,\n                                                    click: (@MainActor (XCUIElement) -> String)? = nil) {\n        let statusItem = app.statusItems.firstMatch\n        XCTAssertTrue(statusItem.waitForExistence(timeout: 10), "No menu bar symbol")\n        let front = waitForFrontmostSettled()\n        let frontmost = NSWorkspace.shared.frontmostApplication?.bundleIdentifier\n        let clickedAt = Date()\n        let how: String\n        if let click { how = click(statusItem) } else { how = frontmostRootClick(statusItem, frontmost: frontmost) }\n        let clickDuration = Date().timeIntervalSince(clickedAt)\n        let appeared = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)\n        var stayed = false\n        if appeared {\n            let holdSeconds: TimeInterval = 3\n            RunLoop.current.run(until: Date().addingTimeInterval(holdSeconds))\n            stayed = app.buttons["menuBarOpenApp"].exists\n        }\n        let opened = appeared && stayed\n        let note = XCTAttachment(string: """\n            click: \\(String(format: "%.3f", clickedAt.timeIntervalSince1970)) (seconds since 1970)\n            how: \\(how)\n            frontmost before the click:\n            \\(front.joined(separator: "\\n"))\n            \\(app.debugDescription)\n            click duration: \\(String(format: "%.3f", clickDuration)) s\n            after: \\(String(format: "%.2f", Date().timeIntervalSince(clickedAt))) s, panel \\(opened ? "open" : "not open")\n            """)\n        note.name = "mac-gallery-\\(label)-click"\n        note.lifetime = .keepAlways\n        add(note)\n        XCTAssertTrue(opened, appeared\n                      ? "The panel closed again within 3 s (\\(label))"\n                      : "One click on the symbol opened no panel (\\(label))")\n    }\n' : Kontrollarm bleibt von der Rückfall-Regel unberührt
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.010s
+
+FAILED (failures=6)
+== scripts/test_mac_panel_repeat_summary.py
+test_after_observer_behaviour (__main__.CallersTests.test_after_observer_behaviour)
+F101: der echte Rumpf von `afterObserver`, mit swiftc gebaut und an festen Stapeln ausgeführt. ... ok
+test_callers_drops_only_leading_frames (__main__.CallersTests.test_callers_drops_only_leading_frames) ... ok
+test_control_arm_guarded_by_env (__main__.ControlArmTests.test_control_arm_guarded_by_env) ... ok
+test_user_arms_click_through_frontmost_root_with_statusitem_fallback (__main__.ControlArmTests.test_user_arms_click_through_frontmost_root_with_statusitem_fallback)
+#978 S3 v2: Nutzerarme klicken über frontmostRootClick, dessen Rückfall ist statusItem.click(). ... FAIL
+test_attachment_without_how_counts_as_unknown (__main__.ExpectedAndHowTests.test_attachment_without_how_counts_as_unknown) ... ok
+test_expected_flags_named_arm_without_clicks (__main__.ExpectedAndHowTests.test_expected_flags_named_arm_without_clicks) ... ok
+test_expected_flags_short_active_arm (__main__.ExpectedAndHowTests.test_expected_flags_short_active_arm) ... ok
+test_expected_ignores_inactive_control_arm (__main__.ExpectedAndHowTests.test_expected_ignores_inactive_control_arm) ... ok
+test_how_counted_per_arm (__main__.ExpectedAndHowTests.test_how_counted_per_arm) ... ok
+test_how_v3_categories (__main__.ExpectedAndHowTests.test_how_v3_categories)
+#978 S3 v3 AC-5: die drei neuen Texte, spezifische vor `statusItem.click()`. ... FAIL
+test_how_v3_counted_and_rates_unchanged (__main__.ExpectedAndHowTests.test_how_v3_counted_and_rates_unchanged) ... FAIL
+test_mandatory_arms_flagged_even_without_clicks (__main__.ExpectedAndHowTests.test_mandatory_arms_flagged_even_without_clicks) ... ok
+test_without_expected_no_check_line (__main__.ExpectedAndHowTests.test_without_expected_no_check_line) ... ok
+test_activation_and_space_lines (__main__.PanelLogTests.test_activation_and_space_lines) ... ok
+test_cg_event_fields_without_subtype_or_data1 (__main__.PanelLogTests.test_cg_event_fields_without_subtype_or_data1) ... ok
+test_monitors_return_event_unchanged (__main__.PanelLogTests.test_monitors_return_event_unchanged) ... ok
+test_no_print_no_try_optional (__main__.PanelLogTests.test_no_print_no_try_optional) ... ok
+test_stack_up_to_40_frames (__main__.PanelLogTests.test_stack_up_to_40_frames) ... ok
+test_arm_of_maps_labels (__main__.SummaryTests.test_arm_of_maps_labels) ... ok
+test_arm_without_attachments_is_zero_not_missing (__main__.SummaryTests.test_arm_without_attachments_is_zero_not_missing) ... ok
+test_counts_every_iteration_per_arm (__main__.SummaryTests.test_counts_every_iteration_per_arm) ... ok
+test_parse_click (__main__.SummaryTests.test_parse_click) ... ok
+test_parse_panel_log_reads_event_and_source (__main__.SummaryTests.test_parse_panel_log_reads_event_and_source) ... ok
+test_report_names_every_arm_and_only_numbers (__main__.SummaryTests.test_report_names_every_arm_and_only_numbers) ... ok
+test_several_export_folders_add_up (__main__.SummaryTests.test_several_export_folders_add_up) ... ok
+test_timeline_of_a_failure (__main__.SummaryTests.test_timeline_of_a_failure) ... ok
+test_workflow_passes_expected_and_arms (__main__.WorkflowExpectedTests.test_workflow_passes_expected_and_arms) ... ok
+test_dispatch_with_inputs (__main__.WorkflowTests.test_dispatch_with_inputs) ... ok
+test_log_from_job_start_and_uploads (__main__.WorkflowTests.test_log_from_job_start_and_uploads) ... ok
+test_pull_request_only_on_this_file (__main__.WorkflowTests.test_pull_request_only_on_this_file) ... ok
+test_runs_only_reopen_tests_with_iterations (__main__.WorkflowTests.test_runs_only_reopen_tests_with_iterations) ... ok
+
+======================================================================
+FAIL: test_user_arms_click_through_frontmost_root_with_statusitem_fallback (__main__.ControlArmTests.test_user_arms_click_through_frontmost_root_with_statusitem_fallback)
+#978 S3 v2: Nutzerarme klicken über frontmostRootClick, dessen Rückfall ist statusItem.click().
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 445, in test_user_arms_click_through_frontmost_root_with_statusitem_fallback
+    self.assertIn(".menuBars.element(boundBy: 0)", body("frontmostRootClick"), "#978 S3 v3: Wurzel = Menüleiste")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '.menuBars.element(boundBy: 0)' not found in 'func frontmostRootClick(_ statusItem: XCUIElement, frontmost: String?) -> String {\n        guard let id = frontmost, id != "none", id != "com.henning.looseends" else {\n            statusItem.click()\n            return "user: statusItem.click() fallback (frontmost \\(frontmost ?? "none"))"\n        }\n        let root = XCUIApplication(bundleIdentifier: id)\n        let rootFrame = root.frame\n        if rootFrame.isEmpty {\n            statusItem.click()\n            return "user: statusItem.click() fallback (frontmost \\(id), empty frame)"\n        }\n        let item = statusItem.frame\n        let offset = CGVector(dx: item.midX - rootFrame.minX, dy: item.midY - rootFrame.minY)\n        root.coordinate(withNormalizedOffset: .zero).withOffset(offset).click()\n        return "user: frontmost root \\(id)"\n    }\n' : #978 S3 v3: Wurzel = Menüleiste
+
+======================================================================
+FAIL: test_how_v3_categories (__main__.ExpectedAndHowTests.test_how_v3_categories)
+#978 S3 v3 AC-5: die drei neuen Texte, spezifische vor `statusItem.click()`.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 254, in test_how_v3_categories
+    self.assertEqual(self.summary.how_of(f"click: 1.0 (seconds since 1970)\nhow: {how}\n"), name, how)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'unbekannt' != 'menubar-root'
+- unbekannt
++ menubar-root
+ : user: frontmost menu bar com.apple.finder
+
+======================================================================
+FAIL: test_how_v3_counted_and_rates_unchanged (__main__.ExpectedAndHowTests.test_how_v3_counted_and_rates_unchanged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/robust-yawning-coral/scripts/test_mac_panel_repeat_summary.py", line 264, in test_how_v3_counted_and_rates_unchanged
+    self.assertEqual(how["open-app"], {"menubar-root": 2, "fallback-noframe": 1})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'unbekannt': 2, 'statusitem': 1} != {'menubar-root': 2, 'fallback-noframe': 1}
+- {'statusitem': 1, 'unbekannt': 2}
++ {'fallback-noframe': 1, 'menubar-root': 2}
+
+----------------------------------------------------------------------
+Ran 31 tests in 0.882s
+
+FAILED (failures=3)
+== scripts/test_menubar_panel_log.py
+............
+----------------------------------------------------------------------
+Ran 12 tests in 0.088s
+
+OK
