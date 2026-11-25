@@ -1,0 +1,167 @@
+FFFFF..FFFFFFF.........................................EFFE.................
+======================================================================
+ERROR: test_parse_retry (test_mac_panel_repeat_summary.RetrySummaryTests.test_parse_retry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_panel_repeat_summary.py", line 761, in test_parse_retry
+    self.assertAlmostEqual(self.summary.parse_retry(text), 0.616, places=3)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'mac_panel_repeat_summary' has no attribute 'parse_retry'
+
+======================================================================
+ERROR: test_without_retry_counts_unchanged (test_mac_panel_repeat_summary.RetrySummaryTests.test_without_retry_counts_unchanged)
+Test 3: ohne `retry` keine Wiederholung, die Zähler wie bisher.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_panel_repeat_summary.py", line 801, in test_without_retry_counts_unchanged
+    self.assertEqual(self.summary.retries([self.base / "raw"]),
+                     ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'mac_panel_repeat_summary' has no attribute 'retries'
+
+======================================================================
+FAIL: test_macos_only_with_oslog (test_mac_reopen_settle.MacPanelHoldSourceTests.test_macos_only_with_oslog)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 229, in setUp
+    self.assertTrue(PANEL_HOLD.is_file(), f"{PANEL_HOLD.relative_to(ROOT)} fehlt")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : LooseEndsUITests/MacPanelHold.swift fehlt
+
+======================================================================
+FAIL: test_no_try_optional_and_no_print (test_mac_reopen_settle.MacPanelHoldSourceTests.test_no_try_optional_and_no_print)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 229, in setUp
+    self.assertTrue(PANEL_HOLD.is_file(), f"{PANEL_HOLD.relative_to(ROOT)} fehlt")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : LooseEndsUITests/MacPanelHold.swift fehlt
+
+======================================================================
+FAIL: test_pairs_first_key_with_first_mouse_up_in_3_s (test_mac_reopen_settle.MacPanelHoldSourceTests.test_pairs_first_key_with_first_mouse_up_in_3_s)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 229, in setUp
+    self.assertTrue(PANEL_HOLD.is_file(), f"{PANEL_HOLD.relative_to(ROOT)} fehlt")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : LooseEndsUITests/MacPanelHold.swift fehlt
+
+======================================================================
+FAIL: test_results_seconds_short_unknown_with_reason (test_mac_reopen_settle.MacPanelHoldSourceTests.test_results_seconds_short_unknown_with_reason)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 229, in setUp
+    self.assertTrue(PANEL_HOLD.is_file(), f"{PANEL_HOLD.relative_to(ROOT)} fehlt")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : LooseEndsUITests/MacPanelHold.swift fehlt
+
+======================================================================
+FAIL: test_subsystem_and_category (test_mac_reopen_settle.MacPanelHoldSourceTests.test_subsystem_and_category)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 229, in setUp
+    self.assertTrue(PANEL_HOLD.is_file(), f"{PANEL_HOLD.relative_to(ROOT)} fehlt")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : LooseEndsUITests/MacPanelHold.swift fehlt
+
+======================================================================
+FAIL: test_both_click_ways_share_the_one_retry_path (test_mac_reopen_settle.RetryPathSourceTests.test_both_click_ways_share_the_one_retry_path)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 171, in setUp
+    self.assertEqual(len(retry), 1, f"genau eine Funktion mit dem Vermerk `retry: hold`, gefunden: {retry}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : genau eine Funktion mit dem Vermerk `retry: hold`, gefunden: []
+
+======================================================================
+FAIL: test_failure_names_hold_or_reason (test_mac_reopen_settle.RetryPathSourceTests.test_failure_names_hold_or_reason)
+Hart rot mit Haltedauer oder Grund in der Meldung; der Klickanhang trägt eine Zeile `hold:`.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 171, in setUp
+    self.assertEqual(len(retry), 1, f"genau eine Funktion mit dem Vermerk `retry: hold`, gefunden: {retry}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : genau eine Funktion mit dem Vermerk `retry: hold`, gefunden: []
+
+======================================================================
+FAIL: test_hold_probe_writes_read_hold (test_mac_reopen_settle.RetryPathSourceTests.test_hold_probe_writes_read_hold)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 171, in setUp
+    self.assertEqual(len(retry), 1, f"genau eine Funktion mit dem Vermerk `retry: hold`, gefunden: {retry}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : genau eine Funktion mit dem Vermerk `retry: hold`, gefunden: []
+
+======================================================================
+FAIL: test_no_retry_elsewhere (test_mac_reopen_settle.RetryPathSourceTests.test_no_retry_elsewhere)
+Außer dem Retry-Pfad liest nur die Halteprobe die Haltedauer (für ihren Anhang, ohne zweiten Klick).
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 171, in setUp
+    self.assertEqual(len(retry), 1, f"genau eine Funktion mit dem Vermerk `retry: hold`, gefunden: {retry}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : genau eine Funktion mit dem Vermerk `retry: hold`, gefunden: []
+
+======================================================================
+FAIL: test_retry_only_on_read_seconds_at_or_above_threshold (test_mac_reopen_settle.RetryPathSourceTests.test_retry_only_on_read_seconds_at_or_above_threshold)
+Kein Retry ohne gelesene Haltedauer: „kurz“ und „unbekannt“ führen nie zum zweiten Klick.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 171, in setUp
+    self.assertEqual(len(retry), 1, f"genau eine Funktion mit dem Vermerk `retry: hold`, gefunden: {retry}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : genau eine Funktion mit dem Vermerk `retry: hold`, gefunden: []
+
+======================================================================
+FAIL: test_retry_reads_hold_first_then_one_short_click (test_mac_reopen_settle.RetryPathSourceTests.test_retry_reads_hold_first_then_one_short_click)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 171, in setUp
+    self.assertEqual(len(retry), 1, f"genau eine Funktion mit dem Vermerk `retry: hold`, gefunden: {retry}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : genau eine Funktion mit dem Vermerk `retry: hold`, gefunden: []
+
+======================================================================
+FAIL: test_vermerk_and_threshold_exactly_once (test_mac_reopen_settle.RetryPathSourceTests.test_vermerk_and_threshold_exactly_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 171, in setUp
+    self.assertEqual(len(retry), 1, f"genau eine Funktion mit dem Vermerk `retry: hold`, gefunden: {retry}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : genau eine Funktion mit dem Vermerk `retry: hold`, gefunden: []
+
+======================================================================
+FAIL: test_retry_closed_is_red (test_mac_panel_repeat_summary.RetrySummaryTests.test_retry_closed_is_red)
+Test 2: auch der zweite Klick zu → die Iteration zählt als rot, der zweite Klick steht im Bericht.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_panel_repeat_summary.py", line 787, in test_retry_closed_is_red
+    self.assertEqual(counts["return"], {"n": 1, "fails": 1, "rate": 1.0})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'n': 2, 'fails': 2, 'rate': 1.0} != {'n': 1, 'fails': 1, 'rate': 1.0}
+- {'fails': 2, 'n': 2, 'rate': 1.0}
+?           ^       ^
+
++ {'fails': 1, 'n': 1, 'rate': 1.0}
+?           ^       ^
+
+
+======================================================================
+FAIL: test_retry_open_is_not_red_and_is_shown (test_mac_panel_repeat_summary.RetrySummaryTests.test_retry_open_is_not_red_and_is_shown)
+Test 1: erster Klick zu, zweiter mit `retry: hold 0.616 s` offen → eine Iteration, nicht rot, ausgewiesen.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_panel_repeat_summary.py", line 770, in test_retry_open_is_not_red_and_is_shown
+    self.assertEqual(counts["open-app"], {"n": 1, "fails": 0, "rate": 0.0})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'n': 2, 'fails': 1, 'rate': 0.5} != {'n': 1, 'fails': 0, 'rate': 0.0}
+- {'fails': 1, 'n': 2, 'rate': 0.5}
+?           ^       ^            ^
+
++ {'fails': 0, 'n': 1, 'rate': 0.0}
+?           ^       ^            ^
+
+
+----------------------------------------------------------------------
+Ran 76 tests in 7.902s
+
+FAILED (failures=14, errors=2)

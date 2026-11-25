@@ -6,6 +6,12 @@ Menüleistensymbol klickt (`openPanel`, beide Nutzerarme), klickt er wie ein Men
 Fehlschlag hart rot. Die Klickwege aus v1 (`waitForFrontmostSettled`) und v3 (`frontmostRootClick`) und die
 Rückfall-Regel entfallen. Kontrollarm und Halteprobe bleiben hinter ihren Umgebungsvariablen.
 
+v6 (nach Befund v5, Lauf 45642831767: Open-App-Arm 1/40 zu, Haltedauer 0,616 s): Der Klick bleibt `shortClick`. Hält
+der erste Klick das Panel nicht, liest der Test die Haltedauer aus dem Panel-Protokoll der App (`MacPanelHold.read`,
+`OSLogStore.local()`); ab 0,4 s folgt genau ein zweiter kurzer Klick mit dem Vermerk `retry: hold X s`, sonst (unter
+0,4 s, „kurz“, „unbekannt“) bleibt der Test hart rot. Es gibt genau einen Retry-Pfad, gemeinsam für `openPanel` und
+`assertSymbolOpensPanelWithOneClick`.
+
 Aufruf: python3 scripts/test_mac_reopen_settle.py
 Die CI fährt die Datei mit `unittest discover -s scripts -p 'test_*.py'`.
 
@@ -20,6 +26,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 GALLERY_TESTS = ROOT / "LooseEndsUITests" / "MacGalleryTests.swift"
+PANEL_HOLD = ROOT / "LooseEndsUITests" / "MacPanelHold.swift"
 SCRIPT = ROOT / "scripts" / "mac_panel_repeat_summary.py"
 
 
@@ -146,6 +153,106 @@ class NewFormatSummaryTests(unittest.TestCase):
         self.assertEqual(counts["return"], {"n": 2, "fails": 1, "rate": 0.5})
         self.assertEqual(counts["open-app"], {"n": 1, "fails": 0, "rate": 0.0})
         self.assertEqual(self.summary.how_of(new_format_click(1.0, True)), "short-click")
+
+
+def functions(text: str) -> dict:
+    """Name → Rumpf jeder Funktion der Klasse (Einrückung 4, Ende an der ersten `    }`-Zeile)."""
+    return {m.group(1): m.group(0) for m in re.finditer(r"^    (?:[a-z@]\w* )*func (\w+)\(.*?\n    \}\n", text, re.S | re.M)}
+
+
+class RetryPathSourceTests(unittest.TestCase):
+    """Spec v6 Test 4 und AC-2: genau ein Retry-Pfad, Schwelle 0,4 s, nur nach gelesener Haltedauer, höchstens einmal."""
+
+    def setUp(self):
+        self.raw = GALLERY_TESTS.read_text()
+        self.text = strip_comments(self.raw)
+        bodies = {name: strip_comments(body) for name, body in functions(self.raw).items()}
+        retry = [name for name, body in bodies.items() if "retry: hold" in body]
+        self.assertEqual(len(retry), 1, f"genau eine Funktion mit dem Vermerk `retry: hold`, gefunden: {retry}")
+        self.name = retry[0]
+        self.retry = bodies[self.name]
+        self.bodies = bodies
+
+    def test_vermerk_and_threshold_exactly_once(self):
+        self.assertEqual(self.text.count("retry: hold"), 1, "genau ein Vermerk `retry: hold`")
+        self.assertEqual(len(re.findall(r"(?<![\d.])0\.4(?![\d])", self.text)), 1, "Schwelle 0.4 genau einmal")
+
+    def test_both_click_ways_share_the_one_retry_path(self):
+        for caller in ("openPanel", "assertSymbolOpensPanelWithOneClick"):
+            self.assertEqual(len(re.findall(rf"\b{self.name}\(", self.bodies[caller])), 1,
+                             f"{caller} ruft den Retry-Pfad genau einmal")
+
+    def test_retry_reads_hold_first_then_one_short_click(self):
+        read = self.retry.find("MacPanelHold.read(")
+        click = self.retry.find("shortClick(")
+        self.assertEqual(self.retry.count("MacPanelHold.read("), 1, "Haltedauer genau einmal lesen")
+        self.assertEqual(self.retry.count("shortClick("), 1, "höchstens eine Wiederholung")
+        self.assertTrue(0 <= read < click, "erst die Haltedauer lesen, dann klicken")
+        self.assertFalse(re.search(r"\b(for|while|repeat)\b", self.retry), "keine Schleife")
+
+    def test_retry_only_on_read_seconds_at_or_above_threshold(self):
+        """Kein Retry ohne gelesene Haltedauer: „kurz“ und „unbekannt“ führen nie zum zweiten Klick."""
+        self.assertRegex(self.retry, r"case \.seconds\(let (\w+)\)[^\n{]*\b\1 >= ",
+                         "zweiter Klick nur bei `.seconds(x)` mit x >= Schwelle")
+        guard = re.search(r"case \.seconds\(let (\w+)\)[^\n{]*\b\1 >= [^\n{]*", self.retry)
+        self.assertLess(guard.start(), self.retry.find("shortClick("), "die Bedingung steht vor dem Klick")
+
+    def test_no_retry_elsewhere(self):
+        """Außer dem Retry-Pfad liest nur die Halteprobe die Haltedauer (für ihren Anhang, ohne zweiten Klick)."""
+        for name, body in self.bodies.items():
+            if name not in (self.name, "holdClick"):
+                self.assertNotIn("MacPanelHold.read(", body, f"{name} liest die Haltedauer nicht")
+        self.assertNotIn("shortClick(", self.bodies["holdClick"].split("MacPanelHold.read(", 1)[-1],
+                         "die Halteprobe klickt nach dem Lesen nicht nach")
+
+    def test_failure_names_hold_or_reason(self):
+        """Hart rot mit Haltedauer oder Grund in der Meldung; der Klickanhang trägt eine Zeile `hold:`."""
+        helper = self.bodies["assertSymbolOpensPanelWithOneClick"]
+        literal = re.search(r'XCTAttachment\(string: """\n(.*?)"""', helper, re.S)
+        self.assertIsNotNone(literal, "Anhangtext fehlt")
+        self.assertTrue(any(line.strip().startswith("hold:") for line in literal.group(1).splitlines()),
+                        "Anhang ohne Zeile `hold:`")
+        assertion = re.search(r"XCTAssertTrue\(opened,.*?\)\n", helper, re.S)
+        self.assertIsNotNone(assertion, "XCTAssertTrue(opened, …) fehlt")
+        self.assertIn("hold", assertion.group(0), "die Meldung nennt Haltedauer oder Grund")
+
+    def test_hold_probe_writes_read_hold(self):
+        body = self.bodies["holdClick"]
+        self.assertEqual(body.count("MacPanelHold.read("), 1, "die Probe liest die Haltedauer je Klick")
+        self.assertIn('"read hold: ', body, "Anhangzeile `read hold:` fehlt")
+
+
+class MacPanelHoldSourceTests(unittest.TestCase):
+    """Spec v6 Test 5 und AC-3: der Helfer liest das Panel-Protokoll der App."""
+
+    def setUp(self):
+        self.assertTrue(PANEL_HOLD.is_file(), f"{PANEL_HOLD.relative_to(ROOT)} fehlt")
+        self.raw = PANEL_HOLD.read_text()
+        self.text = strip_comments(self.raw)
+
+    def test_macos_only_with_oslog(self):
+        self.assertTrue(self.text.lstrip().startswith("#if os(macOS)"), "nur macOS (OSLogStore.local)")
+        self.assertIn("import OSLog", self.text)
+        self.assertIn("OSLogStore.local()", self.text)
+
+    def test_subsystem_and_category(self):
+        self.assertIn('"com.henning.looseends"', self.text)
+        self.assertIn('"MenuBarPanel"', self.text)
+
+    def test_pairs_first_key_with_first_mouse_up_in_3_s(self):
+        self.assertIn('"panel key', self.text)
+        self.assertIn("type=2", self.text)
+        self.assertRegex(self.text, r"window: TimeInterval = 3\b", "3-s-Fenster des Monitors")
+
+    def test_results_seconds_short_unknown_with_reason(self):
+        self.assertRegex(self.text, r"case seconds\(TimeInterval\)")
+        self.assertRegex(self.text, r"case short\b")
+        self.assertRegex(self.text, r"case unknown\(String\)")
+        self.assertRegex(self.text, r"static func read\(since: Date\) -> Reading")
+
+    def test_no_try_optional_and_no_print(self):
+        self.assertNotIn("try?", self.text)
+        self.assertNotRegex(self.text, r"\bprint\(")
 
 
 if __name__ == "__main__":
