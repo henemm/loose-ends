@@ -537,6 +537,13 @@ class HoldProbeSummaryTests(unittest.TestCase):
         self.assertIn("hold-1.0", self.summary.ARMS)
         self.assertIn("hold-0.1", self.summary.ARMS)
 
+    def test_arm_of_hold_names_split_by_xcresulttool(self):
+        # Reale Namen aus Lauf 45602877961: xcresulttool trennt „1.0“/„0.1“ am Punkt wie eine Dateiendung.
+        arm_of = self.summary.arm_of
+        self.assertEqual(arm_of("mac-gallery-hold-1_0_CE05AC11-ACA1-40C0-82D1-B30E06E74FF7.0-0-click"), "hold-1.0")
+        self.assertEqual(arm_of("mac-gallery-hold-0_0_059B0C45-B911-4D47-A029-24FCF9285BB4.1-1-click"), "hold-0.1")
+        self.assertIsNone(arm_of("mac-gallery-panel-hold-1_0_CE05AC11-ACA1-40C0-82D1-B30E06E74FF7.0-0-hierarchy"))
+
     def test_parse_hold(self):
         self.assertEqual(self.summary.parse_hold(hold_text(1.0, 12.5, False, 0.95)),
                          {"d": 1.0, "clicked_at": 12.5, "open": False, "monitor": 0.95})

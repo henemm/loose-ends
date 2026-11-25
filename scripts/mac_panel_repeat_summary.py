@@ -37,6 +37,8 @@ _HOW = (("frontmost menu bar", "menubar-root"), ("fallback (frontmost com.hennin
 # Der Kontrollarm zuerst, weil sein Label mit dem des Return-Arms beginnt.
 _ARM_PATTERN = re.compile(r"^mac-gallery-(reopen-return-control|reopen-return|reopen-open-app)-click(?:[_.]|$)")
 _HOLD_PATTERN = re.compile(r"^mac-gallery-hold-(1\.0|0\.1)-\d+-click(?:[_.]|$)")
+# xcresulttool trennt „1.0“/„0.1“ am Punkt wie eine Dateiendung: `mac-gallery-hold-1_0_<UUID>.0-<n>-click`.
+_HOLD_SPLIT_PATTERN = re.compile(r"^mac-gallery-hold-(1|0)_\d+_[0-9A-Fa-f-]+\.(0|1)-\d+-click(?:[_.]|$)")
 # Entscheidungsregel (Spec Punkt 6): je Arm mindestens 20 Klicks, 1,0 s schließt in mindestens 95 %, 0,1 s nie.
 HOLD_MIN_CLICKS = 20
 HOLD_LONG_MIN_RATE = 0.95
@@ -57,7 +59,11 @@ def arm_of(name: str):
     if match:
         return _LABEL_TO_ARM[match.group(1)]
     hold = _HOLD_PATTERN.match(name)
-    return f"hold-{hold.group(1)}" if hold else None
+    if hold:
+        return f"hold-{hold.group(1)}"
+    split = _HOLD_SPLIT_PATTERN.match(name)
+    arm = f"hold-{split.group(1)}.{split.group(2)}" if split else None
+    return arm if arm in ("hold-1.0", "hold-0.1") else None
 
 
 def parse_click(text: str):
