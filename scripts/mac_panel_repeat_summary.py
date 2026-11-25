@@ -18,6 +18,10 @@ Seit #978 S3 v4 zählt es auch die Haltedauer-Probe (`mac-gallery-hold-<d>-<n>-c
 je Arm Nenner, zu, offen und Rate, je Klick key → Maus hoch aus dem Panel-Protokoll, den Abgleich mit der Haltedauer des
 globalen Monitors im Testläufer (oder `monitor saw nothing`) und die vorab festgelegte Entscheidungsregel (Spec Punkt 6).
 
+Seit #978 S5 v6 kann ein Wiederöffnungsklick einen zweiten kurzen Klick nach sich ziehen, wenn der Test eine Haltedauer
+ab 0,4 s gelesen hat; dessen Anhang trägt die Zeile `retry: hold X s`. Der zweite Klick entscheidet die Iteration und
+ersetzt im Zähler den ersten; der Abschnitt „Wiederholungen“ nennt je Arm jede Wiederholung mit Haltedauer und Ergebnis.
+
 Aufruf: python3 scripts/mac_panel_repeat_summary.py --raw <ordner> [--raw <ordner> …] --log <datei> --out <datei>
         [--expected N] [--arms return,open-app,control,hold-1.0,hold-0.1]
 """
@@ -94,6 +98,12 @@ def parse_hold(text: str):
             "monitor": float(monitor.group(1)) if monitor else None}
 
 
+def parse_retry(text: str):
+    """Gelesene Haltedauer aus der Zeile `retry: hold X s` eines zweiten Klicks (#978 S5 v6), sonst None."""
+    match = re.search(r"^retry: hold ([0-9.]+) s\s*$", text, re.M)
+    return float(match.group(1)) if match else None
+
+
 def _click_texts(folders):
     """(Arm, Text) je Klickanhang, über alle Exportordner."""
     for folder in folders:
@@ -116,6 +126,32 @@ def clicks(folders):
             found.append((arm, hold["clicked_at"], hold["open"]))
         else:
             found.append((arm, *parse_click(text)))
+    return found
+
+
+def _reopen_clicks(folders):
+    """Wiederöffnungsklicks als (Arm, Klickzeit, offen, Haltedauer der Wiederholung oder None), nach der Zeit sortiert."""
+    found = [(arm, *parse_click(text), parse_retry(text)) for arm, text in _click_texts(folders) if arm in REOPEN_ARMS]
+    return sorted(found, key=lambda click: click[1])
+
+
+def iterations(folders):
+    """Je Iteration der Wiederöffnungsarme (Arm, Klickzeit, offen): eine Wiederholung ersetzt den vorangehenden Klick
+    ihres Arms, denn der zweite Klick entscheidet die Iteration (#978 S5 v6)."""
+    found = {arm: [] for arm in REOPEN_ARMS}
+    for arm, at, opened, retry in _reopen_clicks(folders):
+        if retry is not None and found[arm]:
+            found[arm].pop()
+        found[arm].append((arm, at, opened))
+    return [click for arm in REOPEN_ARMS for click in found[arm]]
+
+
+def retries(folders):
+    """Je Wiederöffnungsarm die Wiederholungen: Klickzeit, gelesene Haltedauer des ersten Klicks, Ergebnis des zweiten."""
+    found = {arm: [] for arm in REOPEN_ARMS}
+    for arm, at, opened, retry in _reopen_clicks(folders):
+        if retry is not None:
+            found[arm].append({"at": at, "hold": retry, "open": opened})
     return found
 
 
@@ -147,9 +183,10 @@ def deviations(counts, expected, arms=None):
 
 
 def count_arms(folders):
-    """Je Arm Nenner `n`, Zähler `fails` und `rate` (None ohne Wiederöffnung)."""
+    """Je Arm Nenner `n`, Zähler `fails` und `rate` (None ohne Wiederöffnung); eine Wiederholung zählt als ihre Iteration."""
     counts = {arm: {"n": 0, "fails": 0, "rate": None} for arm in ARMS}
-    for arm, _, opened in clicks(folders):
+    holds = [click for click in clicks(folders) if click[0] in HOLD_ARMS]
+    for arm, _, opened in iterations(folders) + holds:
         counts[arm]["n"] += 1
         counts[arm]["fails"] += 0 if opened else 1
     for entry in counts.values():
@@ -293,6 +330,18 @@ def reopen_hold_report(folders, events):
     return lines
 
 
+def retry_report(folders):
+    """Abschnitt „Wiederholungen“: je Arm die Zahl, danach je Wiederholung Klick, Arm, Haltedauer und Ergebnis (#978 S5 v6)."""
+    found = retries(folders)
+    lines = ["", "## Wiederholungen", ""] + [f"- {arm}: {len(found[arm])}" for arm in REOPEN_ARMS]
+    rows = sorted(((entry["at"], arm, entry) for arm in REOPEN_ARMS for entry in found[arm]), key=lambda row: row[:2])
+    if rows:
+        lines += ["", "| Klick | Arm | Haltedauer | Ergebnis zweiter Klick |", "|---|---|---|---|"]
+        lines += [f"| {at:.3f} | {arm} | {_seconds(entry['hold'])} | {'open' if entry['open'] else 'not open'} |"
+                  for at, arm, entry in rows]
+    return lines
+
+
 def _rate(rate) -> str:
     return "–" if rate is None else f"{rate * 100:.1f} %"
 
@@ -317,6 +366,7 @@ def report(folders, log_text: str, expected=None, arms=None) -> str:
     for arm, ways in count_how(folders).items():
         ranked = sorted(ways.items(), key=lambda way: (order.index(way[0]) if way[0] in order else len(order), way[0]))
         lines.append(f"- {arm}: " + (", ".join(f"{name} {n}" for name, n in ranked) or "–"))
+    lines += retry_report(folders)
     events = parse_panel_log(log_text)
     lines += reopen_hold_report(folders, events)
     if hold:

@@ -310,12 +310,27 @@ final class MacGalleryTests: XCTestCase {
 
     /// Clicks the menu bar symbol briefly (`shortClick`, #978 S5) and returns the window, popover or group holding
     /// the panel. The footer row is found directly (as `macOpenMainWindowIfNeeded` does); the hierarchy goes along as text.
+    /// Without a panel the one retry path decides (#978 S5 v6): a second short click only after a read hold from 0.4 s.
     @MainActor
     private func openPanel(in app: XCUIApplication, label: String) -> XCUIElement? {
         let statusItem = app.statusItems.firstMatch
         XCTAssertTrue(statusItem.waitForExistence(timeout: 20), "No menu bar symbol")
+        let clickedAt = Date()
         _ = shortClick(statusItem)
-        XCTAssertTrue(app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10), "The symbol opened no panel")
+        var appeared = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)
+        var hold = "not read (panel open)"
+        if !appeared {
+            let outcome = retryAfterLongHold(statusItem, since: clickedAt)
+            hold = outcome.hold.text
+            if let second = outcome.second {
+                let note = XCTAttachment(string: "\(second.line)\nclick: \(String(format: "%.3f", second.at.timeIntervalSince1970))\n")
+                note.name = "mac-gallery-panel-\(label)-retry"
+                note.lifetime = .keepAlways
+                add(note)
+                appeared = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)
+            }
+        }
+        XCTAssertTrue(appeared, "The symbol opened no panel (hold \(hold))")
         let tree = XCTAttachment(string: app.debugDescription)
         tree.name = "mac-gallery-panel-\(label)-hierarchy"
         tree.lifetime = .keepAlways
@@ -536,11 +551,13 @@ final class MacGalleryTests: XCTestCase {
         RunLoop.current.run(until: Date().addingTimeInterval(3))
         let open = app.buttons["menuBarOpenApp"].exists
         let hold = monitor.stop()
+        let read = MacPanelHold.read(since: clickedAt)
         let note = XCTAttachment(string: [
             "click: \(String(format: "%.3f", clickedAt.timeIntervalSince1970)) (seconds since 1970)",
             "d: \(String(format: "%.1f", seconds))",
             "result: \(open ? "open" : "closed")",
-            hold.map { "monitor hold: \(String(format: "%.3f", $0))" } ?? "monitor saw nothing"
+            hold.map { "monitor hold: \(String(format: "%.3f", $0))" } ?? "monitor saw nothing",
+            "read hold: \(read.text)"
         ].joined(separator: "\n") + "\n")
         note.name = "mac-gallery-hold-\(String(format: "%.1f", seconds))-\(index)-click"
         note.lifetime = .keepAlways
@@ -604,7 +621,8 @@ final class MacGalleryTests: XCTestCase {
 
     /// #978 S5: a click like a person's: 0.1 s on the middle of the element, dragged onto the same coordinate, so the
     /// mouse goes up where it went down. `click()` held the symbol 0.7 to 0.9 s under load, and letting go after so long
-    /// closes the panel like a system menu (hold probe v4, run 45602877961). Exactly one click, no retry.
+    /// closes the panel like a system menu (hold probe v4, run 45602877961). Exactly one click; a retry is decided only
+    /// by `retryAfterLongHold`.
     @MainActor
     private func shortClick(_ element: XCUIElement) -> String {
         let middle = element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
@@ -612,40 +630,85 @@ final class MacGalleryTests: XCTestCase {
         return "user: short click 0.1 s"
     }
 
-    /// Clicks the symbol exactly once and expects the panel within 10 s and still there 3 s later; any failure is
-    /// hard, there is no second try. The time of the click and of the decision and the hierarchy go along as an
-    /// attachment, so a red run in CI can be read. Without `click` the symbol is clicked like a user does
-    /// (`shortClick`, #978 S5); the control arm passes its own click. The click's duration goes along too.
+    /// Hold from which a failed short click counts as the test tool's stretched click, not the app's (#978 S5 v6):
+    /// panels that closed were held 0.616 to 0.93 s from `key`, short clicks that held stayed at 0.147 s at most.
+    private static let retryHold: TimeInterval = 0.4
+
+    /// A second short click and the line its attachment carries.
+    private struct SecondClick {
+        let at: Date
+        let how: String
+        let line: String
+    }
+
+    /// The one retry path (#978 S5 v6), shared by `openPanel` and `assertSymbolOpensPanelWithOneClick`: reads the failed
+    /// click's hold from the app's panel log, and only for read seconds from `retryHold` on clicks once more, briefly.
+    /// Short, unknown or below the threshold: no second click, the caller stays hard red with the reading.
+    @MainActor
+    private func retryAfterLongHold(_ statusItem: XCUIElement,
+                                    since clickedAt: Date) -> (hold: MacPanelHold.Reading, second: SecondClick?) {
+        let hold = MacPanelHold.read(since: clickedAt)
+        guard case .seconds(let held) = hold, held >= Self.retryHold else { return (hold, nil) }
+        let at = Date()
+        let how = shortClick(statusItem)
+        return (hold, SecondClick(at: at, how: how, line: "retry: hold \(String(format: "%.3f", held)) s"))
+    }
+
+    /// Clicks the symbol and expects the panel within 10 s and still there 3 s later. A failed user click goes through
+    /// `retryAfterLongHold` (at most one second click, only after a read hold from 0.4 s); every other failure is hard.
+    /// Each click leaves an attachment with its time, way, read hold and the hierarchy, so a red run in CI can be read.
+    /// Without `click` the symbol is clicked like a user does (`shortClick`, #978 S5); the control arm passes its own
+    /// click and is never retried.
     @MainActor
     private func assertSymbolOpensPanelWithOneClick(_ app: XCUIApplication, label: String,
                                                     click: (@MainActor (XCUIElement) -> String)? = nil) {
         let statusItem = app.statusItems.firstMatch
         XCTAssertTrue(statusItem.waitForExistence(timeout: 10), "No menu bar symbol")
+        func watch(_ clickedAt: Date) -> (appeared: Bool, opened: Bool, duration: TimeInterval, after: TimeInterval) {
+            let duration = Date().timeIntervalSince(clickedAt)
+            let appeared = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)
+            var stayed = false
+            if appeared {
+                RunLoop.current.run(until: Date().addingTimeInterval(3))
+                stayed = app.buttons["menuBarOpenApp"].exists
+            }
+            return (appeared, appeared && stayed, duration, Date().timeIntervalSince(clickedAt))
+        }
+        func attach(_ clickedAt: Date, how: String, attempt: String, hold: String,
+                    seen: (appeared: Bool, opened: Bool, duration: TimeInterval, after: TimeInterval)) {
+            let note = XCTAttachment(string: """
+                click: \(String(format: "%.3f", clickedAt.timeIntervalSince1970)) (seconds since 1970)
+                how: \(how)
+                \(attempt)
+                hold: \(hold)
+                \(app.debugDescription)
+                click duration: \(String(format: "%.3f", seen.duration)) s
+                after: \(String(format: "%.2f", seen.after)) s, panel \(seen.opened ? "open" : "not open")
+                """)
+            note.name = "mac-gallery-\(label)-click"
+            note.lifetime = .keepAlways
+            add(note)
+        }
         let clickedAt = Date()
         let how: String
         if let click { how = click(statusItem) } else { how = shortClick(statusItem) }
-        let clickDuration = Date().timeIntervalSince(clickedAt)
-        let appeared = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)
-        var stayed = false
-        if appeared {
-            let holdSeconds: TimeInterval = 3
-            RunLoop.current.run(until: Date().addingTimeInterval(holdSeconds))
-            stayed = app.buttons["menuBarOpenApp"].exists
+        var seen = watch(clickedAt)
+        var hold = seen.opened ? "not read (panel open)" : "not read (control click)"
+        var second: SecondClick?
+        if !seen.opened, click == nil {
+            let outcome = retryAfterLongHold(statusItem, since: clickedAt)
+            hold = outcome.hold.text
+            second = outcome.second
         }
-        let opened = appeared && stayed
-        let note = XCTAttachment(string: """
-            click: \(String(format: "%.3f", clickedAt.timeIntervalSince1970)) (seconds since 1970)
-            how: \(how)
-            \(app.debugDescription)
-            click duration: \(String(format: "%.3f", clickDuration)) s
-            after: \(String(format: "%.2f", Date().timeIntervalSince(clickedAt))) s, panel \(opened ? "open" : "not open")
-            """)
-        note.name = "mac-gallery-\(label)-click"
-        note.lifetime = .keepAlways
-        add(note)
-        XCTAssertTrue(opened, appeared
-                      ? "The panel closed again within 3 s (\(label))"
-                      : "One click on the symbol opened no panel (\(label))")
+        attach(clickedAt, how: how, attempt: "first click", hold: hold, seen: seen)
+        if let second {
+            seen = watch(second.at)
+            attach(second.at, how: second.how, attempt: second.line, hold: "not read (second click)", seen: seen)
+        }
+        let opened = seen.opened
+        XCTAssertTrue(opened, seen.appeared
+                      ? "The panel closed again within 3 s (\(label), hold \(hold))"
+                      : "One click on the symbol opened no panel (\(label), hold \(hold))")
     }
 }
 #endif
