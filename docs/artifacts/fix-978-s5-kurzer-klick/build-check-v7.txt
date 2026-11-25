@@ -1,0 +1,20 @@
+# #978 S5 v7 AC-5: Übersetzungsprüfung macOS, App und UI-Test-Bundle (nichts ausgeführt)
+# Zeit: 2026-11-25T17:59Z, Stand dc16940 + Arbeitskopie mit Fix F001 (Monitor-Handler: nur unter --ui-testing,
+# kein assumeIsolated im Handler, Sprung per DispatchQueue.main.async mit event.timestamp), nach ./scripts/sim.sh generate
+# DerivedData LooseEnds-session-dazzling-herding-hopcroft, beide Läufe unter der rechnerweiten Sperre /tmp/loose-ends-testlauf.lock
+# (acquire_testlock/run_xcodebuild aus scripts/sim.sh)
+#
+# 1) App: ./scripts/sim.sh mac-build
+#    = xcodebuild build -project LooseEnds.xcodeproj -scheme LooseEnds -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO
+# Zeilen mit MenuBarCapture.swift im Log: 4 (neu übersetzt)
+# Zeilen mit "warning:" im gesamten Log: 0
+# Zeilen mit "error:" im gesamten Log: 0
+** BUILD SUCCEEDED **
+#
+# 2) UI-Test-Bundle: acquire_testlock + run_xcodebuild aus scripts/sim.sh
+#    = xcodebuild build-for-testing -project LooseEnds.xcodeproj -scheme LooseEnds -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO
+# Inkrementell: MacGalleryTests.swift und MacPanelHold.swift seit dem letzten Lauf (17:37Z) unverändert, daher nicht neu
+# übersetzt (0 Zeilen im Log); das Bundle wurde gegen die neu gebaute App gelinkt.
+# Fehler/Warnungen aus MacGalleryTests.swift/MacPanelHold.swift/MenuBarCapture.swift: keine
+# Zeilen mit "error:" im gesamten Log: 0
+** TEST BUILD SUCCEEDED **

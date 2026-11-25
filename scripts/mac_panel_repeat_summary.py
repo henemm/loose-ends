@@ -8,12 +8,19 @@ keine Bundle-ID, keinen Stapel.
 
 Mit `--expected N` prüft es den Nenner je aktivem Arm gegen N (Iterationen je Test) und nennt jede Abweichung; aktiv sind
 die Arme aus `--arms`, ohne die Angabe Return, Open-App und jeder Arm mit mindestens einem Klickanhang. Je Arm zählt es
-den Klickweg aus der Anhangszeile `how:` (seit #978 S3 v3 menubar-root, fallback-looseends, fallback-noframe; dazu
-statusitem, cgevent, xcuicoordinate als Rückfall). Als Beleg für den Nutzerweg zählt nur menubar-root.
+den Klickweg aus der Anhangszeile `how:` (seit #978 S5 short-click; dazu statusitem, cgevent, xcuicoordinate). Als Beleg
+für den Nutzerweg zählt nur short-click.
+
+Seit #978 S5 nennt der Bericht je Wiederöffnungsklick die Haltedauer: key → Maus hoch, wenn das Maus-hoch im 3-s-Fenster
+des Monitors nach `key` liegt, sonst „kurz (kein Maus-hoch)“ (beim kurzen Klick bleibt das Ereignis beim Statusobjekt).
 
 Seit #978 S3 v4 zählt es auch die Haltedauer-Probe (`mac-gallery-hold-<d>-<n>-click`, Arme hold-1.0 und hold-0.1):
 je Arm Nenner, zu, offen und Rate, je Klick key → Maus hoch aus dem Panel-Protokoll, den Abgleich mit der Haltedauer des
 globalen Monitors im Testläufer (oder `monitor saw nothing`) und die vorab festgelegte Entscheidungsregel (Spec Punkt 6).
+
+Seit #978 S5 v6 kann ein Wiederöffnungsklick einen zweiten kurzen Klick nach sich ziehen, wenn der Test eine Haltedauer
+ab 0,4 s gelesen hat; dessen Anhang trägt die Zeile `retry: hold X s`. Der zweite Klick entscheidet die Iteration und
+ersetzt im Zähler den ersten; der Abschnitt „Wiederholungen“ nennt je Arm jede Wiederholung mit Haltedauer und Ergebnis.
 
 Aufruf: python3 scripts/mac_panel_repeat_summary.py --raw <ordner> [--raw <ordner> …] --log <datei> --out <datei>
         [--expected N] [--arms return,open-app,control,hold-1.0,hold-0.1]
@@ -30,10 +37,10 @@ HOLD_ARMS = ("hold-1.0", "hold-0.1")
 ARMS = REOPEN_ARMS + HOLD_ARMS
 # Die beiden Pflicht-Arme laufen in jedem Wiederholungslauf; der Kontrollarm nur mit `kontrollarm`.
 REQUIRED_ARMS = ("return", "open-app")
-# Klickweg aus der Zeile `how:` des Anhangs (MacGalleryTests.swift). Die genaueren Texte zuerst (#978 S3 v3);
-# als Beleg für den Nutzerweg zählt nur `menubar-root`, die beiden `fallback-*` sind Rückfälle auf statusItem.click().
-_HOW = (("frontmost menu bar", "menubar-root"), ("fallback (frontmost com.henning.looseends)", "fallback-looseends"),
-        ("no menu bar frame", "fallback-noframe"), ("statusItem.click()", "statusitem"), ("CGEvent", "cgevent"), ("XCUICoordinate", "xcuicoordinate"))
+# Klickweg aus der Zeile `how:` des Anhangs (MacGalleryTests.swift), je Eintrag ein regulärer Ausdruck. Als Beleg für
+# den Nutzerweg zählt nur `short-click` (#978 S5); die entfallenen v3-Klickwege sind `unbekannt`.
+_HOW = ((r"short click 0\.1 s", "short-click"), (r"statusItem\.click\(\)$", "statusitem"), (r"CGEvent", "cgevent"),
+        (r"XCUICoordinate", "xcuicoordinate"))
 # Der Kontrollarm zuerst, weil sein Label mit dem des Return-Arms beginnt.
 _ARM_PATTERN = re.compile(r"^mac-gallery-(reopen-return-control|reopen-return|reopen-open-app)-click(?:[_.]|$)")
 _HOLD_PATTERN = re.compile(r"^mac-gallery-hold-(1\.0|0\.1)-\d+-click(?:[_.]|$)")
@@ -47,6 +54,10 @@ AGREEMENT_SECONDS = 0.1
 _LABEL_TO_ARM = {"reopen-return-control": "control", "reopen-return": "return", "reopen-open-app": "open-app"}
 # Wie lange nach dem Klick Protokollzeilen zur Zeitachse eines Falls gehören (Warten des Tests: 10 s).
 TIMELINE_SECONDS = 15.0
+# Fenster des Monitors in der App nach `key` (MenuBarCapture: 3 s); nur ein Maus-hoch darin gehört zum Klick.
+MONITOR_SECONDS = 3.0
+# Haltedauer eines Klicks mit `key`, aber ohne Maus-hoch im Monitorfenster (#978 S5).
+SHORT = "kurz (kein Maus-hoch)"
 
 _LINE = re.compile(
     r"^(?P<stamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(?:\.\d+)?)(?P<tz>[+-]\d{4})?\s.*?"
@@ -87,6 +98,12 @@ def parse_hold(text: str):
             "monitor": float(monitor.group(1)) if monitor else None}
 
 
+def parse_retry(text: str):
+    """Gelesene Haltedauer aus der Zeile `retry: hold X s` eines zweiten Klicks (#978 S5 v6), sonst None."""
+    match = re.search(r"^retry: hold ([0-9.]+) s\s*$", text, re.M)
+    return float(match.group(1)) if match else None
+
+
 def _click_texts(folders):
     """(Arm, Text) je Klickanhang, über alle Exportordner."""
     for folder in folders:
@@ -112,11 +129,37 @@ def clicks(folders):
     return found
 
 
+def _reopen_clicks(folders):
+    """Wiederöffnungsklicks als (Arm, Klickzeit, offen, Haltedauer der Wiederholung oder None), nach der Zeit sortiert."""
+    found = [(arm, *parse_click(text), parse_retry(text)) for arm, text in _click_texts(folders) if arm in REOPEN_ARMS]
+    return sorted(found, key=lambda click: click[1])
+
+
+def iterations(folders):
+    """Je Iteration der Wiederöffnungsarme (Arm, Klickzeit, offen): eine Wiederholung ersetzt den vorangehenden Klick
+    ihres Arms, denn der zweite Klick entscheidet die Iteration (#978 S5 v6)."""
+    found = {arm: [] for arm in REOPEN_ARMS}
+    for arm, at, opened, retry in _reopen_clicks(folders):
+        if retry is not None and found[arm]:
+            found[arm].pop()
+        found[arm].append((arm, at, opened))
+    return [click for arm in REOPEN_ARMS for click in found[arm]]
+
+
+def retries(folders):
+    """Je Wiederöffnungsarm die Wiederholungen: Klickzeit, gelesene Haltedauer des ersten Klicks, Ergebnis des zweiten."""
+    found = {arm: [] for arm in REOPEN_ARMS}
+    for arm, at, opened, retry in _reopen_clicks(folders):
+        if retry is not None:
+            found[arm].append({"at": at, "hold": retry, "open": opened})
+    return found
+
+
 def how_of(text: str) -> str:
     """Klickweg eines Anhangs aus seiner Zeile `how:`; ohne erkennbare Zeile `unbekannt`."""
     line = re.search(r"^how: (.*)$", text, re.M)
-    for needle, name in _HOW:
-        if line and needle in line.group(1):
+    for pattern, name in _HOW:
+        if line and re.search(pattern, line.group(1).strip()):
             return name
     return "unbekannt"
 
@@ -140,9 +183,10 @@ def deviations(counts, expected, arms=None):
 
 
 def count_arms(folders):
-    """Je Arm Nenner `n`, Zähler `fails` und `rate` (None ohne Wiederöffnung)."""
+    """Je Arm Nenner `n`, Zähler `fails` und `rate` (None ohne Wiederöffnung); eine Wiederholung zählt als ihre Iteration."""
     counts = {arm: {"n": 0, "fails": 0, "rate": None} for arm in ARMS}
-    for arm, _, opened in clicks(folders):
+    holds = [click for click in clicks(folders) if click[0] in HOLD_ARMS]
+    for arm, _, opened in iterations(folders) + holds:
         counts[arm]["n"] += 1
         counts[arm]["fails"] += 0 if opened else 1
     for entry in counts.values():
@@ -196,14 +240,30 @@ def timeline(clicked_at: float, events):
     return line
 
 
-def key_to_mouse_up(clicked_at: float, events):
-    """Sekunden von der ersten `key`-Zeile nach dem Klick bis zur ersten Maus hoch (Monitorzeile type=2) danach; sonst None."""
+def _first_key(clicked_at: float, events):
+    """Die erste `key`-Zeile bis `TIMELINE_SECONDS` nach dem Klick, sonst None."""
     window = [e for e in sorted(events, key=lambda e: e["time"]) if 0 <= e["time"] - clicked_at < TIMELINE_SECONDS]
-    key = next((e for e in window if e["kind"] == "key"), None)
+    return next((e for e in window if e["kind"] == "key"), None)
+
+
+def key_to_mouse_up(clicked_at: float, events):
+    """Sekunden von der ersten `key`-Zeile nach dem Klick bis zur ersten Maus hoch (Monitorzeile type=2) im 3-s-Fenster
+    des Monitors danach; sonst None. Ein späteres Maus-hoch gehört zu einem anderen Vorgang (#978 S5)."""
+    key = _first_key(clicked_at, events)
     if key is None:
         return None
-    up = next((e for e in window if e["time"] >= key["time"] and e["kind"].startswith("monitor") and e["event"] == 2), None)
+    up = next((e for e in sorted(events, key=lambda e: e["time"])
+               if 0 <= e["time"] - key["time"] < MONITOR_SECONDS and e["kind"].startswith("monitor") and e["event"] == 2),
+              None)
     return None if up is None else up["time"] - key["time"]
+
+
+def hold_of(clicked_at: float, events):
+    """Haltedauer eines Klicks: Sekunden key → Maus hoch, `SHORT` ohne Maus-hoch im Fenster, None ohne `key`."""
+    if _first_key(clicked_at, events) is None:
+        return None
+    seconds = key_to_mouse_up(clicked_at, events)
+    return SHORT if seconds is None else seconds
 
 
 def agreement(monitor, log) -> str:
@@ -259,6 +319,29 @@ def hold_report(folders, counts, events):
     return lines
 
 
+def reopen_hold_report(folders, events):
+    """Abschnitt „Haltedauer je Klick“: je Wiederöffnungsklick Arm, Ergebnis und Haltedauer (#978 S5)."""
+    rows = sorted((at, arm, opened) for arm, at, opened in clicks(folders) if arm in REOPEN_ARMS)
+    lines = ["", "## Haltedauer je Klick", "", "| Klick | Arm | Ergebnis | Haltedauer |", "|---|---|---|---|"]
+    for at, arm, opened in rows:
+        hold = hold_of(at, events)
+        shown = hold if isinstance(hold, str) else _seconds(hold)
+        lines.append(f"| {at:.3f} | {arm} | {'open' if opened else 'not open'} | {shown} |")
+    return lines
+
+
+def retry_report(folders):
+    """Abschnitt „Wiederholungen“: je Arm die Zahl, danach je Wiederholung Klick, Arm, Haltedauer und Ergebnis (#978 S5 v6)."""
+    found = retries(folders)
+    lines = ["", "## Wiederholungen", ""] + [f"- {arm}: {len(found[arm])}" for arm in REOPEN_ARMS]
+    rows = sorted(((entry["at"], arm, entry) for arm in REOPEN_ARMS for entry in found[arm]), key=lambda row: row[:2])
+    if rows:
+        lines += ["", "| Klick | Arm | Haltedauer | Ergebnis zweiter Klick |", "|---|---|---|---|"]
+        lines += [f"| {at:.3f} | {arm} | {_seconds(entry['hold'])} | {'open' if entry['open'] else 'not open'} |"
+                  for at, arm, entry in rows]
+    return lines
+
+
 def _rate(rate) -> str:
     return "–" if rate is None else f"{rate * 100:.1f} %"
 
@@ -278,12 +361,14 @@ def report(folders, log_text: str, expected=None, arms=None) -> str:
     if expected is not None:
         found = deviations(counts, expected, arms)
         lines += ["", f"Soll-Nenner je aktivem Arm: {expected}"] + (found or ["- keine Abweichung"])
-    lines += ["", "Klickweg je Arm (Beleg für den Nutzerweg nur menubar-root):"]
+    lines += ["", "Klickweg je Arm (Beleg für den Nutzerweg nur short-click):"]
     order = [name for _, name in _HOW]
     for arm, ways in count_how(folders).items():
         ranked = sorted(ways.items(), key=lambda way: (order.index(way[0]) if way[0] in order else len(order), way[0]))
         lines.append(f"- {arm}: " + (", ".join(f"{name} {n}" for name, n in ranked) or "–"))
+    lines += retry_report(folders)
     events = parse_panel_log(log_text)
+    lines += reopen_hold_report(folders, events)
     if hold:
         lines += hold_report(folders, counts, events)
     failures = sorted((at, arm) for arm, at, opened in clicks(folders) if not opened and arm in REOPEN_ARMS)

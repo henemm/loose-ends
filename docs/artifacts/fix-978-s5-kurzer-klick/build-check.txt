@@ -1,0 +1,8 @@
+# #978 S5 AC-3: Übersetzungsprüfung UI-Test-Bundle macOS (build-for-testing, nichts ausgeführt)
+# Zeit: 2026-11-25T14:14Z, Stand 8f5fa87 + Arbeitskopie dieses Schnitts, nach ./scripts/sim.sh generate
+# Befehl (unter der rechnerweiten Sperre /tmp/loose-ends-testlauf.lock, eigene DerivedData im Scratchpad):
+#   xcodebuild build-for-testing -project LooseEnds.xcodeproj -scheme LooseEnds -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO
+# Übersetzungsschritte mit MacGalleryTests.swift im Log: 2
+# Fehler/Warnungen aus MacGalleryTests.swift: keine
+# Zeilen mit "error:" im gesamten Log: 0
+** TEST BUILD SUCCEEDED **

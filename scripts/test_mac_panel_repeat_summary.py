@@ -242,35 +242,36 @@ class ExpectedAndHowTests(unittest.TestCase):
         self.assertIn("control: cgevent 2, xcuicoordinate 1", text)
         self.assertIn("return: statusitem 1", text)
 
-    def test_how_v3_categories(self):
-        """#978 S3 v3 AC-5: die drei neuen Texte, spezifische vor `statusItem.click()`."""
-        cases = {
-            "user: frontmost menu bar com.apple.finder": "menubar-root",
-            "user: statusItem.click() fallback (frontmost com.henning.looseends)": "fallback-looseends",
-            "user: statusItem.click() fallback (frontmost com.apple.finder, no menu bar frame)": "fallback-noframe",
-            "user: statusItem.click()": "statusitem",
-        }
-        for how, name in cases.items():
-            self.assertEqual(self.summary.how_of(f"click: 1.0 (seconds since 1970)\nhow: {how}\n"), name, how)
+    def test_how_short_click_category(self):
+        """#978 S5 Test 3: `user: short click 0.1 s` ist eine eigene Kategorie; die v3-Klickwege gibt es nicht mehr."""
+        text = "click: 1.0 (seconds since 1970)\nhow: {}\n"
+        self.assertEqual(self.summary.how_of(text.format("user: short click 0.1 s")), "short-click")
+        for gone in ("user: frontmost menu bar com.apple.finder",
+                     "user: statusItem.click() fallback (frontmost com.henning.looseends)",
+                     "user: statusItem.click() fallback (frontmost com.apple.finder, no menu bar frame)"):
+            self.assertEqual(self.summary.how_of(text.format(gone)), "unbekannt", gone)
+        names = [name for _, name in self.summary._HOW]
+        for gone in ("menubar-root", "fallback-looseends", "fallback-noframe"):
+            self.assertNotIn(gone, names)
 
-    def test_how_v3_counted_and_rates_unchanged(self):
+    def test_how_short_click_counted_per_arm(self):
+        """#978 S5 Test 3: die neue Kategorie wird je Arm gezählt, Raten unverändert."""
         write_how_export(self.base / "raw", [
-            ("reopen-open-app", 1.0, True, "user: frontmost menu bar com.apple.finder"),
-            ("reopen-open-app", 2.0, True, "user: frontmost menu bar com.apple.finder"),
-            ("reopen-open-app", 3.0, False, "user: statusItem.click() fallback (frontmost com.apple.finder, no menu bar frame)"),
-            ("reopen-return", 4.0, True, "user: statusItem.click() fallback (frontmost com.henning.looseends)"),
+            ("reopen-open-app", 1.0, True, "user: short click 0.1 s"),
+            ("reopen-open-app", 2.0, False, "user: short click 0.1 s"),
+            ("reopen-return", 3.0, True, "user: short click 0.1 s"),
+            ("reopen-return-control", 4.0, True, "control: CGEvent at 1200,12"),
         ])
         how = self.summary.count_how([self.base / "raw"])
-        self.assertEqual(how["open-app"], {"menubar-root": 2, "fallback-noframe": 1})
-        self.assertEqual(how["return"], {"fallback-looseends": 1})
+        self.assertEqual(how["open-app"], {"short-click": 2})
+        self.assertEqual(how["return"], {"short-click": 1})
+        self.assertEqual(how["control"], {"cgevent": 1})
         counts = self.summary.count_arms([self.base / "raw"])
-        self.assertEqual(counts["open-app"]["n"], 3)
-        self.assertEqual(counts["open-app"]["fails"], 1)
-        self.assertAlmostEqual(counts["open-app"]["rate"], 1 / 3)
-        self.assertEqual(counts["return"], {"n": 1, "fails": 0, "rate": 0.0})
+        self.assertEqual(counts["open-app"], {"n": 2, "fails": 1, "rate": 0.5})
         text = self.run_script()
-        self.assertIn("open-app: menubar-root 2, fallback-noframe 1", text)
-        self.assertIn("return: fallback-looseends 1", text)
+        self.assertIn("open-app: short-click 2", text)
+        self.assertIn("return: short-click 1", text)
+        self.assertNotIn("menubar-root", text)
 
     def test_attachment_without_how_counts_as_unknown(self):
         write_export(self.base / "raw", [("reopen-return", 1.0, True)])
@@ -433,16 +434,17 @@ class ControlArmTests(SourceCheck):
         self.matches(r"XCTSkip\(")
         self.has('"reopen-return-control"')
 
-    def test_user_arms_click_through_frontmost_root_with_statusitem_fallback(self):
-        """#978 S3 v2: Nutzerarme klicken über frontmostRootClick, dessen Rückfall ist statusItem.click().
+    def test_user_arms_click_short_without_fallback(self):
+        """#978 S5: Nutzerarme klicken kurz (0,1 s) über `shortClick`, ohne Rückfall auf statusItem.click().
         Kommentare zählen nicht."""
         def body(name):
             match = re.search(rf"func {name}\(.*?\n    \}}\n", self.text, re.S)
             self.assertIsNotNone(match, f"fehlt: func {name}")
             return re.sub(r"//.*$", "", match.group(0), flags=re.M)
-        self.assertIn("frontmostRootClick(", body("assertSymbolOpensPanelWithOneClick"))
-        self.assertIn("statusItem.click()", body("frontmostRootClick"))
-        self.assertIn(".menuBars.element(boundBy: 0)", body("frontmostRootClick"), "#978 S3 v3: Wurzel = Menüleiste")
+        self.assertIn("shortClick(", body("assertSymbolOpensPanelWithOneClick"))
+        self.assertIn("click(forDuration: 0.1", body("shortClick"))
+        self.assertNotIn("statusItem.click()", body("shortClick"))
+        self.lacks("frontmostRootClick")
 
 
 class PanelLogTests(SourceCheck):
@@ -612,6 +614,61 @@ class HoldProbeSummaryTests(unittest.TestCase):
         self.assertNotIn("Entscheidung:", text)
 
 
+# #978 S5: kurze Klicks. Klick A um SHORT_A: key nach 0,15 s, das nächste Maus-hoch erst 12 s später (gehört zu einem
+# anderen Vorgang). Klick B um SHORT_B: key nach 0,2 s, Maus hoch 0,93 s nach key.
+SHORT_A = 1763900000.000
+SHORT_B = 1763900100.000
+SHORT_LOG = """\
+Timestamp               Ty Process[PID:TID]
+2025-11-23 12:13:20.150 Df LooseEnds[10920:83c2] [com.henning.looseends:MenuBarPanel] panel key window=MenuBarExtraWindow<AnyView> event=1 cg=nil active=true keyWindow=true front=x policy=accessory stack=a
+2025-11-23 12:13:32.150 Df LooseEnds[10920:83c2] [com.henning.looseends:MenuBarPanel] monitor local type=2 window=88 time=2
+2025-11-23 12:15:00.200 Df LooseEnds[10920:83c2] [com.henning.looseends:MenuBarPanel] panel key window=MenuBarExtraWindow<AnyView> event=1 cg=nil active=true keyWindow=true front=x policy=accessory stack=b
+2025-11-23 12:15:01.130 Df LooseEnds[10920:83c2] [com.henning.looseends:MenuBarPanel] monitor global type=2 window=0 time=3
+"""
+
+
+class ShortClickSummaryTests(unittest.TestCase):
+    """#978 S5 Test 1, 2 und AC-5: Maus-hoch nur im 3-s-Monitorfenster nach `key`, sonst „kurz (kein Maus-hoch)“."""
+
+    def setUp(self):
+        self.summary = load_summary()
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.base = Path(self.tmp.name)
+
+    def test_no_pairing_with_late_mouse_up(self):
+        """Test 1: ein Maus-hoch 12 s nach key gehört nicht zum Klick."""
+        events = self.summary.parse_panel_log(SHORT_LOG)
+        self.assertIsNone(self.summary.key_to_mouse_up(SHORT_A, events))
+        self.assertEqual(self.summary.hold_of(SHORT_A, events), self.summary.SHORT)
+        self.assertEqual(self.summary.SHORT, "kurz (kein Maus-hoch)")
+
+    def test_mouse_up_inside_window_gives_seconds(self):
+        """Test 2: Maus hoch 0,93 s nach key ist die Haltedauer."""
+        events = self.summary.parse_panel_log(SHORT_LOG)
+        self.assertAlmostEqual(self.summary.key_to_mouse_up(SHORT_B, events), 0.93, places=2)
+        self.assertAlmostEqual(self.summary.hold_of(SHORT_B, events), 0.93, places=2)
+
+    def test_click_without_key_has_no_hold(self):
+        self.assertIsNone(self.summary.hold_of(SHORT_A + 1000, self.summary.parse_panel_log(SHORT_LOG)))
+
+    def test_report_names_hold_per_click(self):
+        """AC-5: der Bericht nennt je Wiederöffnungsklick die Haltedauer oder „kurz (kein Maus-hoch)“."""
+        write_how_export(self.base / "raw", [("reopen-return", SHORT_A, True, "user: short click 0.1 s"),
+                                             ("reopen-open-app", SHORT_B, False, "user: short click 0.1 s")])
+        log = self.base / "panel.log"
+        log.write_text(SHORT_LOG)
+        out = self.base / "summary.md"
+        result = subprocess.run([sys.executable, str(SCRIPT), "--raw", str(self.base / "raw"), "--log", str(log),
+                                 "--out", str(out)], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        text = out.read_text()
+        self.assertIn("Haltedauer je Klick", text)
+        self.assertRegex(text, r"\| 1763900000\.000 \| return \| open \| kurz \(kein Maus-hoch\) \|")
+        self.assertRegex(text, r"\| 1763900100\.000 \| open-app \| not open \| 0\.930 s \|")
+        self.assertNotIn("12.000 s", text)
+
+
 class HoldProbeSourceTests(SourceCheck):
     """#978 S3 v4 AC-2 bis AC-6 am Quelltext."""
 
@@ -660,6 +717,93 @@ class HoldProbeSourceTests(SourceCheck):
         for name in ("testMenuBarReopensAfterReturnWithOneClick", "testMenuBarReopensAfterOpenAppWithOneClick",
                      "testMenuBarReopensAfterReturnWithControlClick"):
             self.has(f"func {name}(")
+
+
+def retry_export(folder: Path, clicks: list[tuple[str, float, bool, object]]) -> None:
+    """Wie `write_how_export`; ein vierter Wert ungleich None ist die gelesene Haltedauer des ersten Klicks, und der
+    Anhang trägt dann die Zeile `retry: hold X s` wie der zweite Klick aus `assertSymbolOpensPanelWithOneClick` (v6)."""
+    folder.mkdir(parents=True, exist_ok=True)
+    tests = {}
+    for index, (label, at, opened, retry) in enumerate(clicks):
+        file_name = f"{index:04d}-click.txt"
+        lines = click_text(at, opened).splitlines()
+        extra = [f"retry: hold {retry:.3f} s"] if retry is not None else []
+        (folder / file_name).write_text("\n".join([lines[0], "how: user: short click 0.1 s", *extra, *lines[1:]]) + "\n")
+        tests.setdefault(f"MacGalleryTests/test-{label}()", []).append({
+            "exportedFileName": file_name,
+            "suggestedHumanReadableName": f"mac-gallery-{label}-click_0_{index:04d}.txt",
+        })
+    manifest = [{"testIdentifier": k, "attachments": v} for k, v in tests.items()]
+    (folder / "manifest.json").write_text(json.dumps(manifest))
+
+
+class RetrySummaryTests(unittest.TestCase):
+    """#978 S5 v6, Spec Test 1 bis 3 und AC-1: der zweite Klick nach einer gelesenen Haltedauer ab 0,4 s trägt
+    `retry: hold X s`; er entscheidet die Iteration, zählt nicht als eigene Iteration und wird ausgewiesen."""
+
+    def setUp(self):
+        self.summary = load_summary()
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.base = Path(self.tmp.name)
+
+    def report(self):
+        log = self.base / "panel.log"
+        log.write_text("")
+        out = self.base / "summary.md"
+        result = subprocess.run([sys.executable, str(SCRIPT), "--raw", str(self.base / "raw"), "--log", str(log),
+                                 "--out", str(out)], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        return out.read_text()
+
+    def test_parse_retry(self):
+        text = "click: 1.000 (seconds since 1970)\nretry: hold 0.616 s\nafter: 3.40 s, panel open\n"
+        self.assertAlmostEqual(self.summary.parse_retry(text), 0.616, places=3)
+        self.assertIsNone(self.summary.parse_retry("click: 1.000 (seconds since 1970)\nafter: 3.40 s, panel open\n"))
+
+    def test_retry_open_is_not_red_and_is_shown(self):
+        """Test 1: erster Klick zu, zweiter mit `retry: hold 0.616 s` offen → eine Iteration, nicht rot, ausgewiesen."""
+        retry_export(self.base / "raw", [("reopen-open-app", 100.0, False, None),
+                                         ("reopen-open-app", 115.0, True, 0.616),
+                                         ("reopen-return", 200.0, True, None)])
+        counts = self.summary.count_arms([self.base / "raw"])
+        self.assertEqual(counts["open-app"], {"n": 1, "fails": 0, "rate": 0.0})
+        self.assertEqual(counts["return"], {"n": 1, "fails": 0, "rate": 0.0})
+        found = self.summary.retries([self.base / "raw"])
+        self.assertEqual(len(found["open-app"]), 1)
+        self.assertAlmostEqual(found["open-app"][0]["hold"], 0.616, places=3)
+        self.assertTrue(found["open-app"][0]["open"])
+        self.assertEqual(found["return"], [])
+        text = self.report()
+        self.assertIn("## Wiederholungen", text)
+        self.assertRegex(text, r"\| 115\.000 \| open-app \| 0\.616 s \| open \|")
+        self.assertRegex(text, r"\| open-app \| 1 \| 0 \| 0\.0 % \|")
+
+    def test_retry_closed_is_red(self):
+        """Test 2: auch der zweite Klick zu → die Iteration zählt als rot, der zweite Klick steht im Bericht."""
+        retry_export(self.base / "raw", [("reopen-return", 100.0, False, None),
+                                         ("reopen-return", 115.0, False, 0.71)])
+        counts = self.summary.count_arms([self.base / "raw"])
+        self.assertEqual(counts["return"], {"n": 1, "fails": 1, "rate": 1.0})
+        found = self.summary.retries([self.base / "raw"])
+        self.assertEqual(len(found["return"]), 1)
+        self.assertFalse(found["return"][0]["open"])
+        self.assertRegex(self.report(), r"\| 115\.000 \| return \| 0\.710 s \| not open \|")
+
+    def test_without_retry_counts_unchanged(self):
+        """Test 3: ohne `retry` keine Wiederholung, die Zähler wie bisher."""
+        retry_export(self.base / "raw", [("reopen-return", 100.0, True, None),
+                                         ("reopen-return", 200.0, False, None),
+                                         ("reopen-open-app", 300.0, True, None)])
+        counts = self.summary.count_arms([self.base / "raw"])
+        self.assertEqual(counts["return"], {"n": 2, "fails": 1, "rate": 0.5})
+        self.assertEqual(counts["open-app"], {"n": 1, "fails": 0, "rate": 0.0})
+        self.assertEqual(self.summary.retries([self.base / "raw"]),
+                         {"return": [], "open-app": [], "control": []})
+        text = self.report()
+        self.assertIn("## Wiederholungen", text)
+        self.assertIn("- return: 0", text)
+        self.assertIn("- open-app: 0", text)
 
 
 if __name__ == "__main__":

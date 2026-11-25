@@ -1,0 +1,10 @@
+# #978 S5 v6 AC-4: Übersetzungsprüfung UI-Test-Bundle macOS (build-for-testing, nichts ausgeführt)
+# Zeit: 2026-11-25T16:38Z, Stand 1e30ee2 + Arbeitskopie dieses Schnitts, nach ./scripts/sim.sh generate
+# Befehl (unter der rechnerweiten Sperre /tmp/loose-ends-testlauf.lock über acquire_testlock/run_xcodebuild aus scripts/sim.sh,
+# DerivedData LooseEnds-session-dazzling-herding-hopcroft):
+#   xcodebuild build-for-testing -project LooseEnds.xcodeproj -scheme LooseEnds -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO
+# Zeilen mit MacGalleryTests.swift im Log: 4
+# Zeilen mit MacPanelHold.swift im Log: 4 (neue Datei kommt über die Ordnerquelle LooseEndsUITests ins Bundle)
+# Fehler/Warnungen aus MacGalleryTests.swift/MacPanelHold.swift: keine
+# Zeilen mit "error:" im gesamten Log: 0
+** TEST BUILD SUCCEEDED **

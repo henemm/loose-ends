@@ -1,0 +1,265 @@
+test_after_observer_behaviour (scripts.test_mac_panel_repeat_summary.CallersTests.test_after_observer_behaviour)
+F101: der echte Rumpf von `afterObserver`, mit swiftc gebaut und an festen Stapeln ausgeführt. ... ok
+test_callers_drops_only_leading_frames (scripts.test_mac_panel_repeat_summary.CallersTests.test_callers_drops_only_leading_frames) ... ok
+test_control_arm_guarded_by_env (scripts.test_mac_panel_repeat_summary.ControlArmTests.test_control_arm_guarded_by_env) ... ok
+test_user_arms_click_short_without_fallback (scripts.test_mac_panel_repeat_summary.ControlArmTests.test_user_arms_click_short_without_fallback)
+#978 S5: Nutzerarme klicken kurz (0,1 s) über `shortClick`, ohne Rückfall auf statusItem.click(). ... FAIL
+test_attachment_without_how_counts_as_unknown (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_attachment_without_how_counts_as_unknown) ... ok
+test_expected_flags_named_arm_without_clicks (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_expected_flags_named_arm_without_clicks) ... ok
+test_expected_flags_short_active_arm (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_expected_flags_short_active_arm) ... ok
+test_expected_ignores_inactive_control_arm (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_expected_ignores_inactive_control_arm) ... ok
+test_how_counted_per_arm (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_how_counted_per_arm) ... ok
+test_how_short_click_category (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_how_short_click_category)
+#978 S5 Test 3: `user: short click 0.1 s` ist eine eigene Kategorie; die v3-Klickwege gibt es nicht mehr. ... FAIL
+test_how_short_click_counted_per_arm (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_how_short_click_counted_per_arm)
+#978 S5 Test 3: die neue Kategorie wird je Arm gezählt, Raten unverändert. ... FAIL
+test_mandatory_arms_flagged_even_without_clicks (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_mandatory_arms_flagged_even_without_clicks) ... ok
+test_without_expected_no_check_line (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_without_expected_no_check_line) ... ok
+test_attachment_lines_and_monitor (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_attachment_lines_and_monitor)
+AC-4: Anhang nennt d, Ergebnis und Monitor-Dauer oder `monitor saw nothing`. ... ok
+test_probe_clicks_with_duration_on_same_coordinate (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_probe_clicks_with_duration_on_same_coordinate)
+AC-2: click(forDuration:thenDragTo:) mit 1,0 s und 0,1 s im Wechsel. ... ok
+test_probe_guarded_by_env (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_probe_guarded_by_env)
+AC-3: ohne LE_PANEL_HOLD_PROBE übersprungen, wie der Kontrollarm. ... ok
+test_required_job_and_reopen_tests_unchanged (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_required_job_and_reopen_tests_unchanged)
+AC-6: der Pflicht-Job setzt die Probe nie, die drei Wiederöffnungstests gibt es weiter. ... ok
+test_workflow_input_halteprobe (scripts.test_mac_panel_repeat_summary.HoldProbeSourceTests.test_workflow_input_halteprobe)
+AC-5: Eingabe halteprobe setzt die Variable und wählt nur den Probetest; die Reopen-Tests bleiben der Standard. ... ok
+test_arm_of_hold_labels (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_arm_of_hold_labels) ... ok
+test_arm_of_hold_names_split_by_xcresulttool (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_arm_of_hold_names_split_by_xcresulttool) ... ok
+test_counts_per_hold_arm (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_counts_per_hold_arm)
+Test 1: 20 Klicks 1,0 s alle zu, 20 Klicks 0,1 s alle offen. ... ok
+test_decision_rule (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_decision_rule)
+Test 4 (lokal): Regel aus Spec Punkt 6. ... ok
+test_hold_clicks_do_not_count_as_reopen (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_hold_clicks_do_not_count_as_reopen) ... ok
+test_key_to_mouse_up_from_panel_log (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_key_to_mouse_up_from_panel_log) ... ok
+test_monitor_against_log (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_monitor_against_log)
+Test 2: Log 0,93 s gegen Monitor 0,95 s stimmt überein; ein Klick ohne Monitorwert wird ausgewiesen. ... ok
+test_parse_hold (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_parse_hold) ... ok
+test_reopen_report_has_no_hold_section (scripts.test_mac_panel_repeat_summary.HoldProbeSummaryTests.test_reopen_report_has_no_hold_section) ... ok
+test_activation_and_space_lines (scripts.test_mac_panel_repeat_summary.PanelLogTests.test_activation_and_space_lines) ... ok
+test_cg_event_fields_without_subtype_or_data1 (scripts.test_mac_panel_repeat_summary.PanelLogTests.test_cg_event_fields_without_subtype_or_data1) ... ok
+test_monitors_return_event_unchanged (scripts.test_mac_panel_repeat_summary.PanelLogTests.test_monitors_return_event_unchanged) ... ok
+test_no_print_no_try_optional (scripts.test_mac_panel_repeat_summary.PanelLogTests.test_no_print_no_try_optional) ... ok
+test_stack_up_to_40_frames (scripts.test_mac_panel_repeat_summary.PanelLogTests.test_stack_up_to_40_frames) ... ok
+test_click_without_key_has_no_hold (scripts.test_mac_panel_repeat_summary.ShortClickSummaryTests.test_click_without_key_has_no_hold) ... ERROR
+test_mouse_up_inside_window_gives_seconds (scripts.test_mac_panel_repeat_summary.ShortClickSummaryTests.test_mouse_up_inside_window_gives_seconds)
+Test 2: Maus hoch 0,93 s nach key ist die Haltedauer. ... ERROR
+test_no_pairing_with_late_mouse_up (scripts.test_mac_panel_repeat_summary.ShortClickSummaryTests.test_no_pairing_with_late_mouse_up)
+Test 1: ein Maus-hoch 12 s nach key gehört nicht zum Klick. ... FAIL
+test_report_names_hold_per_click (scripts.test_mac_panel_repeat_summary.ShortClickSummaryTests.test_report_names_hold_per_click)
+AC-5: der Bericht nennt je Wiederöffnungsklick die Haltedauer oder „kurz (kein Maus-hoch)“. ... FAIL
+test_arm_of_maps_labels (scripts.test_mac_panel_repeat_summary.SummaryTests.test_arm_of_maps_labels) ... ok
+test_arm_without_attachments_is_zero_not_missing (scripts.test_mac_panel_repeat_summary.SummaryTests.test_arm_without_attachments_is_zero_not_missing) ... ok
+test_counts_every_iteration_per_arm (scripts.test_mac_panel_repeat_summary.SummaryTests.test_counts_every_iteration_per_arm) ... ok
+test_parse_click (scripts.test_mac_panel_repeat_summary.SummaryTests.test_parse_click) ... ok
+test_parse_panel_log_reads_event_and_source (scripts.test_mac_panel_repeat_summary.SummaryTests.test_parse_panel_log_reads_event_and_source) ... ok
+test_report_names_every_arm_and_only_numbers (scripts.test_mac_panel_repeat_summary.SummaryTests.test_report_names_every_arm_and_only_numbers) ... ok
+test_several_export_folders_add_up (scripts.test_mac_panel_repeat_summary.SummaryTests.test_several_export_folders_add_up) ... ok
+test_timeline_of_a_failure (scripts.test_mac_panel_repeat_summary.SummaryTests.test_timeline_of_a_failure) ... ok
+test_workflow_passes_expected_and_arms (scripts.test_mac_panel_repeat_summary.WorkflowExpectedTests.test_workflow_passes_expected_and_arms) ... ok
+test_dispatch_with_inputs (scripts.test_mac_panel_repeat_summary.WorkflowTests.test_dispatch_with_inputs) ... ok
+test_log_from_job_start_and_uploads (scripts.test_mac_panel_repeat_summary.WorkflowTests.test_log_from_job_start_and_uploads) ... ok
+test_pull_request_only_on_this_file (scripts.test_mac_panel_repeat_summary.WorkflowTests.test_pull_request_only_on_this_file) ... ok
+test_runs_only_reopen_tests_with_iterations (scripts.test_mac_panel_repeat_summary.WorkflowTests.test_runs_only_reopen_tests_with_iterations) ... ok
+test_counts_new_format (scripts.test_mac_reopen_settle.NewFormatSummaryTests.test_counts_new_format) ... FAIL
+test_parse_click_new_format (scripts.test_mac_reopen_settle.NewFormatSummaryTests.test_parse_click_new_format) ... ok
+test_attachment_first_click_last_after (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_attachment_first_click_last_after) ... FAIL
+test_control_arm_and_hold_probe_stay_behind_env (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_control_arm_and_hold_probe_stay_behind_env) ... FAIL
+test_exactly_one_short_click_helper (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_exactly_one_short_click_helper) ... FAIL
+test_hard_failure_without_second_try (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_hard_failure_without_second_try) ... FAIL
+test_helper_clicks_middle_for_0_1_s_onto_same_coordinate (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_helper_clicks_middle_for_0_1_s_onto_same_coordinate) ... FAIL
+test_helper_has_no_fallback_and_no_retry (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_helper_has_no_fallback_and_no_retry) ... FAIL
+test_open_panel_uses_short_click (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_open_panel_uses_short_click) ... FAIL
+test_user_arms_use_short_click_exactly_once (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_user_arms_use_short_click_exactly_once) ... FAIL
+test_v1_v3_paths_and_fallback_rule_gone (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_v1_v3_paths_and_fallback_rule_gone) ... FAIL
+
+======================================================================
+ERROR: test_click_without_key_has_no_hold (scripts.test_mac_panel_repeat_summary.ShortClickSummaryTests.test_click_without_key_has_no_hold)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_panel_repeat_summary.py", line 653, in test_click_without_key_has_no_hold
+    self.assertIsNone(self.summary.hold_of(SHORT_A + 1000, self.summary.parse_panel_log(SHORT_LOG)))
+                      ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'mac_panel_repeat_summary' has no attribute 'hold_of'. Did you mean '.how_of' instead of '.hold_of'?
+
+======================================================================
+ERROR: test_mouse_up_inside_window_gives_seconds (scripts.test_mac_panel_repeat_summary.ShortClickSummaryTests.test_mouse_up_inside_window_gives_seconds)
+Test 2: Maus hoch 0,93 s nach key ist die Haltedauer.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_panel_repeat_summary.py", line 650, in test_mouse_up_inside_window_gives_seconds
+    self.assertAlmostEqual(self.summary.hold_of(SHORT_B, events), 0.93, places=2)
+                           ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'mac_panel_repeat_summary' has no attribute 'hold_of'. Did you mean '.how_of' instead of '.hold_of'?
+
+======================================================================
+FAIL: test_user_arms_click_short_without_fallback (scripts.test_mac_panel_repeat_summary.ControlArmTests.test_user_arms_click_short_without_fallback)
+#978 S5: Nutzerarme klicken kurz (0,1 s) über `shortClick`, ohne Rückfall auf statusItem.click().
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_panel_repeat_summary.py", line 444, in test_user_arms_click_short_without_fallback
+    self.assertIn("shortClick(", body("assertSymbolOpensPanelWithOneClick"))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'shortClick(' not found in 'func assertSymbolOpensPanelWithOneClick(_ app: XCUIApplication, label: String,\n                                                    click: (@MainActor (XCUIElement) -> String)? = nil) {\n        let statusItem = app.statusItems.firstMatch\n        XCTAssertTrue(statusItem.waitForExistence(timeout: 10), "No menu bar symbol")\n        let front = waitForFrontmostSettled()\n        let frontmost = NSWorkspace.shared.frontmostApplication?.bundleIdentifier\n        let clickedAt = Date()\n        let how: String\n        if let click { how = click(statusItem) } else { how = frontmostRootClick(statusItem, frontmost: frontmost) }\n        let clickDuration = Date().timeIntervalSince(clickedAt)\n        let appeared = app.buttons["menuBarOpenApp"].waitForExistence(timeout: 10)\n        var stayed = false\n        if appeared {\n            let holdSeconds: TimeInterval = 3\n            RunLoop.current.run(until: Date().addingTimeInterval(holdSeconds))\n            stayed = app.buttons["menuBarOpenApp"].exists\n        }\n        let opened = appeared && stayed\n        let note = XCTAttachment(string: """\n            click: \\(String(format: "%.3f", clickedAt.timeIntervalSince1970)) (seconds since 1970)\n            how: \\(how)\n            frontmost before the click:\n            \\(front.joined(separator: "\\n"))\n            \\(app.debugDescription)\n            click duration: \\(String(format: "%.3f", clickDuration)) s\n            after: \\(String(format: "%.2f", Date().timeIntervalSince(clickedAt))) s, panel \\(opened ? "open" : "not open")\n            """)\n        note.name = "mac-gallery-\\(label)-click"\n        note.lifetime = .keepAlways\n        add(note)\n        if click == nil, frontmost != "com.henning.looseends", how.contains("fallback") {\n            XCTFail("Fallback click with a foreign frontmost app (\\(label)): \\(how)")\n        }\n        XCTAssertTrue(opened, appeared\n                      ? "The panel closed again within 3 s (\\(label))"\n                      : "One click on the symbol opened no panel (\\(label))")\n    }\n'
+
+======================================================================
+FAIL: test_how_short_click_category (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_how_short_click_category)
+#978 S5 Test 3: `user: short click 0.1 s` ist eine eigene Kategorie; die v3-Klickwege gibt es nicht mehr.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_panel_repeat_summary.py", line 248, in test_how_short_click_category
+    self.assertEqual(self.summary.how_of(text.format("user: short click 0.1 s")), "short-click")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'unbekannt' != 'short-click'
+- unbekannt
++ short-click
+
+
+======================================================================
+FAIL: test_how_short_click_counted_per_arm (scripts.test_mac_panel_repeat_summary.ExpectedAndHowTests.test_how_short_click_counted_per_arm)
+#978 S5 Test 3: die neue Kategorie wird je Arm gezählt, Raten unverändert.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_panel_repeat_summary.py", line 266, in test_how_short_click_counted_per_arm
+    self.assertEqual(how["open-app"], {"short-click": 2})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'unbekannt': 2} != {'short-click': 2}
+- {'unbekannt': 2}
++ {'short-click': 2}
+
+======================================================================
+FAIL: test_no_pairing_with_late_mouse_up (scripts.test_mac_panel_repeat_summary.ShortClickSummaryTests.test_no_pairing_with_late_mouse_up)
+Test 1: ein Maus-hoch 12 s nach key gehört nicht zum Klick.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_panel_repeat_summary.py", line 642, in test_no_pairing_with_late_mouse_up
+    self.assertIsNone(self.summary.key_to_mouse_up(SHORT_A, events))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 12.0 is not None
+
+======================================================================
+FAIL: test_report_names_hold_per_click (scripts.test_mac_panel_repeat_summary.ShortClickSummaryTests.test_report_names_hold_per_click)
+AC-5: der Bericht nennt je Wiederöffnungsklick die Haltedauer oder „kurz (kein Maus-hoch)“.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_panel_repeat_summary.py", line 666, in test_report_names_hold_per_click
+    self.assertIn("Haltedauer je Klick", text)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Haltedauer je Klick' not found in '## #978 Panel-Wiederholung\n\n| Arm | Nenner | Zähler | Rate |\n|---|---|---|---|\n| return | 1 | 0 | 0.0 % |\n| open-app | 1 | 1 | 100.0 % |\n| control | 0 | 0 | – |\n\nKlickweg je Arm (Beleg für den Nutzerweg nur menubar-root):\n- return: unbekannt 1\n- open-app: unbekannt 1\n- control: –\n\nFälle: 1\n\n### Fall open-app, Klick 1763900100.000\n\n- +0.000 s click\n- +0.200 s key event=1\n- +1.130 s monitor global event=2\n'
+
+======================================================================
+FAIL: test_counts_new_format (scripts.test_mac_reopen_settle.NewFormatSummaryTests.test_counts_new_format)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 148, in test_counts_new_format
+    self.assertEqual(self.summary.how_of(new_format_click(1.0, True)), "short-click")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'unbekannt' != 'short-click'
+- unbekannt
++ short-click
+
+
+======================================================================
+FAIL: test_attachment_first_click_last_after (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_attachment_first_click_last_after)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 63, in setUp
+    self.short = strip_comments(function_body(self.raw, "shortClick"))
+                                ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 37, in function_body
+    raise AssertionError(f"fehlt: func {name}")
+AssertionError: fehlt: func shortClick
+
+======================================================================
+FAIL: test_control_arm_and_hold_probe_stay_behind_env (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_control_arm_and_hold_probe_stay_behind_env)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 63, in setUp
+    self.short = strip_comments(function_body(self.raw, "shortClick"))
+                                ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 37, in function_body
+    raise AssertionError(f"fehlt: func {name}")
+AssertionError: fehlt: func shortClick
+
+======================================================================
+FAIL: test_exactly_one_short_click_helper (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_exactly_one_short_click_helper)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 63, in setUp
+    self.short = strip_comments(function_body(self.raw, "shortClick"))
+                                ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 37, in function_body
+    raise AssertionError(f"fehlt: func {name}")
+AssertionError: fehlt: func shortClick
+
+======================================================================
+FAIL: test_hard_failure_without_second_try (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_hard_failure_without_second_try)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 63, in setUp
+    self.short = strip_comments(function_body(self.raw, "shortClick"))
+                                ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 37, in function_body
+    raise AssertionError(f"fehlt: func {name}")
+AssertionError: fehlt: func shortClick
+
+======================================================================
+FAIL: test_helper_clicks_middle_for_0_1_s_onto_same_coordinate (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_helper_clicks_middle_for_0_1_s_onto_same_coordinate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 63, in setUp
+    self.short = strip_comments(function_body(self.raw, "shortClick"))
+                                ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 37, in function_body
+    raise AssertionError(f"fehlt: func {name}")
+AssertionError: fehlt: func shortClick
+
+======================================================================
+FAIL: test_helper_has_no_fallback_and_no_retry (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_helper_has_no_fallback_and_no_retry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 63, in setUp
+    self.short = strip_comments(function_body(self.raw, "shortClick"))
+                                ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 37, in function_body
+    raise AssertionError(f"fehlt: func {name}")
+AssertionError: fehlt: func shortClick
+
+======================================================================
+FAIL: test_open_panel_uses_short_click (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_open_panel_uses_short_click)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 63, in setUp
+    self.short = strip_comments(function_body(self.raw, "shortClick"))
+                                ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 37, in function_body
+    raise AssertionError(f"fehlt: func {name}")
+AssertionError: fehlt: func shortClick
+
+======================================================================
+FAIL: test_user_arms_use_short_click_exactly_once (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_user_arms_use_short_click_exactly_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 63, in setUp
+    self.short = strip_comments(function_body(self.raw, "shortClick"))
+                                ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 37, in function_body
+    raise AssertionError(f"fehlt: func {name}")
+AssertionError: fehlt: func shortClick
+
+======================================================================
+FAIL: test_v1_v3_paths_and_fallback_rule_gone (scripts.test_mac_reopen_settle.ShortClickSourceTests.test_v1_v3_paths_and_fallback_rule_gone)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 63, in setUp
+    self.short = strip_comments(function_body(self.raw, "shortClick"))
+                                ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/dazzling-herding-hopcroft/scripts/test_mac_reopen_settle.py", line 37, in function_body
+    raise AssertionError(f"fehlt: func {name}")
+AssertionError: fehlt: func shortClick
+
+----------------------------------------------------------------------
+Ran 60 tests in 2.266s
+
+FAILED (failures=15, errors=2)
