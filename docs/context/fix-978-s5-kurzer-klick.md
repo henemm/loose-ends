@@ -112,3 +112,56 @@ Haltedauer, ist die Ursache dort eine andere → Stopp, neue Analyse (dann Alter
 
 ### Open Questions
 - Keine PO-Frage: reine Prüfwerkzeug-Arbeit; die DoD von #978 sieht den Fall „Prüfwerkzeug“ ausdrücklich vor.
+
+## Analysis v6 (2026-11-25, nach Befund v5)
+
+### Type
+Weiter Bug im Prüfwerkzeug. Befund v5 (Lauf 45642831767): kurzer Klick 0/40 zu im Return-Arm, **1/40 zu im Open-App-Arm**,
+Haltedauer ab `key` 0,616 s, Panel 17 ms nach Maus-hoch zu. Ursache bestätigt (langes Halten schließt), aber die
+angeforderte Haltedauer von 0,1 s ist unter Last keine Garantie. Die Abbruchregel der Spec v5 greift → Alternative A.
+
+### Recherche (Quellen)
+- Apple-Forum 714649, Mozilla 101472: Klicken-und-Halten schließt Menüs beim Loslassen (Plattformverhalten).
+- Apple-Doku `click(forDuration:thenDragTo:)`: keine Zusage zur tatsächlichen Haltedauer; keine Quelle zu gedehnter Synthese.
+- Apple-Doku `OSLogStore.local()`: verlangt Admin-Konto (Forum 666679: ohne Entitlement genug), im Sandbox nur eigener
+  Prozess (Forum 744806, mjtsai „OSLogStore on Monterey“). Ob der macOS-UI-Testläufer gesandboxt ist: nicht belegt → Probe.
+- Test-only-Accessibility-Werte sind ein gängiges Muster; für `MenuBarExtra`/Statusobjekt keine Quelle → Probe.
+
+### Messgrundlage für die Schwelle
+Haltedauer ab `key` (App-Monitor, `key` liegt ~0,2 s nach Maus-runter): Fälle 0,616 / 0,71 / 0,90 / 0,93 s;
+Erfolge kurzer Klick 0,033–0,147 s oder „kein Maus-hoch“, Erfolge `click()` ≤ 0,36 s. Schwelle **0,4 s** liegt in der Lücke;
+0,616 + 0,2 ≈ 0,82 s Gesamthalten passt zum Systemwert ≥ 0,7 s (StableBar #904).
+
+### Varianten
+| Variante | Haltedauer-Quelle im Lauf | App-Code | Belegt? | Bewertung |
+|---|---|---|---|---|
+| B (v5, kurzer Klick, hart rot) | keine | 0 | 1/40 zu (2,5 %) | widerlegt als alleiniger Weg |
+| **A-log**: kurzer Klick bleibt; bei Fehlschlag liest der Läufer per `OSLogStore.local()` die `MenuBarPanel`-Zeilen ab dem Klick, Haltedauer ab `key` ≥ 0,4 s → genau eine Wiederholung, sonst/unbekannt hart rot | vorhandenes Panel-Protokoll | 0 | Zugriff des Läufers unbelegt | **Empfehlung** |
+| A-ax: App legt unter `--ui-testing` die letzte Haltedauer als Accessibility-Wert offen (Statusobjekt-Label) | App-Monitor | ~15 LoC in `MenuBarCapture.swift`/`LooseEndsApp.swift` | `MenuBarExtra`-Label-Weitergabe unbelegt | Rückfall, falls A-log keinen Zugriff hat |
+| D: Klick per CGEvent vom Läufer (wie Kontrollarm) | Halten im Läufer selbst gesteuert | 0 | Kontrollarm 120/0, aber nur Return-Zustand | weicht vom XCUITest-Nutzerweg ab, den die DoD verlangt; nicht empfohlen |
+| C: Produkt hält Panel trotz langem Halten offen | – | ja | – | ändert Systemverhalten, kippt #862-Lösung; nicht empfohlen |
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `LooseEndsUITests/MacGalleryTests.swift` | MODIFY | `assertSymbolOpensPanelWithOneClick`/`openPanel`: nach Fehlschlag Haltedauer lesen (neuer Helfer), ≥ 0,4 s → genau ein zweiter kurzer Klick mit Anhang `retry: hold X s`, sonst hart rot mit Haltedauer in der Meldung |
+| `LooseEndsUITests/MacPanelHold.swift` | CREATE | Helfer: `OSLogStore.local()`, Prädikat Subsystem+Kategorie `MenuBarPanel`, ab Klickzeit; `key` → erstes Maus-hoch im 3-s-Fenster (gleiche Regel wie der Auswerter) |
+| `scripts/mac_panel_repeat_summary.py` | MODIFY | Wiederholungen zählen (Arm, Haltedauer, Ergebnis des zweiten Klicks) |
+| `scripts/test_mac_reopen_settle.py`, `scripts/test_mac_panel_repeat_summary.py` | MODIFY | Erwartung „keine Wiederholung“ → „genau eine, nur über Schwelle“ |
+
+### Scope Assessment
+- Files: 4–5; App-Code 0 LoC (A-log), bei Rückfall A-ax ~15 LoC
+- Estimated LoC: ca. +90 / −10 Test-/Skriptcode
+- Risk Level: LOW (Produkt unberührt); Hauptrisiko: Läufer darf das Protokoll nicht lesen → dann A-ax
+
+### Technical Approach
+1. Probe zuerst (im selben Schnitt, kein Warten): Halteprobe-Arm (`halteprobe=true`, 1,0-s-Klick) ruft den neuen Helfer
+   und schreibt die gelesene Haltedauer in den Anhang. Liefert er Werte ≥ 0,4 s → A-log trägt; liefert er nichts/Fehler →
+   Rückfall A-ax, Spec-Nachtrag.
+2. Wiederholungsregel in den Nutzerarmen und `openPanel`, Anhang je Klick mit Haltedauer und `retry`.
+3. Auswerter + Skripttests.
+4. `mac-panel-repeat.yml` 40 Iterationen beider Nutzerarme: 0 rote Iterationen; jede Wiederholung mit Haltedauer ≥ 0,4 s belegt.
+5. Drei aufeinanderfolgende grüne Läufe „Mac Gallery (macOS)“ (DoD #978; Lauf 45642824480 zählt nicht, anderer Stand).
+
+### Open Questions
+- Keine PO-Frage: reine Prüfwerkzeug-Arbeit, die DoD von #978 sieht „Prüfwerkzeug hält zu lange → einmal wiederholen“ vor.
