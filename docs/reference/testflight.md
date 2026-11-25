@@ -450,3 +450,29 @@ Xcode nicht abmelden. Für eine neue Kennung, eine neue Fähigkeit oder nach Abl
 einmal `LOOSEENDS_REGISTER=1 ./scripts/sim.sh device-build` (bzw. `… lab`): Dieser Lauf benutzt die
 Anmeldung in Xcode und legt Kennungen und Profile an. Der API-Schlüssel reicht dafür nicht, weil
 xcodebuild mit ihm keine neuen Entwicklungsprofile anlegen kann.
+
+## Einreichung 1.0.2
+
+Betriebsnotiz zu #625 S5d-2 (`docs/specs/feat-625-schnitt-5d-2-store-betrieb.md`). Die acht Schritte laufen in genau dieser
+Reihenfolge; ein Schritt beginnt erst, wenn der vorige belegt ist. Jeder schreibende Schritt liest vorher (`lesen`), schreibt
+nur bei Abweichung und macht die Gegenprobe im selben Lauf. Jeder Schreibaufruf läuft genau einmal und wird nie wiederholt;
+ein halbes Ergebnis erkennt der nächste Lauf am vorhandenen Zustand. Nie DELETE, nie stornieren.
+
+1. TestFlight-Bau 1.0.2 (iOS und Mac): `gh workflow run testflight.yml` mit `what_to_test` in `de:` und `en:`, warten auf `VALID`, dann `gh workflow run asc-store-version.yml -f aktion=lesen`.
+2. Versionen anlegen: `gh workflow run asc-store-version.yml -f aktion=anlegen` (iOS, dann Mac, Bau-Zuordnung), Gegenprobe im Lauf, danach `lesen`.
+3. Texte und englische Bilder: `asc-version-texts` mit `aktion=texte` (Marketing-Adresse vorher auf HTTP 200 geprüft), `asc-store-images.yml` mit `-f sprache=en` `hochladen`, dann `platzieren`, je `plattform=ios` und `mac`; de-DE nur gelesen.
+4. Aufnahme und Ja: Henning nimmt mit dem 1.0.2-Bau aus TestFlight auf seinem iPhone selbst auf (Erfassen, Detail, Einstellungen › Claude, Anmelden mit Apple, Connector in claude.ai, Konto löschen) und gibt sein datiertes Ja zur Etikett-Vorlage `docs/reference/app-store-datenschutzangaben.md`.
+5. ASC-Web in Hennings Chrome (er meldet sich nur per Passkey an): Aufnahme als Anhang an iOS- und Mac-Version, Datenschutz-Etikett nach Vorlage eintragen, Vorschau als Screenshot gegen die Vorlage; Gegenprobe `asc-review-notes aktion=lesen`.
+6. Tür öffnen am Dienst: Umgebung auf `rennwienix` lesen, `ALLOWED_APPLE_SUBS=*` und `NEW_ACCOUNTS_PER_DAY=20` setzen, Deploy bei festem `LE_COMMIT` per `ssh rennwienix bash -s < …`, Gegenprobe `/health` 200 und Startlog ohne `door invalid`.
+7. Review-Notizen und Vorprüfung: `asc-review-notes aktion=notizen`, danach `gh workflow run asc-store-submit.yml -f aktion=pruefen` (beide Plattformen `bereit`).
+8. Einreichen nur nach Hennings ausdrücklichem, getipptem Wort: `gh workflow run asc-store-submit.yml -f aktion=einreichen -f bestaetigung=1.0.2`, Gegenprobe `WAITING_FOR_REVIEW`; ohne Wort bleibt der Schritt offen.
+
+Etikett und Tür wirken sofort öffentlich (das Etikett app-weit im Store, die Tür für jedes Apple-Konto) und kommen deshalb
+erst spät: das Etikett nicht vor Hennings Ja und der Aufnahme, die Tür direkt vor Notizen und Einreichung.
+
+Die Aufnahme stammt von Henning selbst auf seinem iPhone; Claude rührt sein Gerät nie an, bittet nur darum, wenn der Bau
+in TestFlight bereitsteht, und öffnet und beschreibt die Aufnahme vor dem Haken.
+
+Belege liegen unter `docs/artifacts/feat-625-s5d2-store-betrieb/`, je Schritt eine Datei `acNN-<kurzname>.md` mit Lauf-Link
+oder Befehl, einer Zeile `Zeit:` mit Zone (MEZ) und Zustand vorher und nachher; schreibende Schritte nennen „lesen vorher“
+und „Gegenprobe“. Kein Beleg enthält Token, Schlüssel oder Konto-Kennung.
