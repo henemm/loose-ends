@@ -55,3 +55,60 @@ sonst hart rot. DoD von #978: Test baut den Nutzerweg nach, drei aufeinanderfolg
 - Galerie-Job dauert 33–41 min bei 60-min-Grenze; drei grüne Läufe = drei Reruns.
 - Haltedauer-Schwelle: StableBar ≥ 700 ms, eigene Fälle ≥ 0,71 s, Erfolge ≤ 0,36 s → Schwelle irgendwo 0,4–0,7 s, begründen.
 - Scoping: App-Code höchstens die Offenlegung der Haltedauer; Test-/Skriptcode zählt nicht zum LoC-Limit.
+
+## Analysis
+
+### Type
+Bug im Prüfwerkzeug, nicht in der App: `click()` von XCTest hält das Menüleistensymbol unter Last 0,7–0,9 s; Loslassen
+nach so langem Halten schließt das Panel wie ein Systemmenü (Standardverhalten macOS). Beleg: Halteprobe v4, Lauf 45602877961.
+
+### Recherche (Quellen)
+- Apple-Forum 714649: Popup-Menüs schließen nach Klicken-und-Halten beim Loslassen (XCUITest, Xcode 14).
+- Mozilla Bug 101472: Menü nach Klick-und-Halten verschwindet beim Loslassen (Plattformverhalten).
+- SDL-Issue 13134: Öffnet ein Menü auf Maus-runter, bekommt die App kein Maus-hoch → erklärt das fehlende Maus-hoch beim
+  kurzen Klick im Panel-Protokoll.
+- Apple-Forum 836113: NSStatusItem-Probleme unter macOS 27 (Hervorhebung), kein Bezug zur Haltedauer.
+- Keine Quelle für eine einstellbare Haltedauer von `click()`; `click(forDuration:thenDragTo:)` ist der dokumentierte Weg.
+
+### Gemessene Varianten
+| Variante | Zustand | Haltedauer (Panel-Protokoll) | Panel zu |
+|---|---|---|---|
+| `click()` Fehlfälle | Nutzerarme | 0,71 / 0,90 / 0,93 s | ja |
+| `click()` Erfolge | Nutzerarme | ≤ 0,36 s | nein |
+| `click(forDuration: 1.0, thenDragTo: same)` | Return-Zustand | 0,89–1,44 s | 20/20 |
+| `click(forDuration: 0.1, thenDragTo: same)` | Return-Zustand | 0,036–0,137 s | 0/20 |
+| v1–v3 (Ruhe abwarten, Klickwurzel vorderste App) | Open-App | – | widerlegt |
+| 0,1 s im Open-App-Zustand | Open-App | – | **nicht gemessen** → Nachweislauf |
+
+0/20 schließt eine wahre Ausfallrate von 10 % nur mit ~88 % aus → Nachweislauf mit 40 Iterationen je Nutzerarm.
+
+### Affected Files (with changes)
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `LooseEndsUITests/MacGalleryTests.swift` | MODIFY | ein Helfer für den kurzen Klick (Mitte des Symbols, `click(forDuration: 0.1, thenDragTo:)` auf dieselbe Koordinate) für `openPanel` und beide Nutzerarme; `frontmostRootClick` (v3) und `waitForFrontmostSettled` (v1) samt Rückfall-Regel entfernt; Anhang `how` = `user: short click 0.1 s`; Kontrollarm und Halteprobe bleiben |
+| `scripts/mac_panel_repeat_summary.py` | MODIFY | `key_to_mouse_up`: Maus-hoch nur im 3-s-Monitorfenster nach `key`; keins → „kurz (kein Maus-hoch)“ statt Fehlpaarung (11–13 s); `how_of`/`_HOW` um die neue Kategorie; Haltedauer je Klick im Bericht |
+| `scripts/test_mac_reopen_settle.py` | MODIFY | v2/v3-Erwartungen ersetzen: genau ein kurzer Klick, kein `frontmostRootClick`/`waitForFrontmostSettled`, keine Wiederholung, hart rot |
+| `scripts/test_mac_panel_repeat_summary.py` | MODIFY | kurze Klicks ohne Maus-hoch, neue `how`-Kategorie |
+| `.github/workflows/mac-panel-repeat.yml` | MODIFY (klein, nur falls nötig) | Kommentare; Nachweislauf mit `iterationen=40` |
+
+### Scope Assessment
+- Files: 4–5, nur Test-, Skript- und CI-Code; App-Code 0 LoC
+- Estimated LoC: ca. +40 / −150 (Testcode, zählt nicht zum Limit)
+- Risk Level: LOW (Produkt unberührt); Restrisiko: Open-App-Arm mit kurzem Klick noch unbelegt
+
+### Technical Approach (Empfehlung B, bestätigt durch Plan-Bewertung)
+Kurzer Klick wie ein Mensch (0,1 s) an allen Stellen, an denen der Test das Symbol klickt; keine Wiederholung, hart rot.
+Reihenfolge: (1) Auswerter-Fix mit Test, (2) Helfer in `openPanel` und Nutzerarmen, alte Helfer raus, (3) Skripttests
+nachziehen, (4) `mac-panel-repeat.yml` mit 40 Iterationen beider Nutzerarme, 0 Fehler, Haltedauern im Bericht,
+(5) drei aufeinanderfolgende grüne Läufe „Mac Gallery (macOS)“ (DoD #978). Zeigt (4) Fehler im Open-App-Arm bei kurzer
+Haltedauer, ist die Ursache dort eine andere → Stopp, neue Analyse (dann Alternative A prüfen).
+
+### Alternativen
+- **A (Vorschlag aus Befund v4):** `statusItem.click()` behalten, Haltedauer per Accessibility aus der App lesen
+  (App-Code unter `--ui-testing`), über Schwelle 0,4–0,7 s genau einmal wiederholen. Nicht empfohlen: duldet die Streuung
+  statt sie abzustellen und braucht App-Code für einen Test; Rückfall, falls B im Open-App-Arm scheitert.
+- **C (Produkt):** Panel bei Maus-hoch öffnen bzw. langes Halten nicht schließen lassen. Abweichung vom Systemverhalten der
+  Menüleiste, berührt die #862-Lösung (`dismiss()`), kein Nutzerbefund → nicht empfohlen.
+
+### Open Questions
+- Keine PO-Frage: reine Prüfwerkzeug-Arbeit; die DoD von #978 sieht den Fall „Prüfwerkzeug“ ausdrücklich vor.
