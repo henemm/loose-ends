@@ -289,7 +289,7 @@ The helpers both share live in `MacUITestSupport.swift` (`mac` prefix). Every fe
 `macAssertWindowFitsScreen` (#593): a window wider than the screen, or past its right or bottom edge, fails the test with
 both sizes; the gallery notes `mac-gallery-*-window-size` name window and screen size, and `testWindowFromMenuBarFitsScreen`
 opens the window through the menu bar on every run.
-`gh workflow run mac-panel-repeat.yml -f iterationen=N [-f sandbox=true] [-f kontrollarm=false]` repeats the menu bar panel test N times (default 20; control arm `testMenuBarReopensAfterReturnWithControlClick` on by default, needs `LE_PANEL_CONTROL_ARM`, else skipped) and uploads `MacPanelRepeatLog`, `MacPanelRepeatResults` and `MacPanelRepeatSummary`; `scripts/mac_panel_repeat_summary.py` counts denominator, numerator and rate per arm and lists a timeline per failing case (#978 S2).
+`gh workflow run mac-panel-repeat.yml -f iterationen=N [-f sandbox=true] [-f kontrollarm=false] [-f halteprobe=true]` repeats the menu bar panel test N times (default 20; control arm `testMenuBarReopensAfterReturnWithControlClick` on by default, needs `LE_PANEL_CONTROL_ARM`, else skipped) and uploads `MacPanelRepeatLog`, `MacPanelRepeatResults` and `MacPanelRepeatSummary`; `scripts/mac_panel_repeat_summary.py` counts denominator, numerator and rate per arm and lists a timeline per failing case (#978 S2). `halteprobe=true` runs only `testHoldDurationProbe` (needs `LE_PANEL_HOLD_PROBE`, else skipped): it clicks the menu bar symbol holding 1.0 s and 0.1 s in turn and counts per arm `hold-1.0`/`hold-0.1` how often the panel closes (#978 S3 v4: 20/20 vs 0/20, run 45602877961).
 
 ## Ship
 
