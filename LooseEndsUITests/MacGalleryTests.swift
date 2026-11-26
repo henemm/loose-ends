@@ -19,7 +19,8 @@ final class MacGalleryTests: XCTestCase {
 
     // Launch, window, capture and photo helpers: `MacUITestSupport` (shared with #544).
 
-    /// Start page with three tasks, the New list and a detail; the window size goes along as text.
+    /// Start page with three tasks, the Loose ends list and a detail; the window size goes along as text.
+    /// #1000: the sidebar lists Loose ends and Completed, and no New.
     @MainActor
     private func photograph(dark: Bool) {
         let label = dark ? "dark" : "light"
@@ -30,19 +31,21 @@ final class MacGalleryTests: XCTestCase {
             macCapture(text, in: app)
         }
         let window = macMainWindow(of: app)
-        let newRow = macElement("viewRow_new", in: window)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 10), "Sidebar shows no New")
+        let looseEnds = macElement("viewRow_open", in: window)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 10), "Sidebar shows no Loose ends")
+        XCTAssertTrue(macElement("viewRow_done", in: window).exists, "Sidebar shows no Completed")
+        XCTAssertFalse(macElement("viewRow_new", in: window).exists, "The sidebar lists no New (#1000)")
         macShot(window, "mac-gallery-\(label)-1-start")
 
         let size = window.frame.size
         addWindowSizeNote(size, hadWindow: hadWindow, name: "mac-gallery-\(label)-window-size")
 
-        newRow.click()
+        looseEnds.click()
         let row = window.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_"))
             .firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task")
-        macShot(window, "mac-gallery-\(label)-2-list-new")
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "Loose ends shows no task")
+        macShot(window, "mac-gallery-\(label)-2-list-open")
 
         row.click()
         XCTAssertTrue(macElement("detailRawTextMarker", in: window).waitForExistence(timeout: 10), "Detail did not open")
@@ -56,8 +59,8 @@ final class MacGalleryTests: XCTestCase {
         macShot(window, "mac-gallery-\(label)-4-start-again")
 
         // "Completed" by weeks (#646): one task done from its detail, then the list with the week's head and string.
-        newRow.click()
-        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task for Completed")
+        looseEnds.click()
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "Loose ends shows no task for Completed")
         row.click()
         // Complete stands in the detail's bar on the Mac (#831).
         let complete = macElement("detailCompleteButton", in: window)
@@ -402,7 +405,7 @@ final class MacGalleryTests: XCTestCase {
     }
 
     /// #479 AC-9, AC-12: in German the panel reads "Neue Aufgabe", "Abbrechen", "Fertig"; typed text turns
-    /// Done on, and Return saves and closes the panel. The task then shows in New.
+    /// Done on, and Return saves and closes the panel. The task then shows in Loose ends (#1000: no New).
     @MainActor
     func testPanelTypedGerman() throws {
         let app = macLaunch(dark: false, locale: "de_DE")
@@ -435,22 +438,22 @@ final class MacGalleryTests: XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [closed], timeout: 10), .completed, "Return did not close the panel")
         _ = macOpenMainWindowIfNeeded(app)
         let window = macMainWindow(of: app)
-        let newRow = macElement("viewRow_new", in: window)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 10), "Sidebar shows no New")
-        // With the panel gone no window may be key; activate, so the first click selects New.
+        let looseEnds = macElement("viewRow_open", in: window)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 10), "Sidebar shows no Loose ends")
+        // With the panel gone no window may be key; activate, so the first click selects Loose ends.
         app.activate()
-        newRow.click()
+        looseEnds.click()
         let row = window.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_")).firstMatch
-        if !row.waitForExistence(timeout: 5) { newRow.click() }
-        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task after Return")
-        // Only once New shows rows, so the start page's recent list cannot answer. Label or value as in
+        if !row.waitForExistence(timeout: 5) { looseEnds.click() }
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "Loose ends shows no task after Return")
+        // Only once Loose ends shows rows, so the start page's recent list cannot answer. Label or value as in
         // `MacDetailClickTests.shows`: a combined row may keep its words as value.
         let saved = window.descendants(matching: .any)
             .matching(NSPredicate(format: "label CONTAINS %@ OR value CONTAINS %@", "Müll rausbringen", "Müll rausbringen"))
             .firstMatch
-        XCTAssertTrue(saved.waitForExistence(timeout: 10), "New shows no \"Müll rausbringen\" after Return")
-        macShot(window, "mac-gallery-panel-de-saved-in-new")
+        XCTAssertTrue(saved.waitForExistence(timeout: 10), "Loose ends shows no \"Müll rausbringen\" after Return")
+        macShot(window, "mac-gallery-panel-de-saved-in-loose-ends")
         app.terminate()
     }
 

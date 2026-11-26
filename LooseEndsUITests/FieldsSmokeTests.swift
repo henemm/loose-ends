@@ -22,7 +22,7 @@ final class FieldsSmokeTests: XCTestCase {
         app.descendants(matching: .any).matching(identifier: id).firstMatch
     }
 
-    /// Captures `text`, opens it from "New" and returns once the detail stands.
+    /// Captures `text`, opens it from "Loose ends" (#1000: no "New" any more) and returns once the detail stands.
     @MainActor
     private func captureAndOpenDetail(_ text: String, in app: XCUIApplication) {
         let captureButton = app.buttons["captureButton"]
@@ -34,14 +34,21 @@ final class FieldsSmokeTests: XCTestCase {
         field.typeText(text)
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        openLooseEnds(in: app)
         let row = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_'")).firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 5), "Captured task should appear in New")
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Captured task should appear in Loose ends")
         row.tap()
         XCTAssertTrue(element("detailTitleField", in: app).waitForExistence(timeout: 5), "Detail should open")
+    }
+
+    /// Opens "Loose ends" from the start page; it stands low in the index.
+    @MainActor
+    private func openLooseEnds(in app: XCUIApplication) {
+        let looseEnds = element("viewRow_open", in: app)
+        for _ in 0..<3 where !looseEnds.waitForExistence(timeout: 2) { app.swipeUp() }
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5), "Start screen shows no Loose ends")
+        looseEnds.tap()
     }
 
     @MainActor
@@ -172,9 +179,7 @@ final class FieldsSmokeTests: XCTestCase {
         shot(app, "344-1-detail-signs")
 
         backToStart(in: app)
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        openLooseEnds(in: app)
         let importance = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH 'importanceMarker_'")).firstMatch
         let urgency = app.descendants(matching: .any)
@@ -209,12 +214,10 @@ final class FieldsSmokeTests: XCTestCase {
         shot(app, "344-4-detail-importance-low")
 
         backToStart(in: app)
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        openLooseEnds(in: app)
         let row = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_'")).firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 5), "The task should stand in New")
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "The task should stand in Loose ends")
         let importance = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH 'importanceMarker_'")).firstMatch
         let urgency = app.descendants(matching: .any)

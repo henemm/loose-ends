@@ -71,12 +71,12 @@ extension XCTestCase {
     }
 
     /// The list window, not the menu bar panel: `MenuBarExtra` owns a window of its own under tests.
-    /// Found by New in its sidebar, which stays on every screen; queries resolve anew on each use, so
-    /// the start page's field would lose the window as soon as a list opens.
+    /// Found by Loose ends in its sidebar (New until #1000), which stays on every screen; queries resolve
+    /// anew on each use, so the start page's field would lose the window as soon as a list opens.
     @MainActor
     func macMainWindow(of app: XCUIApplication) -> XCUIElement {
-        let window = app.windows.containing(.any, identifier: "viewRow_new").firstMatch
-        XCTAssertTrue(window.waitForExistence(timeout: 10), "No main window with New in its sidebar")
+        let window = app.windows.containing(.any, identifier: "viewRow_open").firstMatch
+        XCTAssertTrue(window.waitForExistence(timeout: 10), "No main window with Loose ends in its sidebar")
         macAssertWindowFitsScreen(window)
         return window
     }
@@ -132,10 +132,10 @@ extension XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [wait], timeout: 5), .completed, "Field kept \(text)")
     }
 
-    /// Captures one task on the start page, opens a list (New unless named) and the task's detail in
-    /// the main window. `list` is the sidebar row's identifier, e.g. `viewRow_open` for Loose ends.
+    /// Captures one task on the start page, opens a list (Loose ends unless named; #1000: no New) and the
+    /// task's detail in the main window. `list` is the sidebar row's identifier, e.g. `viewRow_open` for Loose ends.
     @MainActor
-    func macOpenDetail(of text: String, in app: XCUIApplication, list: String = "viewRow_new") -> XCUIElement {
+    func macOpenDetail(of text: String, in app: XCUIApplication, list: String = "viewRow_open") -> XCUIElement {
         _ = macOpenMainWindowIfNeeded(app)
         XCTAssertTrue(macElement("startCaptureField", in: app).waitForExistence(timeout: 20), "No start page")
         macCapture(text, in: app)
@@ -146,7 +146,7 @@ extension XCTestCase {
         let row = window.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_"))
             .firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task")
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "\(list) shows no task")
         row.click()
         XCTAssertTrue(macElement("detailRawTextMarker", in: window).waitForExistence(timeout: 10), "Detail did not open")
         return window

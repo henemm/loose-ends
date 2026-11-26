@@ -1,0 +1,30 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: PaperGroundTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-26 14:30:40.221.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-26 14:30:40.222.
+Test Suite 'PaperGroundTests' started at 2026-11-26 14:30:40.223.
+    [33m⊘[0m testDoneRowsShareThePaperGround ([31m0.287[0m seconds)
+    [33m⊘[0m testStartPageRowsShareThePaperGround ([33m0.090[0m seconds)
+Executed 2 tests, with 2 tests skipped and 0 failures (0 unexpected) in 0.377 (0.398) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-11-26 14:30:40.623.
+Executed 2 tests, with 2 tests skipped and 0 failures (0 unexpected) in 0.377 (0.400) seconds
+Executed 2 tests, with 2 tests skipped and 0 failures (0 unexpected) in 0.377 (0.402) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-stateless-kindling-wand/Logs/Test/Test-LooseEnds-2026.11.26_14-30-29-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.

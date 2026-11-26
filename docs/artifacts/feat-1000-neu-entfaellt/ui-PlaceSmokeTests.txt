@@ -1,0 +1,56 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: PlaceSmokeTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-26 14:30:51.884.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-26 14:30:51.884.
+Test Suite 'PlaceSmokeTests' started at 2026-11-26 14:30:51.885.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.PlaceSmokeTests testAlreadyHereNoteOnlyAtThePlace] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    15.51s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    16.55s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testAlreadyHereNoteOnlyAtThePlace ([31m85.231[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.PlaceSmokeTests testCurrentLocationRefusedKeepsSheetOpen] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    10.39s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    11.41s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testCurrentLocationRefusedKeepsSheetOpen ([31m33.409[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.PlaceSmokeTests testCurrentLocationSetsPlaceAndClosesSheet] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    10.07s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    11.09s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testCurrentLocationSetsPlaceAndClosesSheet ([31m39.408[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.PlaceSmokeTests testHomeCanBeDefinedFromSearch] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    10.93s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    11.96s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testHomeCanBeDefinedFromSearch ([31m53.671[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.PlaceSmokeTests testHomeRowSetsPlaceWithOneTap] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    14.90s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    15.92s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testHomeRowSetsPlaceWithOneTap ([31m45.647[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.PlaceSmokeTests testLocationOffNoteWithRefusedPermission] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    17.89s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    18.95s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testLocationOffNoteWithRefusedPermission ([31m72.679[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.PlaceSmokeTests testSetSwitchAndRemovePlace] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    33.21s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    34.23s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testSetSwitchAndRemovePlace ([31m88.971[0m seconds)
+Executed 7 tests, with 0 failures (0 unexpected) in 419.014 (419.027) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-11-26 14:37:50.918.
+Executed 7 tests, with 0 failures (0 unexpected) in 419.014 (419.034) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 419.014 (419.036) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-stateless-kindling-wand/Logs/Test/Test-LooseEnds-2026.11.26_14-30-44-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.

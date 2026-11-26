@@ -70,13 +70,14 @@ final class RecognitionWalkthroughTests: XCTestCase {
         return row
     }
 
-    /// Oberste Zeile der „Neu"-Liste. `ViewRules` sortiert absteigend nach Erfassungszeit, die
-    /// jüngste Erfassung steht also immer oben — unabhängig davon, ob das Modell ihren Titel
-    /// inzwischen geglättet hat und eine Suche nach dem Rohtext damit ins Leere liefe.
+    /// Die Zeile einer Aufgabe in „Lose Enden“, gefunden über ihren Titel. Seit #1000 gibt es „Neu“
+    /// nicht mehr; „Lose Enden“ sortiert nach Druck und Gewicht, nicht nach Erfassungszeit, also
+    /// zählt nicht die oberste Zeile. Der Titel ist der Rohtext (`TitleRule`, kein Modell unter
+    /// `--ui-testing`); die beiden Texte sind wortgleich, aber als Zeichenfolge verschieden.
     @MainActor
-    private func topRow(in app: XCUIApplication) -> XCUIElement {
+    private func row(titled text: String, in app: XCUIApplication) -> XCUIElement {
         app.descendants(matching: .any)
-            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_"))
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS[c] %@", "taskRow_", text))
             .firstMatch
     }
 
@@ -156,13 +157,12 @@ final class RecognitionWalkthroughTests: XCTestCase {
 
         // 1. Erste Erfassung.
         capture(Self.firstText, in: app)
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Die Ansichtsliste zeigt kein Neu")
-        newRow.tap()
-        // Wie bei der zweiten Aufgabe: oberste Zeile, bestätigt über den unveränderlichen Rohtext,
-        // weil eine Titelsuche ins Leere läuft, sobald das Modell den Titel glättet.
-        let first = topRow(in: app)
-        XCTAssertTrue(first.waitForExistence(timeout: 5), "Die erste Aufgabe steht nicht in Neu")
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5), "Die Ansichtsliste zeigt kein Lose Enden")
+        looseEnds.tap()
+        // Gefunden über den Titel, bestätigt über den unveränderlichen Rohtext.
+        let first = row(titled: Self.firstText, in: app)
+        XCTAssertTrue(first.waitForExistence(timeout: 5), "Die erste Aufgabe steht nicht in Lose Enden")
         shot(app, "1-erste-aufgabe-erfasst")
         first.tap()
         let firstRawText = element("detailRawTextMarker", in: app)
@@ -210,16 +210,15 @@ final class RecognitionWalkthroughTests: XCTestCase {
         shot(app, "2-werte-von-hand-gesetzt")
 
         // 4. Zurück in die Liste und wortgleich erneut erfassen.
-        // Geprüft wird, dass die Liste wieder da ist — nicht, dass die erste Zeile noch steht: hat
-        // das Modell ihren Titel gesetzt, verlässt sie „Neu", sobald ihre KI-Vermerke gesehen sind.
+        // Geprüft wird, dass die Liste („Lose Enden“) wieder da ist.
         back(in: app)
         let captureButton = app.buttons["captureButton"]
         XCTAssertTrue(captureButton.waitForExistence(timeout: 5), "Nicht zurück in der Liste")
         capture(Self.secondText, in: app)
-        // Die zweite Aufgabe wird über die oberste Zeile gefunden und über ihren unveränderlichen
-        // Rohtext bestätigt: eine Labelsuche nach „streichen Zaun" bricht, sobald das Modell glättet.
-        let second = topRow(in: app)
-        XCTAssertTrue(second.waitForExistence(timeout: 10), "Die zweite Aufgabe steht nicht in Neu")
+        // Die zweite Aufgabe wird über ihren Titel gefunden und über ihren unveränderlichen Rohtext
+        // bestätigt; in „Lose Enden“ steht sie nicht zwingend oben (#1000).
+        let second = row(titled: Self.secondText, in: app)
+        XCTAssertTrue(second.waitForExistence(timeout: 10), "Die zweite Aufgabe steht nicht in Lose Enden")
         shot(app, "3-wortgleich-erneut-erfasst")
 
         // 5. Der Nachweis: die zweite Aufgabe trägt genau Dauer und Kontext der ersten, mit dem

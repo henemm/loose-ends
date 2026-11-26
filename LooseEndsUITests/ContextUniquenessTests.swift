@@ -92,13 +92,14 @@ final class ContextUniquenessTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(captureField.waitForNonExistence(timeout: 5))
 
-        let newRow = element("viewRow_new", in: app)
-        if !newRow.waitForExistence(timeout: 3) { app.swipeDown() }
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        // #1000: no "New" any more; the task stands in "Loose ends", low in the index.
+        let looseEnds = element("viewRow_open", in: app)
+        for _ in 0..<3 where !looseEnds.waitForExistence(timeout: 2) { app.swipeUp() }
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_")).firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 5), "Keine Aufgabe in Neu")
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Keine Aufgabe in Lose Enden")
         row.tap()
 
         let contextsRow = revealField("field_contexts", in: app)

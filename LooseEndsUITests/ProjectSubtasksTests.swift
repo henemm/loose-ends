@@ -67,9 +67,11 @@ final class ProjectSubtasksTests: XCTestCase {
         field.typeText("Keller entrümpeln")
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        // #1000: no "New" any more; the task stands in "Loose ends", low in the index.
+        let looseEnds = element("viewRow_open", in: app)
+        for _ in 0..<3 where !looseEnds.waitForExistence(timeout: 2) { app.swipeUp() }
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = first(prefix: "taskRow_", in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
@@ -103,8 +105,8 @@ final class ProjectSubtasksTests: XCTestCase {
         haus.tap()   // a single choice closes the editor by itself (#482)
 
         XCTAssertTrue(projectField.waitForExistence(timeout: 5), "Back in the detail")
-        back(in: app)   // detail → New
-        back(in: app)   // New → start screen
+        back(in: app)   // detail → Loose ends
+        back(in: app)   // Loose ends → start screen
         if !toggle.waitForExistence(timeout: 3) { app.swipeUp() }
         XCTAssertTrue(toggle.waitForExistence(timeout: 5))
         toggle.tap()

@@ -45,9 +45,11 @@ final class PlaceSmokeTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        // #1000: no "New" any more; the task stands in "Loose ends", low in the index.
+        let looseEnds = element("viewRow_open", in: app)
+        for _ in 0..<3 where !looseEnds.waitForExistence(timeout: 2) { app.swipeUp() }
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_'")).firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 5))
@@ -116,9 +118,11 @@ final class PlaceSmokeTests: XCTestCase {
         field.typeText("Dübel und Schrauben kaufen")
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        // #1000: no "New" any more; the task stands in "Loose ends", low in the index.
+        let looseEnds = element("viewRow_open", in: app)
+        for _ in 0..<3 where !looseEnds.waitForExistence(timeout: 2) { app.swipeUp() }
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_'")).firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 5))

@@ -28,7 +28,7 @@ final class StartScreenInteractionTests: XCTestCase {
             .firstMatch
     }
 
-    /// One captured task, lined up in Next up from the New list, then back on the start screen.
+    /// One captured task, lined up in Next up from "Loose ends" (#1000: no "New"), then back on the start screen.
     @MainActor
     private func captureAndLineUp(_ text: String, in app: XCUIApplication) {
         let captureButton = app.buttons["captureButton"]
@@ -41,11 +41,10 @@ final class StartScreenInteractionTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture sheet did not close")
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Start screen shows no New")
-        newRow.tap()
+        scrollTo("viewRow_open", in: app).tap()
+        // The only task in the list: a date word ("Heute") leaves the title, so the text would not match.
         let row = firstElement(prefix: "taskRow_", in: app)
-        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task")
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "Loose ends shows no task")
         row.swipeLeft()
         let nextUp = app.buttons["Next up"]
         XCTAssertTrue(nextUp.waitForExistence(timeout: 5), "Swipe left offers no Next up")
@@ -53,72 +52,9 @@ final class StartScreenInteractionTests: XCTestCase {
         let back = app.navigationBars.buttons.firstMatch
         XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
         back.tap()
-    }
-
-    /// In New the check means "looked over" (#318): swipe right never completes there, it offers
-    /// "Looks right" for what the AI sorted and nothing for a task that needs a look. Done stays
-    /// in the long-press menu. Without Apple Intelligence (the simulator) every new task needs a
-    /// look, so the swipe shows nothing; with it, "Looks right". Never "Complete".
-    @MainActor
-    func testSwipeRightInNewNeverCompletes() throws {
-        let app = launch()
-        let captureButton = app.buttons["captureButton"]
-        XCTAssertTrue(captureButton.waitForExistence(timeout: 10), "No capture button")
-        captureButton.tap()
-        let field = element("captureTextField", in: app)
-        XCTAssertTrue(field.waitForExistence(timeout: 5), "Capture sheet did not open")
-        field.tap()
-        field.typeText("Rechnung bezahlen")
-        app.buttons["captureDoneButton"].tap()
-        XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture sheet did not close")
-
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Start screen shows no New")
-        newRow.tap()
-        let row = firstElement(prefix: "taskRow_", in: app)
-        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task")
-        row.swipeRight()
-        XCTAssertFalse(app.buttons["Complete"].waitForExistence(timeout: 2), "Swipe right in New must not offer Done")
-        XCTAssertFalse(firstElement(prefix: "undoComplete_", in: app).exists, "Swipe right in New must not start Done")
-        // With Apple Intelligence a full swipe may already have confirmed the task out of New.
-        guard row.exists else { return }
-
-        // Done is still there, one long press away.
-        row.press(forDuration: 1.2)
-        XCTAssertTrue(element("menuDone", in: app).waitForExistence(timeout: 5), "The long-press menu in New should still offer Done")
-    }
-
-    /// A task under "Needs a look" leaves New with "Looks right" in its detail (#318): opening
-    /// alone kept an unchecked title in New until it was edited.
-    @MainActor
-    func testLooksRightInDetailTakesTheTaskOutOfNew() throws {
-        let app = launch()
-        let captureButton = app.buttons["captureButton"]
-        XCTAssertTrue(captureButton.waitForExistence(timeout: 10), "No capture button")
-        captureButton.tap()
-        let field = element("captureTextField", in: app)
-        XCTAssertTrue(field.waitForExistence(timeout: 5), "Capture sheet did not open")
-        field.tap()
-        field.typeText("Dachrinne reinigen")
-        app.buttons["captureDoneButton"].tap()
-        XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture sheet did not close")
-
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Start screen shows no New")
-        newRow.tap()
-        let row = firstElement(prefix: "taskRow_", in: app)
-        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task")
-        let id = row.identifier
-        row.tap()
-        let confirm = element("detailConfirmButton", in: app)
-        // With Apple Intelligence the task may already be sorted; then opening was enough.
-        guard confirm.waitForExistence(timeout: 5) else { return }
-        confirm.tap()
-        XCTAssertTrue(confirm.waitForNonExistence(timeout: 5), "Looks right should go once the task is confirmed")
-        let back = app.navigationBars.buttons.firstMatch
-        XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
-        back.tap()
-        XCTAssertTrue(element(id, in: app).waitForNonExistence(timeout: 5), "The confirmed task should leave New")
+        // "Loose ends" stands low in the index: scroll back up to "Now", where the callers look.
+        let now = firstElement(prefix: "nowRow_", in: app)
+        for _ in 0..<2 where !(now.waitForExistence(timeout: 2) && now.isHittable) { app.swipeDown() }
     }
 
     /// What is due today stands in the "Now" block of the start screen (#299, #368). The rule step reads
@@ -178,29 +114,12 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertTrue(preview.waitForNonExistence(timeout: 5), "Removed from Next up, the task leaves the preview")
     }
 
-    // MARK: - Inbox bar and Now (#368)
+    // MARK: - Now (#368)
 
     @MainActor
     private func nowRows(in app: XCUIApplication) -> [XCUIElement] {
         app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH 'nowRow_'")).allElementsBoundByIndex
-    }
-
-    /// The inbox bar stands for "New" only while something waits there (AC-5); "New" stays reachable
-    /// as a row either way (AC-16).
-    @MainActor
-    func testInboxBarAppearsOnlyWithNewAndOpensNew() throws {
-        let app = launch()
-        XCTAssertTrue(scrollTo("viewRow_new", in: app).waitForExistence(timeout: 10), "New stays in the views")
-        XCTAssertFalse(element("inboxBar", in: app).exists, "No inbox bar without anything in New")
-        app.swipeDown() // back to the top if the lookup scrolled
-
-        capture("Rechnung bezahlen", in: app)
-
-        let bar = element("inboxBar", in: app)
-        XCTAssertTrue(bar.waitForExistence(timeout: 5), "A captured task should raise the inbox bar")
-        bar.tap()
-        XCTAssertTrue(app.navigationBars["New"].waitForExistence(timeout: 5), "The bar should open New")
     }
 
     /// Seven tasks due today: five rows, "2 more" unfolds in place and folds again (AC-6).
@@ -272,14 +191,15 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertTrue(element(id, in: app).waitForExistence(timeout: 5), "Back on the start screen the same row stands in Now")
     }
 
-    /// Something waits in New but nothing stands for now: the inbox bar, and Now with only its hint (#398).
+    /// A task without a date is captured but nothing stands for now: Now keeps only its hint (#398), and since
+    /// #1000 no inbox bar stands for "New".
     @MainActor
-    func testNewWithoutNowKeepsTheHint() throws {
+    func testUndatedTaskKeepsTheNowHint() throws {
         let app = launch()
         capture("Rechnung bezahlen", in: app)
 
-        XCTAssertTrue(element("inboxBar", in: app).waitForExistence(timeout: 5), "A task in New should raise the inbox bar")
         XCTAssertTrue(app.staticTexts["Swipe left on any task to line it up here."].waitForExistence(timeout: 5), "Now should keep its hint")
+        XCTAssertFalse(element("inboxBar", in: app).exists, "No inbox bar any more (#1000)")
         XCTAssertTrue(nowRows(in: app).isEmpty, "A task without a date is not for now")
         XCTAssertFalse(element("nowMore", in: app).exists)
     }
@@ -389,16 +309,15 @@ final class StartScreenInteractionTests: XCTestCase {
         XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture sheet did not close")
     }
 
-    /// Captures one task, opens New (where it is the only one), long-presses it and picks a menu
-    /// entry; waits until the task has left New, then goes back to the start screen.
+    /// Captures one task, opens "Loose ends" (#1000: no "New"; an earlier parked task may stand there too, so the
+    /// row is found by its text), long-presses it and picks a menu entry; waits until the row no longer stands
+    /// there as an open task (Complete takes it out, Park marks it with the moon), then goes back to the start screen.
     @MainActor
     private func captureAndPick(_ text: String, _ entry: (XCUIApplication) -> XCUIElement, in app: XCUIApplication) {
         capture(text, in: app)
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Start screen shows no New")
-        newRow.tap()
-        let row = firstElement(prefix: "taskRow_", in: app)
-        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task")
+        scrollTo("viewRow_open", in: app).tap()
+        let row = taskRow(containing: text, in: app)
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "Loose ends shows no \(text)")
         let item = entry(app)
         // A slow runner can miss the first press (#114).
         for duration in [1.2, 2.0, 3.0] where !item.exists {
@@ -407,10 +326,16 @@ final class StartScreenInteractionTests: XCTestCase {
         }
         XCTAssertTrue(item.exists, "The long-press menu lacks the entry")
         item.tap()
-        XCTAssertTrue(row.waitForNonExistence(timeout: 10), "The task should leave New")
+        let stillOpen = app.buttons.matching(NSPredicate(
+            format: "identifier BEGINSWITH 'taskRow_' AND label CONTAINS %@ AND NOT (label CONTAINS 'Parked')", text))
+        let picked = XCTNSPredicateExpectation(predicate: NSPredicate(format: "count == 0"), object: stillOpen)
+        XCTAssertEqual(XCTWaiter().wait(for: [picked], timeout: 10), .completed, "The task should no longer stand as open")
         let back = app.navigationBars.buttons.firstMatch
         XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
         back.tap()
+        // "Loose ends" stands low in the index: back to the top of the start screen, as before #1000.
+        let header = element("startHeader", in: app)
+        for _ in 0..<2 where !(header.waitForExistence(timeout: 2) && header.isHittable) { app.swipeDown() }
     }
 
     /// The bottom rows start out of sight on an iPhone (#180): swipe up until the row can be tapped.
@@ -460,7 +385,7 @@ final class StartScreenInteractionTests: XCTestCase {
         let openFirst = openRow.frame.minY < doneRow.frame.minY
             || (openRow.frame.minY == doneRow.frame.minY && openRow.frame.minX < doneRow.frame.minX)
         XCTAssertTrue(openFirst, "All open comes right before Completed")
-        XCTAssertEqual(badgeNumbers(of: openRow), ["2"], "The count should match the list: one new, one parked")
+        XCTAssertEqual(badgeNumbers(of: openRow), ["2"], "The count should match the list: one open, one parked")
 
         let shot = XCTAttachment(screenshot: app.screenshot())
         shot.name = "Start screen with All open"
@@ -596,7 +521,8 @@ final class StartScreenInteractionTests: XCTestCase {
     }
 
     /// The index marks the open list on the iPad, where it is a sidebar next to the list (#334); on the iPhone
-    /// it is a page, so after "Back" nothing stays marked.
+    /// it is a page, so after "Back" nothing stays marked. Since #1000 the index lists Loose ends and Completed,
+    /// and no New, on the iPhone page and in the iPad sidebar alike.
     @MainActor
     func testIndexMarksTheOpenListOnIPadOnly() throws {
         #if os(macOS)
@@ -607,21 +533,24 @@ final class StartScreenInteractionTests: XCTestCase {
         if isPad { XCUIDevice.shared.orientation = .landscapeLeft }
         defer { if isPad { XCUIDevice.shared.orientation = .portrait } }
         let app = launch()
-        let newRow = scrollTo("viewRow_new", in: app)
-        XCTAssertFalse(newRow.isSelected, "Nothing is open yet, so nothing is marked")
-        newRow.tap()
-        XCTAssertTrue(app.navigationBars["New"].waitForExistence(timeout: 5), "New did not open")
+        let openRow = scrollTo("viewRow_open", in: app)
+        XCTAssertTrue(scrollTo("viewRow_done", in: app).exists, "The index lists Completed")
+        XCTAssertFalse(element("viewRow_new", in: app).exists, "The index lists no New (#1000)")
+        XCTAssertFalse(openRow.isSelected, "Nothing is open yet, so nothing is marked")
+        openRow.tap()
+        XCTAssertTrue(app.navigationBars["All open"].waitForExistence(timeout: 5), "All open did not open")
 
         if isPad {
-            XCTAssertTrue(newRow.waitForExistence(timeout: 5), "The sidebar should stay next to the list")
-            XCTAssertTrue(newRow.isSelected, "The open list is marked in the sidebar (#334)")
-            XCTAssertFalse(element("viewRow_open", in: app).isSelected, "Only the open list is marked")
+            XCTAssertTrue(openRow.waitForExistence(timeout: 5), "The sidebar should stay next to the list")
+            XCTAssertTrue(openRow.isSelected, "The open list is marked in the sidebar (#334)")
+            XCTAssertFalse(element("viewRow_done", in: app).isSelected, "Only the open list is marked")
+            XCTAssertFalse(element("viewRow_new", in: app).exists, "The sidebar lists no New (#1000)")
         } else {
             let back = app.navigationBars.buttons.firstMatch
             XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
             back.tap()
-            XCTAssertTrue(scrollTo("viewRow_new", in: app).waitForExistence(timeout: 5))
-            XCTAssertFalse(element("viewRow_new", in: app).isSelected, "On the iPhone the index is a page: nothing stays marked")
+            XCTAssertTrue(scrollTo("viewRow_open", in: app).waitForExistence(timeout: 5))
+            XCTAssertFalse(element("viewRow_open", in: app).isSelected, "On the iPhone the index is a page: nothing stays marked")
         }
         #endif
     }

@@ -2,15 +2,14 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-/// "New" with its sentence, the writing line, and the drawer the first Return opens (#601, form 2,
-/// Henning 2026-10-21; calm since #677, draft C3; variant B since #693): no tinted surface, "New" in
-/// the margin and "3 to look over" beside it in accent open "New", the rows of this sitting rise
-/// between that head and the line, and the end of the entry folds them away. One row of the start
-/// list, so the whole thing moves as one piece. Every sentence is a task the moment
-/// Return is pressed (`CaptureService`, the rules read it at once), so the number counts it honestly
-/// and the row shows it sorted. The rows are the lists' rows; a tap opens the task. Shared by the
-/// iPhone start list and the wide start page. Only for typing: no microphone (the keyboard has one,
-/// "+" opens the sheet with speech).
+/// The writing line and the drawer the first Return opens (#601, form 2, Henning 2026-10-21; calm
+/// since #677, draft C3): no tinted surface and no head since #1000 (ADR-22), the rows of this
+/// sitting rise above the line, and the end of the entry folds them away. One row of the start list,
+/// so the whole thing moves as one piece. Every sentence is a task the moment Return is pressed
+/// (`CaptureService`, the rules read it at once) and stands in its list at once; the row shows it
+/// sorted. The rows are the lists' rows; a tap opens the task. Shared by the iPhone start list and
+/// the wide start page. Only for typing: no microphone (the keyboard has one, "+" opens the sheet
+/// with speech).
 struct InboxDrawerView: View {
     let tasks: [TaskItem]
     /// Opens a list or a task; the host's navigation decides how.
@@ -31,20 +30,16 @@ struct InboxDrawerView: View {
     @State private var drawer = InboxDrawer()
     @State private var text = ""
     @State private var saveFailed = false
-    /// The sentence lights up once as the folded rows reach it (#693).
-    @State private var headGlow = false
     @FocusState private var writing: Bool
     private static let logger = Logger(subsystem: "com.henning.looseends", category: "StartPage")
     /// Opening, folding and a new row take one soft curve, no spring: paper, not rubber.
     private static let softMotion: Animation = .smooth(duration: 0.4)
 
-    private var count: Int { ViewRules.tasks(for: .new, in: tasks).count }
     private var rows: [TaskItem] { drawer.rows(in: tasks) }
 
     var body: some View {
         let metrics = StartMetrics(typeSize)
         VStack(spacing: 0) {
-            head(metrics)
             ForEach(rows) { task in
                 row(task, metrics)
                     .transition(rowTransition)
@@ -67,49 +62,6 @@ struct InboxDrawerView: View {
         }
         .onChange(of: focusRequest) { _, _ in writing = true }
         .onChange(of: endRequest) { _, _ in writing = false }
-    }
-
-    /// "New" in the margin, "3 to look over" beside it at the rows' title size (#693, variant B,
-    /// Henning 2026-10-26): the small margin word alone went under on the page. Accent, because a
-    /// tap on either opens "New"; gone while nothing waits there.
-    @ViewBuilder
-    private func head(_ metrics: StartMetrics) -> some View {
-        if count > 0 {
-            Button {
-                open(.system(.new))
-            } label: {
-                HStack(alignment: .firstTextBaseline, spacing: 12) {
-                    Text("New")
-                        .font(metrics.margin.weight(.semibold))
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
-                        .frame(width: metrics.marginWidth, alignment: .trailing)
-                    HStack(alignment: .firstTextBaseline, spacing: 6) {
-                        Text("\(count) to look over")
-                            .font(metrics.rowTitle)
-                            .contentTransition(.numericText(value: Double(count)))
-                            .animation(motion, value: count)
-                        Image(systemName: "chevron.right")
-                            .font(metrics.margin.weight(.semibold))
-                    }
-                    // The glow reaches past the words, so the text keeps the titles' edge.
-                    .padding(.horizontal, 6)
-                    .background(
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color.accentColor.opacity(headGlow ? 0.14 : 0))
-                    )
-                    .padding(.horizontal, -6)
-                    Spacer(minLength: 0)
-                }
-                .foregroundStyle(.tint)
-                .padding(.vertical, 8)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(Text("\(count) to look over"))
-            .accessibilityIdentifier("inboxBar")
-            .transition(.opacity)
-        }
     }
 
     /// A row of the drawer: the lists' row, a hairline above at the titles' edge, a tap opens the task.
@@ -151,7 +103,7 @@ struct InboxDrawerView: View {
             .exitEndsEntry { writing = false }
     }
 
-    /// A new row rises from the line into its place; on folding the rows slide up under the head.
+    /// A new row rises from the line into its place; on folding the rows slide up and fade.
     private var rowTransition: AnyTransition {
         if reduceMotion { return .opacity }
         return .asymmetric(
@@ -176,7 +128,7 @@ struct InboxDrawerView: View {
             let item = try CaptureService.save(text, via: .keyboard, in: modelContext)
             text = ""
             withAnimation(motion) { drawer.didCapture(item.id) }
-            AccessibilityNotification.Announcement(String(localized: "Filed in New: \(item.displayTitle)")).post()
+            AccessibilityNotification.Announcement(String(localized: "Captured: \(item.displayTitle)")).post()
         } catch {
             Self.logger.error("Capture from the writing line failed: \(error, privacy: .public)")
             saveFailed = true
@@ -199,28 +151,10 @@ struct InboxDrawerView: View {
 
     private func endEntry(animated: Bool) {
         guard drawer.isOpen else { return }
-        let hadRows = !rows.isEmpty
         if animated {
             withAnimation(motion) { drawer.close() }
-            if hadRows && !reduceMotion { glowHead() }
         } else {
             drawer.close()
-        }
-    }
-
-    /// The folded rows slide up into the head; as they arrive the sentence lights up once and fades,
-    /// so the eye follows them into "New" (#693, Henning 2026-10-26). Not under reduced motion.
-    private func glowHead() {
-        Task { @MainActor in
-            do {
-                try await Task.sleep(for: .milliseconds(250))
-                withAnimation(.easeOut(duration: 0.2)) { headGlow = true }
-                try await Task.sleep(for: .milliseconds(200))
-            } catch {
-                headGlow = false
-                return
-            }
-            withAnimation(.easeIn(duration: 0.4)) { headGlow = false }
         }
     }
 }

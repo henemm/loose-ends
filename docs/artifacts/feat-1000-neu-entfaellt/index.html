@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>„Neu“ entfällt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* VOICE: ruhig, sachlich, Papier und Faden wie die App.
+   IDEA: ein Blatt aus der App, einmal mit und einmal ohne „Neu“.
+   PICTURE: Telefone nebeneinander, Heute als Bildschirmfoto, Entwürfe in echten App-Farben.
+   COLOUR and TYPE: Papier #F4F3EE / #171816, Akzent #0F6E73 / #5FC4C9, Grau #77786F; Serif für Inhalt, Sans für App.
+   LAYOUT: je Abschnitt eine Reihe Telefone, darunter zwei Sätze. */
+:root{color-scheme:light dark;--bg:light-dark(#ebe9e2,#0e0f0e);--ink:light-dark(#1c1c1a,#e9e8e3);--muted:light-dark(#5d5e57,#a3a49c)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(28px,4vw,56px) max(5vw,16px);max-width:1320px;margin:0 auto}
+h1{font:600 clamp(32px,4.4vw,48px)/1.08 "Source Serif 4",Georgia,serif;margin:0 0 14px;text-wrap:balance}
+h2{font:600 26px/1.15 "Source Serif 4",Georgia,serif;margin:0 0 6px}
+p{max-width:68ch;margin:0 0 12px}
+.lead{font-size:17px;color:var(--muted)}
+.row{display:flex;gap:22px;overflow-x:auto;padding:18px 2px 8px;scroll-snap-type:x mandatory}
+figure{margin:0;flex:none;width:250px;scroll-snap-align:start}
+figcaption{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.4}
+figcaption b{color:var(--ink);font-weight:600}
+.shot{width:250px;border-radius:30px;display:block;box-shadow:0 1px 0 #0002,0 10px 30px #0002}
+/* Telefon in App-Farben */
+.ph{--paper:#F4F3EE;--t:#1c1c1a;--acc:#0F6E73;--q:#77786F;--red:#E5484D;--hair:#d9d8d0;
+  width:250px;height:542px;border-radius:30px;background:var(--paper);color:var(--t);overflow:hidden;position:relative;
+  box-shadow:0 1px 0 #0002,0 10px 30px #0002;font-family:Inter,system-ui,sans-serif;padding:52px 14px 0 0}
+.ph.dk{--paper:#171816;--t:#ecebe6;--acc:#5FC4C9;--q:#8E8F88;--red:#FF6369;--hair:#2c2d2a}
+.ph .bar{position:absolute;top:14px;left:18px;right:18px;display:flex;justify-content:space-between}
+.ph .btn{width:30px;height:30px;border-radius:50%;border:1px solid var(--hair);display:grid;place-items:center;font-size:17px;color:var(--t)}
+.r{display:grid;grid-template-columns:62px 1fr;gap:10px;align-items:baseline;padding:6px 0}
+.m{font-size:10px;text-align:right;color:var(--q)}
+.m.red{color:var(--red)}.m.acc{color:var(--acc);font-weight:600}
+.s{font:400 15px/1.25 "Source Serif 4",Georgia,serif}
+.big{font:600 22px/1.1 "Source Serif 4",Georgia,serif}
+.line{font:italic 14px/1.3 "Source Serif 4",Georgia,serif;color:var(--q);border-bottom:1px solid var(--hair);padding-bottom:6px}
+.line.typing{color:var(--t);font-style:normal}
+.line.typing::after{content:"";display:inline-block;width:1.5px;height:15px;background:var(--acc);vertical-align:-2px;margin-left:2px}
+.hr{border-top:1px solid var(--hair);margin:2px 0 2px 72px}
+.tag{font-size:10.5px;color:var(--acc)}
+.idx{font:400 15px/1 "Source Serif 4",Georgia,serif;display:flex;align-items:baseline;gap:4px}
+.idx i{flex:1;border-bottom:1px dotted var(--q);opacity:.6;transform:translateY(-3px)}
+.idx em{font:10.5px Inter,sans-serif;color:var(--q);font-style:normal}
+.gone{text-decoration:line-through;text-decoration-color:var(--red);opacity:.55}
+.sp{height:10px}
+/* Alternative B: Quittung */
+.slip{margin:8px 0 0 72px;background:light-dark(#fffdf6,#22231f);border:1px dashed var(--q);border-radius:4px;padding:7px 9px;font:11px/1.5 "IBM Plex Mono",monospace;color:var(--t)}
+.slip div{display:flex;justify-content:space-between;gap:8px}
+.slip span:last-child{color:var(--acc)}
+.ph.dk .slip{background:#22231f}
+.note{border-left:3px solid #0F6E73;padding:10px 14px;background:light-dark(#f7f6f1,#1a1b19);border-radius:0 8px 8px 0;max-width:72ch;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="band">
+  <h1>„Neu“ entfällt: was du sagst, steht sofort in seiner Liste</h1>
+  <p class="lead">#1000, Teil von „kein Modell mehr“. Heute wartet jede neue Aufgabe unter „Neu“ auf ein „Passt“. Ohne Modell gibt es nichts Erfundenes mehr zu prüfen, also verschwinden die Zeile „N zum Durchsehen“, der Eintrag „Neu“ im Inhalt, die Liste „Bitte ansehen“ und der Knopf „Passt“ – auf iPhone, iPad und Mac. Die Aufgaben selbst standen schon immer zusätzlich in „Jetzt“, „Fällig“ oder „Lose Enden“; dort bleiben sie einfach.</p>
+</div>
+
+<div class="band">
+  <h2>1 · Startseite in Ruhe</h2>
+  <p>Unter dem Satz des Tages steht nur noch die Schreibzeile. Im Inhalt fehlt „Neu“.</p>
+  <div class="row">
+    <figure><img class="shot" src="heute-start.png" alt="Heute: Startseite mit Neu, 4 zum Durchsehen"><figcaption><b>Heute</b> · Bildschirmfoto: „Neu · 4 zum Durchsehen“ über der Schreibzeile, „Neu 4“ im Inhalt</figcaption></figure>
+    <figure><div class="ph" id="a1"></div><figcaption><b>Entwurf A</b> · hell</figcaption></figure>
+    <figure><div class="ph dk" id="a2"></div><figcaption><b>Entwurf A</b> · dunkel</figcaption></figure>
+  </div>
+</div>
+
+<div class="band">
+  <h2>2 · Beim Schreiben</h2>
+  <p>Jeder Satz wird mit der Eingabetaste zur Aufgabe. In Entwurf A steigt er wie heute als Zeile über die Schreibzeile – mit seinem Datum am Rand –, nur ohne Kopf „Neu“ und ohne Zahl. Wenn du aufhörst (Tastatur weg, Tipp daneben), falten sich die Zeilen weg; die Aufgaben stehen in „Jetzt“, wenn sie heute fällig sind, sonst in „Lose Enden“.</p>
+  <div class="row">
+    <figure><div class="ph" id="h1"></div><figcaption><b>Heute</b> · nachgebaut aus dem Code: Kopf „Neu · 6 zum Durchsehen“ über den Zeilen dieser Sitzung</figcaption></figure>
+    <figure><div class="ph" id="w1"></div><figcaption><b>Entwurf A · Zeilen</b> · hell: die Sätze dieser Sitzung, kein Kopf</figcaption></figure>
+    <figure><div class="ph dk" id="w2"></div><figcaption><b>Entwurf A · Zeilen</b> · dunkel</figcaption></figure>
+    <figure><div class="ph" id="r1"></div><figcaption><b>Entwurf A · nach der Eingabetaste</b> · „Arzttermin morgen 9 Uhr“ ist jetzt eine Aufgabe: Titel „Arzttermin“, fällig morgen 9:00 (am Rand „Morgen“, die Uhrzeit steht im Detail), die Schreibzeile ist wieder leer</figcaption></figure>
+    <figure><div class="ph" id="b1"></div><figcaption><b>Alternative B · Quittung</b> · hell: jeder Satz als Zeile eines Belegs mit der Liste, in der er gelandet ist</figcaption></figure>
+    <figure><div class="ph dk" id="b2"></div><figcaption><b>Alternative B · Quittung</b> · dunkel</figcaption></figure>
+  </div>
+  <p class="note">Alternative B ist ein eigener Look: Schreibmaschinenschrift auf einem gestrichelten Zettel statt Serif auf Papier. Dafür fiele die Ruhe-Regel der Startseite (#677: keine getönten Flächen, Serif ist Inhalt). Gewinn: man sieht sofort, wohin ein Satz gegangen ist. Ich empfehle A – es ist die heutige Schublade ohne „Neu“, nichts Neues zu lernen.</p>
+</div>
+
+<div class="band">
+  <h2>3 · Die Liste „Neu“</h2>
+  <p>Die Liste „Neu“ mit „Bitte ansehen“, „Noch nicht sortiert“ und „Titel nicht geprüft“ gibt es nicht mehr, auch nicht das Wischen und den Menüpunkt „Passt“. Im Detail einer Aufgabe fällt der Knopf „Passt“ weg; sonst bleibt das Detail, wie es ist.</p>
+  <div class="row">
+    <figure><img class="shot" src="heute-neu.png" alt="Heute: Liste Neu mit Bitte ansehen"><figcaption><b>Heute</b> · Bildschirmfoto der Liste „Neu“ – <b>entfällt ganz</b></figcaption></figure>
+  </div>
+</div>
+
+<div class="band">
+  <h2>4 · Die Tönung „noch nicht angesehen“</h2>
+  <p>Heute färbt die App ein Datum oder eine Dauer, die eine Regel gesetzt hat, in Akzentfarbe, bis du die Aufgabe einmal öffnest. Das war das Gegenstück zum Durchsehen. Ohne „Neu“ gibt es keinen Ort mehr, an dem man das bestätigt.</p>
+  <div class="row">
+    <figure><div class="ph" id="t1"></div><figcaption><b>Empfehlung: Tönung weg</b> · alle Ränder grau, rot nur bei Zeitdruck</figcaption></figure>
+    <figure><div class="ph" id="t2"></div><figcaption><b>Alternative: Tönung bleibt</b> · „Fr.“ und „15 Min.“ in Akzent, bis die Aufgabe einmal geöffnet war</figcaption></figure>
+  </div>
+</div>
+
+<div class="band">
+  <p class="lead">Aufgaben, die heute noch in „Neu“ liegen, gehen ohne dein Zutun in ihre Listen über – sie standen dort ohnehin schon. Watch, Widgets und die Verbindung zu Claude zeigen „Neu“ heute schon nicht; dort ändert sich nichts.</p>
+</div>
+
+<script>
+{
+const T = (m,s,cls='',extra='') => `<div class="r"><div class="m ${cls}">${m}</div><div class="s">${s}${extra}</div></div>`;
+const top = `<div class="bar"><span class="btn">⚙︎</span><span class="btn">+</span></div>`;
+const head = `<div class="r"><div class="m">Freitag<br>30. Okt.</div><div class="big">Heute verknotet: Blumen gießen.</div></div>`;
+const nowBlock = `<div class="sp"></div><div class="r"><div class="m" style="font-size:11px">Jetzt <b style="color:var(--t)">2</b></div><div></div></div>`
+  + T('Heute','Steuerbescheid prüfen','red') + `<div class="hr"></div>` + T('Heute','Anna wegen Sonntag anrufen','red','<div class="tag">◇ Telefon</div>');
+const idx = (withNew) => `<div class="sp"></div><div class="r"><div class="m">Inhalt</div><div style="display:grid;gap:11px">
+  <div class="idx">Als nächstes<i></i></div><div class="idx">Fällig<i></i><em>2</em></div>
+  ${withNew?'<div class="idx">Neu<i></i><em>4</em></div>':''}
+  <div class="idx">Etiketten<i></i><em>6</em></div><div class="idx">Projekte<i></i></div>
+  <div class="idx">Lose Enden<i></i><em>4</em></div><div class="idx">Erledigt<i></i><em>1</em></div></div></div>`;
+const line = (txt) => `<div class="r"><div></div><div class="line ${txt?'typing':''}">${txt||'Was soll ich aufnehmen?'}</div></div>`;
+const set = (id, html) => { const e=document.getElementById(id); if(e) e.innerHTML = top + html; };
+
+const restA = head + `<div class="sp"></div>` + line('') + nowBlock + idx(false);
+set('a1', restA); set('a2', restA);
+
+const sitting = T('Fr.','Fahrrad zur Inspektion bringen') + `<div class="hr"></div>` + T('','Rasen mähen');
+const headToday = `<div class="r"><div class="m acc">Neu</div><div class="s" style="color:var(--acc)">6 zum Durchsehen ›</div></div>`;
+set('h1', head + `<div class="sp"></div>` + headToday + sitting + line('Arzttermin morgen 9 Uhr') + nowBlock);
+const wA = head + `<div class="sp"></div>` + sitting + line('Arzttermin morgen 9 Uhr') + nowBlock;
+set('w1', wA); set('w2', wA);
+set('r1', head + `<div class="sp"></div>` + sitting + `<div class="hr"></div>` + T('Morgen','Arzttermin') + line('') + nowBlock);
+
+const slip = `<div class="slip"><div><span>Fahrrad zur Inspektion…</span><span>Lose Enden · Fr.</span></div><div><span>Rasen mähen</span><span>Lose Enden</span></div></div>`;
+const wB = head + `<div class="sp"></div>` + line('Arzttermin morgen 9 Uhr') + slip + nowBlock;
+set('b1', wB); set('b2', wB);
+
+const listRows = (tint) => `<div class="r"><div class="m" style="font-size:11px">Lose Enden</div><div></div></div>`
+  + T('Heute','Steuerbescheid prüfen','red') + `<div class="hr"></div>`
+  + T('Fr.','Fahrrad zur Inspektion bringen', tint?'acc':'') + `<div class="hr"></div>`
+  + T('15 Min.','Rasen mähen', tint?'acc':'','<div class="tag">◇ Garten</div>') + `<div class="hr"></div>`
+  + T('','Geschenk für Mia besorgen');
+set('t1', head + `<div class="sp"></div>` + listRows(false));
+set('t2', head + `<div class="sp"></div>` + listRows(true));
+}
+</script>
+</body>
+</html>

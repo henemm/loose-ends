@@ -58,12 +58,12 @@ final class DesignGalleryTests: XCTestCase {
     /// One task into "Next up", so the start screen's preview (#180) has something to show. Best
     /// effort: if the swipe does not reveal the button, the start screen shows its empty line instead.
     @MainActor
-    private func lineUpFirstTask(in app: XCUIApplication, from newRow: XCUIElement) {
-        newRow.tap()
+    private func lineUpFirstTask(in app: XCUIApplication, from looseEnds: XCUIElement) {
+        looseEnds.tap()
         let row = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_"))
             .firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task")
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "Loose ends shows no task")
         row.swipeLeft()
         let nextUp = app.buttons["Next up"]
         if nextUp.waitForExistence(timeout: 3) {
@@ -74,7 +74,8 @@ final class DesignGalleryTests: XCTestCase {
         back.tap()
     }
 
-    /// Start screen (top and scrolled, for the section headers), an empty view, the New list and a detail.
+    /// Start screen (top and scrolled, for the section headers), an empty view, the Loose ends list and a detail
+    /// (#1000: no "New" any more).
     @MainActor
     private func photograph(dark: Bool) {
         let label = dark ? "dark" : "light"
@@ -82,10 +83,15 @@ final class DesignGalleryTests: XCTestCase {
         for text in Self.tasks {
             capture(text, in: app)
         }
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Start screen shows no New")
-        lineUpFirstTask(in: app, from: newRow)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Not back on the start screen")
+        // Loose ends stands low in the index; the start screen is photographed from its top again.
+        let looseEnds = element("viewRow_open", in: app)
+        for _ in 0..<3 where !looseEnds.waitForExistence(timeout: 2) {
+            app.swipeUp()
+        }
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5), "Start screen shows no Loose ends")
+        lineUpFirstTask(in: app, from: looseEnds)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5), "Not back on the start screen")
+        for _ in 0..<2 { app.swipeDown() }
         shot(app, "gallery-\(label)-1-start")
         app.swipeUp()
         shot(app, "gallery-\(label)-2-start-scrolled")
@@ -106,17 +112,17 @@ final class DesignGalleryTests: XCTestCase {
         XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
         back.tap()
 
-        // Completed sits at the bottom; New is back at the top.
-        for _ in 0..<3 where !newRow.waitForExistence(timeout: 2) {
-            app.swipeDown()
+        // Completed sits at the bottom, Loose ends right above it.
+        for _ in 0..<3 where !looseEnds.waitForExistence(timeout: 2) {
+            app.swipeUp()
         }
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_"))
             .firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no task")
-        shot(app, "gallery-\(label)-3-list-new")
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "Loose ends shows no task")
+        shot(app, "gallery-\(label)-3-list-open")
 
         row.tap()
         XCTAssertTrue(element("detailRawTextMarker", in: app).waitForExistence(timeout: 5), "Detail did not open")
@@ -151,7 +157,7 @@ final class DesignGalleryTests: XCTestCase {
         let taxRow = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "taskRow_", "Steuerbescheid"))
             .firstMatch
-        XCTAssertTrue(taxRow.waitForExistence(timeout: 10), "New shows no Steuerbescheid")
+        XCTAssertTrue(taxRow.waitForExistence(timeout: 10), "Loose ends shows no Steuerbescheid")
         taxRow.tap()
         // Below the place section (#241) the summary can sit under the fold.
         let summary = element("originSummary", in: app)

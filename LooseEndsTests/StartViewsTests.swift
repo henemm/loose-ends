@@ -4,9 +4,10 @@ import Testing
 @testable import LooseEnds
 
 @Suite("Start screen views") struct StartViewsTests {
-    @Test("With no task at all only the daily three remain")
+    @Test("With no task at all only Next up and Due remain, New is gone (#1000)")
     @MainActor func dailyThreeAlways() async throws {
-        #expect(ViewRules.startViews(in: []) == [.next, .new, .due])
+        #expect(ViewRules.startViews(in: []) == [.next, .due])
+        #expect(!ViewRules.dailyViews.contains(.new))
     }
 
     @Test("An occasional view appears once it holds a task, in its fixed place")
@@ -24,7 +25,8 @@ import Testing
 
         let views = ViewRules.startViews(in: all)
 
-        #expect(views == [.next, .new, .due, .repeating, .parked])
+        #expect(views == [.next, .due, .repeating, .parked])
+        #expect(!views.contains(.new), "New is gone (#1000)")
         #expect(!views.contains(.waiting), "nothing waits, so Waiting stays out")
         #expect(!views.contains(.done), "Done sits apart at the bottom of the start screen")
     }
@@ -32,7 +34,7 @@ import Testing
     @Test("Daily and occasional views together cover every list view except Done and All open")
     func everyViewHasAPlace() {
         let placed = Set(ViewRules.dailyViews + ViewRules.occasionalViews)
-        let lists = Set(ViewKind.allCases).subtracting([.done, .open, .context, .project])
+        let lists = Set(ViewKind.allCases).subtracting([.done, .open, .context, .project, .new])
         #expect(placed == lists)
     }
 
@@ -132,7 +134,7 @@ import Testing
 
     @Test("The iPhone index shows the daily three first and the occasional ones with content, Quick included (#421)")
     @MainActor func indexViews() async throws {
-        #expect(ViewRules.indexViews(in: []) == [.next, .due, .new])
+        #expect(ViewRules.indexViews(in: []) == [.next, .due])
 
         let store = try TestStore()
         let parked = TaskItem(rawText: "Fahrrad verkaufen")
@@ -141,7 +143,7 @@ import Testing
         try store.context.save()
         let all = try store.context.fetch(FetchDescriptor<TaskItem>())
 
-        #expect(ViewRules.indexViews(in: all) == [.next, .due, .new, .parked])
+        #expect(ViewRules.indexViews(in: all) == [.next, .due, .parked])
     }
 
     @Test("Quick stands in the index while it holds a task, after the daily three (#421)")
@@ -153,6 +155,6 @@ import Testing
         store.context.insert(task)
         try store.context.save()
 
-        #expect(ViewRules.indexViews(in: [task]) == [.next, .due, .new, .quick])
+        #expect(ViewRules.indexViews(in: [task]) == [.next, .due, .quick])
     }
 }

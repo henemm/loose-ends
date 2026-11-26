@@ -322,9 +322,8 @@ final class MacDetailClickTests: XCTestCase {
 
     // MARK: - Writing line (#601)
 
-    /// The writing line under "New" on the Mac start page (#601, form 2): Return makes a task and
-    /// opens the button into a drawer that shows it, the cursor stays; Escape folds the drawer, the
-    /// number keeps counting.
+    /// The writing line on the Mac start page (#601, form 2; without "New" since #1000): Return makes a task and
+    /// shows it in the drawer above the line, the cursor stays; Escape folds the drawer. No head, no number.
     @MainActor
     func testWritingLineOpensTheDrawerAndEscapeFoldsIt() throws {
         let app = macLaunch(dark: false)
@@ -339,16 +338,17 @@ final class MacDetailClickTests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 10), "Return should put the task into the drawer")
         XCTAssertTrue(row.label.contains("Reifen wechseln"), "The drawer row shows the sorted title, got \(row.label)")
         let head = macElement("inboxBar", in: window)
-        XCTAssertTrue(head.waitForExistence(timeout: 5), "New and its sentence should stand above the rows")
-        XCTAssertTrue(head.label.contains("1 to look over"), "New counts the task at once, got \(head.label)")
+        XCTAssertFalse(head.exists, "No New above the rows any more (#1000)")
+        XCTAssertLessThan(row.frame.minY, line.frame.minY, "The row of this sitting stands above the line")
         XCTAssertTrue(hasKeyboardFocus(line), "The cursor should stay in the line after Return")
         macShot(window, "mac-gallery-601-1-schublade-offen")
 
         line.typeText("Mama anrufen\n")
-        XCTAssertTrue(head.label.contains("2 to look over"), "New counts both, got \(head.label)")
+        XCTAssertFalse(head.exists, "No New after the second Return either (#1000)")
         app.typeKey(.escape, modifierFlags: [])
         XCTAssertTrue(row.waitForNonExistence(timeout: 10), "Escape should fold the drawer")
-        XCTAssertTrue(head.label.contains("2 to look over"), "The number keeps counting after folding, got \(head.label)")
+        XCTAssertFalse(head.exists, "No New after folding (#1000)")
+        XCTAssertFalse(macElement("viewRow_new", in: window).exists, "The sidebar lists no New (#1000)")
         XCTAssertTrue(line.exists, "The line stays after folding")
         macShot(window, "mac-gallery-601-2-zugeklappt")
         app.terminate()
