@@ -88,6 +88,11 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
   (knot, loose thread, #180): it is the brand mark, not a control. Since #642 (Henning, 2026-10-23) its family holds two
   more drawn signs: the Knäuel (English UI: “the Tangle”, #758; `ThreadShape.Form.knaeuel`, the one avoided task, #643) and the bead (`PearlGlyph`, a
   task that counts on the week's string, #645); every other sign stays an SF Symbol.
+- **No model, no "New"** (Henning, 2026-11-26, Epic #999, ADR-22): „Die AI hat in der Summe keinen Mehrwert, sondern
+  stört eher.“ The on-device model leaves the product path (#982); fields come from rules only, and only from what was
+  said (duration only named or recognized, else empty). The review step goes: no "New", no "N to look over", no "Looks
+  right"; a captured task stands in its list at once (#1000). Rules are sharpened on Henning's own captures (#1001).
+  Until those land, the paragraph below describes the code as it still is.
 - **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,
   regex, calendar, contacts or a word list. The on-device model only gets what needs language
   understanding (refining the title: since #202 `TitleRule` sets it at capture from the cleaned raw
