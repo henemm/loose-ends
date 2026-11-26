@@ -93,8 +93,10 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
   said (duration only named or recognized, else empty). The review step goes: no "New", no "N to look over", no "Looks
   right"; a captured task stands in its list at once (#1000). Rules are sharpened on Henning's own captures (#1001).
   #982 S1 is done (2026-11-26): `EnrichmentCoordinator` has no enricher any more and runs the rules once per task;
-  the model code stays compiled only for the lab app and measurement tests until S3. Until #1000/#1001 land, the
-  paragraph below describes the rest as it still is.
+  the model code stays compiled only for the lab app and measurement tests until S3.
+  #1000 S1 is done (2026-11-26): the start page head "New · N to look over" and the "New" entry in the index and sidebar
+  are gone (`ViewRules.dailyViews = [.next, .due]`); the list "New", "Looks right", `isInNew`, `ViewKind.new` and the tint stay
+  until S2/S3. Until #1000/#1001 land, the paragraph below describes the rest as it still is.
 - **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,
   regex, calendar, contacts or a word list. The on-device model only gets what needs language
   understanding (refining the title: since #202 `TitleRule` sets it at capture from the cleaned raw
@@ -383,10 +385,9 @@ not scope creep on the current one.
 
 ## Where things live
 
-- `Shared/Models` — SwiftData model, enums, `InboxDrawer` (#601: the writing line under "New"; pure: `didCapture` opens and
+- `Shared/Models` — SwiftData model, enums, `InboxDrawer` (#601: the writing line; pure: `didCapture` opens and
   orders, `close` ends the sitting, `rows(in:)` this sitting's open tasks; the view `LooseEnds/Views/InboxDrawerView.swift`
-  is one row of both start lists: "New" in accent in the margin with "N to look over" beside it at row-title size (#693, variant B;
-  no tinted head, #677), this sitting's rows between that head and the line, the question always shown in italics, soft 0.4 s motion, no spring; on folding the rows slide up into the head and the sentence lights up once, not under reduced motion), `RepeatRule` (its `anchor` holds the rhythm, a moved round does not shift it, #552),
+  is one row of both start lists: no head since #1000 S1 (ADR-22, draft A), this sitting's rows stand between the sentence of the day and the line, the question always shown in italics, soft 0.4 s motion, no spring; after Return VoiceOver says "Captured: %@"), `RepeatRule` (its `anchor` holds the rhythm, a moved round does not shift it, #552),
   `ViewRules` (pure view computation), `NewDateRule` (a deadline that passed is no deadline, #548: with a time after the
   time, without one after the day; the evening look reads a day-only date as passed after the reminder time; the trace
   "was 15:00" under the "New date" button), `DetailFields` (#538: what a task offers, five groups in one order, a section
