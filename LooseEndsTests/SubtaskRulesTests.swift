@@ -29,7 +29,7 @@ import Testing
         (task.revisions ?? []).map(\.author)
     }
 
-    @Test("A new line gets its due date and tag from the rules; the model is never called for it")
+    @Test("A new line gets its due date and tag from the rules")
     @MainActor func rulesFillALine() async throws {
         let store = try TestStore()
         let phone = TaskContext(name: "Telefon", sortOrder: 0)
@@ -38,14 +38,10 @@ import Testing
         let now = try tuesday
         let line = try Subtasks.add("Werkstatt anrufen am Freitag", to: auto, in: store.context, now: now)
         try store.context.save()
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Vom Modell", confidence: 0.9, reason: "Stub.")
-        let stub = StubEnricher(draft: draft)
-        let coordinator = EnrichmentCoordinator(enricher: stub, container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
 
         await coordinator.processPending()
 
-        #expect(stub.calls == 0, "the model never sees a line")
         let due = try #require(line.dueDate)
         #expect(Calendar.current.component(.weekday, from: due) == 6, "am Freitag → Friday")
         #expect(due > now && due < now.addingTimeInterval(4 * 86_400))
@@ -61,7 +57,6 @@ import Testing
 
         await coordinator.processPending()
         #expect(authors(of: line).count == 2, "the second pass adds no revision")
-        #expect(stub.calls == 0)
     }
 
     @Test("A bare line only gets the marker; a line the user dated keeps its date; a done line is left alone")
@@ -77,12 +72,10 @@ import Testing
         let done = try Subtasks.add("Termin machen am Freitag", to: auto, in: store.context, now: now)
         Subtasks.toggle(done, now: now)
         try store.context.save()
-        let stub = StubEnricher()
-        let coordinator = EnrichmentCoordinator(enricher: stub, container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
 
         await coordinator.processPending()
 
-        #expect(stub.calls == 0)
         #expect(bare.rulesAppliedAt != nil, "no hit still marks the step as done (#144)")
         #expect(bare.dueDate == nil && (bare.contexts ?? []).isEmpty && (bare.revisions ?? []).isEmpty)
         #expect(dated.dueDate == own, "a date the user set stays")
@@ -91,7 +84,7 @@ import Testing
         #expect(done.rulesAppliedAt == nil && done.dueDate == nil, "a done line is not read")
     }
 
-    @Test("Analyze again on a line runs the two rules only and says that the model did not run")
+    @Test("Analyze again on a line runs the two rules only")
     @MainActor func reanalysisRulesOnly() async throws {
         let store = try TestStore()
         let garden = TaskContext(name: "Garten", sortOrder: 0)
@@ -100,23 +93,18 @@ import Testing
         let now = try tuesday
         let line = try Subtasks.add("Hecke schneiden am Samstag", to: auto, in: store.context, now: now)
         try store.context.save()
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Vom Modell", confidence: 0.9, reason: "Stub.")
-        draft.duration = EnrichmentDraft.Guess(.hour1, confidence: 0.9, reason: "Stub.")
-        let stub = StubEnricher(draft: draft)
-        let coordinator = EnrichmentCoordinator(enricher: stub, container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
 
         let result = await coordinator.reanalyze(line)
 
-        #expect(result == .finished(changed: 2, modelRan: false))
-        #expect(stub.calls == 0)
+        #expect(result == .finished(changed: 2))
         let due = try #require(line.dueDate)
         #expect(Calendar.current.component(.weekday, from: due) == 7, "am Samstag → Saturday")
         #expect((line.contexts ?? []).map(\.name) == ["Garten"])
-        #expect(line.duration == nil && line.title == "Hecke schneiden am Samstag", "nothing of the stub's draft lands")
+        #expect(line.duration == nil && line.title == "Hecke schneiden am Samstag", "no duration, the title stays the line's words")
         #expect(line.rulesAppliedAt != nil && line.processedAt == nil)
 
         let again = await coordinator.reanalyze(line)
-        #expect(again == .finished(changed: 0, modelRan: false), "the same result adds no revision")
+        #expect(again == .finished(changed: 0), "the same result adds no revision")
     }
 }

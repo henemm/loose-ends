@@ -51,7 +51,7 @@ import Testing
         let task = TaskItem(rawText: "Erinnere mich zu Hause daran, Donauwellen rausnehmen")
         store.context.insert(task)
         try store.context.save()
-        let coordinator = EnrichmentCoordinator(enricher: StubEnricher(draft: EnrichmentDraft()), container: store.container,
+        let coordinator = EnrichmentCoordinator(container: store.container,
                                                 savedPlaces: { Self.places })
         await coordinator.processPending()
         #expect(task.place?.name == "Zuhause")
@@ -65,7 +65,7 @@ import Testing
         let task = TaskItem(rawText: "Zu Hause Donauwellen rausnehmen")
         store.context.insert(task)
         try store.context.save()
-        let coordinator = EnrichmentCoordinator(enricher: StubEnricher(draft: EnrichmentDraft()), container: store.container,
+        let coordinator = EnrichmentCoordinator(container: store.container,
                                                 savedPlaces: { Self.places })
         await coordinator.processPending()
         RevisionService.set(.place, to: nil, on: task, contexts: [], projects: [])

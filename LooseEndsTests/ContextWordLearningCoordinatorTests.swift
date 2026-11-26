@@ -22,12 +22,6 @@ struct ContextWordLearningCoordinatorTests {
         context.insert(task)
     }
 
-    private func silentStub() -> StubEnricher {
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Titel", confidence: 0.9, reason: "Stub.")
-        return StubEnricher(draft: draft)
-    }
-
     @Test("Ein von Hand gesetztes Etikett lehrt seine Wörter (AC-1)")
     @MainActor func learnedWordSetsContext() async throws {
         let store = try TestStore()
@@ -39,7 +33,7 @@ struct ContextWordLearningCoordinatorTests {
         context.insert(fresh)
         try context.save()
 
-        await EnrichmentCoordinator(enricher: silentStub(), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect((fresh.contexts ?? []).map(\.name) == ["Garten"])
         #expect(fresh.contextsSourceRaw == FieldSource.rule.rawValue)
@@ -63,7 +57,7 @@ struct ContextWordLearningCoordinatorTests {
         context.insert(fresh)
         try context.save()
 
-        await EnrichmentCoordinator(enricher: silentStub(), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect(Set((fresh.contexts ?? []).map(\.name)) == ["Garten", "Besorgung"])
         let revision = try #require((fresh.revisions ?? []).first { $0.field == .contexts })
@@ -87,7 +81,7 @@ struct ContextWordLearningCoordinatorTests {
         context.insert(conflict)
         try context.save()
 
-        await EnrichmentCoordinator(enricher: silentStub(), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect((fromRule.contexts ?? []).isEmpty, "ein Regelwert kann eine kopierte Schätzung sein")
         #expect((conflict.contexts ?? []).isEmpty, "Kirschbaum steht bei Garten und Computer")
@@ -108,7 +102,7 @@ struct ContextWordLearningCoordinatorTests {
         let line = try Subtasks.add("Kirschbaum gießen", to: parent, in: context)
         try context.save()
 
-        await EnrichmentCoordinator(enricher: silentStub(), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect((line.contexts ?? []).map(\.name) == ["Garten"])
         #expect(line.contextsSourceRaw == FieldSource.rule.rawValue)

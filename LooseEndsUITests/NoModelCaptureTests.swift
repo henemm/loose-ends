@@ -70,7 +70,11 @@ final class NoModelCaptureTests: XCTestCase {
         let titleField = element("detailTitleField", in: app)
         XCTAssertTrue(titleField.waitForExistence(timeout: 10), "Detail ging nicht auf")
         XCTAssertEqual(titleField.value as? String, spoken, "Der Titel ist das Gesagte, nichts dazuerfunden")
-        XCTAssertFalse(element("field_duration", in: app).exists, "Keine Dauer, wenn keine genannt wurde")
+        // `field_duration` is also the identifier of the empty "+ Duration" word (Duration is on by default, #538),
+        // so the check is for a value on it, not for the element.
+        let durationValue = app.descendants(matching: .any).matching(NSPredicate(
+            format: "identifier == 'field_duration' AND (label CONTAINS ' min' OR label CONTAINS ' h')"))
+        XCTAssertEqual(durationValue.count, 0, "Keine Dauer, wenn keine genannt wurde")
         XCTAssertEqual(modelMentions(in: app).count, 0, "Kein KI-Merkmal in der Detailansicht")
 
         let more = element("detailMoreMenu", in: app)

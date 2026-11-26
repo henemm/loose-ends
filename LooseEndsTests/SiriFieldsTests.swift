@@ -225,7 +225,7 @@ struct SiriFieldsTests {
         earlierTask("Rasen mähen", context: office, in: store.context)
         try store.context.save()
         let task = try capture(SiriFields(urls: [], isFlagged: true, tags: ["Garten"]), in: store.context)
-        let coordinator = EnrichmentCoordinator(enricher: StubEnricher(), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
         await coordinator.processPending()
 
         _ = await coordinator.reanalyze(task)
@@ -244,9 +244,7 @@ struct SiriFieldsTests {
         earlierTask("Rasen mähen", context: office, in: store.context)
         try store.context.save()
         let task = try capture(SiriFields(urls: [], isFlagged: true, tags: ["Garten"]), in: store.context)
-        var draft = EnrichmentDraft()
-        draft.importance = EnrichmentDraft.Guess(.low, confidence: 0.9, reason: "Stub.")
-        let coordinator = EnrichmentCoordinator(enricher: StubEnricher(draft: draft), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
 
         await coordinator.processPending()
 

@@ -656,15 +656,12 @@ struct TaskDetailView: View {
             Text("Still sorting other tasks. Try again in a moment.")
         case .done(.failed):
             Text("Could not analyze again.")
-        case .done(.finished(let changed, let modelRan)):
+        case .done(.finished(let changed)):
             VStack(alignment: .leading, spacing: 2) {
                 switch changed {
                 case 0: Text("Nothing new found.")
                 case 1: Text("One field updated.")
                 default: Text("\(changed) fields updated.")
-                }
-                if !modelRan {
-                    Text("Apple Intelligence did not run, only the rules.")
                 }
             }
         }

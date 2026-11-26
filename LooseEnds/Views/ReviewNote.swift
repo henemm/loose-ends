@@ -10,7 +10,7 @@ struct ReviewNote: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             headline.fontWeight(.semibold)
-            hint.foregroundStyle(.secondary)
+            if let hint { hint.foregroundStyle(.secondary) }
         }
         .font(.footnote)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -38,11 +38,13 @@ struct ReviewNote: View {
         }
     }
 
-    private var hint: Text {
+    /// No hint for a task the rules sorted and nobody else will: the model is out of the product path
+    /// (ADR-22, #982), so nothing happens "by itself" any more.
+    private var hint: Text? {
         switch ViewRules.reviewReason(of: task) {
         case .titleChanged, .sortedByAI: Text("Check the tinted values, then “Looks right”.")
         case .titleNotChecked: Text("Does it fit? Otherwise tap it and change it.")
-        case .notSortedYet: Text("That happens by itself once Apple Intelligence is ready.")
+        case .notSortedYet: nil
         }
     }
 }

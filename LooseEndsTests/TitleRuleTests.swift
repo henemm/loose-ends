@@ -325,20 +325,19 @@ import Testing
         #expect(!(task.revisions ?? []).contains { $0.field == .title })
     }
 
-    @Test("First run and Analyze again hand the examples' notes to the guard")
-    @MainActor func coordinatorDropsBorrowedTitle() async throws {
+    @Test("First run and Analyze again keep the rule title (no model since #982)")
+    @MainActor func coordinatorKeepsRuleTitle() async throws {
         let store = try TestStore()
         let done = TaskItem(rawText: "Altpapier Altglas wegbringen")
         done.status = .done
         done.completedAt = Date()
         store.context.insert(done)
         let task = try CaptureService.save("Cider kaltstellen", via: .app, in: store.context)
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Cider kaltstellen und Altpapier Altglas wegbringen", confidence: 0.9, reason: "Stub.")
-        let coordinator = EnrichmentCoordinator(enricher: StubEnricher(draft: draft), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
 
         await coordinator.processPending()
-        #expect(task.processedAt != nil)
+        #expect(task.rulesAppliedAt != nil)
+        #expect(task.processedAt == nil)
         #expect(task.title == "Cider kaltstellen")
 
         _ = await coordinator.reanalyze(task)

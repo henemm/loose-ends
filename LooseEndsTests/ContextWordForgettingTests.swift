@@ -69,9 +69,7 @@ struct ContextWordForgettingTests {
         context.insert(fresh)
         try context.save()
 
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Titel", confidence: 0.9, reason: "Stub.")
-        await EnrichmentCoordinator(enricher: StubEnricher(draft: draft), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect((fresh.contexts ?? []).isEmpty)
         #expect(!(fresh.revisions ?? []).contains { $0.field == .contexts })

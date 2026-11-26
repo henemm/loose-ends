@@ -445,15 +445,11 @@ struct SiriCaptureTests {
         let task = try await capture(input, in: store.context)
         #expect(task.rawText == raw)
 
-        var draft = EnrichmentDraft()
-        draft.importance = EnrichmentDraft.Guess(.low, confidence: 0.9, reason: "Stub.")
-        draft.duration = EnrichmentDraft.Guess(.minutes30, confidence: 0.9, reason: "Stub.")
-        draft.contexts = EnrichmentDraft.Guess(["Büro"], confidence: 0.9, reason: "Stub.")
-        let coordinator = EnrichmentCoordinator(enricher: StubEnricher(draft: draft), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
 
         await coordinator.processPending()
 
-        #expect(task.processedAt != nil, "the pass ran")
+        #expect(task.rulesAppliedAt != nil, "the pass ran")
         #expect(task.dueDate == nineTomorrow)
         #expect(task.dueHasTime == true)
         #expect(task.dueSourceRaw == FieldSource.user.rawValue)
@@ -464,7 +460,7 @@ struct SiriCaptureTests {
         #expect((task.contexts ?? []).map(\.name) == ["Garten"])
     }
 
-    @Test("Der erste Veredelungsdurchlauf lässt Siris Liste stehen, auch wenn das Modell ein anderes Projekt nennt (AC-7)")
+    @Test("Der erste Veredelungsdurchlauf lässt Siris Liste stehen (AC-7)")
     func siriProjectSurvivesFirstEnrichmentPass() async throws {
         let store = try TestStore()
         store.context.insert(Project(name: "Haus", sortOrder: 0))
@@ -474,22 +470,18 @@ struct SiriCaptureTests {
         input.listName = "Büro"
         let task = try await capture(input, in: store.context)
 
-        var draft = EnrichmentDraft()
-        draft.project = EnrichmentDraft.Guess("Haus", confidence: 0.9, reason: "Stub.")
-        let coordinator = EnrichmentCoordinator(enricher: StubEnricher(draft: draft), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
 
         await coordinator.processPending()
 
-        #expect(task.processedAt != nil, "the pass ran")
+        #expect(task.rulesAppliedAt != nil, "the pass ran")
         #expect(task.project?.name == "Büro")
     }
 
-    /// The title is not one of the fields Siri protects: the project's decision is that the model may
-    /// refine every title in the first pass (CLAUDE.md, "Rules before the model"; `TitleRule` sets it at
-    /// capture, the model may refine it). A Siri title is captured text like any other, so it is refined
-    /// too, while every value Siri set as the user's stays.
-    @Test("Der Siri-Titel darf im ersten Durchlauf verfeinert werden wie jeder Titel, die übrigen Siri-Felder bleiben (F002)")
-    func siriTitleMayBeRefinedLikeAnyTitle() async throws {
+    /// The title comes from `TitleRule` at capture and nothing rewrites it since the model left the
+    /// product path (ADR-22, #982); every value Siri set as the user's stays through the first pass.
+    @Test("Der Siri-Titel bleibt im ersten Durchlauf wie erfasst, die übrigen Siri-Felder bleiben (F002, #982)")
+    func siriTitleStaysAsCaptured() async throws {
         let store = try TestStore()
         store.context.insert(TaskContext(name: "Garten"))
         try store.context.save()
@@ -505,14 +497,12 @@ struct SiriCaptureTests {
         let task = try await capture(input, in: store.context)
         #expect(task.title == "Rasen mähen machen")
 
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Rasen mähen", confidence: 0.9, reason: "Stub.")
-        let coordinator = EnrichmentCoordinator(enricher: StubEnricher(draft: draft), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
 
         await coordinator.processPending()
 
-        #expect(task.processedAt != nil, "the pass ran")
-        #expect(task.title == "Rasen mähen")
+        #expect(task.rulesAppliedAt != nil, "the pass ran")
+        #expect(task.title == "Rasen mähen machen")
         #expect(task.dueDate == nineTomorrow)
         #expect(task.dueHasTime == true)
         #expect(task.project?.name == "Büro")

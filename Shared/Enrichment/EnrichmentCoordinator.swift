@@ -2,125 +2,64 @@ import Foundation
 import OSLog
 import SwiftData
 
-/// Runs enrichment for every task that has none yet (ADR-4): right after capture and as the
-/// catch-up pass at app start. A failure — model call or save — stays with that one task, leaves
-/// it unprocessed for the next pass and does not stop the pass; nothing is swallowed silently.
+/// Runs the rule step for every task that has had none yet (ADR-4): right after capture and as the
+/// catch-up pass at app start. The on-device model is out of the product path (ADR-22, #982): this type
+/// cannot receive or call one, every field comes from the rules. `processedAt` keeps its meaning "the
+/// model ran" and is no longer set; `rulesAppliedAt` marks the one rule run (#144). A failed save stays
+/// with that one task and does not stop the pass; nothing is swallowed silently.
 @MainActor
 final class EnrichmentCoordinator {
     static let exampleLimit = 5
-
-    /// The time limit per model call, measured (#534, `docs/reference/modell-latenz.md`): three times the
-    /// largest value on Mac and iPhone (7.92 s, iPhone, cold), rounded up to full 5 s. Replaces the 30 s
-    /// estimated in #530. The real-model test checks against the same value.
-    nonisolated static let defaultModelTimeout: Duration = .seconds(25)
 
     /// What "Analyze again" (#34) reports back to the detail.
     enum ReanalysisResult: Equatable, Sendable {
         /// Another pass is running; nothing was done.
         case busy
-        /// `changed` fields got a new value; `modelRan` is false when only the rules ran.
-        case finished(changed: Int, modelRan: Bool)
+        /// `changed` fields got a new value from the rules.
+        case finished(changed: Int)
         /// Reading or saving the store failed (logged).
         case failed
     }
 
-    private let enricher: any TaskEnricher
     private let container: ModelContainer
-    /// How long one model call may take before it counts as failed (#530); `defaultModelTimeout` unless a
-    /// test passes its own. Measured calls took at most 7.92 s (#534); a hang must not hold the pass forever.
-    private let modelTimeout: Duration
     /// Home and work as the user saved them (#680), read at each rule step; the app passes its store.
     private let savedPlaces: @MainActor () -> SavedPlaces
     private let logger = Logger(subsystem: "com.henning.looseends", category: "Enrichment")
     private var isRunning = false
 
     init(
-        enricher: any TaskEnricher,
         container: ModelContainer,
-        modelTimeout: Duration = EnrichmentCoordinator.defaultModelTimeout,
         savedPlaces: @escaping @MainActor () -> SavedPlaces = { .empty }
     ) {
-        self.enricher = enricher
         self.container = container
-        self.modelTimeout = modelTimeout
         self.savedPlaces = savedPlaces
     }
 
-    /// The model call with its time limit; a timeout throws like any other failure of the call.
-    private func callModel(_ input: EnrichmentInput) async throws -> EnrichmentDraft {
-        let enricher = enricher
-        return try await ModelDeadline.run(within: modelTimeout) { try await enricher.enrich(input) }
-    }
-
-    /// Processes all pending tasks once, oldest first. A call while a pass is running returns at once.
+    /// Runs the rule step once for all pending tasks, oldest first. A call while a pass is running returns at once.
     func processPending() async {
         guard !isRunning else { return }
         isRunning = true
         defer { isRunning = false }
 
-        // An unavailable model ends the model step, not the pass: the rule runs anyway (#95, AC-7).
-        let modelUnavailable = enricher.unavailableReason
-        if let modelUnavailable {
-            logger.notice("Model unavailable, rules only: \(modelUnavailable, privacy: .public)")
-        }
-
         let context = container.mainContext
-        // Lines under a task first (#565): their two rules, never the model, so an added line shows
-        // its date and tag at once; the pass below is for top-level tasks only.
+        // Lines under a task first (#565): their two rules, so an added line shows its date and tag
+        // at once; the pass below is for top-level tasks only.
         applySubtaskRules(in: context)
         do {
-            let unprocessed = TaskStatus.unprocessed.rawValue
-            let active = TaskStatus.active.rawValue
-            let waiting = try context.fetch(FetchDescriptor<TaskItem>(
-                predicate: #Predicate { $0.processedAt == nil && $0.statusRaw == unprocessed }
-            ))
-            // Open top-level tasks the user vouched for with "Looks right" before the model step
-            // ran (#318), or activated again from parked: they are still owed their one run (ADR-4).
-            // Two fetches instead of `||`, as in `recognitionInputs`; subtasks never see the model (#565).
-            let confirmed = try context.fetch(FetchDescriptor<TaskItem>(
-                predicate: #Predicate { $0.processedAt == nil && $0.statusRaw == active }
-            )).filter { $0.parent == nil }
-            let pending = (waiting + confirmed).sorted { $0.capturedAt < $1.capturedAt }
+            let pending = try pendingTasks(in: context)
             guard !pending.isEmpty else { return }
 
             let contexts = try context.fetch(FetchDescriptor<TaskContext>(sortBy: [SortDescriptor(\.sortOrder)]))
             let projects = try context.fetch(FetchDescriptor<Project>(sortBy: [SortDescriptor(\.sortOrder)]))
-            let examples = modelUnavailable == nil ? try Self.examples(in: context) : []
             let recognition = try Self.recognitionInputs(in: context)   // once before the loop (#136)
             let learned = Self.learnedWords(from: recognition.tasksByID.values, catalog: contexts)   // once as well (#233)
 
             for task in pending {
                 applyRules(to: task, mode: .firstRun, catalog: contexts, projects: projects,
                            recognitionPool: recognition.pool, tasksByID: recognition.tasksByID, learned: learned)
-                // Outside the model block and outside its `do`/`catch` on purpose: the rule step ran,
-                // whether or not the model was there and whether or not its call threw (#144).
                 task.rulesAppliedAt = Date()
-                if modelUnavailable == nil {
-                    let input = EnrichmentInput(
-                        rawText: task.rawText,
-                        capturedAt: task.capturedAt,
-                        contextVocabulary: contexts.map(\.name),
-                        projectNames: projects.map(\.name),
-                        examples: examples
-                    )
-                    do {
-                        let draft = try await callModel(input)
-                        let written = EnrichmentWriter.apply(draft, to: task, contexts: contexts, projects: projects,
-                                                             pastNotes: examples.map(\.rawText))
-                        logger.info("Enriched \(task.id, privacy: .public): \(written) fields")
-                    } catch {
-                        logger.error("Enrichment failed for \(task.id, privacy: .public): \(error, privacy: .public)")
-                        // A permanent failure marks the one run as spent, without an AI revision:
-                        // the note would fail the same way on every pass (#535). "Reanalyze" still tries.
-                        if ModelFailure.isPermanent(error) {
-                            task.processedAt = Date()
-                            logger.notice("Model failure for \(task.id, privacy: .public) is permanent, not retried")
-                        }
-                    }
-                }
                 // Saving per task, caught per task: a failed save skips this one task, the pass
-                // continues with the next (#95). The rule hit is persisted even when the model
-                // was unavailable or its call failed.
+                // continues with the next (#95).
                 do {
                     try context.save()
                 } catch {
@@ -132,11 +71,28 @@ final class EnrichmentCoordinator {
         }
     }
 
-    /// The second analysis, only on the user's explicit request (ADR-4, #34): the same rule step and
-    /// model call as the first run, in `EnrichmentWriter.Mode.reanalysis`. Every field the user never
-    /// touched may change — AI-set or still empty —, each change is a new AI revision; a field the
-    /// user set stays as it is, and a value found again unchanged adds nothing. A missing value in
-    /// the new result never clears an existing one.
+    /// The tasks still owed their one rule run (ADR-4): unprocessed ones, and open top-level tasks the
+    /// user vouched for with "Looks right" before the pass (#318) or activated again from parked. Without
+    /// the model `processedAt` stays empty, so `rulesAppliedAt` limits the pass to one run per task
+    /// (#982); `processedAt == nil` keeps out tasks the model saw before #144, which never got the rule
+    /// marker, so they get no late rule duration. Two fetches instead of `||`, as in `recognitionInputs`.
+    private func pendingTasks(in context: ModelContext) throws -> [TaskItem] {
+        let unprocessed = TaskStatus.unprocessed.rawValue
+        let active = TaskStatus.active.rawValue
+        let waiting = try context.fetch(FetchDescriptor<TaskItem>(
+            predicate: #Predicate { $0.processedAt == nil && $0.rulesAppliedAt == nil && $0.statusRaw == unprocessed }
+        ))
+        let confirmed = try context.fetch(FetchDescriptor<TaskItem>(
+            predicate: #Predicate { $0.processedAt == nil && $0.rulesAppliedAt == nil && $0.statusRaw == active }
+        )).filter { $0.parent == nil }
+        return (waiting + confirmed).sorted { $0.capturedAt < $1.capturedAt }
+    }
+
+    /// The second analysis, only on the user's explicit request (ADR-4, #34): the same rule step as the
+    /// first run, in `EnrichmentWriter.Mode.reanalysis`, no model (ADR-22, #982). Every field the user
+    /// never touched may change to a new rule value, each change a new rule revision, and every older
+    /// revision (an old AI one too) stays; a field the user set stays as it is, and a value found again
+    /// unchanged adds nothing. A field no rule finds keeps its value.
     func reanalyze(_ task: TaskItem) async -> ReanalysisResult {
         guard !isRunning else { return .busy }
         isRunning = true
@@ -144,58 +100,21 @@ final class EnrichmentCoordinator {
 
         let context = container.mainContext
         let before = task.revisions?.count ?? 0
-        // A line under a task is read again by its two rules only (#565): the model never sees it.
-        if task.parent != nil {
-            do {
-                let contexts = try context.fetch(FetchDescriptor<TaskContext>(sortBy: [SortDescriptor(\.sortOrder)]))
-                let learned = try Self.learnedWords(from: Self.recognitionInputs(in: context).tasksByID.values, catalog: contexts)
-                applySubtaskRules(to: task, mode: .reanalysis, catalog: contexts, learned: learned)
-                task.rulesAppliedAt = Date()
-                try context.save()
-            } catch {
-                logger.error("Re-analysis failed for subtask \(task.id, privacy: .public): \(error, privacy: .public)")
-                return .failed
-            }
-            let changed = (task.revisions?.count ?? 0) - before
-            logger.info("Re-analysed subtask \(task.id, privacy: .public): \(changed) fields")
-            return .finished(changed: changed, modelRan: false)
-        }
-        let modelUnavailable = enricher.unavailableReason
-        if let modelUnavailable {
-            logger.notice("Model unavailable, re-analysis with rules only: \(modelUnavailable, privacy: .public)")
-        }
-        var modelRan = false
         do {
             let contexts = try context.fetch(FetchDescriptor<TaskContext>(sortBy: [SortDescriptor(\.sortOrder)]))
-            let projects = try context.fetch(FetchDescriptor<Project>(sortBy: [SortDescriptor(\.sortOrder)]))
             let recognition = try Self.recognitionInputs(in: context)
-            // The task's own rule step ran before, so it sits in the pool: it must not recognise itself.
-            let pool = recognition.pool.filter { $0.id != task.id }
             let learned = Self.learnedWords(from: recognition.tasksByID.values, catalog: contexts)
-            let ruleFields = applyRules(to: task, mode: .reanalysis, catalog: contexts, projects: projects,
-                                        recognitionPool: pool, tasksByID: recognition.tasksByID, learned: learned)
-            task.rulesAppliedAt = Date()
-
-            if modelUnavailable == nil {
-                let examples = try Self.examples(in: context)
-                let input = EnrichmentInput(
-                    rawText: task.rawText,
-                    capturedAt: task.capturedAt,
-                    contextVocabulary: contexts.map(\.name),
-                    projectNames: projects.map(\.name),
-                    examples: examples
-                )
-                do {
-                    let draft = try await callModel(input)
-                    EnrichmentWriter.apply(
-                        draft, to: task, contexts: contexts, projects: projects, mode: .reanalysis, ruleFields: ruleFields,
-                        pastNotes: examples.map(\.rawText)
-                    )
-                    modelRan = true
-                } catch {
-                    logger.error("Re-analysis model call failed for \(task.id, privacy: .public): \(error, privacy: .public)")
-                }
+            if task.parent != nil {
+                // A line under a task is read again by its two rules only (#565).
+                applySubtaskRules(to: task, mode: .reanalysis, catalog: contexts, learned: learned)
+            } else {
+                let projects = try context.fetch(FetchDescriptor<Project>(sortBy: [SortDescriptor(\.sortOrder)]))
+                // The task's own rule step ran before, so it sits in the pool: it must not recognise itself.
+                let pool = recognition.pool.filter { $0.id != task.id }
+                applyRules(to: task, mode: .reanalysis, catalog: contexts, projects: projects,
+                           recognitionPool: pool, tasksByID: recognition.tasksByID, learned: learned)
             }
+            task.rulesAppliedAt = Date()
             try context.save()
         } catch {
             logger.error("Re-analysis failed for \(task.id, privacy: .public): \(error, privacy: .public)")
@@ -203,19 +122,17 @@ final class EnrichmentCoordinator {
         }
         let changed = (task.revisions?.count ?? 0) - before
         logger.info("Re-analysed \(task.id, privacy: .public): \(changed) fields")
-        return .finished(changed: changed, modelRan: modelRan)
+        return .finished(changed: changed)
     }
 
-    /// The rule step, before and independent of the model (#95, #117, #136): it writes due date,
-    /// importance, urgency, a duration the user named (#673) and — from a raw text captured before —
-    /// duration and contexts the way
-    /// `EnrichmentWriter` writes a model value — one revision per field — but with the origin `rule`
-    /// instead of `ai`, read from the user's words rather than guessed (#101), and leaves
+    /// The rule step (#95, #117, #136): it writes due date, importance, urgency, a duration the user
+    /// named (#673) and — from a raw text captured before — duration and contexts, one revision per
+    /// field with the origin `rule`, read from the user's words rather than guessed (#101), and leaves
     /// `processedAt` alone, because that marker means "the model has seen this task" (ADR-4). Each
     /// field only while it is still empty, so the catch-up pass adds no second revision (#95 AC-8,
     /// #117 AC-6, #136 AC-8). The four steps are independent of each other. In a re-analysis (#34)
     /// `EnrichmentWriter.mayWrite` decides instead: any field the user never touched, to a new value.
-    /// Returns the fields a rule matched, written or not: the model leaves them alone (#34).
+    /// Returns the fields a rule matched, written or not.
     @discardableResult
     private func applyRules(
         to task: TaskItem,
@@ -455,7 +372,7 @@ final class EnrichmentCoordinator {
     /// A length the user named ("20 Minuten"), rounded up to its bucket (#441, #673). Same second
     /// condition as the recognition: only a user `Revision` marks a duration the user cleared.
     /// No catch-up over existing tasks: once the rule step ran (`rulesAppliedAt`), only a re-analysis
-    /// brings the duration — without the model `processedAt` stays empty and the pass comes back.
+    /// brings the duration.
     private func applyDurationRule(to task: TaskItem, mode: EnrichmentWriter.Mode) -> Bool {
         if mode == .firstRun, task.rulesAppliedAt != nil { return false }
         guard let guess = DurationRule.match(in: task.rawText)?.guess else { return false }

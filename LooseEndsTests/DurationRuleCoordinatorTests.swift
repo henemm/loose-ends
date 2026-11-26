@@ -9,8 +9,6 @@ import Testing
 struct DurationRuleCoordinatorTests {
     private let text = "Steuerbescheid prüfen 20 Minuten"
 
-    private func noModel() -> StubEnricher { StubEnricher(unavailableReason: "Kein Apple Intelligence") }
-
     private func durationRevisions(_ task: TaskItem) -> [Revision] {
         (task.revisions ?? []).filter { $0.field == .duration }
     }
@@ -22,7 +20,7 @@ struct DurationRuleCoordinatorTests {
         store.context.insert(task)
         try store.context.save()
 
-        await EnrichmentCoordinator(enricher: noModel(), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect(task.duration == .minutes30, "20 Minuten sind der nächste Eimer: 30 min")
         #expect(task.durationSourceRaw == FieldSource.rule.rawValue)
@@ -44,7 +42,7 @@ struct DurationRuleCoordinatorTests {
         store.context.insert(task)
         try store.context.save()
 
-        await EnrichmentCoordinator(enricher: noModel(), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect(task.duration == .hour1)
         #expect(durationRevisions(task).count == 1, "keine Regel-Revision neben der des Nutzers")
@@ -53,7 +51,7 @@ struct DurationRuleCoordinatorTests {
     @Test("Neu analysieren ersetzt einen Regelwert, nie einen Nutzerwert (AC-3)")
     @MainActor func reanalysisReplacesRuleValueOnly() async throws {
         let store = try TestStore()
-        let coordinator = EnrichmentCoordinator(enricher: noModel(), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
         let ruled = TaskItem(rawText: text)
         ruled.duration = .hours2plus
         ruled.durationSourceRaw = FieldSource.rule.rawValue
@@ -88,19 +86,16 @@ struct DurationRuleCoordinatorTests {
         store.context.insert(second)
         try store.context.save()
 
-        await EnrichmentCoordinator(enricher: noModel(), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect(second.duration == .hour1, "der frühere Nutzerwert, nicht der gelesene Eimer")
         #expect(durationRevisions(second).count == 1)
     }
 
-    @Test("Das Modell überschreibt den Regeltreffer nicht, auch nicht beim Neu analysieren (AC-5)")
-    @MainActor func modelStaysAwayFromRuleHit() async throws {
+    @Test("Der Regeltreffer bleibt beim Neu analysieren stehen (AC-5, ohne Modell #982)")
+    @MainActor func ruleHitStaysOnReanalysis() async throws {
         let store = try TestStore()
-        var draft = EnrichmentDraft()
-        draft.duration = EnrichmentDraft.Guess(.hours2plus, confidence: 0.99, reason: "Stub.")
-        draft.title = EnrichmentDraft.Guess("Steuerbescheid prüfen", confidence: 0.9, reason: "Stub.")
-        let coordinator = EnrichmentCoordinator(enricher: StubEnricher(draft: draft), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
         let task = TaskItem(rawText: text)
         store.context.insert(task)
         try store.context.save()
@@ -112,21 +107,7 @@ struct DurationRuleCoordinatorTests {
         _ = await coordinator.reanalyze(task)
         #expect(task.duration == .minutes30)
         #expect(task.durationSourceRaw == FieldSource.rule.rawValue)
-    }
-
-    @Test("Ohne Treffer bleibt die Modelldauer wie bisher (AC-5)")
-    @MainActor func modelStillSetsDurationWithoutHit() async throws {
-        let store = try TestStore()
-        var draft = EnrichmentDraft()
-        draft.duration = EnrichmentDraft.Guess(.hour1, confidence: 0.99, reason: "Stub.")
-        let task = TaskItem(rawText: "Steuerbescheid prüfen")
-        store.context.insert(task)
-        try store.context.save()
-
-        await EnrichmentCoordinator(enricher: StubEnricher(draft: draft), container: store.container).processPending()
-
-        #expect(task.duration == .hour1)
-        #expect(task.durationSourceRaw == FieldSource.ai.rawValue)
+        #expect(durationRevisions(task).count == 1, "derselbe Befund schreibt nichts noch einmal")
     }
 
     @Test("Eine Unteraufgabe bekommt keine Dauer (AC-6)")
@@ -140,7 +121,7 @@ struct DurationRuleCoordinatorTests {
         let line = try Subtasks.add(text, to: parent, in: store.context)
         try store.context.save()
 
-        await EnrichmentCoordinator(enricher: noModel(), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect(line.duration == nil)
         #expect(durationRevisions(line).isEmpty)
@@ -149,7 +130,7 @@ struct DurationRuleCoordinatorTests {
     @Test("Bestand ohne Nachlauf: Regelvermerk gesetzt heißt keine Dauer, Neu analysieren holt sie (AC-7)")
     @MainActor func existingTaskOnlyViaReanalysis() async throws {
         let store = try TestStore()
-        let coordinator = EnrichmentCoordinator(enricher: noModel(), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
         let task = TaskItem(rawText: text)
         task.rulesAppliedAt = Date()
         store.context.insert(task)
@@ -171,7 +152,7 @@ struct DurationRuleCoordinatorTests {
         store.context.insert(point)
         try store.context.save()
 
-        await EnrichmentCoordinator(enricher: noModel(), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         for task in [plain, point] {
             #expect(task.duration == nil)

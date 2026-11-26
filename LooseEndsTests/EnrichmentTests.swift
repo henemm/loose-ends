@@ -140,7 +140,7 @@ struct TestStore {
 }
 
 @Suite("EnrichmentCoordinator") struct EnrichmentCoordinatorTests {
-    @Test("Every unprocessed task is enriched once; a second pass touches nothing")
+    @Test("Every unprocessed task gets the rule step once; a second pass touches nothing (#982)")
     @MainActor func processesOnce() async throws {
         let store = try TestStore()
         let context = store.context
@@ -153,27 +153,24 @@ struct TestStore {
         context.insert(second)
         context.insert(done)
         try context.save()
-
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Titel", confidence: 0.9, reason: "Stub.")
-        let stub = StubEnricher(draft: draft)
-        let coordinator = EnrichmentCoordinator(enricher: stub, container: container)
+        let coordinator = EnrichmentCoordinator(container: container)
 
         await coordinator.processPending()
-        #expect(stub.calls == 2)
-        #expect(first.processedAt != nil && second.processedAt != nil)
-        #expect(done.processedAt == nil, "only unprocessed tasks run")
+        let firstMarker = try #require(first.rulesAppliedAt)
+        #expect(second.rulesAppliedAt != nil)
+        #expect(first.processedAt == nil && second.processedAt == nil, "no model, no model marker")
+        #expect(done.rulesAppliedAt == nil, "only unprocessed tasks run")
 
         await coordinator.processPending()
-        #expect(stub.calls == 2)
+        #expect(first.rulesAppliedAt == firstMarker, "once means once")
     }
 
-    @Test("A task confirmed with Looks right before its model step still gets its one run (#318)")
+    @Test("A task confirmed with Looks right before its rule step still gets its one run (#318)")
     @MainActor func confirmedBeforeEnrichmentStillRuns() async throws {
         let store = try TestStore()
         let context = store.context
         let container = store.container
-        let task = TaskItem(rawText: "Zettel sortieren")
+        let task = TaskItem(rawText: "Zettel sortieren morgen")
         task.title = "Zettel sortieren"
         let sub = TaskItem(rawText: "Erster Stapel")
         sub.status = .active
@@ -183,54 +180,16 @@ struct TestStore {
         try context.save()
         TaskActions.confirmReview(task)
         #expect(task.status == .active)
-
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Zettel sortieren", confidence: 0.9, reason: "Stub.")
-        let stub = StubEnricher(draft: draft)
-        let coordinator = EnrichmentCoordinator(enricher: stub, container: container)
+        let coordinator = EnrichmentCoordinator(container: container)
 
         await coordinator.processPending()
-        #expect(stub.calls == 1, "the confirmed task runs once, the subtask never")
-        #expect(task.processedAt != nil)
+        let marker = try #require(task.rulesAppliedAt, "the confirmed task runs once")
+        #expect(task.dueDate != nil, "its rules ran")
         #expect(task.status == .active)
 
         await coordinator.processPending()
-        #expect(stub.calls == 1, "once means once")
-    }
-
-    @Test("A failing model leaves the task unprocessed for the next pass")
-    @MainActor func failureLeavesTaskUnprocessed() async throws {
-        let store = try TestStore()
-        let context = store.context
-        let container = store.container
-        // Eine Notiz ohne Regel-Signal (kein Datum, keine Wichtigkeit, keine Dringlichkeit): geprüft
-        // wird hier der Modellpfad, und der schreibt bei einem Fehlschlag nichts (#117).
-        let task = TaskItem(rawText: "Zettel sortieren")
-        context.insert(task)
-        try context.save()
-        let stub = StubEnricher(failure: StubFailure())
-        let coordinator = EnrichmentCoordinator(enricher: stub, container: container)
-
-        await coordinator.processPending()
-
-        #expect(stub.calls == 1)
-        #expect(task.status == .unprocessed)
-        #expect(task.processedAt == nil)
-        #expect((task.revisions ?? []).isEmpty)
-    }
-
-    @Test("An unavailable model is not called at all")
-    @MainActor func unavailableModelIsSkipped() async throws {
-        let store = try TestStore()
-        let context = store.context
-        let container = store.container
-        context.insert(TaskItem(rawText: "Irgendwas"))
-        try context.save()
-        let stub = StubEnricher(unavailableReason: "deviceNotEligible")
-        let coordinator = EnrichmentCoordinator(enricher: stub, container: container)
-
-        await coordinator.processPending()
-        #expect(stub.calls == 0)
+        #expect(task.rulesAppliedAt == marker, "once means once")
+        #expect((task.revisions ?? []).filter { $0.field == .dueDate }.count == 1)
     }
 
     @Test("Examples are the most recent completed tasks with their final attributes")
@@ -259,10 +218,8 @@ struct TestStore {
         #expect(examples.first?.contexts == ["Garten"])
     }
 
-    /// „Regeln vor Modell" heißt nicht „Regeln nur, wenn das Modell kann" (#95, AC-7): der
-    /// Regelschritt läuft im Koordinator, unabhängig vom Modell-Gate. Auf einem Gerät ohne Apple
-    /// Intelligence, bei gesperrtem Gerät oder am Ratenlimit entsteht das Datum trotzdem.
-    @Test("Ohne verfügbares Modell schreibt die Regel trotzdem das Datum")
+    /// Der Regelschritt schreibt das Datum (#95, AC-7); seit #982 gibt es nur ihn.
+    @Test("Die Regel schreibt das Datum")
     @MainActor func ruleWritesDueDateWithoutModel() async throws {
         let store = try TestStore()
         let context = store.context
@@ -273,12 +230,10 @@ struct TestStore {
         task.capturedAt = try #require(Calendar.current.date(from: DateComponents(year: 2026, month: 3, day: 12, hour: 12)))
         context.insert(task)
         try context.save()
-        let stub = StubEnricher(unavailableReason: "deviceNotEligible")
-        let coordinator = EnrichmentCoordinator(enricher: stub, container: container)
+        let coordinator = EnrichmentCoordinator(container: container)
 
         await coordinator.processPending()
 
-        #expect(stub.calls == 0, "das Modell wird nicht befragt")
         let due = try #require(task.dueDate, "die Regel muss ein Datum liefern")
         #expect(Calendar.current.dateComponents([.year, .month, .day], from: due)
                 == DateComponents(year: 2026, month: 3, day: 20))
@@ -289,14 +244,12 @@ struct TestStore {
         #expect(dueRevisions.count == 1)
         #expect(dueRevisions.first?.author == .rule)
         #expect(dueRevisions.first?.reason?.isEmpty == false)
-        #expect(task.processedAt == nil, "Titel und Wichtigkeit stehen noch aus")
+        #expect(task.processedAt == nil, "kein Modell, kein Modellvermerk (#982)")
     }
 
-    /// `processedAt` bleibt der Marker für „das Modell hat es gesehen" (ADR-4). Sonst verlöre eine
-    /// einmal ohne Apple Intelligence erfasste Aufgabe Titel und Wichtigkeit für immer. Beim
-    /// Nachhol-Durchgang darf die Regel aber keine zweite Revision auf dasselbe Feld legen
-    /// (#95, AC-8).
-    @Test("Der Nachhol-Durchgang holt den Titel, ohne die Regel-Revision zu verdoppeln")
+    /// Beim Nachhol-Durchgang darf die Regel keine zweite Revision auf dasselbe Feld legen (#95, AC-8);
+    /// seit #982 nimmt der Durchgang eine Aufgabe mit Regelvermerk gar nicht erst wieder.
+    @Test("Der Nachhol-Durchgang verdoppelt die Regel-Revision nicht")
     @MainActor func catchUpPassDoesNotDuplicateRuleRevision() async throws {
         let store = try TestStore()
         let context = store.context
@@ -305,22 +258,13 @@ struct TestStore {
         task.capturedAt = try #require(Calendar.current.date(from: DateComponents(year: 2026, month: 3, day: 12, hour: 12)))
         context.insert(task)
         try context.save()
-        let stub = StubEnricher(unavailableReason: "deviceNotEligible")
-        let coordinator = EnrichmentCoordinator(enricher: stub, container: container)
+        let coordinator = EnrichmentCoordinator(container: container)
 
         await coordinator.processPending()
         let dueAfterRule = try #require(task.dueDate)
 
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Miete überweisen", confidence: 0.9, reason: "Stub.")
-        stub.draft = draft
-        stub.unavailableReason = nil
-
         await coordinator.processPending()
 
-        #expect(stub.calls == 1, "das Modell wird im Nachhol-Durchgang genau einmal befragt")
-        #expect(task.title == "Miete überweisen")
-        #expect(task.processedAt != nil, "jetzt hat das Modell die Aufgabe gesehen")
         #expect(task.dueDate == dueAfterRule, "das Datum der Regel bleibt stehen")
         #expect((task.revisions ?? []).filter { $0.field == .dueDate }.count == 1,
                 "die Regel legt beim zweiten Durchgang keine zweite Revision an")
@@ -334,8 +278,7 @@ struct TestStore {
         let store = try TestStore()
         let context = store.context
         let container = store.container
-        let stub = StubEnricher(unavailableReason: "deviceNotEligible")
-        let coordinator = EnrichmentCoordinator(enricher: stub, container: container)
+        let coordinator = EnrichmentCoordinator(container: container)
 
         let recent = TaskItem(rawText: "250 Euro an den Verein überweisen")
         recent.capturedAt = Date()
@@ -362,14 +305,12 @@ struct TestStore {
         let task = TaskItem(rawText: "Dringend 250 Euro an den Verein überweisen")
         context.insert(task)
         try context.save()
-        let stub = StubEnricher(unavailableReason: "deviceNotEligible")
-        let coordinator = EnrichmentCoordinator(enricher: stub, container: container)
+        let coordinator = EnrichmentCoordinator(container: container)
 
         await coordinator.processPending()
         let importanceAfterRule = task.importance
         let urgencyAfterRule = task.urgency
 
-        stub.unavailableReason = nil
         await coordinator.processPending()
 
         #expect(task.importance == importanceAfterRule)
@@ -511,12 +452,6 @@ struct RecognitionCoordinatorTests {
         return task
     }
 
-    /// Ein Stub-Modell, das für Dauer und Kontexte nichts liefert: geprüft wird hier der Regelpfad.
-    private func silentStub() -> StubEnricher {
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Titel", confidence: 0.9, reason: "Stub.")
-        return StubEnricher(draft: draft)
-    }
 
     @Test("Wortgleiche Wiedererfassung übernimmt Dauer und Kontexte der früheren Aufgabe (AC-1)")
     @MainActor func adoptsDurationAndContextsFromIdenticalRawText() async throws {
@@ -529,7 +464,7 @@ struct RecognitionCoordinatorTests {
         context.insert(fresh)
         try context.save()
 
-        let coordinator = EnrichmentCoordinator(enricher: silentStub(), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
         await coordinator.processPending()
 
         #expect(fresh.duration == .minutes30)
@@ -558,7 +493,7 @@ struct RecognitionCoordinatorTests {
         context.insert(fresh)
         try context.save()
 
-        let coordinator = EnrichmentCoordinator(enricher: silentStub(), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
         await coordinator.processPending()
 
         #expect(fresh.duration == .minutes15)
@@ -581,7 +516,7 @@ struct RecognitionCoordinatorTests {
         context.insert(unrelated)
         try context.save()
 
-        let coordinator = EnrichmentCoordinator(enricher: silentStub(), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
         await coordinator.processPending()
 
         #expect(tea.duration == nil, "Tee holen ist nicht Bad holen")
@@ -603,7 +538,7 @@ struct RecognitionCoordinatorTests {
         context.insert(fresh)
         try context.save()
 
-        let coordinator = EnrichmentCoordinator(enricher: silentStub(), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
         await coordinator.processPending()
 
         #expect(fresh.duration == .hour1, "Dauer ja")
@@ -623,7 +558,7 @@ struct RecognitionCoordinatorTests {
         context.insert(fresh)
         try context.save()
 
-        let coordinator = EnrichmentCoordinator(enricher: silentStub(), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
         await coordinator.processPending()
 
         #expect(fresh.duration == .hours2plus, "die Korrektur des Nutzers gewinnt, nicht der KI-Wert")
@@ -644,7 +579,7 @@ struct RecognitionCoordinatorTests {
         context.insert(second)
         try context.save()
 
-        let coordinator = EnrichmentCoordinator(enricher: silentStub(), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
         await coordinator.processPending()
 
         #expect(second.duration == nil, "die erste Aufgabe war beim Lauf noch nicht veredelt")
@@ -659,15 +594,13 @@ struct RecognitionCoordinatorTests {
         context.insert(fresh)
         try context.save()
 
-        // Erster Lauf ohne Modell: die Regel greift, `processedAt` bleibt leer (ADR-4).
-        let unavailable = silentStub()
-        unavailable.unavailableReason = "Kein Apple Intelligence"
-        await EnrichmentCoordinator(enricher: unavailable, container: store.container).processPending()
+        // Erster Lauf: die Regel greift, `processedAt` bleibt leer (ADR-4, #982).
+        await EnrichmentCoordinator(container: store.container).processPending()
         #expect(fresh.duration == .minutes30)
         #expect(fresh.processedAt == nil)
 
-        // Zweiter Lauf, Modell jetzt verfügbar: kein zweiter Regelschritt auf dasselbe Feld.
-        await EnrichmentCoordinator(enricher: silentStub(), container: store.container).processPending()
+        // Zweiter Lauf: kein zweiter Regelschritt auf dasselbe Feld.
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         let durationRevisions = (fresh.revisions ?? []).filter { $0.field == .duration }
         #expect(durationRevisions.count == 1)
@@ -724,11 +657,8 @@ struct RecognitionCoordinatorTests {
         context.insert(fresh)
         try context.save()
 
-        // Erster Lauf ohne Modell: die Regel setzt die Dauer, `processedAt` bleibt leer (ADR-4) —
-        // die Aufgabe bleibt damit Kandidat für jeden weiteren Nachzügler-Lauf.
-        let unavailable = silentStub()
-        unavailable.unavailableReason = "Kein Apple Intelligence"
-        await EnrichmentCoordinator(enricher: unavailable, container: store.container).processPending()
+        // Erster Lauf: die Regel greift, `processedAt` bleibt leer (ADR-4, #982).
+        await EnrichmentCoordinator(container: store.container).processPending()
         #expect(fresh.duration == .minutes30)
         #expect(fresh.processedAt == nil)
 
@@ -739,7 +669,7 @@ struct RecognitionCoordinatorTests {
         #expect(fresh.duration == nil)
         #expect(fresh.durationSourceRaw == nil, "der Herkunftsvermerk fällt beim Leeren mit weg")
 
-        await EnrichmentCoordinator(enricher: unavailable, container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect(fresh.duration == nil, "der Nutzerentscheid bleibt stehen")
         let aiRevisions = (fresh.revisions ?? []).filter { $0.field == .duration && $0.author == .rule }
@@ -760,9 +690,8 @@ struct RecognitionCoordinatorTests {
         context.insert(fresh)
         try context.save()
 
-        let unavailable = silentStub()
-        unavailable.unavailableReason = "Kein Apple Intelligence"
-        await EnrichmentCoordinator(enricher: unavailable, container: store.container).processPending()
+        // Erster Lauf: die Regel greift, `processedAt` bleibt leer (ADR-4, #982).
+        await EnrichmentCoordinator(container: store.container).processPending()
         #expect((fresh.contexts ?? []).map(\.name) == ["Garten"])
         #expect(fresh.processedAt == nil)
 
@@ -772,7 +701,7 @@ struct RecognitionCoordinatorTests {
         #expect((fresh.contexts ?? []).isEmpty)
         #expect(fresh.contextsSourceRaw == nil, "der Herkunftsvermerk fällt beim Leeren mit weg")
 
-        await EnrichmentCoordinator(enricher: unavailable, container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect((fresh.contexts ?? []).isEmpty, "der Nutzerentscheid bleibt stehen")
         let aiRevisions = (fresh.revisions ?? []).filter { $0.field == .contexts && $0.author == .rule }
@@ -797,13 +726,11 @@ struct RecognitionPoolReachabilityTests {
         let garden = TaskContext(name: "Garten")
         context.insert(garden)
 
-        let noModel = StubEnricher(unavailableReason: "Kein Apple Intelligence")
-
         // Erste Erfassung, danach der Veredelungs-Durchgang wie in der App.
         let first = TaskItem(rawText: "Rasen mähen")
         context.insert(first)
         try context.save()
-        await EnrichmentCoordinator(enricher: noModel, container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         // Der Nutzer setzt Dauer und Kontext selbst — der Normalfall, wenn kein Modell da ist.
         first.duration = .minutes30
@@ -816,7 +743,7 @@ struct RecognitionPoolReachabilityTests {
         let second = TaskItem(rawText: "Rasen mähen")
         context.insert(second)
         try context.save()
-        await EnrichmentCoordinator(enricher: noModel, container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect(second.duration == .minutes30, "die Dauer von vorhin muss übernommen werden")
         #expect((second.contexts ?? []).map(\.name) == ["Garten"], "die Kontexte von vorhin auch")
@@ -832,38 +759,17 @@ struct RecognitionPoolReachabilityTests {
     @MainActor func ruleMarkerFillsThePoolWithoutTheModel() async throws {
         let store = try TestStore()
         let context = store.context
-        let noModel = StubEnricher(unavailableReason: "Kein Apple Intelligence")
 
         for index in 0..<3 {
             context.insert(TaskItem(rawText: "Aufgabe \(index)"))
         }
         try context.save()
-        await EnrichmentCoordinator(enricher: noModel, container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         let pool = try context.fetch(FetchDescriptor<TaskItem>(predicate: #Predicate { $0.rulesAppliedAt != nil }))
         #expect(pool.count == 3, "wer die Regeln durchlaufen hat, gehört in die Vergleichsmenge")
         let unseenByModel = try context.fetch(FetchDescriptor<TaskItem>(predicate: #Predicate { $0.processedAt == nil }))
         #expect(unseenByModel.count == 3, "`processedAt` behält seine Bedeutung: das Modell war nicht da")
-    }
-
-    /// Der zweite Fehlerpfad aus der Analyse, der auch Hennings iPhone 16 Pro trifft und nicht nur
-    /// den Simulator: Das Modell ist verfügbar, aber der Aufruf scheitert. Dann läuft
-    /// `EnrichmentWriter.apply` nicht, also bleibt `processedAt` leer — der Regelschritt lief aber
-    /// trotzdem und muss seinen eigenen Vermerk behalten.
-    @Test("Ein fehlgeschlagener Modellaufruf nimmt dem Regelschritt den Vermerk nicht (AC-3)")
-    @MainActor func ruleMarkerSurvivesAFailingModelCall() async throws {
-        let store = try TestStore()
-        let context = store.context
-        let failing = StubEnricher(failure: StubFailure())
-        let task = TaskItem(rawText: "Reifen wechseln lassen")
-        context.insert(task)
-        try context.save()
-
-        await EnrichmentCoordinator(enricher: failing, container: store.container).processPending()
-
-        #expect(failing.calls == 1, "das Modell wurde befragt")
-        #expect(task.processedAt == nil, "ein gescheiterter Aufruf ist kein Modelllauf (ADR-4)")
-        #expect(task.rulesAppliedAt != nil, "der Regelschritt lief und vermerkt das selbst")
     }
 
     /// Die Bestandsdaten-Lücke: Aufgaben, die vor #144 veredelt wurden — lokal oder per CloudKit von
@@ -893,10 +799,7 @@ struct RecognitionPoolReachabilityTests {
         context.insert(fresh)
         try context.save()
 
-        await EnrichmentCoordinator(
-            enricher: StubEnricher(unavailableReason: "Kein Apple Intelligence"),
-            container: store.container
-        ).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect(fresh.duration == .hour1, "die Bestandsaufgabe muss erreichbar bleiben")
         #expect((fresh.contexts ?? []).map(\.name) == ["Garten"])
@@ -930,44 +833,10 @@ struct RecognitionPoolReachabilityTests {
         let fresh = TaskItem(rawText: "Steuer sortieren")
         context.insert(fresh)
         try context.save()
-        await EnrichmentCoordinator(
-            enricher: StubEnricher(unavailableReason: "Kein Apple Intelligence"),
-            container: store.container
-        ).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect(fresh.duration == .hours2plus)
         #expect((fresh.revisions ?? []).filter { $0.field == .duration }.count == 1)
-    }
-
-    /// Der Fehler, den #95 schon einmal behoben hat, darf nicht zurückkommen: Würde der
-    /// Nachzügler-Fetch um `rulesAppliedAt == nil` verengt, verlöre eine ohne Apple Intelligence
-    /// erfasste Aufgabe für immer Titel, Energie, Personen und Projekt.
-    @Test("Der Regel-Vermerk verengt den Nachzügler-Lauf nicht (AC-6)")
-    @MainActor func ruleMarkerDoesNotHideATaskFromTheModelPass() async throws {
-        let store = try TestStore()
-        let context = store.context
-        let task = TaskItem(rawText: "Dachrinne reinigen")
-        context.insert(task)
-        try context.save()
-
-        let stub = StubEnricher(unavailableReason: "Kein Apple Intelligence")
-        let coordinator = EnrichmentCoordinator(enricher: stub, container: store.container)
-        await coordinator.processPending()
-        #expect(task.rulesAppliedAt != nil, "der Regelschritt lief")
-        #expect(task.processedAt == nil, "das Modell nicht")
-
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Dachrinne reinigen", confidence: 0.9, reason: "Stub.")
-        draft.duration = EnrichmentDraft.Guess(.hour1, confidence: 0.9, reason: "Stub.")
-        stub.draft = draft
-        stub.unavailableReason = nil
-
-        await coordinator.processPending()
-
-        #expect(stub.calls == 1, "die Aufgabe wird beim Nachzügler-Lauf weiterhin gefunden")
-        #expect(task.title == "Dachrinne reinigen")
-        #expect(task.duration == .hour1)
-        #expect(task.processedAt != nil, "jetzt hat das Modell sie gesehen")
     }
 
     /// AC-8 aus #136 und #95 unter der neuen Lesart: Ab dem zweiten Durchgang steht eine Aufgabe mit
@@ -995,9 +864,8 @@ struct RecognitionPoolReachabilityTests {
         context.insert(fresh)
         try context.save()
 
-        let noModel = StubEnricher(unavailableReason: "Kein Apple Intelligence")
         for _ in 0..<3 {
-            await EnrichmentCoordinator(enricher: noModel, container: store.container).processPending()
+            await EnrichmentCoordinator(container: store.container).processPending()
         }
 
         #expect(fresh.duration == .minutes30)
@@ -1010,7 +878,7 @@ struct RecognitionPoolReachabilityTests {
 }
 
 /// #932 Schnitt 1: a title the user (or Claude, as a user revision) set before the first run stays; the model writes its title
-/// only where no user revision hangs. And the chain: what Claude set at capture survives rules, model and "Analyze again".
+/// only where no user revision hangs. And the chain: what Claude set at capture survives the rules and "Analyze again".
 @MainActor final class EnrichmentTitleProtectionTests: XCTestCase {
     private static let fields: [RevisedField] = [
         .title, .notes, .dueDate, .importance, .urgency, .duration, .energy, .contexts, .project,
@@ -1047,7 +915,7 @@ struct RecognitionPoolReachabilityTests {
 
     // MARK: AC-10
 
-    func testClaudesFieldsSurviveRulesModelAndReanalysis() async throws {
+    func testClaudesFieldsSurviveRulesAndReanalysis() async throws {
         let store = try TestStore()
         for (index, name) in ["Garten", "Büro"].enumerated() { store.context.insert(TaskContext(name: name, sortOrder: index)) }
         for (index, name) in ["Haus", "Arbeit"].enumerated() { store.context.insert(Project(name: name, sortOrder: index)) }
@@ -1069,13 +937,9 @@ struct RecognitionPoolReachabilityTests {
         XCTAssertEqual(claude[.title] ?? nil, "Hecke beim Nachbarn schneiden")
         XCTAssertEqual(claude[.project] ?? nil, "Arbeit")
 
-        var draft = modelTitle("Hecke schneiden")
-        draft.duration = EnrichmentDraft.Guess(.minutes5, confidence: 0.9, reason: "Short job.")
-        let stub = StubEnricher(draft: draft)
-        let coordinator = EnrichmentCoordinator(enricher: stub, container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
         await coordinator.processPending()
-        XCTAssertEqual(stub.calls, 1, "the model ran")
-        stub.draft = modelTitle("Hecke schneiden Garten")
+        XCTAssertNotNil(task.rulesAppliedAt, "the rules ran")
         _ = await coordinator.reanalyze(task)
 
         for field in Self.fields {

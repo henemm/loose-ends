@@ -16,12 +16,6 @@ import Testing
         return task
     }
 
-    private func titleOnly(_ title: String) -> StubEnricher {
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess(title, confidence: 0.9, reason: "Stub.")
-        return StubEnricher(draft: draft)
-    }
-
     @Test("Old records stay readable; unknown text reads as AI, as before (AC-1)")
     func legacyRecordsStayReadable() {
         let legacy = Revision(task: nil, field: .dueDate, oldValue: nil, newValue: nil, author: .ai)
@@ -35,28 +29,27 @@ import Testing
         #expect(!FieldSource.isAutomatic("user") && !FieldSource.isAutomatic(nil) && !FieldSource.isAutomatic("x"))
     }
 
-    @Test("Due date, importance and urgency from a rule carry the rule origin; the title stays AI (AC-2)")
-    @MainActor func rulesWriteRuleModelWritesAI() async throws {
+    @Test("Due date, importance and urgency from a rule carry the rule origin; no AI field since #982 (AC-2)")
+    @MainActor func rulesWriteRuleOrigin() async throws {
         let store = try TestStore()
         let task = try capture("bis Freitag dringend Steuererklärung abgeben", in: store)
 
-        await EnrichmentCoordinator(enricher: titleOnly("Steuererklärung abgeben"), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect(task.dueSourceRaw == FieldSource.rule.rawValue)
         #expect(task.importanceSourceRaw == FieldSource.rule.rawValue)
         #expect(task.urgencySourceRaw == FieldSource.rule.rawValue)
-        #expect(task.titleSourceRaw == FieldSource.ai.rawValue)
+        #expect(task.titleSourceRaw == nil, "no model, no AI title")
         let revisions = task.revisions ?? []
         for field in [RevisedField.dueDate, .importance, .urgency] {
             #expect(revisions.first { $0.field == field }?.author == .rule, "\(field)")
         }
-        #expect(revisions.first { $0.field == .title }?.author == .ai)
+        #expect(!revisions.contains { $0.author == .ai })
 
         #expect(RevisionService.origin(of: .dueDate, on: task) == .rule)
-        #expect(RevisionService.origin(of: .title, on: task) == .ai)
-        #expect(RevisionService.automaticFields(on: task) == [.title, .dueDate, .importance, .urgency])
+        #expect(RevisionService.automaticFields(on: task) == [.dueDate, .importance, .urgency])
         #expect(task.hasUnseenAutomaticRevisions)
-        #expect(RevisionService.markSeen(task) == 4, "rule revisions are marked seen like AI ones")
+        #expect(RevisionService.markSeen(task) == 3, "rule revisions are marked seen like AI ones")
         #expect(!task.hasUnseenAutomaticRevisions)
     }
 
@@ -65,7 +58,7 @@ import Testing
         let store = try TestStore()
         let task = try capture("Morgen wichtig Steuerbescheid prüfen", in: store)
 
-        await EnrichmentCoordinator(enricher: titleOnly("Steuerbescheid prüfen"), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect(task.importance == .high)
         #expect(task.importanceSourceRaw == FieldSource.rule.rawValue)
@@ -78,7 +71,7 @@ import Testing
     @MainActor func ruleValueResets() async throws {
         let store = try TestStore()
         let task = try capture("bis Freitag Geschenk besorgen", in: store)
-        await EnrichmentCoordinator(enricher: titleOnly("Geschenk besorgen"), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
         let rule = try #require(RevisionService.firstAutomaticRevision(of: .dueDate, on: task))
         #expect(rule.author == .rule)
 
@@ -113,7 +106,7 @@ import Testing
         store.context.insert(earlier)
         let fresh = try capture("Rasen mähen", in: store)
 
-        await EnrichmentCoordinator(enricher: titleOnly("Rasen mähen"), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect(fresh.duration == .minutes30)
         #expect(fresh.durationSourceRaw == FieldSource.rule.rawValue)

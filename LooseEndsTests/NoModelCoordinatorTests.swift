@@ -25,8 +25,9 @@ final class NoModelCoordinatorTests: XCTestCase {
         EnrichmentCoordinator(container: store.container)
     }
 
+    /// Oldest first: a SwiftData to-many relationship comes back in no fixed order.
     private func revisions(_ task: TaskItem, _ field: RevisedField? = nil) -> [Revision] {
-        (task.revisions ?? []).filter { field == nil || $0.field == field }
+        (task.revisions ?? []).filter { field == nil || $0.field == field }.sorted { $0.createdAt < $1.createdAt }
     }
 
     // MARK: - Test 1 (AC-1)
