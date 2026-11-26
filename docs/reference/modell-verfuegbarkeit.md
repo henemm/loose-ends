@@ -33,7 +33,7 @@ Stand: **2026-10-24**. OS laut Latenzbericht (`docs/reference/modell-latenz.md`)
   (`rulesAppliedAt` gesetzt, Datum und Dringlichkeit aus der Regel), `processedAt` bleibt leer; wird das Modell verfügbar, ruft der nächste Lauf es genau einmal, ohne zweite Regel-Revision.
 - Doppellauf im selben Test: Ein zweiter Modelllauf mit abweichender Antwort überschreibt keinen Nutzerwert, setzt nie Kontext oder Projekt und legt keine Nutzer-Revision an.
   **Nicht belegt:** zwei echte Geräte und der CloudKit-Abgleich selbst.
-- Bestehend: `EnrichmentTests.unavailableModelIsSkipped`, `ruleMarkerDoesNotHideATaskFromTheModelPass`, `ReanalysisTests.rulesOnlyWithoutModel`, `OnboardingFlowTests.modelNote`.
+- Bestehend: `EnrichmentTests.unavailableModelIsSkipped`, `ruleMarkerDoesNotHideATaskFromTheModelPass`, `ReanalysisTests.rulesOnlyWithoutModel`. (`OnboardingFlowTests.modelNote` entfiel mit dem Onboarding-Hinweis, #982 Schnitt 2.)
 
 ## Matrix
 

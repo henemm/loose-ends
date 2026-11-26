@@ -1,0 +1,8 @@
+** TEST SUCCEEDED **
+-- ui OnboardingTests (test-proof)
+result=Passed passed=3 failed=0 skipped=0 total=3
+Executed 3 tests, with 0 failures
+-- unit alle (zweiter Lauf; erster brach mit 'Lost connection to testmanagerd' ab)
+result=Passed passed=1394 failed=0 skipped=13 total=1407
+-- python3 scripts/test_catalog_languages.py: OK (9 Tests)
+-- python3 scripts/test_onboarding_ohne_modell.py: OK (2 Tests)

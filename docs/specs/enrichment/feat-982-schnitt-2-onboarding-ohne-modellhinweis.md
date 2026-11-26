@@ -106,6 +106,10 @@ UI-Test (XCTest), Lauf `./scripts/sim.sh test-proof OnboardingTests` (iPhone).
   Argument `--ui-testing-model-reason=deviceNotEligible` WHEN Schritt 1 (Siri) erscheint THEN steht dort kein Element
   `onboardingModelNote` und kein Text, der „Apple Intelligence“ enthält; Screenshot angehängt. RED heute: das Argument holt
   den Hinweis „This device has no Apple Intelligence …“ hervor.
+- [ ] Test 1b: GIVEN den Repo-Stand WHEN `python3 scripts/test_onboarding_ohne_modell.py` läuft THEN enthält
+  `Localizable.xcstrings` keinen der drei Hinweisschlüssel (AC-3) und kein Swift in `LooseEnds`, `Shared`,
+  `LooseEndsTests` nennt `ModelNote`, `modelNote`, `onboardingModelReason` oder `ui-testing-model-reason` (AC-2).
+  RED gegen den Stand vor der Umsetzung (2 Fehlschläge); die CI fährt alle `scripts/test_*.py`.
 - [ ] Test 2: GIVEN die beiden bestehenden Ablauftests (`testWalkThroughThreeStepsToTheStartScreen`,
   `testSkipEndsTheOnboardingAtOnce`) WHEN sie laufen THEN bestehen sie unverändert.
 - [ ] Test 3: GIVEN alle übrigen Unit- und UI-Tests und den Katalogwächter WHEN sie laufen (`./scripts/sim.sh unit`,
@@ -115,8 +119,10 @@ UI-Test (XCTest), Lauf `./scripts/sim.sh test-proof OnboardingTests` (iPhone).
 
 - **AC-1:** Schritt 1 des Onboardings zeigt keinen Modellhinweis, auch nicht mit dem früheren Testargument
   `--ui-testing-model-reason=…` (Test 1, Screenshot geöffnet und beschrieben).
-- **AC-2:** Im App-Code gibt es keine `ModelNote`, kein `modelNote`, kein `modelUnavailableReason` außerhalb der Labor-App,
-  kein `onboardingModelReason` und kein `--ui-testing-model-reason`: `grep -rn "ModelNote\|modelNote\|onboardingModelReason\|ui-testing-model-reason" LooseEnds Shared LooseEndsTests LooseEndsUITests` ist leer.
+- **AC-2:** Im App- und Unit-Test-Code gibt es keine `ModelNote`, kein `modelNote`, kein `modelUnavailableReason` außerhalb
+  der Labor-App, kein `onboardingModelReason` und kein `--ui-testing-model-reason`:
+  `grep -rn "ModelNote\|modelNote\|onboardingModelReason\|ui-testing-model-reason" LooseEnds Shared LooseEndsTests` ist leer.
+  In `LooseEndsUITests` steht das frühere Argument nur noch in `OnboardingTests`, die es für AC-1 absichtlich übergibt.
 - **AC-3:** `Localizable.xcstrings` enthält die drei Schlüssel „Apple Intelligence is off. …“, „Apple Intelligence is still
   getting ready. …“ und „This device has no Apple Intelligence. …“ nicht mehr; der Katalogwächter ist grün.
 - **AC-4:** Durchlauf und Überspringen des Onboardings funktionieren unverändert; alle übrigen Tests grün (Tests 2, 3).
@@ -138,3 +144,4 @@ UI-Test (XCTest), Lauf `./scripts/sim.sh test-proof OnboardingTests` (iPhone).
 ## Changelog
 
 - 2026-11-26: Initial spec created
+- 2026-11-26: AC-2 auf App- und Unit-Test-Code begrenzt; der AC-1-Test übergibt das frühere Argument absichtlich (Widerspruch AC-1/AC-2 behoben); Test 1b prüft die Abwesenheit von Code und Katalogschlüsseln

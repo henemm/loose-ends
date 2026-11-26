@@ -1,0 +1,51 @@
+FF
+======================================================================
+FAIL: test_app_and_unit_test_code_name_no_model_note (__main__.OnboardingOhneModellTests.test_app_and_unit_test_code_name_no_model_note)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/optimized-honking-crystal/scripts/test_onboarding_ohne_modell.py", line 37, in test_app_and_unit_test_code_name_no_model_note
+    self.assertEqual(hits, [], "Modellhinweis noch im Code")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['LooseEnds/App/ContentView.swift: onboard[474 chars]ote'] != []
+
+First list contains 9 additional elements.
+First extra element 0:
+'LooseEnds/App/ContentView.swift: onboardingModelReason'
+
++ []
+- ['LooseEnds/App/ContentView.swift: onboardingModelReason',
+-  'LooseEnds/App/ContentView.swift: ui-testing-model-reason',
+-  'LooseEnds/Views/OnboardingFlow.swift: ModelNote',
+-  'LooseEnds/Views/OnboardingFlow.swift: modelNote',
+-  'LooseEnds/Views/OnboardingView.swift: ModelNote',
+-  'LooseEnds/Views/OnboardingView.swift: modelNote',
+-  'LooseEndsTests/NoModelCoordinatorTests.swift: onboardingModelReason',
+-  'LooseEndsTests/NoModelCoordinatorTests.swift: ui-testing-model-reason',
+-  'LooseEndsTests/OnboardingFlowTests.swift: modelNote'] : Modellhinweis noch im Code
+
+======================================================================
+FAIL: test_catalog_has_none_of_the_three_note_keys (__main__.OnboardingOhneModellTests.test_catalog_has_none_of_the_three_note_keys)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/optimized-honking-crystal/scripts/test_onboarding_ohne_modell.py", line 29, in test_catalog_has_none_of_the_three_note_keys
+    self.assertEqual(left, [], "Hinweisschlüssel stehen noch im Katalog")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['Apple Intelligence is off. Turn it on in[301 chars]re.'] != []
+
+First list contains 3 additional elements.
+First extra element 0:
+'Apple Intelligence is off. Turn it on in Settings so new tasks get a title and a duration.'
+
++ []
+- ['Apple Intelligence is off. Turn it on in Settings so new tasks get a title '
+-  'and a duration.',
+-  'Apple Intelligence is still getting ready. Tasks captured meanwhile are '
+-  'sorted once it is.',
+-  'This device has no Apple Intelligence. Due dates, importance, urgency and '
+-  'tags are still found; a duration only when you name it or the task came up '
+-  'before.'] : Hinweisschlüssel stehen noch im Katalog
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.039s
+
+FAILED (failures=2)

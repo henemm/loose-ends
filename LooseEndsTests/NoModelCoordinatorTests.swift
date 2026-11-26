@@ -172,18 +172,6 @@ final class NoModelCoordinatorTests: XCTestCase {
         XCTAssertNotNil(built)
     }
 
-    // MARK: - Test 8 (AC-8)
-
-    func testTheRealAppPassesNoModelReasonToTheOnboarding() {
-        XCTAssertNil(ContentView.onboardingModelReason(arguments: [], isUITesting: false))
-        XCTAssertNil(ContentView.onboardingModelReason(
-            arguments: ["--ui-testing-model-reason=deviceNotEligible"], isUITesting: false),
-            "ohne Testmodus zählt das Argument nicht")
-        XCTAssertNil(ContentView.onboardingModelReason(arguments: ["--ui-testing"], isUITesting: true))
-        XCTAssertEqual(ContentView.onboardingModelReason(
-            arguments: ["--ui-testing", "--ui-testing-model-reason=modelNotReady"], isUITesting: true), "modelNotReady")
-    }
-
     // MARK: - Test 9 (AC-10)
 
     func testSubtasksStillGetTheirTwoRules() async throws {
