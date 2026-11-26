@@ -55,7 +55,7 @@ final class PaperGroundTests: XCTestCase {
         XCTAssertLessThanOrEqual(apart, 3, "\(what): the row stands on \(inRow), the area below on \(below)")
     }
 
-    /// Writes one task into the start page's line; it lands in "New".
+    /// Writes one task into the start page's line; it stands in "Loose ends" at once (#1000).
     @MainActor
     private func capture(_ text: String, in app: XCUIApplication) {
         let line = element("startCaptureField", in: app)
@@ -100,9 +100,10 @@ final class PaperGroundTests: XCTestCase {
     func testDoneRowsShareThePaperGround() throws {
         let app = try launch()
         capture("Apfel kaufen", in: app)
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5), "No New in the sidebar")
-        newRow.tap()
+        // #1000: no "New" any more; the task stands in "Loose ends", its only task.
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5), "No Loose ends in the sidebar")
+        looseEnds.tap()
         holdFirstRow(until: "menuCounts", in: app)
         holdFirstRow(until: "menuDone", in: app)
         let doneRow = element("viewRow_done", in: app)

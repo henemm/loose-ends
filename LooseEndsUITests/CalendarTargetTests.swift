@@ -34,9 +34,11 @@ final class CalendarTargetTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
-        let newRow = app.descendants(matching: .any).matching(identifier: "viewRow_new").firstMatch
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        // #1000: no "New" any more; the task stands in "Loose ends", low in the index.
+        let looseEnds = app.descendants(matching: .any).matching(identifier: "viewRow_open").firstMatch
+        for _ in 0..<3 where !looseEnds.waitForExistence(timeout: 2) { app.swipeUp() }
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_'")).firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 5))
@@ -175,7 +177,7 @@ final class CalendarTargetTests: XCTestCase {
         app.buttons["settingsDoneButton"].tap()
     }
 
-    /// Captures `text`, opens it from "New", switches on "Show in calendar" and returns the target row.
+    /// Captures `text`, opens it from "Loose ends", switches on "Show in calendar" and returns the target row.
     @MainActor
     private func switchOnNewTask(_ text: String, titled title: String, in app: XCUIApplication) -> XCUIElement {
         let capture = app.buttons["captureButton"]
@@ -188,12 +190,14 @@ final class CalendarTargetTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
-        let newRow = app.descendants(matching: .any).matching(identifier: "viewRow_new").firstMatch
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        // #1000: no "New" any more; the task stands in "Loose ends", low in the index.
+        let looseEnds = app.descendants(matching: .any).matching(identifier: "viewRow_open").firstMatch
+        for _ in 0..<3 where !looseEnds.waitForExistence(timeout: 2) { app.swipeUp() }
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_' AND label CONTAINS %@", title)).firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 5), "New should list the task \(title)")
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Loose ends should list the task \(title)")
         row.tap()
 
         let word = app.descendants(matching: .any).matching(identifier: "field_calendar").firstMatch

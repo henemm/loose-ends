@@ -74,7 +74,7 @@ final class StoreScreenshotsTests: XCTestCase {
             let typed = app.descendants(matching: .any)
                 .matching(NSPredicate(format: "identifier == 'startCaptureField' AND value == %@", text)).firstMatch
             if !line.exists, typed.exists { typed.tap() }
-            app.typeText("\n")   // what was kept is checked later: rows in Jetzt and Neu
+            app.typeText("\n")   // what was kept is checked later: rows in Jetzt and Lose Enden
             return
         }
         XCTAssertTrue(field.exists, "Capture sheet did not open")
@@ -156,7 +156,7 @@ final class StoreScreenshotsTests: XCTestCase {
         shot("01-start")
         guard hidden else { return }
         sidebarButton(["Seitenleiste einblenden", "Show Sidebar"], in: app).tap()
-        XCTAssertTrue(element("viewRow_new", in: app).waitForExistence(timeout: 5), "Sidebar did not come back")
+        XCTAssertTrue(element("viewRow_due", in: app).waitForExistence(timeout: 5), "Sidebar did not come back")
     }
 
     /// Since #827 the iPad's start page draws its "Jetzt" rows like the Mac (`startNowRow_`), the iPhone keeps `nowRow_`.
@@ -168,18 +168,24 @@ final class StoreScreenshotsTests: XCTestCase {
         app.buttons.matching(NSPredicate(format: "label IN %@", labels)).firstMatch
     }
 
-    /// Back until the start's "Neu" row can be tapped: two steps on the iPhone (detail, list), one on the
-    /// iPad, where the detail replaces the list and the first button brings the sidebar back.
+    /// Back until the start's "Fällig" row can be tapped: two steps on the iPhone (detail, list), one on the
+    /// iPad, where the detail replaces the list and the first button brings the sidebar back. Since #1000 the
+    /// marker is "Fällig" (there is no "Neu"); on the iPhone the start page may stand scrolled down after
+    /// "Lose Enden", low in the index, so it is scrolled back up instead of pressing a button.
     @MainActor
     private func backToStart(in app: XCUIApplication) {
-        let newRow = element("viewRow_new", in: app)
-        for _ in 0..<3 where !(newRow.exists && newRow.isHittable) {
+        let dueRow = element("viewRow_due", in: app)
+        for _ in 0..<4 where !(dueRow.exists && dueRow.isHittable) {
+            if UIDevice.current.userInterfaceIdiom == .phone, dueRow.exists {
+                app.swipeDown()
+                continue
+            }
             let back = app.navigationBars.buttons.firstMatch
             XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
             back.tap()
-            _ = newRow.waitForExistence(timeout: 2)
+            _ = dueRow.waitForExistence(timeout: 2)
         }
-        XCTAssertTrue(newRow.isHittable, "Not back on the start screen")
+        XCTAssertTrue(dueRow.isHittable, "Not back on the start screen")
     }
 
     /// Completes a "Jetzt" row from its long-press menu ("Erledigt" alone also names the view row);
@@ -224,17 +230,19 @@ final class StoreScreenshotsTests: XCTestCase {
             photographStart(in: app)
         }
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Start screen shows no Neu")
-        newRow.tap()
+        // #1000: "Neu" is gone; the third picture keeps its slot (`03-neu`, the name the store tooling
+        // knows) and shows "Lose Enden", where every captured task stands at once.
+        let looseEnds = element("viewRow_open", in: app)
+        for _ in 0..<3 where !looseEnds.waitForExistence(timeout: 2) { app.swipeUp() }
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5), "Start screen shows no Lose Enden")
+        looseEnds.tap()
         let taskRows = rows("taskRow_", in: app)
-        XCTAssertTrue(taskRows.firstMatch.waitForExistence(timeout: 10), "Neu shows no task")
-        XCTAssertGreaterThanOrEqual(taskRows.count, 2, "Neu should show at least two tasks")
+        XCTAssertTrue(taskRows.firstMatch.waitForExistence(timeout: 10), "Lose Enden shows no task")
+        XCTAssertGreaterThanOrEqual(taskRows.count, 2, "Lose Enden should show at least two tasks")
         shot("03-neu")
 
-        // From "Fällig", not from "Neu": only the "Neu" list opens a detail for review, with the grey
-        // "Noch nicht sortiert" note (TaskListView `reviewing: kind == .new`, F004). A "Jetzt" row of the
-        // iPad's sidebar would stay selected in the picture, white on a frame.
+        // The detail from "Fällig": a "Jetzt" row of the iPad's sidebar would stay selected in the
+        // picture, white on a frame.
         backToStart(in: app)
         let dueRow = element("viewRow_due", in: app)
         XCTAssertTrue(dueRow.waitForExistence(timeout: 5), "Start screen shows no Fällig")

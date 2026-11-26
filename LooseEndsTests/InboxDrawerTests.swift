@@ -6,7 +6,7 @@ import Testing
 /// The start page's writing line and the drawer it opens (#601, form 2): Return makes a task at
 /// once, the drawer shows this sitting's tasks, ending the entry folds it.
 @Suite("Inbox drawer") struct InboxDrawerTests {
-    @Test("Return makes a task that New counts at once; the drawer opens and keeps the order")
+    @Test("Return makes a task that stands in Loose ends at once; the drawer opens and keeps the order (#1000)")
     @MainActor func returnCountsAtOnce() async throws {
         let store = try TestStore()
         var drawer = InboxDrawer()
@@ -19,7 +19,7 @@ import Testing
         let all = try store.context.fetch(FetchDescriptor<TaskItem>())
 
         #expect(drawer.isOpen)
-        #expect(ViewRules.tasks(for: .new, in: all).count == 2, "the number on the button is honest: both are in New")
+        #expect(Set(ViewRules.tasks(for: .open, in: all).map(\.id)) == [first.id, second.id], "both stand in Loose ends at once")
         #expect(drawer.rows(in: all).map(\.id) == [first.id, second.id], "oldest first, the line follows the newest")
     }
 
@@ -34,7 +34,7 @@ import Testing
 
         #expect(!drawer.isOpen)
         #expect(drawer.rows(in: all).isEmpty, "a closed drawer shows nothing")
-        #expect(ViewRules.tasks(for: .new, in: all).count == 1, "the task stays in New")
+        #expect(ViewRules.tasks(for: .open, in: all).map(\.id) == [task.id], "the task stays in Loose ends")
         drawer.didCapture(task.id)
         #expect(drawer.rows(in: all).map(\.id) == [task.id], "the next Return starts a new sitting")
     }

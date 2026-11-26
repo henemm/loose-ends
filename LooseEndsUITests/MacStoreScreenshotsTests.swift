@@ -22,14 +22,15 @@ final class MacStoreScreenshotsTests: XCTestCase {
         XCTAssertTrue(macElement("startCaptureField", in: app).waitForExistence(timeout: 20), "Keine Startseite")
         for text in Self.tasks { macCapture(text, in: app) }
         let window = macMainWindow(of: app)
-        let newRow = macElement("viewRow_new", in: window)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 10), "Seitenleiste zeigt kein „Neu“")
+        // #1000: „Neu“ is gone; the third picture keeps its slot (`03-neu`) and shows „Lose Enden“.
+        let looseEnds = macElement("viewRow_open", in: window)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 10), "Seitenleiste zeigt kein „Lose Enden“")
         shot(window, "01-start")
 
-        newRow.click()
+        looseEnds.click()
         let row = window.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@", "taskRow_")).firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 10), "„Neu“ zeigt keine Aufgabe")
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "„Lose Enden“ zeigt keine Aufgabe")
         shot(window, "03-neu")
 
         row.click()

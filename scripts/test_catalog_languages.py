@@ -198,5 +198,17 @@ class ComplicationLiteralTests(unittest.TestCase):
                 self.assertEqual(sorted(found), expected)
 
 
+class CaptureAnnouncementTests(unittest.TestCase):
+    """#1000: „Neu“ entfällt, die Ansage nach Return nennt es nicht mehr."""
+
+    def test_capture_announcement_without_new(self):
+        with open(ROOT / "LooseEnds/Resources/Localizable.xcstrings", encoding="utf-8") as handle:
+            strings = json.load(handle)["strings"]
+        self.assertNotIn("Filed in New: %@", strings)
+        self.assertIn("Captured: %@", strings)
+        german = strings["Captured: %@"]["localizations"]["de"]["stringUnit"]["value"]
+        self.assertEqual(german, "Aufgenommen: %@")
+
+
 if __name__ == "__main__":
     unittest.main()

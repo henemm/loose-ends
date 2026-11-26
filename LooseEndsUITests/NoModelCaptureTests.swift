@@ -54,12 +54,14 @@ final class NoModelCaptureTests: XCTestCase {
         XCTAssertTrue(field.waitForNonExistence(timeout: 10))
 
         // Time for the rule pass and, before #982, for the model to rewrite the task.
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 10), "„New“ fehlt auf dem Startbildschirm")
-        newRow.tap()
+        // #1000: no „New“ any more; the task stands in „Loose ends“ at once.
+        let looseEnds = element("viewRow_open", in: app)
+        for _ in 0..<3 where !looseEnds.waitForExistence(timeout: 3) { app.swipeUp() }
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 10), "„Loose ends“ fehlt auf dem Startbildschirm")
+        looseEnds.tap()
         let row = app.descendants(matching: .any).matching(NSPredicate(
             format: "identifier BEGINSWITH 'taskRow_' AND label CONTAINS %@", spoken)).firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 10), "Die Aufgabe steht nicht unter „New“")
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "Die Aufgabe steht nicht unter „Loose ends“")
         sleep(8)
         let shot = XCTAttachment(screenshot: app.screenshot())
         shot.name = "982-list-vor-konzert"

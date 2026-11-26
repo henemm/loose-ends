@@ -46,7 +46,7 @@ final class DriveSmokeTests: XCTestCase {
         return target
     }
 
-    /// Captures one task; it lands in "New".
+    /// Captures one task; it stands in "Loose ends" at once (#1000).
     @MainActor
     private func capture(_ text: String, in app: XCUIApplication) {
         let captureButton = app.buttons["captureButton"]
@@ -60,7 +60,7 @@ final class DriveSmokeTests: XCTestCase {
         XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture sheet did not close")
     }
 
-    /// Holds the row in "New" whose title contains `title` until the menu shows `menuID`. A slow
+    /// Holds the row in the open list whose title contains `title` until the menu shows `menuID`. A slow
     /// runner can miss the first press (#114), so it tries longer presses.
     @MainActor
     @discardableResult
@@ -68,7 +68,7 @@ final class DriveSmokeTests: XCTestCase {
         let row = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "taskRow_", title))
             .firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 10), "New shows no row for \(title)")
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "The list shows no row for \(title)")
         let entry = element(menuID, in: app)
         for duration in [1.2, 2.0, 3.0] where !entry.exists {
             row.press(forDuration: duration)
@@ -78,11 +78,13 @@ final class DriveSmokeTests: XCTestCase {
         return entry
     }
 
+    /// Opens "Loose ends" from the start page (#1000: "New" is gone); it stands low in the index.
     @MainActor
-    private func openNew(in app: XCUIApplication) {
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5), "Start screen shows no New")
-        newRow.tap()
+    private func openLooseEnds(in app: XCUIApplication) {
+        let looseEnds = element("viewRow_open", in: app)
+        for _ in 0..<3 where !looseEnds.waitForExistence(timeout: 2) { app.swipeUp() }
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5), "Start screen shows no Loose ends")
+        looseEnds.tap()
     }
 
     @MainActor
@@ -100,7 +102,7 @@ final class DriveSmokeTests: XCTestCase {
         capture("Steuerberater anrufen", in: app)
         capture("Hecke schneiden", in: app)
 
-        openNew(in: app)
+        openLooseEnds(in: app)
         holdRow(titled: "Steuerberater", until: "menuKnaeuel", in: app).tap()
         back(in: app)
 
@@ -120,7 +122,7 @@ final class DriveSmokeTests: XCTestCase {
             .firstMatch.exists, "Now must not show the Tangle again")
 
         // The second task asks first and then takes the mark.
-        openNew(in: app)
+        openLooseEnds(in: app)
         holdRow(titled: "Hecke", until: "menuKnaeuel", in: app).tap()
         let move = element("confirmKnaeuelMove", in: app)
         XCTAssertTrue(move.waitForExistence(timeout: 5), "No question before the Tangle moves")
@@ -149,7 +151,7 @@ final class DriveSmokeTests: XCTestCase {
         let app = launch()
         // One bead first: without it the sentence stays in Settings (Henning, build 110).
         capture("Apfel kaufen", in: app)
-        openNew(in: app)
+        openLooseEnds(in: app)
         holdRow(titled: "Apfel", until: "menuCounts", in: app).tap()
         holdRow(titled: "Apfel", until: "menuDone", in: app).tap()
         back(in: app)
@@ -187,7 +189,7 @@ final class DriveSmokeTests: XCTestCase {
         for title in titles {
             capture("\(title) kaufen", in: app)
         }
-        openNew(in: app)
+        openLooseEnds(in: app)
         for title in titles.prefix(5) {
             holdRow(titled: title, until: "menuCounts", in: app).tap()
             XCTAssertTrue(elements(prefix: "countsMarker_", in: app).firstMatch.waitForExistence(timeout: 5), "No bead in the row of \(title)")
@@ -212,7 +214,7 @@ final class DriveSmokeTests: XCTestCase {
     func testChangeListNamesTheBeadMarkInGerman() throws {
         let app = launch(language: "de", locale: "de_DE")
         capture("Steuerberater anrufen morgen", in: app)
-        openNew(in: app)
+        openLooseEnds(in: app)
         holdRow(titled: "Steuerberater", until: "menuCounts", in: app).tap()
         let row = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "taskRow_", "Steuerberater"))

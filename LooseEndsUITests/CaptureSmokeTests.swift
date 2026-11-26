@@ -1,6 +1,6 @@
 import XCTest
 
-/// Smoke test for the first end-to-end path: capture a task, find it in "New".
+/// Smoke test for the first end-to-end path: capture a task, find it in "Loose ends" (since #1000 there is no "New").
 /// Runs against an in-memory store (`--ui-testing`), so it never touches real data.
 final class CaptureSmokeTests: XCTestCase {
     override func setUp() {
@@ -96,8 +96,7 @@ final class CaptureSmokeTests: XCTestCase {
     }
 
     /// Editor → detail → list → sidebar, then "Repeating"; returns the task row found there.
-    /// Whether the task still sits in "New" depends on enrichment and on "Looks right" (#165, #349),
-    /// so the row is looked up under "Repeating", where its rule keeps it regardless of either.
+    /// The row is looked up under "Repeating", where its rule keeps it (#165, #349).
     @MainActor
     private func openRepeatingFromEditor(in app: XCUIApplication, detailMarker: XCUIElement) -> XCUIElement {
         let backToDetail = app.navigationBars.buttons.firstMatch
@@ -157,7 +156,7 @@ final class CaptureSmokeTests: XCTestCase {
     }
 
     @MainActor
-    func testCapturedTaskShowsUpInNew() throws {
+    func testCapturedTaskShowsUpInLooseEnds() throws {
         let app = launch()
 
         let captureButton = app.buttons["captureButton"]
@@ -175,17 +174,17 @@ final class CaptureSmokeTests: XCTestCase {
         done.tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture sheet should close after Done")
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5), "View list should show New")
-        newRow.tap()
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5), "The index should list Loose ends (#1000)")
+        looseEnds.tap()
 
         let captured = taskRow(in: app)
-        XCTAssertTrue(captured.waitForExistence(timeout: 5), "Captured task should appear in New")
+        XCTAssertTrue(captured.waitForExistence(timeout: 5), "Captured task should appear in Loose ends")
         captured.tap()
         assertDetailRawText("Rasenmäher Ölwechsel", in: app)
     }
 
-    /// Captures `text`, opens New and returns the detail's title field (#202).
+    /// Captures `text`, opens Loose ends (#1000) and returns the detail's title field (#202).
     @MainActor
     private func captureAndOpenDetail(_ text: String, in app: XCUIApplication) -> XCUIElement {
         let captureButton = app.buttons["captureButton"]
@@ -197,11 +196,11 @@ final class CaptureSmokeTests: XCTestCase {
         field.typeText(text)
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = taskRow(in: app)
-        XCTAssertTrue(row.waitForExistence(timeout: 5), "Captured task should appear in New")
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Captured task should appear in Loose ends")
         row.tap()
         let titleField = element("detailTitleField", in: app)
         XCTAssertTrue(titleField.waitForExistence(timeout: 5), "Detail should offer the title field")
@@ -298,12 +297,12 @@ final class CaptureSmokeTests: XCTestCase {
         done.tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5), "Capture-Blatt schloss nach Fertig nicht")
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let captured = taskRow(in: app)
-        XCTAssertTrue(captured.waitForExistence(timeout: 5), "Erfasste Aufgabe taucht nicht in Neu auf")
-        shot(app, "4-aufgabe-steht-in-neu")
+        XCTAssertTrue(captured.waitForExistence(timeout: 5), "Erfasste Aufgabe taucht nicht in Lose Enden auf")
+        shot(app, "4-aufgabe-steht-in-lose-enden")
         captured.tap()
         assertDetailRawText("Reifen wechseln lassen", in: app)
     }
@@ -322,12 +321,12 @@ final class CaptureSmokeTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
 
         let row = taskRow(in: app)
-        XCTAssertTrue(row.waitForExistence(timeout: 5), "Task row should be listed in New")
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Task row should be listed in Loose ends")
         row.tap()
 
         let rawText = element("detailRawTextMarker", in: app)
@@ -354,7 +353,7 @@ final class CaptureSmokeTests: XCTestCase {
     }
 
     @MainActor
-    func testDoneFromMenuEmptiesNew() throws {
+    func testDoneFromMenuEmptiesLooseEnds() throws {
         let app = launch()
 
         let captureButton = app.buttons["captureButton"]
@@ -367,12 +366,12 @@ final class CaptureSmokeTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
 
         let row = taskRow(in: app)
-        XCTAssertTrue(row.waitForExistence(timeout: 5), "Task row should be listed in New")
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Task row should be listed in Loose ends")
         let done = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDone", "Complete"))
             .firstMatch
@@ -381,8 +380,8 @@ final class CaptureSmokeTests: XCTestCase {
         done.tap()
 
         // Done waits out its three seconds with Undo before the task leaves (#32).
-        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 10), "New should be empty after Done")
-        XCTAssertTrue(row.waitForNonExistence(timeout: 5), "The finished task should leave New")
+        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 10), "Loose ends should be empty after Done")
+        XCTAssertTrue(row.waitForNonExistence(timeout: 5), "The finished task should leave Loose ends")
     }
 
     @MainActor
@@ -430,9 +429,9 @@ final class CaptureSmokeTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
@@ -490,9 +489,9 @@ final class CaptureSmokeTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
@@ -534,9 +533,9 @@ final class CaptureSmokeTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
@@ -596,9 +595,9 @@ final class CaptureSmokeTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
@@ -671,9 +670,9 @@ final class CaptureSmokeTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         let complete = app.descendants(matching: .any)
@@ -716,9 +715,9 @@ final class CaptureSmokeTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
@@ -745,7 +744,7 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(keepOpen.waitForExistence(timeout: 5), "An open subtask should make Complete ask first")
         XCTAssertTrue(element("completeAllSubtasks", in: app).exists, "The question should offer Complete all")
         element("completeAllSubtasks", in: app).tap()
-        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 10), "New should be empty after Complete all")
+        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 10), "Loose ends should be empty after Complete all")
     }
 
     /// #667 (Henning, 2026-10-24): the detail's "…" menu is the list's menu, Delete included. Delete
@@ -753,7 +752,7 @@ final class CaptureSmokeTests: XCTestCase {
     @MainActor
     func testDeleteFromTheDetailLeavesIt() throws {
         let app = launch()
-        let row = captureIntoNew("Alte Rechnung wegwerfen", in: app)
+        let row = captureIntoLooseEnds("Alte Rechnung wegwerfen", in: app)
         row.tap()
         assertDetailRawText("Alte Rechnung wegwerfen", in: app)
 
@@ -770,7 +769,7 @@ final class CaptureSmokeTests: XCTestCase {
         confirm.tap()
 
         XCTAssertTrue(element("detailRawTextMarker", in: app).waitForNonExistence(timeout: 5), "The detail should leave the deleted task")
-        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 10), "New should be empty after the delete")
+        XCTAssertTrue(element("emptyViewLabel", in: app).waitForExistence(timeout: 10), "Loose ends should be empty after the delete")
     }
 
     /// #605 (Henning, 2026-10-21): deleting a task with a subtask left the task standing; its
@@ -788,10 +787,13 @@ final class CaptureSmokeTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
-        let row = taskRow(in: app)
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
+        // Loose ends will list the lifted subtask too (#1000), so the row is found by its title.
+        let row = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH 'taskRow_' AND label CONTAINS %@", "Umzug planen"))
+            .firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
         assertDetailRawText("Umzug planen", in: app)
@@ -809,9 +811,9 @@ final class CaptureSmokeTests: XCTestCase {
         let back = app.navigationBars.buttons.firstMatch
         XCTAssertTrue(back.waitForExistence(timeout: 5))
         back.tap()
-        XCTAssertTrue(row.waitForExistence(timeout: 5), "Back in New, the task should be listed")
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Back in Loose ends, the task should be listed")
         deleteFromMenu(row, in: app)
-        XCTAssertTrue(row.waitForNonExistence(timeout: 5), "The deleted task should leave New")
+        XCTAssertTrue(row.waitForNonExistence(timeout: 5), "The deleted task should leave Loose ends")
 
         let toSidebar = app.navigationBars.buttons.firstMatch
         XCTAssertTrue(toSidebar.waitForExistence(timeout: 5))
@@ -843,9 +845,9 @@ final class CaptureSmokeTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
@@ -904,9 +906,9 @@ final class CaptureSmokeTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = taskRow(in: app)
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.tap()
@@ -940,9 +942,9 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(waitForValue("1", of: toggle), "The switch should be saved")
     }
 
-    /// Captures one task and opens "New"; returns its row there.
+    /// Captures one task and opens "Loose ends" (#1000: no "New" any more); returns its row there.
     @MainActor
-    private func captureIntoNew(_ text: String, in app: XCUIApplication) -> XCUIElement {
+    private func captureIntoLooseEnds(_ text: String, in app: XCUIApplication) -> XCUIElement {
         let captureButton = app.buttons["captureButton"]
         XCTAssertTrue(captureButton.waitForExistence(timeout: 10))
         captureButton.tap()
@@ -953,11 +955,11 @@ final class CaptureSmokeTests: XCTestCase {
         app.buttons["captureDoneButton"].tap()
         XCTAssertTrue(field.waitForNonExistence(timeout: 5))
 
-        let newRow = element("viewRow_new", in: app)
-        XCTAssertTrue(newRow.waitForExistence(timeout: 5))
-        newRow.tap()
+        let looseEnds = element("viewRow_open", in: app)
+        XCTAssertTrue(looseEnds.waitForExistence(timeout: 5))
+        looseEnds.tap()
         let row = taskRow(in: app)
-        XCTAssertTrue(row.waitForExistence(timeout: 5), "Task row should be listed in New")
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "Task row should be listed in Loose ends")
         return row
     }
 
@@ -965,7 +967,7 @@ final class CaptureSmokeTests: XCTestCase {
     @MainActor
     func testMoveToChosenDateSetsDueDate() throws {
         let app = launch()
-        let row = captureIntoNew("Garage aufräumen", in: app)
+        let row = captureIntoLooseEnds("Garage aufräumen", in: app)
 
         let move = app.descendants(matching: .any)
             .matching(NSPredicate(format: "label == %@", "Move"))
@@ -998,7 +1000,7 @@ final class CaptureSmokeTests: XCTestCase {
     func testUndoInsideTheDoneWindowKeepsTheTask() throws {
         // 20 s instead of 3: the tap must land inside the window even on a slow runner (#172).
         let app = launch(extra: ["--ui-testing-long-done-window"])
-        let row = captureIntoNew("Briefkasten leeren", in: app)
+        let row = captureIntoLooseEnds("Briefkasten leeren", in: app)
 
         let complete = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier == %@ OR label == %@", "menuDone", "Complete"))
@@ -1015,8 +1017,8 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(undo.waitForNonExistence(timeout: 5), "Undo should end the window")
 
         // The task is still open and listed.
-        XCTAssertFalse(element("emptyViewLabel", in: app).waitForExistence(timeout: 5), "New must not empty after Undo")
-        XCTAssertTrue(row.exists, "The task should stay in New after Undo")
+        XCTAssertFalse(element("emptyViewLabel", in: app).waitForExistence(timeout: 5), "Loose ends must not empty after Undo")
+        XCTAssertTrue(row.exists, "The task should stay in Loose ends after Undo")
     }
 
     /// #34: "Analyze again" in the detail's menu runs the pipeline once more and says what it found.
@@ -1024,7 +1026,7 @@ final class CaptureSmokeTests: XCTestCase {
     @MainActor
     func testAnalyzeAgainReportsBack() throws {
         let app = launch()
-        let row = captureIntoNew("Steuererklärung morgen abgeben", in: app)
+        let row = captureIntoLooseEnds("Steuererklärung morgen abgeben", in: app)
         row.tap()
         assertDetailRawText("Steuererklärung morgen abgeben", in: app)
 
@@ -1103,7 +1105,7 @@ final class CaptureSmokeTests: XCTestCase {
         XCTAssertTrue(back.waitForExistence(timeout: 5), "No back button")
         back.tap()
         let row = taskRow(in: app)
-        XCTAssertTrue(row.waitForExistence(timeout: 5), "The task should still be in New")
+        XCTAssertTrue(row.waitForExistence(timeout: 5), "The task should still be in Loose ends")
         row.tap()
         let again = element("noteText", in: app)
         for _ in 0..<5 where !again.exists { app.swipeUp() }
