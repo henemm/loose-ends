@@ -1,0 +1,26 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "40F333EE-AE85-4340-AE84-C99533B25273.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "982-detail-nach-analyze-again_0_410B4AA5-C595-4025-9C97-9CC39B8DD4B9.png",
+        "timestamp" : 1795682386.476
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "8F31E932-FC02-4A7B-B09D-F984400357AF.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "982-list-vor-konzert_0_DEBFB19D-A0E2-477D-AA7C-DC354AF08293.png",
+        "timestamp" : 1795682378.541
+      }
+    ],
+    "testIdentifier" : "NoModelCaptureTests/testSpokenTitleStaysAndAnalyzeAgainNamesNoModel()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/NoModelCaptureTests/testSpokenTitleStaysAndAnalyzeAgainNamesNoModel"
+  }
+]

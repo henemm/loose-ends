@@ -1,0 +1,43 @@
+# Simulator-Beleg
+erzeugt: 2026-11-26T09:39:47+0100
+befehl: scripts/sim.sh test-proof NoModelCaptureTests
+workflow: feat-982-modell-ausbauen
+head: d134269cedce9784cb2bbad0388d9aabf71098ad
+basis: 852a3d30b77a478fc707f93ab9a9631ffbdd2051 (merge-base origin/main HEAD)
+testklasse: NoModelCaptureTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1795682335.734  ende: 1795682387.212
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-982-modell-ausbauen/simulator-run/summary.json  sha256:e4349af0e53af9cc5ffdac9c662232d08e0386d486014cc10519c12b2c42d651
+xcresult: docs/artifacts/feat-982-modell-ausbauen/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-982-modell-ausbauen/simulator-run/*.png (2 Stück)
+
+## Geprüfte Dateien
+- sha256:9ce643bfa47ca006c04190d4aa238440a6a2588d14ee25f9c133fed9a9a9e3f4  LooseEnds/App/ContentView.swift
+- sha256:3e593035e977eb26d5dbff1af698230ced4bcf06e9e2db278c38144f75a9a75e  LooseEnds/App/LooseEndsApp.swift
+- sha256:f055f52692540a1915fa2ea466c9fb8aa2f8e3573fcdae94106231806444c2ff  LooseEnds/Views/ReviewNote.swift
+- sha256:c09e1f0992e752d14688e4bacd7345bf14ddf389df093a19079b9b2230c75d52  LooseEnds/Views/TaskDetailView.swift
+- sha256:62bbad30271d960f64c2c6ff6bd0fe204883a0e8d807a6827216fa41838f7fb9  LooseEndsTests/ClaudeTitleTests.swift
+- sha256:e7db1f72e62fe189f56542941578a99d6a8a6519b42e6bb7738f69175d590ab7  LooseEndsTests/ContextWordForgettingTests.swift
+- sha256:2f24b07014606ceeaf6f42423a9956142658beef848d8403c089b82f05e76d01  LooseEndsTests/ContextWordLearningCoordinatorTests.swift
+- sha256:27858232e6c05a33ba296ef9c4f45a5240bfc221e577668b69fbf6dd754b595f  LooseEndsTests/ContextWordRuleTests.swift
+- sha256:3890333f4f2eedad38ec4c11b2df25fc699fc6beaedc319859cae2eeccdb9746  LooseEndsTests/DurationRuleCoordinatorTests.swift
+- sha256:6283a8774416b4b431c9d49efa0563bdc45a83289c5d690f67df05820dd799b6  LooseEndsTests/EnergyTests.swift
+- sha256:bb2cde45e4a52e4a648b589235a0d1ec64844b5d3bf08b41d4cf8272db16e411  LooseEndsTests/EnrichmentTests.swift
+- sha256:80c6b0f4469a38b53ccfd1a97c706d1dce3b98b3f4b434dfa944ee12ba109908  LooseEndsTests/FieldOriginTests.swift
+- sha256:3a5aaa1966e197c083915f155114d3c13d76c0bf79e470f740b1dbea0e9d227f  LooseEndsTests/KeyboardTitleTests.swift
+- sha256:295ba6870fe9867e7c27cd646be94a71b44abc427071983fd9ce796e8d3dd1d6  LooseEndsTests/ModelSeamTests.swift
+- sha256:2b459d91e06ac5c2e86fb3a6facf8c653c1362c9d1df635d4bc210b54245b755  LooseEndsTests/NoModelCoordinatorTests.swift
+- sha256:6d5bb3e9a29b95fc1d8381f8bebb421d752779994699c152ef5f95e3ebbefc6d  LooseEndsTests/PhoneRuleTests.swift
+- sha256:a73ad4cc949b0d421671917eae1409ce0e688dff9293c686e6c08fb8e17485de  LooseEndsTests/PlaceWordRuleTests.swift
+- sha256:51116a03ff13cd1d92fe69a6dce60fe9d13135f798c42c954cb71e0c0f9a387b  LooseEndsTests/ProjectNameRuleTests.swift
+- sha256:fa6bf358f8fbe101995df6c3cdc89bf5ad124a85fab517937b195f77416027e8  LooseEndsTests/RealModelTests.swift
+- sha256:547ef0002f81bdeb36c78960dc534762937b67567188c85f4a73897ffac6e799  LooseEndsTests/ReanalysisTests.swift
+- sha256:c8ec84528b7d196108feb55d4f2269ce9cf54b72317092db3972077e4bdb3328  LooseEndsTests/SiriCaptureTests.swift
+- sha256:01bc05d1cea4b8b540309bd7637a7054541dee65eb9055db0c962715568e15e8  LooseEndsTests/SiriFieldsTests.swift
+- sha256:cf7c6b9c5bc796f588bd1fa52c06086921a98d894bac6500e78c475e6d286266  LooseEndsTests/SubtaskRulesTests.swift
+- sha256:3bb10c89dd59c0526de9f3a757a2b7f3a9b914b5166edd06b891a2839efd7ab5  LooseEndsTests/TitleRuleTests.swift
+- sha256:742d45e508fb9fea089353242608a8adbda05b4e50412bc0931bb6e3fcfd93d6  LooseEndsUITests/NoModelCaptureTests.swift
+- sha256:18cda44d62787ccd9ab604a333a95f175127a95610fa4966f86b2eba96657177  Shared/Enrichment/EnrichmentCoordinator.swift
