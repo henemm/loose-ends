@@ -1,0 +1,22 @@
+# Simulator-Beleg
+erzeugt: 2026-11-26T17:31:42+0100
+befehl: scripts/sim.sh test-proof InboxDrawerSmokeTests
+workflow: feat-1000-s2-passt-entfaellt
+head: f6feb936536198672f4cc59c2bc62b629587f8ef
+basis: 6c87205ef8ee754c2eee5016b862d52528e90fcc (merge-base origin/main HEAD)
+testklasse: InboxDrawerSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1795710606.2  ende: 1795710700.924
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-1000-s2-passt-entfaellt/simulator-run/summary.json  sha256:5cc93c5f2c83fef0434b883081bb8a58d7e400e930d07e072fbf21ed730f386e
+xcresult: docs/artifacts/feat-1000-s2-passt-entfaellt/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-1000-s2-passt-entfaellt/simulator-run/*.png (8 Stück)
+
+## Geprüfte Dateien
+- sha256:4d4e3c91e2f641cda0a265b47d0a33a60374289964d686154a0768ec5b2a90f3  LooseEnds/Views/TaskDetailView.swift
+- sha256:929750b05ba9a7e41dcfc0cdf4319a8373d9ceb27d4c8284be4b01552c057cc4  LooseEnds/Views/TaskInteractions.swift
+- sha256:7544b5de7e58171c9214a6a39e7f5fbd34c6c8d1d2272f5b3a05099e5e127cfc  LooseEnds/Views/TaskListView.swift
+- sha256:e735790c5b1c09c71fa3a24d7f010e356b86a01d4bdf6441acf2e0620b783033  LooseEndsUITests/InboxDrawerSmokeTests.swift
+- sha256:44bff616573cd04a43c2a5f2fa6faf7b7189e4f8a358c461f1d90ab1a9c55a6e  LooseEndsUITests/StoreScreenshotsTests.swift

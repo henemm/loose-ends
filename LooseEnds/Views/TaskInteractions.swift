@@ -3,8 +3,8 @@ import SwiftData
 import SwiftUI
 
 /// The usual gestures on a task (design briefing, screen 3), one set for every list and for the
-/// start screen's "Next up" preview (#303): swipe right Done (Restore in Done, Activate in Parked,
-/// "Looks right" in New), swipe left Next up (Park in Old; All open: Activate for a parked task), long press the full menu. The view owns the state behind the
+/// start screen's "Next up" preview (#303): swipe right Done (Restore in Done, Activate in Parked),
+/// swipe left Next up (Park in Old; All open: Activate for a parked task), long press the full menu. The view owns the state behind the
 /// delete confirmation and the date sheet and attaches both with `taskInteractionDialogs`.
 /// The detail's "…" menu is the same `menu` (#667, Henning 2026-10-24: "both menus should be the same"),
 /// so Delete, Move and Analyze again stand in both.
@@ -85,18 +85,6 @@ struct TaskInteractions {
         case .parked?:
             Button("Activate", systemImage: "sun.max") { activate(task) }
                 .tint(.accentColor)
-        case .new?:
-            // New is the inbox: there the check reads "looked over", and a Done swipe made tasks
-            // vanish unseen (Henning, 2026-10-11, #318). The swipe confirms what the AI sorted
-            // (#188); Done stays in the long-press menu. A title nobody vouched for ("Needs a
-            // look") gets no swipe, it has to be opened.
-            // The word, as in the detail's bar, not a sign: a bare eye said nothing (Henning,
-            // 2026-10-16, build 76), and a checkmark belongs to Complete alone (#349).
-            if !ViewRules.needsLook(task) {
-                Button("Looks right") { confirm(task) }
-                    .tint(.accentColor)
-                    .accessibilityIdentifier("swipeConfirm_\(task.id.uuidString)")
-            }
         default:
             Button("Complete", systemImage: "checkmark.circle") { complete(task) }
                 .tint(Color("Completed"))
@@ -134,8 +122,7 @@ struct TaskInteractions {
 
     // MARK: - Long-press menu
 
-    /// One menu for the list's long press and the detail's "…" (#667): in New "Looks right" first (#681),
-    /// then Complete, by name (no checkmark in the detail's bar, #435), Next up, the Knäuel and the bead, Move, Park, Analyze
+    /// One menu for the list's long press and the detail's "…" (#667): Complete first, by name (no checkmark in the detail's bar, #435), Next up, the Knäuel and the bead, Move, Park, Analyze
     /// again; Delete last, after the line. A done or parked task gets Restore or Activate and Delete.
     /// `inBar`: the wide detail carries Complete, Next up, Move and Park as buttons of their own (#831), so its
     /// "…" leaves them out.
@@ -146,12 +133,6 @@ struct TaskInteractions {
         } else if task.status == .parked {
             Button("Activate", systemImage: "sun.max") { activate(task) }
         } else {
-            // In New the menu opens with what the swipe offers (#681): "Looks right" for what the AI
-            // sorted, nothing for a task that needs a look. The detail has it in its bar (kind nil).
-            if kind == .new, !ViewRules.needsLook(task) {
-                Button("Looks right", systemImage: "hand.thumbsup") { confirm(task) }
-                    .accessibilityIdentifier("menuConfirm")
-            }
             if !inBar {
                 if isPending(task) {
                     Button("Undo", systemImage: "arrow.uturn.backward") { undoComplete(task) }
@@ -289,12 +270,6 @@ struct TaskInteractions {
     func restore(_ task: TaskItem) {
         TaskActions.restore(task)
         save("restore")
-    }
-
-    /// Marks the AI's changes as seen; the task leaves "New", its revisions stay.
-    func confirm(_ task: TaskItem) {
-        _ = RevisionService.markSeen(task)
-        save("confirm")
     }
 
     func toggleNext(_ task: TaskItem) {

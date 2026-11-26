@@ -1,0 +1,92 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "5C681D30-0E31-48A2-8E97-5BF400346451.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "1000-s2-menue_0_702A7CB4-D207-495F-8ECF-3BFBACC2D2E5.png",
+        "timestamp" : 1795710658.823
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "8DA5C37E-8C9A-4E04-9CC7-0DBCBDE7127F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "1000-s2-detail_0_3D8BDE1E-38E7-4DE0-99BB-6D664A017DE5.png",
+        "timestamp" : 1795710654.562
+      }
+    ],
+    "testIdentifier" : "InboxDrawerSmokeTests/testFreshTaskDetailOffersNoLooksRight()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/InboxDrawerSmokeTests/testFreshTaskDetailOffersNoLooksRight"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "75D37299-7002-4375-8573-BC677B178322.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "1000-5-lose-enden_0_56E23A2C-9C2C-4CDF-B508-2BECC33B6FE0.png",
+        "timestamp" : 1795710685.842
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "B24F5E82-76C0-44BC-ABD4-BB02318EADFA.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "1000-4-zugeklappt_0_24121FE0-8FFA-4149-B0E2-B230D94D958B.png",
+        "timestamp" : 1795710682.783
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "09FB51D4-496C-4A28-929A-0A5F994458BF.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "1000-3-zwei-zeilen_0_4C1CE36F-16BA-4F0C-82B9-A3BDDE2C8B94.png",
+        "timestamp" : 1795710677.91
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "382095C4-85D9-4F65-9ED8-29E2BF2E8341.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "1000-2-erste-zeile_0_29B0A576-536A-4BE4-9831-221153E3AA7E.png",
+        "timestamp" : 1795710676.087
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "28295638-C80B-4221-BCFB-F1F929457271.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "1000-1-leer_0_6BA07D52-FBF1-4993-86AF-0994DA7A99A7.png",
+        "timestamp" : 1795710671.312
+      }
+    ],
+    "testIdentifier" : "InboxDrawerSmokeTests/testReturnOpensTheDrawerAndATapBesideFoldsIt()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/InboxDrawerSmokeTests/testReturnOpensTheDrawerAndATapBesideFoldsIt"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "2148EE3F-4275-48F2-8617-A562D476922D.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "950-zeile-getippt_0_46F28FB9-2ACB-4720-B82C-55629206F10D.png",
+        "timestamp" : 1795710700.275
+      }
+    ],
+    "testIdentifier" : "InboxDrawerSmokeTests/testTypedLineKeepsItsWordingAsTitle()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/InboxDrawerSmokeTests/testTypedLineKeepsItsWordingAsTitle"
+  }
+]

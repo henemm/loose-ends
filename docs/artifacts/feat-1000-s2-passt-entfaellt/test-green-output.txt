@@ -1,0 +1,8 @@
+-- ui InboxDrawerSmokeTests 17:16
+result=Passed passed=3 failed=0 skipped=0 total=3
+-- unit alle 17:20
+result=Passed passed=1396 failed=0 skipped=13 total=1409
+
+Zusammenfassung (aus den xcresult-Daten oben):
+UI: Executed 3 tests, with 0 failures (0 unexpected)
+Unit: Executed 1409 tests, with 0 failures (0 unexpected), 13 skipped

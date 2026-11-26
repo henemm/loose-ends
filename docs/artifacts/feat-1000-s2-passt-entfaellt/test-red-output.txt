@@ -1,0 +1,31 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: InboxDrawerSmokeTests/testFreshTaskDetailOffersNoLooksRight
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-26 17:02:53.292.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-26 17:02:53.307.
+Test Suite 'InboxDrawerSmokeTests' started at 2026-11-26 17:02:53.309.
+    [31m✖[0m testFreshTaskDetailOffersNoLooksRight, XCTAssertFalse failed - The bar offers no Passt (#1000)
+Executed 1 test, with 1 failure (0 unexpected) in 167.315 (167.443) seconds
+Test Suite 'LooseEndsUITests.xctest' failed at 2026-11-26 17:05:40.763.
+Executed 1 test, with 1 failure (0 unexpected) in 167.315 (167.456) seconds
+Executed 1 test, with 1 failure (0 unexpected) in 167.315 (167.474) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-stateless-kindling-wand/Logs/Test/Test-LooseEnds-2026.11.26_17-00-38-+0100.xcresult
+[36;1mTesting started[0m
+
+== xcresult ==
+Test Case testFreshTaskDetailOffersNoLooksRight() Failed
+Failure Message XCTAssertFalse failed - The bar offers no Passt (#1000)

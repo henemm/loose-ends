@@ -92,6 +92,39 @@ final class InboxDrawerSmokeTests: XCTestCase {
         shot(app, "1000-5-lose-enden")
     }
 
+    /// #1000 Schnitt 2 (ADR-22): nothing to vouch for. A task just captured is still unsorted with a title, and its
+    /// detail offered "Passt" in the bar and in the "…" menu; both are gone, Complete stays.
+    @MainActor
+    func testFreshTaskDetailOffersNoLooksRight() throws {
+        let app = launch()
+        let line = element("startCaptureField", in: app)
+        XCTAssertTrue(line.waitForExistence(timeout: 10), "The start screen shows no writing line")
+        line.tap()
+        line.typeText("Fahrradschloss ölen\n")
+        let row = rows(in: app).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "Return should put the task into the drawer")
+        row.tap()
+
+        let title = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "label CONTAINS 'Fahrradschloss'")).firstMatch
+        XCTAssertTrue(title.waitForExistence(timeout: 10), "The detail shows the task")
+        let looksRight = NSPredicate(format: "label IN {'Passt', 'Looks right'}")
+        XCTAssertFalse(element("detailConfirmButton", in: app).waitForExistence(timeout: 3), "The bar offers no Passt (#1000)")
+        XCTAssertFalse(app.buttons.matching(looksRight).firstMatch.exists, "No button reads Passt (#1000)")
+        XCTAssertFalse(element("reviewNote", in: app).exists, "The detail says nothing about New (#1000)")
+        shot(app, "1000-s2-detail")
+
+        let more = element("detailMoreMenu", in: app)
+        XCTAssertTrue(more.waitForExistence(timeout: 5), "The detail has its … menu")
+        more.tap()
+        let complete = app.buttons
+            .matching(NSPredicate(format: "identifier == %@ OR label IN {'Complete', 'Erledigen'}", "menuDone")).firstMatch
+        XCTAssertTrue(complete.waitForExistence(timeout: 5), "The menu still offers Complete")
+        XCTAssertFalse(element("menuConfirm", in: app).exists, "The menu offers no Passt (#1000)")
+        XCTAssertFalse(app.buttons.matching(looksRight).firstMatch.exists, "No menu entry reads Passt (#1000)")
+        shot(app, "1000-s2-menue")
+    }
+
     /// #950: a task typed into the line keeps its own words as title. The model is off under `--ui-testing`, so this
     /// proves the line's path up to the stored task; the channel itself is proven by `KeyboardTitleTests`.
     @MainActor
