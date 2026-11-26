@@ -1,0 +1,39 @@
+# Simulator-Beleg
+erzeugt: 2026-11-26T14:12:45+0100
+befehl: scripts/sim.sh test-proof InboxDrawerSmokeTests
+workflow: feat-1000-neu-entfaellt
+head: 9687b392c6a7fb57ffcba0e76e4bd8ab64df0756
+basis: 84dbca05adb61a445c441c299d66151ea2a5bb37 (merge-base origin/main HEAD)
+testklasse: InboxDrawerSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 2 gesamt, 2 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1795698677.422  ende: 1795698764.214
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-1000-neu-entfaellt/simulator-run/summary.json  sha256:81d2d0b3cd6be27556cc848ff0b1ab02176ddc5e3df20247a727635f67db0bcf
+xcresult: docs/artifacts/feat-1000-neu-entfaellt/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-1000-neu-entfaellt/simulator-run/*.png (6 Stück)
+
+## Geprüfte Dateien
+- sha256:feaaedb308244e7220f24fb74b32bd4c86b76d20d3444b35fa739168132a8db4  LooseEnds/Views/InboxDrawerView.swift
+- sha256:bac8e132fa0faa2e715320ddb0b6bd50961d8e674786bce8d8a1a8b2d7ce3c16  LooseEndsTests/InboxDrawerTests.swift
+- sha256:a0d3c65e33a76b43803a590c47c79c4cb6e1a033ea479f90484072d0ba06beb0  LooseEndsTests/StartViewsTests.swift
+- sha256:9dce6f4d699da05491d1dec36b4caecf91f2017052170add5d9ee6f0ac01210a  LooseEndsUITests/CalendarTargetTests.swift
+- sha256:3a9dec7301d5af38500693087678f75e856a7d48efcd69dd04270dd5257f29ca  LooseEndsUITests/CaptureSmokeTests.swift
+- sha256:1118d4e4b51487ce8dc0dd1455c8786883bed963897d199308e507b0f97e12b3  LooseEndsUITests/ContextUniquenessTests.swift
+- sha256:8f1f35585aac84046e47c52e5e5fc6730678d12e7d1b89d51603c6b7e928880f  LooseEndsUITests/DesignGalleryTests.swift
+- sha256:92f20c95d5db80ed148acdf1bf1af20a8da0a66d60ce5a11187d3ddca4bd5c0d  LooseEndsUITests/DriveSmokeTests.swift
+- sha256:5a8d5fbe059f0b3104e8b62fb8a5dcafb31145b1a72e5c0b4aaab4984f4c4dc9  LooseEndsUITests/FieldsSmokeTests.swift
+- sha256:680bf4acfa26a98afe40683b9150c4375de0fe402e68dff3e3cde21148843bff  LooseEndsUITests/InboxDrawerSmokeTests.swift
+- sha256:a17871497379d69c816a7b8cf5621f6887480c0fe60aeb75e83e0897deb02eaf  LooseEndsUITests/MacDetailClickTests.swift
+- sha256:98f6766ca3edfbd889797eeb89c704a0d69a9a84729c7ce24b5a9f1b79f60cd5  LooseEndsUITests/MacGalleryTests.swift
+- sha256:1add8ea186a2af9515ebde288cf3c546016de76f4c2103154a178633b3cd3a19  LooseEndsUITests/MacStoreScreenshotsTests.swift
+- sha256:4d4ccff0c2b374312e908682b32e87a3dbf81dcf785284f38ac133698a44f5f5  LooseEndsUITests/MacUITestSupport.swift
+- sha256:ef79c58b387c5d94c02169bef92016baec8547944e0331912076a75238bb76dc  LooseEndsUITests/NoModelCaptureTests.swift
+- sha256:3b92cbe61498ac6d532e88a80dee86915843a3d1bba1a30d6eb17a08cc039dcc  LooseEndsUITests/PaperGroundTests.swift
+- sha256:1ce49b74940bd6a86803e661e1a09d8c86510f753655ec993dd7497fb283e31b  LooseEndsUITests/PlaceSmokeTests.swift
+- sha256:80b4fb5ae7493f4452b64fb09d4295dfc0398546b51fad11faa515e8894f1b5f  LooseEndsUITests/ProjectSubtasksTests.swift
+- sha256:ac69346a11e53df2a6c1a43d91ebeaa9ffbc0b85d0f133cda8747a9be47b9d57  LooseEndsUITests/RecognitionWalkthroughTests.swift
+- sha256:eb52561e3fb0f1f989d832aab629fc36c92d2c8fddbbdccbcf2d4e4eaed3755b  LooseEndsUITests/StartScreenInteractionTests.swift
+- sha256:2d05fb34f7792814adb238f022810f5ee66377b18ca3ffaa481a43d5adbfbe5c  LooseEndsUITests/StoreScreenshotsTests.swift
+- sha256:4e1b8645f111c8ab80f43a4b9eabea36cb28e46d9d8ac93245b7e418f1fe0ab7  Shared/Models/ViewRules.swift

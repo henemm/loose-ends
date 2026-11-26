@@ -1,0 +1,32 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: ContextUniquenessTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-26 14:17:53.199.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-26 14:17:53.202.
+Test Suite 'ContextUniquenessTests' started at 2026-11-26 14:17:53.202.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.ContextUniquenessTests testSecondGardenIsRejected] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    42.69s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    43.77s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testSecondGardenIsRejected ([31m64.091[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 64.091 (64.099) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-11-26 14:18:57.308.
+Executed 1 test, with 0 failures (0 unexpected) in 64.091 (64.106) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 64.091 (64.110) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-stateless-kindling-wand/Logs/Test/Test-LooseEnds-2026.11.26_14-17-40-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.

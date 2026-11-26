@@ -1,0 +1,8 @@
+== #1000 S1 QA-Lauf 2026-11-26 14:51 CET ==
+Suite "Start screen views" passed after 0.466 seconds
+Suite "Inbox drawer" passed after 0.613 seconds
+Ran 9 tests in 0.191s
+
+OK
+-- UI (frühere Läufe, App-Quellen seit 12:25 unverändert): siehe test-green-output.txt, ui-rewired-summary.txt
+Executed 2 tests, with 0 failures (0 unexpected) in 70.060 (70.108) seconds

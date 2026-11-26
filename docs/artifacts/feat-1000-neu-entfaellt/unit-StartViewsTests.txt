@@ -1,0 +1,98 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/StartViewsTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mCompiling[0m MacGalleryTests.swift
+[[36mLooseEndsUITests[0m] [1mCompiling[0m StartScreenInteractionTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/stateless-kindling-wand/LooseEndsUITests/StartScreenInteractionTests.swift:369:16: [33mmain actor-isolated property 'label' can not be referenced from a nonisolated context[0m
+366 | 
+[32m367 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").[0m
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/stateless-kindling-wand/LooseEndsUITests/StartScreenInteractionTests.swift:369:29: [33mmain actor-isolated property 'value' can not be referenced from a nonisolated context[0m
+366 | 
+[32m367 |     /// The row count as the badge shows it, read from the combined row ("All open, 2").[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m ListPolishTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m MarginMarkTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ModelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueStateTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m DueTodayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m EnrichmentTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m InboxDrawerTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m KnaeuelTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m LeftoversTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProjectLinesTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ProjectNameRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RepeatEditTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m OrderExecutorTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PeopleRetiredTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m PressureOrderTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NextRankTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NextUpWidgetTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m NowRuleTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m ReviewTrayTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m RevisionServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m StartViewsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CaptureServiceTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CarryRemindersTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m CatalogServiceTests.swift
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/stateless-kindling-wand/LooseEndsTests/SubtaskTests.swift:108:35: [33m'#require(_:_:)' is redundant because 'TaskPlace(name: "Markt", latitude: 53.55, longitude: 9.93, event: .arrive)' never equals 'nil' (from macro 'require')[0m
+106 |         milk.dueHasTime = true
+[32m107 |         milk.contexts = [garden, phone][0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskListsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m SubtaskTests.swift
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftsourceinfo -> LooseEndsUITests.swiftsourceinfo
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftmodule -> LooseEndsUITests.swiftmodule
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.swiftdoc -> LooseEndsUITests.swiftdoc
+[[36mLooseEndsUITests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsUITests.abi.json
+⚠️  /Users/hem/Developer/loose-ends/.claude/worktrees/stateless-kindling-wand/LooseEndsTests/TaskActionsTests.swift:172:37: [33m'#require(_:_:)' is redundant because 'calendar.date(byAdding: .hour, value: 5, to: wednesday)' never equals 'nil' (from macro 'require')[0m
+170 |         let task = TaskItem(rawText: "Zahnarzt anrufen")
+[32m171 |         let wednesday = try day(2026, 9, 16, in: calendar)[0m
+[[36mLooseEndsTests[0m] [1mCompiling[0m TaskActionsTests.swift
+[[36mLooseEndsTests[0m] [1mCompiling[0m TranscriptCodecTests.swift
+[[36mLooseEndsTests[0m] [1mCopy[0m arm64-apple-ios-simulator.abi.json -> LooseEndsTests.abi.json
+[[36mLooseEndsTests[0m] [1mLinking[0m LooseEndsTests
+[[36mLooseEndsTests[0m] [1mExtract App Intents Metadata[0m
+[[36mLooseEnds[0m] [1mValidate[0m LooseEnds.app
+[[36mLooseEndsUITests[0m] [1mLinking[0m LooseEndsUITests
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+[[36mLooseEndsUITests[0m] [1mExtract App Intents Metadata[0m
+Test Suite 'Selected tests' started at 2026-11-26 12:29:06.230.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-26 12:29:06.244.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-26 12:29:06.244.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.016) seconds
+[1mTest run started.[0m
+Suite "Start screen views" started
+    [32m✔[0m "With no task at all only Next up and Due remain, New is gone (#1000)" (0.001 seconds)
+    [32m✔[0m "An occasional view appears once it holds a task, in its fixed place" ([31m0.131[0m seconds)
+    [32m✔[0m "Daily and occasional views together cover every list view except Done and All open" (0.003 seconds)
+    [32m✔[0m "All open holds new, unverified, active, waiting and parked tasks" (0.017 seconds)
+    [32m✔[0m "All open leaves out done tasks and subtasks" (0.008 seconds)
+    [32m✔[0m "All open puts urgent first, then important, then the older one; a parked task closes the list (#545)" (0.010 seconds)
+    [32m✔[0m "All open is empty without tasks and never one of the upper start rows" (0.007 seconds)
+    [32m✔[0m "All open is called „Lose Enden“ in German (#518), shows a circle and says „Nichts mehr offen.“ when empty" (0.001 seconds)
+    [32m✔[0m "The iPhone index shows the daily three first and the occasional ones with content, Quick included (#421)" (0.007 seconds)
+    [32m✔[0m "Quick stands in the index while it holds a task, after the daily three (#421)" (0.006 seconds)
+Suite "Start screen views" passed after 0.196 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-stateless-kindling-wand/Logs/Test/Test-LooseEnds-2026.11.26_12-27-39-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log

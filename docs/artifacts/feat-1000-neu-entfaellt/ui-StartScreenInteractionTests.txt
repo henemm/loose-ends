@@ -1,0 +1,85 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: StartScreenInteractionTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-26 12:32:15.975.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-26 12:32:15.976.
+Test Suite 'StartScreenInteractionTests' started at 2026-11-26 12:32:15.976.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.StartScreenInteractionTests testChipOpensItsView] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    14.22s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    15.25s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testChipOpensItsView ([31m22.738[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.StartScreenInteractionTests testDueTodayShowsOnTheStartScreen] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    10.17s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    11.20s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testDueTodayShowsOnTheStartScreen ([31m17.671[0m seconds)
+    [32m✔[0m testEmptyNowShowsTheHint ([31m26.850[0m seconds)
+    [32m✔[0m testGridCellOpensView ([31m25.104[0m seconds)
+    [32m✔[0m testIndexMarksTheOpenListOnIPadOnly ([31m31.629[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.StartScreenInteractionTests testNowFoldsAgainOnceFiveAreLeft] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    10.68s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    11.70s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testNowFoldsAgainOnceFiveAreLeft ([31m177.125[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.StartScreenInteractionTests testNowMoreExpandsInPlace] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    35.84s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    36.89s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testNowMoreExpandsInPlace ([31m115.023[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.StartScreenInteractionTests testNowRowOpensItsTask] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    27.89s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    28.94s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testNowRowOpensItsTask ([31m75.524[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.StartScreenInteractionTests testOpenRowShowsOpenAndParkedButNotDone] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    25.47s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    26.56s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testOpenRowShowsOpenAndParkedButNotDone ([31m301.504[0m seconds)
+    [32m✔[0m testOpenViewEmptySentence ([31m70.021[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.StartScreenInteractionTests testOpenViewOrdersDueThenUnweightedThenLaterThenParked] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    53.96s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    54.99s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testOpenViewOrdersDueThenUnweightedThenLaterThenParked ([31m120.992[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.StartScreenInteractionTests testPreviewRowHasLongPressMenu] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    21.91s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    22.92s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testPreviewRowHasLongPressMenu ([31m56.001[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.StartScreenInteractionTests testPreviewRowSwipesToDoneAndBack] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    13.97s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    14.98s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+Test Suite 'Selected tests' started at 2026-11-26 12:56:10.967.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-26 12:56:10.983.
+Test Suite 'StartScreenInteractionTests' started at 2026-11-26 12:56:10.983.
+Test Suite 'Selected tests' started at 2026-11-26 12:59:50.934.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-26 12:59:50.954.
+Test Suite 'StartScreenInteractionTests' started at 2026-11-26 12:59:50.955.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.StartScreenInteractionTests testRemovingNextUpFromDueRowKeepsItInNow] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =   275.71s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =   276.75s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+Test Suite 'Selected tests' started at 2026-11-26 13:14:56.587.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-26 13:14:56.784.
+Test Suite 'StartScreenInteractionTests' started at 2026-11-26 13:14:56.784.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.StartScreenInteractionTests testSwipesOnParkedRowInOpenView] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    55.86s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    56.95s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testSwipesOnParkedRowInOpenView ([31m267.405[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.StartScreenInteractionTests testUndatedTaskKeepsTheNowHint] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    13.31s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    14.32s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testUndatedTaskKeepsTheNowHint ([31m19.890[0m seconds)
+Executed 2 tests, with 0 failures (0 unexpected) in 287.295 (287.950) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-11-26 13:19:44.737.
+Executed 2 tests, with 0 failures (0 unexpected) in 287.295 (287.954) seconds
+Executed 2 tests, with 0 failures (0 unexpected) in 287.295 (288.150) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-stateless-kindling-wand/Logs/Test/Test-LooseEnds-2026.11.26_12-32-06-+0100.xcresult
+[36;1mTesting started[0m

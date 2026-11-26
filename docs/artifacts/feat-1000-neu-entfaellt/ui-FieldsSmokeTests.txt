@@ -1,0 +1,50 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: FieldsSmokeTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-26 14:24:28.442.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-26 14:24:28.446.
+Test Suite 'FieldsSmokeTests' started at 2026-11-26 14:24:28.446.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.FieldsSmokeTests testCalendarWaitsForADate] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    26.52s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    27.55s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testCalendarWaitsForADate ([31m65.552[0m seconds)
+    [32m✔[0m testDueWordFollowsMidnight ([31m0.145[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.FieldsSmokeTests testFieldsSettingSwitchesWordAndStartPageGroup] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    48.52s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    49.55s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testFieldsSettingSwitchesWordAndStartPageGroup ([31m63.325[0m seconds)
+    [32m✔[0m testLineWaitOutlastsOneSlowQuery ([31m6.101[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.FieldsSmokeTests testLowAndMediumShowNoSignInTheRowButTheLadderInTheDetail] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    10.08s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    11.10s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testLowAndMediumShowNoSignInTheRowButTheLadderInTheDetail ([31m56.601[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.FieldsSmokeTests testNewTaskShowsOnlyTheStandardWordsAndNoEmptySection] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    10.39s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    11.42s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testNewTaskShowsOnlyTheStandardWordsAndNoEmptySection ([31m39.297[0m seconds)
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.FieldsSmokeTests testSignsStandInTheRowAndBehindTheValuesInTheDetail] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    10.04s Waiting 5.0s for "captureTextField" Any to exist
+[32m    t =    11.06s     Checking `Expect predicate `existsNoRetry == 1` for object "captureTextField" Any`[0m
+    [32m✔[0m testSignsStandInTheRowAndBehindTheValuesInTheDetail ([31m52.671[0m seconds)
+Executed 7 tests, with 0 failures (0 unexpected) in 283.693 (283.706) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-11-26 14:29:12.176.
+Executed 7 tests, with 0 failures (0 unexpected) in 283.693 (283.731) seconds
+Executed 7 tests, with 0 failures (0 unexpected) in 283.693 (283.759) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-stateless-kindling-wand/Logs/Test/Test-LooseEnds-2026.11.26_14-24-02-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.

@@ -1,0 +1,22 @@
+== #1000 S1 GREEN (2026-11-26) ==
+-- unit-StartViewsTests.txt
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-26 12:29:06.244.
+Suite "Start screen views" passed after 0.196 seconds
+-- unit-InboxDrawerTests.txt
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-26 12:29:30.062.
+Suite "Inbox drawer" passed after 0.209 seconds
+-- catalog-test-output.txt
+Ran 9 tests in 0.847s
+
+OK
+-- ui-InboxDrawerSmokeTests.txt
+Executed 2 tests, with 0 failures (0 unexpected) in 80.416 (80.544) seconds
+-- ui-CaptureSmokeTests.txt
+Executed 29 tests, with 0 failures (0 unexpected) in 1092.324 (1092.449) seconds
+-- test-proof-InboxDrawerSmokeTests.txt
+Executed 2 tests, with 0 failures (0 unexpected) in 70.060 (70.108) seconds
+-- StartScreenInteractionTests (Erstlauf 14/17, 3 Abbrüche durch fremdes simctl shutdown all ~13:10 MEZ, Einzelwiederholungen grün)
+   Erstlauf: 14 bestanden, 3 'Test crashed with signal term' (Simulator von anderer Sitzung beendet)
+   testProjectsLineOpensPage: Wiederholung bestanden
+   testRemovingNextUpFromDueRowKeepsItInNow: Wiederholung bestanden
+   testPreviewRowSwipesToDoneAndBack: 1. Wiederholung beim Bauen von außen beendet, 2. Wiederholung bestanden
