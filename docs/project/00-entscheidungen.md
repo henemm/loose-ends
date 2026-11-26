@@ -345,6 +345,17 @@ installierte 2026-09-30 unter Hennings Produktivkennung und überschrieb seine I
 Kennung hängt am Prüfweg, nicht an der Build-Konfiguration — Begründung und Alternative in
 `docs/specs/tooling/fix-156-pruefkennung.md` (#156).
 
+**ADR-22 Kein Modell, kein „Neu“ (Henning, 2026-11-26, Epic #999; kippt den Modellteil von ADR-4).**
+„Die AI hat in der Summe keinen Mehrwert, sondern stört eher.“ Anlass: erfundene Titel und Dauern
+(#982: aus „Vor Konzert“ wurde „Vor Konzert Zimmer aufräumen“, 15 Min.). Das On-Device-Modell kommt aus dem
+Produktweg (#982); jedes Feld setzen nur Regeln, und nur aus dem, was gesagt wurde: Titel = `TitleRule`,
+Dauer nur genannt (`DurationRule`) oder wiedererkannt (`RecognitionRule`), sonst leer („lieber leer als
+geraten“). Weil nichts mehr erfunden wird, entfällt die Sichtung: „Neu“, „N zu sichten“ und „Sieht gut aus“
+verschwinden, eine erfasste Aufgabe steht sofort in ihrer Liste (#1000). Die Regeln werden an Hennings eigenen
+Erfassungen nachgeschärft (#1001). Bisherige KI-Werte und Revisionen bleiben stehen (ADR-3), Messcode in
+`Measurement/` und die Labor-App bleiben. Verworfen: Modell nur auf Wunsch über „Neu analysieren“; „Neu“ als
+Anzeige „Zuletzt erfasst“; Bestätigen nur bei Regeltreffern; Wortliste, die Kurzaufgaben 5 Minuten gibt.
+
 ## Bewusst nicht in Version 1
 
 Fokusblöcke, Timer, Coaching, Tagesreview (außer der Wahl „Abends durchsehen“, #414), Disziplin-Statistiken, Aufgabentyp (Einkommen,
