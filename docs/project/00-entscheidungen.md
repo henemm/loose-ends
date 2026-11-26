@@ -100,6 +100,8 @@ Seit #535 setzt ein dauerhafter Modellfehler (Guardrail, Kontextfenster) `proces
 KI-Revision, damit die Aufgabe nicht bei jedem Durchlauf erneut ans Modell geht; vorübergehende
 Fehler (Zeitgrenze, Last, Gerätezustand, unbekannte Fehler) lassen es leer. „Neu analysieren"
 bleibt der ausdrückliche zweite Versuch.
+Seit #982 (S1, ADR-22) setzt nichts mehr `processedAt`; der Nachzügler-Lauf nimmt eine Aufgabe genau einmal
+über `rulesAppliedAt` (offen = beide Marken leer), „Neu analysieren“ führt nur noch den Regelschritt aus.
 Seit #34 ist die erneute Analyse „Neu analysieren" im Detail-Menü: derselbe Regelschritt und
 derselbe Modellaufruf wie beim ersten Mal (`EnrichmentCoordinator.reanalyze`). Sie darf jedes
 Feld neu setzen, das der Nutzer nie angefasst hat — von der KI gesetzt oder noch leer —, jede
@@ -345,7 +347,7 @@ installierte 2026-09-30 unter Hennings Produktivkennung und überschrieb seine I
 Kennung hängt am Prüfweg, nicht an der Build-Konfiguration — Begründung und Alternative in
 `docs/specs/tooling/fix-156-pruefkennung.md` (#156).
 
-**ADR-22 Kein Modell, kein „Neu“ (Henning, 2026-11-26, Epic #999; kippt den Modellteil von ADR-4).**
+**ADR-22 Kein Modell, kein „Neu“ (Henning, 2026-11-26, Epic #999; kippt den Modellteil von ADR-4; #982 S1 umgesetzt 2026-11-26).**
 „Die AI hat in der Summe keinen Mehrwert, sondern stört eher.“ Anlass: erfundene Titel und Dauern
 (#982: aus „Vor Konzert“ wurde „Vor Konzert Zimmer aufräumen“, 15 Min.). Das On-Device-Modell kommt aus dem
 Produktweg (#982); jedes Feld setzen nur Regeln, und nur aus dem, was gesagt wurde: Titel = `TitleRule`,
