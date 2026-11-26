@@ -109,11 +109,6 @@ final class StoreScreenshotsTests: XCTestCase {
         XCTAssertTrue(back.waitForExistence(timeout: 5), "Tags editor has no back button")
         back.tap()
 
-        // "Passt" vouches for the title; the task stays in "Jetzt", so the detail stays open.
-        let confirm = element("detailConfirmButton", in: app)
-        if confirm.waitForExistence(timeout: 3) { confirm.tap() }
-        XCTAssertTrue(confirm.waitForNonExistence(timeout: 5), "Passt stays in the bar")
-        XCTAssertFalse(element("reviewNote", in: app).exists, "The detail shows the review note")
         XCTAssertTrue(tags.waitForExistence(timeout: 5) && tags.label.contains("Computer"), "Tag not set: \(tags.label)")
         XCTAssertTrue(duration.label.contains("30"), "Duration not set: \(duration.label)")
     }

@@ -117,8 +117,6 @@ struct TaskListView: View {
                 doneSections
             } else if project != nil {
                 projectRows
-            } else if kind == .new {
-                reviewSections
             } else if kind == .due || kind == .open {
                 newDateSections
             } else if context != nil || kind == .quick {
@@ -150,8 +148,8 @@ struct TaskListView: View {
     }
 
     /// Opening a task marks its row on the Mac (#480), so the arrows go on from there after "Back".
-    private func detail(_ task: TaskItem, reviewing: Bool = false) -> some View {
-        TaskDetailView(task: task, reviewing: reviewing)
+    private func detail(_ task: TaskItem) -> some View {
+        TaskDetailView(task: task)
         #if os(macOS)
             .onAppear { selectedID = task.id }
         #endif
@@ -243,9 +241,6 @@ struct TaskListView: View {
                 if case .task(let task) = line { return task.id }
                 return nil
             }
-        }
-        if kind == .new {
-            return (shown.filter { !ViewRules.needsLook($0) } + shown.filter(ViewRules.needsLook)).map(\.id)
         }
         if kind == .due || kind == .open {
             // `shown` already stands in the blocks' order (#657); only the leftovers move up.
@@ -372,26 +367,6 @@ struct TaskListView: View {
         let style = Date.IntervalFormatStyle(locale: locale, calendar: calendar, timeZone: calendar.timeZone).day().month(.wide)
         let span = (week.week.lowerBound..<last).formatted(style)
         return week.isCurrent ? String(localized: "This week · \(span)") : span
-    }
-
-    /// "New" as the review tray (#188): on top what only needs a nod ("Looks right" by swipe),
-    /// below what needs opening: no title vouched for, or nothing sorted yet.
-    @ViewBuilder
-    private var reviewSections: some View {
-        let confirm = shown.filter { !ViewRules.needsLook($0) }
-        let look = shown.filter(ViewRules.needsLook)
-        if !confirm.isEmpty {
-            Section {
-                ForEach(confirm) { row($0) }
-            }
-        }
-        if !look.isEmpty {
-            Section {
-                ForEach(look) { row($0) }
-            } header: {
-                head(Text("Needs a look"))
-            }
-        }
     }
 
     /// "Due" and "Loose ends" (#518, #548): whose deadline passed stands on top until it has a new date,
@@ -590,7 +565,7 @@ struct TaskListView: View {
 
     private func openRow(_ task: TaskItem, marginWords: String? = nil) -> some View {
         NavigationLink {
-            detail(task, reviewing: kind == .new)
+            detail(task)
         } label: {
             TaskRow(task: task, hidesContext: context != nil, note: note(for: task), marksParked: kind == .open,
                     nextRank: nextRank(of: task), onNewDate: { redating = task }, marginWords: marginWords)
@@ -628,14 +603,6 @@ struct TaskListView: View {
     private func note(for task: TaskItem) -> String? {
         if let parent = task.parent {
             return String(localized: "Subtask of \(parent.displayTitle)")
-        }
-        if kind == .new {
-            switch ViewRules.reviewReason(of: task) {
-            case .titleChanged(let raw): return String(localized: "was: \(raw)")
-            case .sortedByAI: return nil
-            case .titleNotChecked: return String(localized: "Title not checked")
-            case .notSortedYet: return String(localized: "Not sorted yet")
-            }
         }
         guard kind == .old else { return nil }
         var parts = [ViewRules.openSince(task).formatted(.relative(presentation: .named))]

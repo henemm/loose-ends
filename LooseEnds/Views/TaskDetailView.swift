@@ -8,11 +8,9 @@ import SwiftUI
 /// in one line of words below, grouped the same way, only the fields that are on in the settings.
 /// Tapping a row opens its editor; a field a rule read from the raw text carries the quote mark, one the AI
 /// estimated the spark (#101), both accent-tinted, and its editor also shows before, after, the
-/// reason and Reset. Opening the detail marks the AI changes as seen, except from "New" (#349):
-/// there a line under the title says why the task waits, and "Looks right" takes the place of
-/// Complete, which moves into the menu. Opened elsewhere, the bar carries Complete, "Looks right"
-/// while the task still needs a look (#318), and the "…" menu: the list's long-press menu, entry for
-/// entry (`TaskInteractions.menu`, #667), Delete included, which leaves the detail.
+/// reason and Reset. Opening the detail marks the rule changes as seen. The "…" menu is the list's
+/// long-press menu, entry for entry (`TaskInteractions.menu`, #667), Delete included, which leaves
+/// the detail.
 struct TaskDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(CompletionPulse.self) private var completionPulse: CompletionPulse?
@@ -26,8 +24,6 @@ struct TaskDetailView: View {
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
     @Query(sort: \Project.sortOrder) private var projects: [Project]
     @Bindable var task: TaskItem
-    /// Opened from "New" (#349): opening confirms nothing, "Looks right" does.
-    var reviewing = false
     /// Opened by "Details" on its parent's line (#565): "Part of" goes back instead of stacking the
     /// parent once more.
     var fromParent = false
@@ -88,7 +84,6 @@ struct TaskDetailView: View {
     private var carried: Set<DetailField> { DetailFields.carried(by: task) }
     /// A section shows with content, or once its word was tapped (rule 1 and 2).
     private func shows(_ field: DetailField) -> Bool { carried.contains(field) || opened.contains(field) }
-    private var inReview: Bool { reviewing && ViewRules.isInNew(task) }
     /// A wide window or the Mac (#477): the detail as a centered column with the larger title.
     /// Split View and Slide Over are compact and keep the iPhone's detail.
     private var isWide: Bool {
@@ -161,15 +156,6 @@ struct TaskDetailView: View {
             .detailRow()
 
             driveSection
-
-            if inReview {
-                Section {
-                    ReviewNote(task: task, automaticFields: aiFields.count)
-                }
-                // Wide: the tint no wider than the hairlines (#477).
-                .listRowBackground(Color.accentColor.opacity(0.08).padding(.horizontal, isWide ? 20 : 0))
-                .listRowInsets(isWide ? Paper.wideNoteInsets : nil)
-            }
 
             if let reanalysis {
                 Section {
@@ -324,7 +310,7 @@ struct TaskDetailView: View {
         .taskInteractionDialogs(actions)
         .onAppear {
             titleDraft = storedTitle
-            if !reviewing { markSeen() }
+            markSeen()
         }
         .onChange(of: titleFocused) { _, focused in
             if !focused { commitTitle() }
@@ -558,35 +544,10 @@ struct TaskDetailView: View {
     }
 
     /// The briefing's "…" menu (screen 4) with Complete first; completing leaves the detail. No
-    /// checkmark in the bar: it reads as "close" (#349 for New, #435 everywhere). From "New" the
-    /// bar holds "Looks right". The menu is the list's (#667), for a done or parked task too.
+    /// checkmark in the bar: it reads as "close" (#349, #435 everywhere). The menu is the list's
+    /// (#667), for a done or parked task too.
     @ToolbarContentBuilder
     private var toolbarActions: some ToolbarContent {
-        if !deleted, task.isOpen {
-            if inReview {
-                if ViewRules.canConfirm(task) {
-                    ToolbarItem(placement: .primaryAction) {
-                        Button("Looks right", action: confirmReview)
-                            .buttonStyle(.borderedProminent)
-                            .accessibilityIdentifier("detailConfirmButton")
-                    }
-                }
-            } else {
-                // Still in New after opening ("Needs a look": title not checked, not sorted yet): one
-                // tap vouches for it, without editing the title first (#318). The word, not a sign:
-                // a bare eye in the bar said nothing (Henning, 2026-10-16, build 76).
-                if ViewRules.needsLook(task), task.title != nil {
-                    ToolbarItem(placement: .primaryAction) {
-                        Button("Looks right") {
-                            TaskActions.confirmReview(task)
-                            save("confirm")
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .accessibilityIdentifier("detailConfirmButton")
-                    }
-                }
-            }
-        }
         if !deleted, showsBarActions {
             // The wide detail's empty bar holds the four daily actions (#831, Henning 2026-11-04). Complete as a word,
             // never a checkmark (2026-10-15): a checkmark reads as "close" and completed tasks by accident.
@@ -711,13 +672,6 @@ struct TaskDetailView: View {
             .font(.subheadline)
             .detailRow()
         }
-    }
-
-    /// The nod (#349): the task leaves "New", and the detail returns to it for the next one.
-    private func confirmReview() {
-        TaskActions.confirmReview(task)
-        save("confirm")
-        dismiss()
     }
 
     /// Under the switch: why nothing shows (ADR-13, #203). Silent while the switch is off or the
