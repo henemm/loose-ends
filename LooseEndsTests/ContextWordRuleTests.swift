@@ -111,7 +111,7 @@ struct ContextWordRuleTests {
         store.context.insert(task)
         try store.context.save()
 
-        await EnrichmentCoordinator(enricher: StubEnricher(unavailableReason: "Kein Modell"), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect((task.contexts ?? []).map(\.name) == ["Garten"])
         #expect(task.contextsSourceRaw == FieldSource.rule.rawValue)
@@ -122,17 +122,15 @@ struct ContextWordRuleTests {
         #expect(revisions.first?.reason == String(localized: "From “\(word)” in the note."))
     }
 
-    @Test("Ohne Treffer bleibt der Kontext leer, auch wenn das Modell einen vorschlägt")
+    @Test("Ohne Treffer bleibt der Kontext leer (#215, ohne Modell #982)")
     @MainActor func noHitStaysEmpty() async throws {
         let store = try TestStore()
         store.context.insert(TaskContext(name: "Unterwegs", isSystemDefault: true, sortOrder: 5))
         let task = TaskItem(rawText: "Morgen wichtig Steuerbescheid prüfen")
         store.context.insert(task)
         try store.context.save()
-        var draft = EnrichmentDraft()
-        draft.contexts = EnrichmentDraft.Guess(["Unterwegs"], confidence: 0.9, reason: "Geraten.")
 
-        await EnrichmentCoordinator(enricher: StubEnricher(draft: draft), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect((task.contexts ?? []).isEmpty)
         #expect(!(task.revisions ?? []).contains { $0.field == .contexts })
@@ -157,7 +155,7 @@ struct ContextWordRuleTests {
         store.context.insert(fresh)
         try store.context.save()
 
-        await EnrichmentCoordinator(enricher: StubEnricher(unavailableReason: "Kein Modell"), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect((fresh.contexts ?? []).isEmpty)
         #expect(!(fresh.revisions ?? []).contains { $0.field == .contexts })
@@ -174,7 +172,7 @@ struct ContextWordRuleTests {
         store.context.insert(task)
         RevisionService.set(.contexts, to: EnrichmentWriter.encode(["Haus"]), on: task, contexts: [garden, home], projects: [])
         try store.context.save()
-        let coordinator = EnrichmentCoordinator(enricher: StubEnricher(unavailableReason: "Kein Modell"), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
 
         await coordinator.processPending()
         _ = await coordinator.reanalyze(task)

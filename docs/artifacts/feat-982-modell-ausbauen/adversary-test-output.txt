@@ -1,0 +1,92 @@
+    [32m✔[0m "The contract document carries the transcript example word for word (AC-10)" (0.001 seconds)
+Suite "Transcript for Claude" passed after 0.029 seconds
+Suite "Wartet auf: Verweise von Hand (#251)" started
+    [32m✔[0m "Verbinden setzt den Verweis und schreibt eine Nutzer-Revision mit Titeln" (0.003 seconds)
+    [32m✔[0m "Ein zweites Verbinden derselben Aufgabe ändert nichts" (0.002 seconds)
+    [32m✔[0m "Lösen entfernt nur die Verbindung, beide Aufgaben bleiben" (0.005 seconds)
+    [32m✔[0m "Ist die andere Aufgabe erledigt, wartet die Aufgabe nicht mehr; der Verweis bleibt sichtbar" (0.002 seconds)
+    [32m✔[0m "Die Auswahl bietet nur offene, fremde, noch nicht verbundene Aufgaben der obersten Ebene an" (0.004 seconds)
+    [32m✔[0m "Eine Aufgabe, die (auch über andere) auf diese wartet, wird nicht angeboten: kein Kreis" (0.004 seconds)
+    [32m✔[0m "Die Suche findet Titel und Rohtext, ohne Rücksicht auf Groß- und Kleinschreibung oder Akzente" (0.003 seconds)
+    [32m✔[0m "Die Listenzeile nennt die erste offene Aufgabe, gekürzt, und zählt weitere" (0.002 seconds)
+Suite "Wartet auf: Verweise von Hand (#251)" passed after 0.030 seconds
+Suite "Waveform" started
+    [32m✔[0m "Silence and an empty sample are zero" (0.001 seconds)
+    [32m✔[0m "−55 dBFS is the floor" (0.001 seconds)
+    [32m✔[0m "−40 dBFS, measured speech, is half the height" (0.001 seconds)
+    [32m✔[0m "−25 dBFS and a full-scale signal fill the bar" (0.001 seconds)
+    [32m✔[0m "Below the floor clamps to zero" (0.001 seconds)
+    [32m✔[0m "−36 dBFS, measured peaks, sits above half" (0.001 seconds)
+    [32m✔[0m "The ring grows with the level from the circle to 1.35 times it, clamped" (0.001 seconds)
+    [32m✔[0m "The waveform keeps only the newest levels and clamps them to 0...1" (0.001 seconds)
+Suite "Waveform" passed after 0.007 seconds
+Suite "Listening hint" started
+    [32m✔[0m "Listening with an empty field shows the hint" (0.001 seconds)
+    [32m✔[0m "Whitespace only counts as empty" (0.001 seconds)
+    [32m✔[0m "The first word replaces the hint" (0.001 seconds)
+    [32m✔[0m "Not listening with an empty field shows the usual placeholder" (0.013 seconds)
+    [32m✔[0m "Not listening with text shows neither" (0.001 seconds)
+Suite "Listening hint" passed after 0.014 seconds
+Suite "Bericht: Gewichtung nach Hennings Verteilung" started
+    [32m✔[0m "Die Gewichte sind Hennings Angabe, mit Quelle und eingefrorener Zählung" (0.001 seconds)
+    [32m✔[0m "Titel: ein Drittel Stichwörter, zwei Drittel alle übrigen Formen zusammen" (0.001 seconds)
+    [32m✔[0m "Datum: 12 % Sätze mit Datum, 88 % ohne" (0.001 seconds)
+    [32m✔[0m "Eine leere Gruppe wird nie still umnormiert" (0.001 seconds)
+    [32m✔[0m "Der Abschnitt nennt Gewichte, Quelle, Formel, Regel-Spalte und kein Gewicht für die übrigen Formen" (0.001 seconds)
+    [32m✔[0m "Die Zählung steht als zweite Zeile, eingefroren, als Titel statt Rohsätze" (0.001 seconds)
+    [32m✔[0m "Der Regelparser und TitleRule werden je Bauform gezählt" (0.012 seconds)
+    [32m✔[0m "Der neue Abschnitt steht nach „Nach Bauform“ und vor „Titel“, die alten behalten ihre Reihenfolge" (0.001 seconds)
+Suite "Bericht: Gewichtung nach Hennings Verteilung" passed after 0.015 seconds
+Suite "WidgetReload (#883)" started
+    [32m✔[0m "A finished, successful import reloads exactly once (AC-1)" ([31m0.422[0m seconds)
+    [32m✔[0m "An unfinished import, a failed import and an export reload nothing (AC-1)" ([31m0.403[0m seconds)
+    [32m✔[0m "A save in the app's context reloads with no ContentView around (AC-2)" ([31m0.425[0m seconds)
+    [32m✔[0m "Ten messages within a second reload once (AC-3)" ([31m0.424[0m seconds)
+    [32m✔[0m "Becoming active reloads exactly once (#883 Schnitt 2, AC-3)" ([31m0.413[0m seconds)
+    [32m✔[0m "Ten active messages within a second reload once (#883 Schnitt 2, AC-3)" ([31m0.412[0m seconds)
+    [32m✔[0m "ContentView no longer calls reloadTimelines itself (AC-4)" (0.003 seconds)
+    [32m✔[0m "The app creates and starts one WidgetReload at process level (AC-4)" (0.001 seconds)
+Suite "WidgetReload (#883)" passed after 2.507 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-validated-exploring-kurzweil/Logs/Test/Test-LooseEnds-2026.11.26_09-34-03-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 3 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   RawSentenceReportTests – fehlt: loose-ends-rawtexts.json
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: Sprache de_DE wird hier nicht unterstützt (isAvailable false, supportedLocales.count 0, installedLocales.count 0)
+[sim]   The final text keeps the key words – NICHT gemessen: Sprache de_DE wird hier nicht unterstützt (isAvailable false, supportedLocales.count 0, installedLocales.count 0)
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m UI-Test: NoModelCaptureTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-26 09:36:12.770.
+Test Suite 'LooseEndsUITests.xctest' started at 2026-11-26 09:36:12.771.
+Test Suite 'NoModelCaptureTests' started at 2026-11-26 09:36:12.771.
+⚠️  <unknown>:0: [33m-[LooseEndsUITests.NoModelCaptureTests testSpokenTitleStaysAndAnalyzeAgainNamesNoModel] : This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.[0m
+    t =    16.73s Waiting 3.0s for Button (First Match) to exist
+[32m    t =    17.80s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`[0m
+    [32m✔[0m testSpokenTitleStaysAndAnalyzeAgainNamesNoModel ([31m43.570[0m seconds)
+Executed 1 test, with 0 failures (0 unexpected) in 43.570 (43.575) seconds
+Test Suite 'LooseEndsUITests.xctest' passed at 2026-11-26 09:36:56.352.
+Executed 1 test, with 0 failures (0 unexpected) in 43.570 (43.581) seconds
+Executed 1 test, with 0 failures (0 unexpected) in 43.570 (43.582) seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-validated-exploring-kurzweil/Logs/Test/Test-LooseEnds-2026.11.26_09-36-04-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m UI-Test bestanden.

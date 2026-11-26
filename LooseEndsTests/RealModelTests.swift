@@ -21,6 +21,10 @@ enum RealModel {
         FoundationModelsEnricher().unavailableReason == nil
     }
 
+    /// The measured limit per model call (#534, `docs/reference/modell-latenz.md`): the coordinator waited this long
+    /// until the model left the product path (#982); the measurement keeps checking against it.
+    static let callLimit: Duration = .seconds(25)
+
     /// Invented notes, no personal data; German and English like the captures.
     static let notes = [
         "Morgen Zahnarzt anrufen wegen dem Termin",
@@ -65,7 +69,7 @@ struct RealModelTests {
             let took = ContinuousClock.now - started
 
             #expect(
-                took < EnrichmentCoordinator.defaultModelTimeout,
+                took < RealModel.callLimit,
                 "\(note): \(took), longer than the coordinator waits (#530, #534)"
             )
             let title = try #require(draft.title, "\(note): no title")

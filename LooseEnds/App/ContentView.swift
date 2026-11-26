@@ -31,15 +31,13 @@ struct ContentView: View {
         ProcessInfo.processInfo.arguments.contains("--ui-testing-long-done-window") ? 20 : PendingCompletions.defaultWindow
     }
 
-    /// The simulator has a model, so the onboarding's note never shows there (#342). Under `--ui-testing`,
-    /// `--ui-testing-model-reason=<reason>` stands in for the system's reason; otherwise the real one applies.
-    private static var modelUnavailableReason: String? {
+    /// The onboarding's model reason (#342). The model is out of the product path (ADR-22, #982), so the
+    /// real app passes none; only under `--ui-testing`, `--ui-testing-model-reason=<reason>` still stands in
+    /// for one until the note itself goes (Schnitt 2).
+    static func onboardingModelReason(arguments: [String], isUITesting: Bool) -> String? {
         let prefix = "--ui-testing-model-reason="
-        if ModelContainerFactory.isUITesting,
-           let argument = ProcessInfo.processInfo.arguments.first(where: { $0.hasPrefix(prefix) }) {
-            return String(argument.dropFirst(prefix.count))
-        }
-        return FoundationModelsEnricher().unavailableReason
+        guard isUITesting, let argument = arguments.first(where: { $0.hasPrefix(prefix) }) else { return nil }
+        return String(argument.dropFirst(prefix.count))
     }
 
     /// Nil only in previews; the app always passes its coordinator and notification center.
@@ -221,11 +219,12 @@ struct ContentView: View {
         }
     }
 
-    /// Screen 12 (#29), once per device. The model is asked directly: the coordinator only knows
-    /// whether it is there when a pass runs.
+    /// Screen 12 (#29), once per device.
     private var onboarding: some View {
         OnboardingView(
-            modelUnavailableReason: Self.modelUnavailableReason,
+            modelUnavailableReason: Self.onboardingModelReason(
+                arguments: ProcessInfo.processInfo.arguments, isUITesting: ModelContainerFactory.isUITesting
+            ),
             requestNotifications: { await notifications?.requestAuthorization() },
             onFinish: {
                 OnboardingFlow.finish()

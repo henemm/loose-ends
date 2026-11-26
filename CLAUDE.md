@@ -92,7 +92,9 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
   stört eher.“ The on-device model leaves the product path (#982); fields come from rules only, and only from what was
   said (duration only named or recognized, else empty). The review step goes: no "New", no "N to look over", no "Looks
   right"; a captured task stands in its list at once (#1000). Rules are sharpened on Henning's own captures (#1001).
-  Until those land, the paragraph below describes the code as it still is.
+  #982 S1 is done (2026-11-26): `EnrichmentCoordinator` has no enricher any more and runs the rules once per task;
+  the model code stays compiled only for the lab app and measurement tests until S3. Until #1000/#1001 land, the
+  paragraph below describes the rest as it still is.
 - **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,
   regex, calendar, contacts or a word list. The on-device model only gets what needs language
   understanding (refining the title: since #202 `TitleRule` sets it at capture from the cleaned raw
@@ -454,7 +456,7 @@ not scope creep on the current one.
   itself; `TranscriptCodec` builds the transcript for Claude (open tasks, "Now" and its count from `ViewRules`, no raw text or
   note). Contract version 1: `docs/reference/claude-abschrift-vertrag.md`. Nothing in the app calls either yet.
 - `Shared/Enrichment` — `TaskEnricher` protocol (`StubEnricher` in the tests plays hang, empty answer, answer per note and
-  refusal, #530), `ModelDeadline` (time limit per model call, 25 s in the coordinator, from the measurement #534; a timeout counts as a failed call, #530), `EnrichmentWriter` (threshold + revisions; never writes the model's contexts or project, #215/#469), `EnrichmentCoordinator`
+  refusal, #530), `ModelDeadline` (time limit per model call, from the measurement #534; since #982 S1 the coordinator no longer calls the model, so `TaskEnricher`, `StubEnricher`, `ModelDeadline`, `FoundationModelsEnricher`, `EnrichmentDraft` and `ModelFailure` are compiled only for the lab app and measurement tests until S3), `EnrichmentWriter` (threshold + revisions; never writes the model's contexts or project, #215/#469), `EnrichmentCoordinator`
   (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`
   (combines the rule parsers into the due date, confidence 1.0, #95), `ImportanceUrgencyRule` (keyword
   match for importance/urgency, confidence 1.0, no default on miss, #117), `DurationRule` (a length the text names, "20 Minuten",

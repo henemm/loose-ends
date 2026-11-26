@@ -41,9 +41,8 @@ struct LooseEndsApp: App {
         LaunchTimings.mark(.containerEnd)
         Self.seedLeftoversIfAsked(in: container)
         Self.seedClaudeChangeIfAsked(in: container)
-        let enricher: any TaskEnricher = ModelContainerFactory.isUITesting ? ModelOffEnricher() : FoundationModelsEnricher()
-        enrichment = EnrichmentCoordinator(enricher: enricher, container: container,
-                                           savedPlaces: { SavedPlacesStore.shared.places })
+        // Rules only, no on-device model in the product path (ADR-22, #982).
+        enrichment = EnrichmentCoordinator(container: container, savedPlaces: { SavedPlacesStore.shared.places })
         #if os(iOS)
         Self.seedPlaceTaskIfAsked(in: container)
         let places: (any PlaceReconciling)? = PlaceNotificationCenter(container: container)
@@ -237,19 +236,4 @@ struct LooseEndsApp: App {
         .menuBarExtraStyle(.window)
         #endif
     }
-}
-
-/// The model as UI tests see it: absent (#228). The iOS 27 simulator carries an on-device model;
-/// its runs race the tests (#208) and load the CI runner until XCTest gets no accessibility
-/// snapshot ("Timed out while evaluating UI query"). The UI tests were written for a simulator
-/// without Apple Intelligence, which is also what a device without it shows: the rules run, the
-/// model step reports itself unavailable. The app itself never uses this.
-private struct ModelOffEnricher: TaskEnricher {
-    var unavailableReason: String? { "Apple Intelligence is off under UI testing." }
-
-    func enrich(_ input: EnrichmentInput) async throws -> EnrichmentDraft {
-        throw ModelOff()
-    }
-
-    private struct ModelOff: Error {}
 }

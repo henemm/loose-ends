@@ -72,19 +72,17 @@ private final class EnergyBundleMarker {}
         }
     }
 
-    @Test("The model run leaves energy alone (AC-5)")
-    @MainActor func modelNeverWritesEnergy() async throws {
+    @Test("The enrichment pass leaves energy alone (AC-5, rules only since #982)")
+    @MainActor func enrichmentNeverWritesEnergy() async throws {
         let store = try TestStore()
         let task = TaskItem(rawText: "Klavier spielen")
         store.context.insert(task)
         try store.context.save()
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Klavier spielen", confidence: 0.9, reason: "Stub.")
-        let coordinator = EnrichmentCoordinator(enricher: StubEnricher(draft: draft), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
 
         await coordinator.processPending()
 
-        #expect(task.processedAt != nil)
+        #expect(task.rulesAppliedAt != nil)
         #expect(task.energyRaw == nil)
         #expect(!(task.revisions ?? []).contains { $0.field == .energy })
     }

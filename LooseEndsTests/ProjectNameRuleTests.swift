@@ -62,7 +62,7 @@ import Testing
         let task = TaskItem(rawText: "Kartons für den Umzug kaufen")
         store.context.insert(task)
         try store.context.save()
-        let coordinator = EnrichmentCoordinator(enricher: StubEnricher(draft: EnrichmentDraft()), container: store.container)
+        let coordinator = EnrichmentCoordinator(container: store.container)
         await coordinator.processPending()
         #expect(task.project?.name == "Umzug")
         #expect((task.revisions ?? []).contains { $0.field == .project && $0.author == .rule })

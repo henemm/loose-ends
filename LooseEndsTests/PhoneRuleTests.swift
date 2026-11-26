@@ -27,7 +27,7 @@ import Testing
         store.context.insert(task)
         try store.context.save()
 
-        await EnrichmentCoordinator(enricher: StubEnricher(unavailableReason: "Kein Modell"), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect(task.notes?.hasPrefix("+49") == true)
         #expect(task.notesSourceRaw == FieldSource.rule.rawValue)
@@ -45,7 +45,7 @@ import Testing
         RevisionService.set(.notes, to: "Praxis Dr. Meier", on: task, contexts: [], projects: [])
         try store.context.save()
 
-        await EnrichmentCoordinator(enricher: StubEnricher(unavailableReason: "Kein Modell"), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect(task.notes == "Praxis Dr. Meier")
         #expect(!(task.revisions ?? []).contains { $0.field == .notes && $0.author == .rule })
@@ -135,7 +135,7 @@ import Testing
         store.context.insert(task)
         try store.context.save()
 
-        await EnrichmentCoordinator(enricher: StubEnricher(unavailableReason: "Kein Modell"), container: store.container).processPending()
+        await EnrichmentCoordinator(container: store.container).processPending()
 
         #expect(task.notes == nil)
         #expect(!(task.revisions ?? []).contains { $0.field == .notes && $0.author == .rule })
