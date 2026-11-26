@@ -79,6 +79,20 @@ final class OnboardingTests: XCTestCase {
         XCTAssertTrue(app.buttons["captureButton"].isHittable, "The start screen should be usable")
     }
 
+    // MARK: - No model note any more (#982 Schnitt 2, ADR-22)
+
+    /// AC-1: step one never speaks of Apple Intelligence, not even with the old reason argument (#342) that
+    /// used to bring the note up under UI tests.
+    @MainActor
+    func testStepOneShowsNoModelNoteEvenWithTheOldReasonArgument() throws {
+        let app = launch(reason: "deviceNotEligible")
+        XCTAssertTrue(element("onboardingStep_siri", in: app).waitForExistence(timeout: 10), "The onboarding should open on Siri")
+        shot(app, "onboarding-982-no-model-note-en")
+        XCTAssertFalse(element("onboardingModelNote", in: app).exists, "No model note on step one (ADR-22)")
+        let mentions = app.staticTexts.containing(NSPredicate(format: "label CONTAINS[c] %@", "Apple Intelligence"))
+        XCTAssertEqual(mentions.count, 0, "No text on step one names Apple Intelligence")
+    }
+
     // MARK: - The model note on the screen (#342, Schnitt 1a)
 
     @MainActor
