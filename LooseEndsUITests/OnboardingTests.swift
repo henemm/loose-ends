@@ -11,21 +11,11 @@ final class OnboardingTests: XCTestCase {
     private func launch(reason: String? = nil, language: String = "en", locale: String = "en_US") -> XCUIApplication {
         let app = XCUIApplication()
         var arguments = ["--ui-testing", "--ui-testing-onboarding", "-AppleLanguages", "(\(language))", "-AppleLocale", locale]
-        // #342: the simulator has a model, so the note never shows; this brings each case up (only under --ui-testing).
+        // The former argument (#342) is only passed to show that the app no longer reads it (#982 Schnitt 2).
         if let reason { arguments.append("--ui-testing-model-reason=\(reason)") }
         app.launchArguments = arguments
         app.launch()
         return app
-    }
-
-    /// The note's words as the screen shows them; fails when the note is not on step one.
-    @MainActor
-    private func modelNoteText(_ app: XCUIApplication, shot name: String) -> String {
-        XCTAssertTrue(element("onboardingStep_siri", in: app).waitForExistence(timeout: 10), "The onboarding should open on Siri")
-        let note = element("onboardingModelNote", in: app)
-        XCTAssertTrue(note.waitForExistence(timeout: 5), "The model note should stand on step one")
-        shot(app, name)
-        return note.label
     }
 
     @MainActor
@@ -79,37 +69,17 @@ final class OnboardingTests: XCTestCase {
         XCTAssertTrue(app.buttons["captureButton"].isHittable, "The start screen should be usable")
     }
 
-    // MARK: - The model note on the screen (#342, Schnitt 1a)
+    // MARK: - No model note any more (#982 Schnitt 2, ADR-22)
 
+    /// AC-1: step one never speaks of Apple Intelligence, not even with the old reason argument (#342) that
+    /// used to bring the note up under UI tests.
     @MainActor
-    func testNoModelNoteSaysWhatStillWorksInEnglish() throws {
-        let text = modelNoteText(launch(reason: "deviceNotEligible"), shot: "onboarding-342-not-eligible-en")
-        XCTAssertEqual(text, "This device has no Apple Intelligence. Due dates, importance, urgency and tags are still found; a duration only when you name it or the task came up before.")
-    }
-
-    @MainActor
-    func testNoModelNoteSaysWhatStillWorksInGerman() throws {
-        let text = modelNoteText(launch(reason: "deviceNotEligible", language: "de", locale: "de_DE"), shot: "onboarding-342-not-eligible-de")
-        XCTAssertEqual(text, "Dieses Gerät hat kein Apple Intelligence. Fälligkeit, Wichtigkeit, Dringlichkeit und Etiketten werden trotzdem erkannt; eine Dauer nur, wenn du sie nennst oder die Aufgabe schon einmal da war.")
-    }
-
-    @MainActor
-    func testTurnedOffNoteStandsOnTheScreen() throws {
-        let text = modelNoteText(launch(reason: "appleIntelligenceNotEnabled"), shot: "onboarding-342-turned-off-en")
-        XCTAssertEqual(text, "Apple Intelligence is off. Turn it on in Settings so new tasks get a title and a duration.")
-    }
-
-    @MainActor
-    func testNotReadyNoteStandsOnTheScreen() throws {
-        let text = modelNoteText(launch(reason: "modelNotReady"), shot: "onboarding-342-not-ready-en")
-        XCTAssertEqual(text, "Apple Intelligence is still getting ready. Tasks captured meanwhile are sorted once it is.")
-    }
-
-    @MainActor
-    func testNoNoteWhileTheModelIsThere() throws {
-        let app = launch()
-        XCTAssertTrue(element("onboardingStep_siri", in: app).waitForExistence(timeout: 10))
-        shot(app, "onboarding-342-no-note-en")
-        XCTAssertFalse(element("onboardingModelNote", in: app).exists, "The simulator has a model: no note")
+    func testStepOneShowsNoModelNoteEvenWithTheOldReasonArgument() throws {
+        let app = launch(reason: "deviceNotEligible")
+        XCTAssertTrue(element("onboardingStep_siri", in: app).waitForExistence(timeout: 10), "The onboarding should open on Siri")
+        shot(app, "onboarding-982-no-model-note-en")
+        XCTAssertFalse(element("onboardingModelNote", in: app).exists, "No model note on step one (ADR-22)")
+        let mentions = app.staticTexts.containing(NSPredicate(format: "label CONTAINS[c] %@", "Apple Intelligence"))
+        XCTAssertEqual(mentions.count, 0, "No text on step one names Apple Intelligence")
     }
 }

@@ -2,22 +2,17 @@ import SwiftData
 import SwiftUI
 
 /// The onboarding (design briefing, screen 12, #29): Siri, notifications, the starter contexts, each
-/// skippable, and "Skip" ends it all. Over the first step, a note when Apple Intelligence is not there.
+/// skippable, and "Skip" ends it all.
 /// Calm and short, like the rest of the app: it shows, it does not explain itself.
 struct OnboardingView: View {
     @Query(sort: \TaskContext.sortOrder) private var contexts: [TaskContext]
     @State private var flow = OnboardingFlow()
-    /// Why the model cannot run, nil when it can (`FoundationModelsEnricher.unavailableReason`).
-    let modelUnavailableReason: String?
     let requestNotifications: () async -> Void
     let onFinish: () -> Void
 
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 20) {
-                if flow.step == .siri, let note = OnboardingFlow.modelNote(for: modelUnavailableReason) {
-                    modelNote(note)
-                }
                 stepContent
                 Spacer(minLength: 0)
                 buttons
@@ -76,23 +71,6 @@ struct OnboardingView: View {
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("onboardingStep_\(String(describing: flow.step))")
-    }
-
-    @ViewBuilder
-    private func modelNote(_ note: OnboardingFlow.ModelNote) -> some View {
-        Group {
-            switch note {
-            case .turnedOff:
-                Text("Apple Intelligence is off. Turn it on in Settings so new tasks get a title and a duration.")
-            case .notReady:
-                Text("Apple Intelligence is still getting ready. Tasks captured meanwhile are sorted once it is.")
-            case .notEligible:
-                Text("This device has no Apple Intelligence. Due dates, importance, urgency and tags are still found; a duration only when you name it or the task came up before.")
-            }
-        }
-        .font(.footnote)
-        .foregroundStyle(.secondary)
-        .accessibilityIdentifier("onboardingModelNote")
     }
 
     @ViewBuilder

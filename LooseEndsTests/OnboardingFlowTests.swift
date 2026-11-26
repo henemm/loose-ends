@@ -51,13 +51,4 @@ import Testing
         #expect(OnboardingFlow.shouldShow(defaults: defaults, arguments: ["--ui-testing", OnboardingFlow.uiTestArgument]),
                 "the onboarding test runs whatever an earlier run left behind")
     }
-
-    @Test("The model note follows the reason the system gives; none while the model is there")
-    func modelNote() {
-        #expect(OnboardingFlow.modelNote(for: nil) == nil)
-        #expect(OnboardingFlow.modelNote(for: "appleIntelligenceNotEnabled") == .turnedOff)
-        #expect(OnboardingFlow.modelNote(for: "modelNotReady") == .notReady)
-        #expect(OnboardingFlow.modelNote(for: "deviceNotEligible") == .notEligible)
-        #expect(OnboardingFlow.modelNote(for: "somethingNew") == .notEligible, "an unknown reason still says the model is missing")
-    }
 }

@@ -8,12 +8,6 @@ struct OnboardingFlow: Equatable {
         case siri, notifications, contexts
     }
 
-    /// What to say when Apple Intelligence is not there (screen 12). The rules still sort dates,
-    /// importance, urgency and recognised texts without it (#95, #117, #136).
-    enum ModelNote: Equatable {
-        case turnedOff, notReady, notEligible
-    }
-
     /// UI tests that start without `--ui-testing` pass `-onboardingDone YES` (argument domain):
     /// renaming the key means renaming it there too.
     static let doneKey = "onboardingDone"
@@ -45,14 +39,5 @@ struct OnboardingFlow: Equatable {
     /// Finished or skipped, it does not come back on this device.
     static func finish(defaults: UserDefaults = .standard) {
         defaults.set(true, forKey: doneKey)
-    }
-
-    /// Maps the model's unavailability reason (`FoundationModelsEnricher.unavailableReason`, the
-    /// system's case name) to the note; nil while the model is there.
-    static func modelNote(for reason: String?) -> ModelNote? {
-        guard let reason else { return nil }
-        if reason.contains("appleIntelligenceNotEnabled") { return .turnedOff }
-        if reason.contains("modelNotReady") { return .notReady }
-        return .notEligible
     }
 }

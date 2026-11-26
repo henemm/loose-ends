@@ -1,0 +1,17 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "D553352F-E7E6-4A9A-B1F5-190001E01113",
+        "deviceName" : "iPhone 17",
+        "exportedFileName" : "0538FA8D-A5CC-401E-98B0-0D5FAF61370E.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "onboarding-982-no-model-note-en_0_6219983F-6E38-4D5E-B820-7CE7509353E0.png",
+        "timestamp" : 1795719659.092
+      }
+    ],
+    "testIdentifier" : "OnboardingTests/testStepOneShowsNoModelNoteEvenWithTheOldReasonArgument()",
+    "testIdentifierURL" : "test://com.apple.xcode/LooseEnds/LooseEndsUITests/OnboardingTests/testStepOneShowsNoModelNoteEvenWithTheOldReasonArgument"
+  }
+]

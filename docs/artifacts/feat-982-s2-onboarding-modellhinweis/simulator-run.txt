@@ -1,0 +1,23 @@
+# Simulator-Beleg
+erzeugt: 2026-11-26T20:01:24+0100
+befehl: scripts/sim.sh test-proof OnboardingTests
+workflow: feat-982-s2-onboarding-modellhinweis
+head: 6d8bbc10a25376231a6fb908bb2d3a9bc373fc2d
+basis: 7e2dff6d752da789e3cd9965152e1a44ffef1ebc (merge-base origin/main HEAD)
+testklasse: OnboardingTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1795719624.912  ende: 1795719683.804
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-982-s2-onboarding-modellhinweis/simulator-run/summary.json  sha256:5e977d1ae209af78a943d887a38d0f9359eacdfbdc7c1783f54ed703da979588
+xcresult: docs/artifacts/feat-982-s2-onboarding-modellhinweis/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-982-s2-onboarding-modellhinweis/simulator-run/*.png (1 Stück)
+
+## Geprüfte Dateien
+- sha256:74950e14aeff08ffacfebee3498e94a7b769cb0e10709c8176e539d135220871  LooseEnds/App/ContentView.swift
+- sha256:9de051af40eec9fdb9b3f609424f02ad7e63d4000db91e14bc7e575aa8171abb  LooseEnds/Views/OnboardingFlow.swift
+- sha256:523182c529ea8ca6d9d5bb9ae39c9d34e2479d372158ea1860c177795f8f37e4  LooseEnds/Views/OnboardingView.swift
+- sha256:f6f3c41508ca71cbe331ba25724ba7564dbc4e4e6d257914b93a0e23b5bd6617  LooseEndsTests/NoModelCoordinatorTests.swift
+- sha256:1c8f0017c973ee917b491b1cdfa34477adafdb97874745730d8192025f25ba19  LooseEndsTests/OnboardingFlowTests.swift
+- sha256:610b0d5c3405de4ccaf05929c4e2a92ea8bb204a0f08d0d4df22123f423fdca3  LooseEndsUITests/OnboardingTests.swift
