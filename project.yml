@@ -129,13 +129,21 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.henning.looseends$(BUNDLE_ID_SUFFIX)
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+      configs:
+        # No on-device model in a shipped build (#982 S3b, ADR-22): Release drops the adapter by file
+        # name. Debug keeps it for the measurement tests (test host); the lab app lists it itself.
+        Release:
+          EXCLUDED_SOURCE_FILE_NAMES: FoundationModelsEnricher.swift
 
   LooseEndsWatch:
     type: application
     platform: watchOS
     sources:
       - LooseEndsWatch
-      - Shared
+      # The model adapter stays out (#982 S3b); `!os(watchOS)` already hides its body.
+      - path: Shared
+        excludes:
+          - Enrichment/FoundationModelsEnricher.swift
       # Siri phrases, dialogs and the app's spoken names in German (#355): the watch inherits none of
       # them from the iOS app (WWDC23 10102; SiriKit "Specifying synonyms for your app name").
       # Same files as the app, no copy; the iOS assets stay out.
@@ -224,6 +232,7 @@ targets:
       - path: Shared
         excludes:
           - Intents/CaptureTextIntent.swift
+          - Enrichment/FoundationModelsEnricher.swift   # no on-device model in an extension (#982 S3b)
     entitlements:
       path: LooseEndsWidgets/LooseEndsWidgets.entitlements
       properties:
@@ -257,6 +266,7 @@ targets:
         excludes:
           - Intents/CaptureTextIntent.swift
           - Intents/NextUpWidgetIntents.swift
+          - Enrichment/FoundationModelsEnricher.swift   # no on-device model in an extension (#982 S3b)
     entitlements:
       path: LooseEndsShare/LooseEndsShare.entitlements
       properties:

@@ -1,0 +1,19 @@
+# Simulator-Beleg
+erzeugt: 2026-11-27T22:03:31+0100
+befehl: scripts/sim.sh test-proof NoModelCaptureTests
+workflow: feat-982-s3b-enricher
+head: 4cc271f0fb13debf5cb599517e59e8db47cd28b2
+basis: ac5ef8685e07e2afa56d09767e0963f802c26d92 (merge-base origin/main HEAD)
+testklasse: NoModelCaptureTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1795813232.089  ende: 1795813409.139
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-982-s3b-enricher/simulator-run/summary.json  sha256:7ec7772bd95f34a267bab20b54511568471547f1bf6b3aed8252095159446d1b
+xcresult: docs/artifacts/feat-982-s3b-enricher/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-982-s3b-enricher/simulator-run/*.png (2 Stück)
+
+## Geprüfte Dateien
+- sha256:4714a6803fa49de573e0e3867a577d3e93487906e18643f5e0b3328fcf825db7  Shared/Enrichment/EnrichmentDraft.swift
+- sha256:cd906bc585ebc3a02e60e56eb685dcb6ed9e78d3f5a0b5867b79bbccf10e3659  Shared/Enrichment/FoundationModelsEnricher.swift
