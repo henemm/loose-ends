@@ -1,0 +1,25 @@
+# Simulator-Beleg
+erzeugt: 2026-11-27T19:20:52+0100
+befehl: scripts/sim.sh test-proof DayPartTitleUITests
+workflow: feat-1001-regeln-schaerfen
+head: f6b73b0191b69cd9120875dd86902554a8607542
+basis: 3794047bf90fb7fa97c2a1f09c0da24cdbae5699 (merge-base origin/main HEAD)
+testklasse: DayPartTitleUITests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1795803560.523  ende: 1795803651.499
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-1001-regeln-schaerfen/simulator-run/summary.json  sha256:89ba5501b087cc528597bc5b9b56e44a2c6c8c8fdf255d6925cd8f39c9041e19
+xcresult: docs/artifacts/feat-1001-regeln-schaerfen/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-1001-regeln-schaerfen/simulator-run/*.png (3 Stück)
+
+## Geprüfte Dateien
+- sha256:78707df70a4683b77496bf209d39a1c8c0d1440f50ca66721fdd68fb5aef0ec1  LooseEndsTests/DayPartTitleTests.swift
+- sha256:273c91a1d9381bdb50d99615e358733866cfec393cce8fc89235cdbf31fee327  LooseEndsTests/Language/LanguagePackConformanceTests.swift
+- sha256:e6832c68f387440c4a946a0341d15a55e63a0b46bcb80286b4d863f400c299c3  LooseEndsTests/Language/TestPack.swift
+- sha256:2b3a9cc397f8f48cdda40b73216fc22bc6bb08879a03070c7bc0ce0385d83111  LooseEndsUITests/DayPartTitleUITests.swift
+- sha256:fc710c2622b5949b27e3099f4ea59056ead9904e50c7d98a67407d93b7555b9a  Shared/Language/EnglishPack.swift
+- sha256:19c6cb629a8561d03ce08e5aa80a46e2feeaed08870a0a07a5cb1b337a8b6098  Shared/Language/GermanPack.swift
+- sha256:c1e56eb677aa86f1310cd06594b0445bb3e5f566080d1502739d6d62742009fd  Shared/Language/LanguagePack.swift
+- sha256:89a6cc1877880e0d713d5ad70284bf408239f69958d53056997b421337c0d7b0  Shared/Services/TitleRule.swift

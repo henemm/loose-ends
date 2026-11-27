@@ -55,7 +55,7 @@ enum TitleRule {
 
         var struck = Set<Int>()
         for span in DueDateRule.match(in: text, reference: reference, calendar: calendar)?.spans ?? [] {
-            struck.formUnion(withLeadIns(span, in: words))
+            struck.formUnion(withLeadIns(withDayParts(span, in: words), in: words))
         }
         let markers = [ImportanceUrgencyRule.importanceMarker(in: text), ImportanceUrgencyRule.urgencyMarker(in: text)]
         for marker in markers.compactMap({ $0 }) {
@@ -79,6 +79,34 @@ enum TitleRule {
         }
         result += text[cursor...]
         return result
+    }
+
+    /// The span plus a time of day right beside it, with its own lead-in (#1001): "heute Abend",
+    /// "Montag am Abend", "tomorrow in the evening". A word that is also a day ("morgen") counts only
+    /// after the span; before it, it is the date itself. A word that only contains one ("Abendessen") stays.
+    private static func withDayParts(_ span: Range<Int>, in words: [ExpressionWord]) -> Range<Int> {
+        let dayParts = Set(LanguagePacks.dayParts)
+        var end = span.upperBound
+        let after = end + dayPartLeadIn(at: end, in: words)
+        if after < words.count, dayParts.contains(words[after].text) { end = after + 1 }
+
+        var start = span.lowerBound
+        let before = start - 1
+        if before >= 0, dayParts.contains(words[before].text), LanguagePacks.relativeDays[words[before].text] == nil {
+            start = before
+            if before >= 2, words[before - 2].text == "in", words[before - 1].text == "the" {
+                start = before - 2
+            }
+        }
+        return start..<end
+    }
+
+    /// How many words at `index` lead into a time of day: "am" (any title lead-in) or "in the".
+    private static func dayPartLeadIn(at index: Int, in words: [ExpressionWord]) -> Int {
+        guard index < words.count else { return 0 }
+        if leadIns.contains(words[index].text) { return 1 }
+        if index + 1 < words.count, words[index].text == "in", words[index + 1].text == "the" { return 2 }
+        return 0
     }
 
     /// The span plus the lead-ins right before it; "on the 12th" and "by the 12th" take their "the".

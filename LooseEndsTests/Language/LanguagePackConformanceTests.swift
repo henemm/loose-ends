@@ -25,7 +25,7 @@ struct LanguagePackConformanceTests {
         ("timeCues", \.timeCues), ("clockWords", \.clockWords), ("timeArticles", \.timeArticles),
         ("articleCues", \.articleCues), ("hourUnits", \.hourUnits), ("abbreviatedHourUnits", \.abbreviatedHourUnits),
         ("minuteUnits", \.minuteUnits), ("pointInTime", \.pointInTime), ("titleLeadIns", \.titleLeadIns),
-        ("titleConnectors", \.titleConnectors),
+        ("titleConnectors", \.titleConnectors), ("dayParts", \.dayParts),
     ] }
 
     /// Alle gefalteten Wörter eines Pakets, je Feld; Zahlentabellen mit ihrem Wert als Rolle.
@@ -98,6 +98,18 @@ struct LanguagePackConformanceTests {
                         "\(pack.code): \(entry.field): „\(entry.word)“ hat Leerzeichen am Rand")
                 #expect(ExpressionText.folded(entry.word) == entry.word,
                         "\(pack.code): \(entry.field): „\(entry.word)“ ist nicht gefaltet (\(ExpressionText.folded(entry.word)))")
+            }
+        }
+    }
+
+    /// #1001 (Spec Test 12): jede ausgelieferte Sprache nennt ihre Tageszeiten, klein und ohne Dubletten.
+    @Test("Tageszeiten je Sprache: nicht leer, kleingeschrieben, ohne Dubletten")
+    func dayPartsAreClean() {
+        for pack in LanguagePacks.shipped {
+            #expect(!pack.dayParts.isEmpty, "\(pack.code): dayParts ist leer")
+            #expect(Set(pack.dayParts).count == pack.dayParts.count, "\(pack.code): dayParts hat Dubletten")
+            for word in pack.dayParts {
+                #expect(word == word.lowercased(), "\(pack.code): dayParts: „\(word)“ ist nicht kleingeschrieben")
             }
         }
     }
