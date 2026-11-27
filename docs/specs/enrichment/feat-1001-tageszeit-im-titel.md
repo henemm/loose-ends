@@ -122,8 +122,8 @@ UI-Test mit `./scripts/sim.sh test-proof`: eine Aufgabe „Pakete wegbringen heu
 
 ## Definition of Done (kein AC)
 
-- [ ] **Stufe 3 Gerät:** Kein Pfad der Geräteliste berührt (weder `Shared/Persistence/`, `LooseEnds/Speech/`, `Shared/Intents/` noch `project.yml`, Entitlements oder Info.plist; `Shared/Language` und `Shared/Services` stehen nicht in der Tabelle). Die Abnahme endet nach Stufe 2.
-- [ ] **Zahl im Issue:** Wenn `docs/reference/loose-ends-rawtexts.json` vorhanden ist (Hennings Export, nicht eingecheckt), läuft der lokale Auswertelauf nach dem Schnitt erneut; Ziel: mindestens 16 von 41 Titeln gleich seiner Korrektur (vorher 14). Die Zahl steht im Issue, ohne Sätze. Fehlt die Datei, steht das so im Issue; kein Zugriff auf seine Geräte ohne sein Wort.
+- [x] **Stufe 3 Gerät:** Kein Pfad der Geräteliste berührt (weder `Shared/Persistence/`, `LooseEnds/Speech/`, `Shared/Intents/` noch `project.yml`, Entitlements oder Info.plist; `Shared/Language` und `Shared/Services` stehen nicht in der Tabelle). Die Abnahme endet nach Stufe 2.
+- [x] **Zahl im Issue (2026-11-27: 15 von 41, vorher 14; Abweichung von der Erwartung 16 im Issue begründet):** Wenn `docs/reference/loose-ends-rawtexts.json` vorhanden ist (Hennings Export, nicht eingecheckt), läuft der lokale Auswertelauf nach dem Schnitt erneut; Ziel: mindestens 16 von 41 Titeln gleich seiner Korrektur (vorher 14). Die Zahl steht im Issue, ohne Sätze. Fehlt die Datei, steht das so im Issue; kein Zugriff auf seine Geräte ohne sein Wort.
 
 ## Changelog
 
