@@ -89,13 +89,22 @@ struct RealModelTests {
         var lines: [String] = []
         for note in RealModel.notes {
             let title = try await enricher.enrich(input(note)).title?.value ?? ""
-            let fromNote = TitleRule.isFromNote(title, rawText: note)
+            let fromNote = isFromNote(title, rawText: note)
             if fromNote { kept += 1 }
             lines.append("\(fromNote ? "ok " : "NO ") \(note) → \(title)")
         }
         let rate = Double(kept) / Double(RealModel.notes.count)
         let report = lines.joined(separator: "\n")
         #expect(rate >= 0.8, "\(kept)/\(RealModel.notes.count) titles from the note:\n\(report)")
+    }
+
+    /// Whether a model title keeps a word of its note (#460): one content word (four letters or more) of the title
+    /// stands in the note, a word start being enough. The measurement's own copy; the app has no model title since #982.
+    private func isFromNote(_ title: String, rawText: String) -> Bool {
+        let noteWords = RawTextWords.words(in: rawText).map(RawTextWords.normalized).filter { $0.count >= 4 }
+        let content = RawTextWords.words(in: title).map(RawTextWords.normalized).filter { $0.count >= 4 }
+        guard !content.isEmpty else { return true }
+        return content.contains { word in noteWords.contains { $0.hasPrefix(word) || word.hasPrefix($0) } }
     }
 }
 #endif

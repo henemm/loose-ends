@@ -97,18 +97,18 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
   #1000 S1 is done (2026-11-26): the start page head "New · N to look over" and the "New" entry in the index and sidebar
   are gone (`ViewRules.dailyViews = [.next, .due]`); #1000 S2 is done (2026-11-26):
   no "Looks right" in the detail's bar, swipe or menu, no `ReviewNote`, no "Needs a look" section; opening the detail always marks
-  seen. #1000 S3a is done (2026-11-27): `isInNew`, `needsLook`, `canConfirm`, `reviewReason`, `ViewKind.new` and `TaskActions.confirmReview` are gone; #1000 S3b is done (2026-11-27): no unseen tint or spark in the rows, `Paper.wideNoteInsets` and the nine catalog keys of "New" are gone; #1000 is complete. Until #1001 lands, the paragraph below describes the rest as it still is.
-- **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,
-  regex, calendar, contacts or a word list. The on-device model only gets what needs language
-  understanding (refining the title: since #202 `TitleRule` sets it at capture from the cleaned raw
-  text, at most 12 words — 312 of 319 raw sentences have ≤ 12 words; the model may refine it, except the title of a task Claude captured (`capturedVia == .claude`), which is never the model's, #953, nor the title of a task typed by hand (`capturedVia == .keyboard`, #950)). Every analysis and spec that proposes the model for a field must contain
-  the line "Without the model this fails because …" with evidence from a measurement; without that line
-  the rule path is the proposal. Every measurement report carries the rule-based column as baseline; if
-  the rules beat the model, the rules win, and an existing ADR or schema is not a counter-argument.
+  seen. #1000 S3a is done (2026-11-27): `isInNew`, `needsLook`, `canConfirm`, `reviewReason`, `ViewKind.new` and `TaskActions.confirmReview` are gone; #1000 S3b is done (2026-11-27): no unseen tint or spark in the rows, `Paper.wideNoteInsets` and the nine catalog keys of "New" are gone; #1000 is complete.
+- **Rules before the model** (Henning, 2026-09-20; since ADR-22, 2026-11-26: no model in the product). Every derived field
+  comes from rules only (regex, calendar, contacts, a word list) and only from what was said; no product path calls the
+  on-device model. The title: since #202 `TitleRule` sets it at capture from the cleaned raw text, at most 12 words — 312 of
+  319 raw sentences have ≤ 12 words. Every analysis and spec that proposes the model for a field must contain the line
+  "Without the model this fails because …" with evidence from a measurement; without that line the rule path is the
+  proposal. Every measurement report carries the rule-based column as baseline; if the rules beat the model, the rules win,
+  and an existing ADR or schema is not a counter-argument. Measuring code lives in `Measurement/`, the lab app and the
+  measurement tests (`RealModel*Tests`), never in the product path.
   Measured 2026-09-20: model 50 % exact dates, 96.5 % invented; `NSDataDetector` 65–68 % depending on the weekday of the run (it takes no reference day, so its column is frozen, #148), 0 % (#67, #92);
   own rule parser 99.3 %, 0 % (#92, Schnitt 1). Since #95 the rule parser sets the due date in the
-  product path; the model schema lost the four due-date fields. A subtask gets the due date and context word rules
-  at add and on "Analyze again", never the model (#565).
+  product path. A subtask gets the due date and context word rules at add and on "Analyze again" (#565).
 - **Context names are unique** (Henning, 2026-10-01, #157). Contexts are matched by name
   (`FieldCodec`), so two contexts named alike put both on a task ("Garden, Garden"). `CatalogService`
   rejects a taken name (trimmed, case- and accent-insensitive) when adding or renaming, and
@@ -457,9 +457,11 @@ not scope creep on the current one.
   change with the reason "Claude" (every order leaves a revision since #622 Schnitt 1, side revisions such as the Knäuel mark get the reason too), checks the expected state before the first write (`stale`, `missing`, `invalid`) and saves
   itself; `TranscriptCodec` builds the transcript for Claude (open tasks, "Now" and its count from `ViewRules`, no raw text or
   note). Contract version 1: `docs/reference/claude-abschrift-vertrag.md`. Nothing in the app calls either yet.
-- `Shared/Enrichment` — `TaskEnricher` protocol (`StubEnricher` in the tests plays hang, empty answer, answer per note and
-  refusal, #530), `ModelDeadline` (time limit per model call, from the measurement #534; since #982 S1 the coordinator no longer calls the model, so `TaskEnricher`, `StubEnricher`, `ModelDeadline`, `FoundationModelsEnricher`, `EnrichmentDraft` and `ModelFailure` are compiled only for the lab app and measurement tests until S3), `EnrichmentWriter` (threshold + revisions; never writes the model's contexts or project, #215/#469), `EnrichmentCoordinator`
-  (catch-up pass), `FoundationModelsEnricher` (on-device model, `#if canImport(FoundationModels)`), `DueDateRule`
+- `Shared/Enrichment` — `EnrichmentWriter` (the rule step's helpers: `Mode`, `mayWrite`, `userHasTouched`, `encode`; the model's
+  draft writer is gone since #982 S3a), `EnrichmentCoordinator`
+  (catch-up pass, rules only), `FoundationModelsEnricher` and `TaskEnricher` (on-device model,
+  `#if canImport(FoundationModels)`; the model files are there only for the lab app and the measurement tests, no product
+  path calls them, ADR-22; the rules still use `EnrichmentDraft.Guess`), `DueDateRule`
   (combines the rule parsers into the due date, confidence 1.0, #95), `ImportanceUrgencyRule` (keyword
   match for importance/urgency, confidence 1.0, no default on miss, #117), `DurationRule` (a length the text names, "20 Minuten",
   rounded up to its bucket, confidence 1.0; runs after recognition and only where it found no duration, never for a line

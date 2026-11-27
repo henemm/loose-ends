@@ -136,23 +136,6 @@ import Testing
         #expect(task.titleSourceRaw == nil)
     }
 
-    @Test("A model title that brings the struck words back is cut the same way; equal to the rule title, nothing is written")
-    @MainActor func modelTitleIsStruckToo() throws {
-        let store = try TestStore()
-        let task = try CaptureService.save("Morgen wichtig Steuerbescheid prüfen", via: .app, in: store.context)
-
-        modelTitle("Morgen wichtig Steuerbescheid prüfen", on: task)
-
-        #expect(task.title == "Steuerbescheid prüfen")
-        #expect(task.titleSourceRaw == nil, "the rule title stays, no AI marker")
-        #expect(!(task.revisions ?? []).contains { $0.field == .title })
-
-        modelTitle("Wichtig: Steuerbescheid vom Finanzamt prüfen", on: task)
-
-        #expect(task.title == "Steuerbescheid vom Finanzamt prüfen")
-        #expect(task.titleSourceRaw == FieldSource.ai.rawValue)
-    }
-
     // MARK: Capture
 
     @Test("Capture sets the title from the rule: no AI marker, no revision, status unprocessed, raw text untouched")
@@ -173,11 +156,14 @@ import Testing
 
     // MARK: Reset
 
+    /// An AI title as older tasks carry it (the model wrote titles until #982): value, marker and one AI revision.
     @MainActor
     private func modelTitle(_ value: String, on task: TaskItem) {
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess(value, confidence: 0.9, reason: "Names the job.")
-        EnrichmentWriter.apply(draft, to: task, contexts: [], projects: [])
+        let revision = Revision(task: task, field: .title, oldValue: task.title, newValue: value, author: .ai, reason: "Names the job.")
+        task.revisions = (task.revisions ?? []) + [revision]
+        task.title = value
+        task.titleSourceRaw = FieldSource.ai.rawValue
+        task.titleConfidence = 0.9
     }
 
     @Test("Reset after the model title leads back to the rule title")
@@ -266,64 +252,7 @@ import Testing
         #expect(task.titleSourceRaw == nil)
     }
 
-    // MARK: Model title from the note (#460)
-
-    @Test("A model title without a word of the note is a copy and is not written")
-    @MainActor func foreignModelTitleIsDropped() throws {
-        let store = try TestStore()
-        let task = try CaptureService.save("Das ist jetzt nur ein Test bitte hinterher löschen", via: .app, in: store.context)
-        let ruleTitle = try #require(task.title)
-        modelTitle("Eløb Frühbucher anmelden", on: task)
-        #expect(task.title == ruleTitle)
-        #expect(!(task.revisions ?? []).contains { $0.field == .title })
-    }
-
-    @Test("A title sharing one word or word start with the note counts as from the note")
-    func fromNote() {
-        #expect(TitleRule.isFromNote("Zettel ordnen", rawText: "Zettel sortieren"))
-        #expect(TitleRule.isFromNote("Anruf bei Petra", rawText: "Petra anrufen"))
-        #expect(TitleRule.isFromNote("Rasenmäher: Ölwechsel", rawText: "Rasenmäher Ölwechsel am Samstag"))
-        #expect(!TitleRule.isFromNote("Eløb Frühbucher anmelden", rawText: "Das ist jetzt nur ein Test bitte hinterher löschen"))
-        #expect(!TitleRule.isFromNote("Einkaufen gehen", rawText: "Ein Brief an Oma"))
-        #expect(TitleRule.isFromNote("Tee", rawText: "Kaffee"), "no content word, nothing to check")
-    }
-
-    // MARK: A date the note does not name (#507)
-
-    @Test("A model title with the capture day in it is not written")
-    @MainActor func dateInModelTitleIsDropped() throws {
-        let store = try TestStore()
-        let task = try CaptureService.save("Erinnere mich daran, dass ich Blumen gießen muss", via: .app, in: store.context)
-        let ruleTitle = try #require(task.title)
-        modelTitle("Blumen 17. Oktober, gießen", on: task)
-        #expect(task.title == ruleTitle)
-        #expect(!(task.revisions ?? []).contains { $0.field == .title })
-    }
-
-    @Test("A month, a weekday or a number counts only when the note names it")
-    func addsDate() {
-        #expect(TitleRule.addsDate("Blumen 17. Oktober, gießen", rawText: "Blumen gießen muss"))
-        #expect(TitleRule.addsDate("Zahnarzt am Montag", rawText: "Zahnarzt anrufen"))
-        #expect(TitleRule.addsDate("Zahnarzt anrufen 12", rawText: "Zahnarzt anrufen"))
-        #expect(!TitleRule.addsDate("Zahnarzt am Montag", rawText: "Am Montag zum Zahnarzt"))
-        #expect(!TitleRule.addsDate("Rechnung 17 bezahlen", rawText: "Rechnung 17 bezahlen bis Freitag"))
-        #expect(!TitleRule.addsDate("Blumen gießen", rawText: "Blumen gießen muss"))
-        #expect(!TitleRule.addsDate("Mai-Fest planen", rawText: "Mai-Fest planen"), "a hyphenated word is one word")
-    }
-
-    // MARK: A word of a past task's note (#607)
-
-    @Test("A model title that tacks on an example's note is not written")
-    @MainActor func borrowedModelTitleIsDropped() throws {
-        let store = try TestStore()
-        let task = try CaptureService.save("Cider kaltstellen", via: .app, in: store.context)
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Cider kaltstellen und Altpapier Altglas wegbringen", confidence: 0.9, reason: "Names the job.")
-        EnrichmentWriter.apply(draft, to: task, contexts: [], projects: [], pastNotes: ["Altpapier Altglas wegbringen"])
-        #expect(task.title == "Cider kaltstellen")
-        #expect(task.titleSourceRaw == nil, "the rule title stays, no AI marker")
-        #expect(!(task.revisions ?? []).contains { $0.field == .title })
-    }
+    // MARK: Coordinator (#982)
 
     @Test("First run and Analyze again keep the rule title (no model since #982)")
     @MainActor func coordinatorKeepsRuleTitle() async throws {
@@ -343,16 +272,5 @@ import Testing
         _ = await coordinator.reanalyze(task)
         #expect(task.title == "Cider kaltstellen")
         #expect(!(task.revisions ?? []).contains { $0.field == .title })
-    }
-
-    @Test("Only a word the note lacks and an example carries counts as borrowed")
-    func borrows() {
-        let past = ["Altpapier Altglas wegbringen", "Zahnarzttermin vereinbaren"]
-        #expect(TitleRule.borrows("Cider kaltstellen und Altpapier Altglas wegbringen", rawText: "Cider kaltstellen", pastNotes: past))
-        #expect(TitleRule.borrows("Zahnarzt: Termin vereinbaren", rawText: "Zahnarzt anrufen", pastNotes: past))
-        #expect(!TitleRule.borrows("Cider kalt stellen", rawText: "Cider kaltstellen", pastNotes: past), "rephrasing stays allowed")
-        #expect(!TitleRule.borrows("Altglas wegbringen", rawText: "Heute Altglas wegbringen", pastNotes: past), "the note has it too")
-        #expect(!TitleRule.borrows("Altpapier holen", rawText: "Altpapiertonne holen", pastNotes: past), "a word start of the note")
-        #expect(!TitleRule.borrows("Cider kaltstellen und Altpapier wegbringen", rawText: "Cider kaltstellen", pastNotes: []))
     }
 }

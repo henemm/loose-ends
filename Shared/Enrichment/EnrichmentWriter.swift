@@ -1,108 +1,13 @@
 import Foundation
 import SwiftData
 
-/// Writes a draft onto a task. Fields at or above the threshold get value, source and confidence
-/// plus one AI revision each (ADR-6). Runs exactly once per task (ADR-4): `processedAt` is set
-/// even when nothing crossed the threshold. A second run only on the user's request (#34), in
-/// `Mode.reanalysis`. Pure over the model objects; the caller saves.
+/// The helpers the rule step writes with (ADR-4, ADR-6): the run mode, whether a field may be written
+/// now, whether the user ever touched it, and the JSON encoding of revision values. The model's draft
+/// writer is gone since ADR-22 (#982): no product path calls the model. Pure over the model objects.
 enum EnrichmentWriter {
-    static let confidenceThreshold = 0.6
-
     /// The one run per task (ADR-4), or the second one the user asked for in the detail (#34).
     enum Mode: Sendable {
         case firstRun, reanalysis
-    }
-
-    /// Returns the number of fields written.
-    @discardableResult
-    static func apply(
-        _ draft: EnrichmentDraft,
-        to task: TaskItem,
-        contexts available: [TaskContext],
-        projects: [Project],
-        threshold: Double = confidenceThreshold,
-        mode: Mode = .firstRun,
-        ruleFields: Set<RevisedField> = [],
-        pastNotes: [String] = [],
-        now: Date = Date()
-    ) -> Int {
-        var written = 0
-        let ai = FieldSource.ai.rawValue
-
-        // Rules before the model: a field a rule matched in this run is the rule's, even where the
-        // re-analysis lifts the first run's "only while empty" guard (#34).
-        func may(_ field: RevisedField, firstRun: Bool, changes: Bool) -> Bool {
-            !ruleFields.contains(field) && mayWrite(field, on: task, mode: mode, firstRun: firstRun, changes: changes)
-        }
-
-        func record(_ field: RevisedField, old: String?, new: String?, reason: String) {
-            let revision = Revision(task: task, field: field, oldValue: old, newValue: new, author: .ai, reason: reason)
-            task.revisions = (task.revisions ?? []) + [revision]
-            written += 1
-        }
-
-        // A title with no word of the note is a copy from elsewhere, not a refinement (#460); one with a date
-        // the note never names is the capture day leaking in (#507); one with a word of an example's note
-        // (`pastNotes`, the raw texts the model was handed) is a copy tacked on (#607).
-        // A task Claude captured or the user typed is already worded: its title is never the model's, on no run
-        // (#953, #950).
-        let keepsWording = task.capturedVia.keepsWording
-        if !keepsWording, let title = draft.title, title.confidence >= threshold, !title.value.isEmpty,
-           TitleRule.isFromNote(title.value, rawText: task.rawText),
-           !TitleRule.addsDate(title.value, rawText: task.rawText),
-           !TitleRule.borrows(title.value, rawText: task.rawText, pastNotes: pastNotes) {
-            // The model may refine the rule title, but not bring back what the rules struck (#217):
-            // its title goes through the same rule. Equal to the rule title means nothing to write.
-            let value = TitleRule.title(from: title.value, reference: task.capturedAt) ?? title.value
-            if value != task.title, may(.title, firstRun: !userHasTouched(.title, on: task), changes: true) {
-                record(.title, old: task.title, new: value, reason: title.reason)
-                task.title = value
-                task.titleSourceRaw = ai
-                task.titleConfidence = title.confidence
-            }
-            // Unverified means the first run found no title; a re-analysis that finds one lifts it.
-            if task.status == .unprocessed || task.status == .unverified, task.title != nil { task.status = .active }
-        } else if keepsWording, task.status == .unprocessed || task.status == .unverified, task.title != nil {
-            task.status = .active
-        } else if task.status == .unprocessed {
-            task.status = .unverified
-        }
-
-        if let due = draft.dueDate, due.confidence >= threshold,
-           may(.dueDate, firstRun: true, changes: due.value != task.dueDate || draft.dueHasTime != task.dueHasTime) {
-            record(.dueDate, old: task.dueDate?.ISO8601Format(), new: due.value.ISO8601Format(), reason: due.reason)
-            task.dueDate = due.value
-            task.dueHasTime = draft.dueHasTime
-            task.dueSourceRaw = ai
-            task.dueConfidence = due.confidence
-        }
-
-        // Only while the field is still empty and the user never touched it (#136 AC-9): the rule step
-        // runs before the model in the same pass, and without this guard the model would silently
-        // overwrite a recognised value and hang a second revision on the same field. Due date,
-        // importance and urgency need no guard — they left the model schema with #95/#117, energy
-        // with #112.
-        if let duration = draft.duration, duration.confidence >= threshold,
-           may(.duration, firstRun: task.duration == nil && !userHasTouched(.duration, on: task),
-               changes: duration.value != task.duration) {
-            record(.duration, old: task.durationRaw, new: duration.value.rawValue, reason: duration.reason)
-            task.duration = duration.value
-            task.durationSourceRaw = ai
-            task.durationConfidence = duration.confidence
-        }
-
-        // Contexts are never the model's (#215): it guessed "Unterwegs" for a tax letter and "Haus"
-        // on the re-analysis of the same text, and its confidence does not separate right from
-        // wrong (#65). Empty beats a guess (Henning). Contexts come from the user, from the
-        // recognition of a raw text captured before and from the word list (#232); `draft.contexts`
-        // stays for the measurements (#234).
-
-        // The model never sets the project either (Henning, 2026-10-16, #469): with one project named
-        // "Erstes" it put nearly every task there. A project comes from the user, from Siri and from
-        // its own name in the note (`ProjectNameRule`); `draft.project` stays for the measurements.
-
-        task.processedAt = now
-        return written
     }
 
     /// Whether a rule or the model may write `field` now. First run (ADR-4): what the caller's own

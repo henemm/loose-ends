@@ -1,0 +1,26 @@
+# Simulator-Beleg
+erzeugt: 2026-11-27T12:24:57+0100
+befehl: scripts/sim.sh test-proof NoModelCaptureTests
+workflow: feat-982-s3-aufraeumen
+head: 747c4b830c913ad006135cafc9f19322fc5e508d
+basis: 4aa4632e9d2bb4926b459131a4eeda9c37bbe7b0 (merge-base origin/main HEAD)
+testklasse: NoModelCaptureTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 1 gesamt, 1 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1795778535.032  ende: 1795778692.896
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-982-s3-aufraeumen/simulator-run/summary.json  sha256:f9bbc8ba29fdb73dd0998f66cf5f9f73bd4b9377e67ef0f5f443ef2f5378641a
+xcresult: docs/artifacts/feat-982-s3-aufraeumen/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-982-s3-aufraeumen/simulator-run/*.png (2 Stück)
+
+## Geprüfte Dateien
+- sha256:02802b212f9fd0205471a0556ad368ec4525980a37ba259c82447d751a997790  LooseEndsTests/EnrichmentTests.swift
+- sha256:3b3a6b6441e95f8c6ed77f5fc36bc3849c641f2b547871a646c013a53641211e  LooseEndsTests/ModelSeamTests.swift
+- sha256:fbe52ea6781ebf01eff3b155870a4c2c0204dfc5e76625faf581f45dc6b4b635  LooseEndsTests/RealModelTests.swift
+- sha256:04037bf3a9fdbd47b40a0d9e16240005556156927d49632ceb4795cb7c2b8335  LooseEndsTests/ReanalysisTests.swift
+- sha256:c1df7c56af581e87ea98c7b05ac3bb5419727fca8ff966e4b78b5e5723ef1bb5  LooseEndsTests/RevisionServiceTests.swift
+- sha256:8f0149a210cff30ff13b1118382c7228cb7062d1528c8dffbf52b0c6c0ef096a  LooseEndsTests/TitleRuleTests.swift
+- sha256:8e1bd0a65ee0c18cbfe7931734281f0b4fb0c07ff215a4256395ed68c818027b  Shared/Enrichment/EnrichmentCoordinator.swift
+- sha256:4e1423eb67b7bb40666aaedd9ade33f4e42e4ff057711932f23fc44633c98292  Shared/Enrichment/EnrichmentWriter.swift
+- sha256:571a3976c865902c51558e4af4ee6868a641c21a895b6aed9c165e8af9857663  Shared/Services/TitleRule.swift

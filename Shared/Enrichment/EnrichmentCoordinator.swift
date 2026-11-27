@@ -9,8 +9,6 @@ import SwiftData
 /// with that one task and does not stop the pass; nothing is swallowed silently.
 @MainActor
 final class EnrichmentCoordinator {
-    static let exampleLimit = 5
-
     /// What "Analyze again" (#34) reports back to the detail.
     enum ReanalysisResult: Equatable, Sendable {
         /// Another pass is running; nothing was done.
@@ -418,7 +416,7 @@ final class EnrichmentCoordinator {
     /// model step already ran (#136, #144): a task of this very catch-up pass can structurally never
     /// feed another one, so an AI mistake cannot multiply — no runtime filter needed, it follows from
     /// the fetch time. No `done` filter either: a re-capture should take the values of a still open
-    /// task too, unlike `examples`. The map resolves a hit back to its `TaskContext` objects.
+    /// task too. The map resolves a hit back to its `TaskContext` objects.
     ///
     /// Two fetches instead of one `#Predicate` with `||`: no such predicate exists anywhere in this
     /// project, and whether SwiftData translates an OR predicate correctly against the CloudKit store
@@ -509,27 +507,5 @@ final class EnrichmentCoordinator {
             logger.info("Recognition set contexts for \(task.id, privacy: .public)")
         }
         return matched
-    }
-
-    /// The most recent completed tasks with their final attributes, by recency. The similarity-picked
-    /// examples ADR-5 once promised are gone (B1 decided 2026-09-27): measured word overlap only
-    /// carries where the text recurs almost verbatim, and that case is `RecognitionRule` (#136).
-    static func examples(in context: ModelContext, limit: Int = exampleLimit) throws -> [EnrichmentExample] {
-        let done = TaskStatus.done.rawValue
-        var descriptor = FetchDescriptor<TaskItem>(
-            predicate: #Predicate { $0.statusRaw == done },
-            sortBy: [SortDescriptor(\.completedAt, order: .reverse)]
-        )
-        descriptor.fetchLimit = limit
-        return try context.fetch(descriptor).map { task in
-            EnrichmentExample(
-                rawText: task.rawText,
-                title: task.title,
-                importance: task.importance,
-                urgency: task.urgency,
-                duration: task.duration,
-                contexts: (task.contexts ?? []).map(\.name)
-            )
-        }
     }
 }

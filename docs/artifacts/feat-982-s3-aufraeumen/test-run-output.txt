@@ -1,0 +1,17 @@
+# #982 S3a GREEN – 2026-11-27 12:21 CET, Stand: Worktree (staged) auf 747c4b8
+## ./scripts/sim.sh unit (iPhone 17 Simulator) – xcresult-Zusammenfassung
+{'result': 'Passed', 'totalTestCount': 1385, 'passedTests': 1372, 'failedTests': 0, 'skippedTests': 13, 'expectedFailures': 0}
+## RuleGolden im Log
+## Log-Ende
+** TEST SUCCEEDED **
+
+Testing started
+## python3 scripts/test_modell_rest_entfernt.py
+Ran 6 tests in 0.076s
+
+OK
+## python3 scripts/test_catalog_languages.py
+Ran 9 tests in 0.056s
+
+OK
+## rule-golden.json: kein Diff (git diff --cached --stat leer)

@@ -4,39 +4,6 @@ import Testing
 import XCTest
 @testable import LooseEnds
 
-/// Fake model (ADR-11): returns a fixed draft, or fails, and counts calls. For the cases only a real
-/// model shows otherwise (#530): an answer per note (`respond`), and a call that takes its time
-/// (`delay`, per note through `delayFor`), honouring cancellation like the real session.
-final class StubEnricher: TaskEnricher, @unchecked Sendable {
-    var draft: EnrichmentDraft
-    var failure: Error?
-    var unavailableReason: String?
-    var delay: Duration?
-    var delayFor: (@Sendable (EnrichmentInput) -> Duration?)?
-    var respond: (@Sendable (EnrichmentInput) throws -> EnrichmentDraft)?
-    private(set) var calls = 0
-    private(set) var notes: [String] = []
-
-    init(draft: EnrichmentDraft = EnrichmentDraft(), failure: Error? = nil, unavailableReason: String? = nil) {
-        self.draft = draft
-        self.failure = failure
-        self.unavailableReason = unavailableReason
-    }
-
-    func enrich(_ input: EnrichmentInput) async throws -> EnrichmentDraft {
-        calls += 1
-        notes.append(input.rawText)
-        if let wait = delayFor?(input) ?? delay {
-            try await Task.sleep(for: wait)
-        }
-        if let failure { throw failure }
-        if let respond { return try respond(input) }
-        return draft
-    }
-}
-
-struct StubFailure: Error {}
-
 /// Holds the container for the whole test: a ModelContext does not retain its ModelContainer,
 /// and a context whose container was released crashes on the next save or fetch.
 @MainActor
@@ -46,95 +13,6 @@ struct TestStore {
 
     init() throws {
         container = try ModelContainerFactory.make(inMemory: true)
-    }
-}
-
-@Suite("EnrichmentWriter") struct EnrichmentWriterTests {
-    @Test("Fields at or above the threshold are written with source, confidence and one AI revision each")
-    @MainActor func appliesFieldsAboveThreshold() async throws {
-        let store = try TestStore()
-        let context = store.context
-        let garden = TaskContext(name: "Garten", isSystemDefault: true, sortOrder: 3)
-        let computer = TaskContext(name: "Computer", isSystemDefault: true, sortOrder: 0)
-        context.insert(garden)
-        context.insert(computer)
-        let task = TaskItem(rawText: "Rasenmäher Ölwechsel am Samstag, dauert ne Viertelstunde")
-        context.insert(task)
-        try context.save()
-
-        let saturday = try #require(Calendar.current.date(from: DateComponents(year: 2026, month: 9, day: 19)))
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Rasenmäher: Ölwechsel", confidence: 0.9, reason: "The note names the job.")
-        draft.dueDate = EnrichmentDraft.Guess(saturday, confidence: 0.8, reason: "Saturday after the capture date.")
-        draft.importance = EnrichmentDraft.Guess(.medium, confidence: 0.7, reason: "Maintenance, nobody waits.")
-        draft.urgency = EnrichmentDraft.Guess(.high, confidence: 0.3, reason: "No signal.")
-        draft.duration = EnrichmentDraft.Guess(.minutes15, confidence: 0.65, reason: "A quarter of an hour is stated.")
-        draft.contexts = EnrichmentDraft.Guess(["garten", "Werkstatt"], confidence: 0.9, reason: "Lawn mower lives in the garden.")
-
-        let now = Date()
-        let written = EnrichmentWriter.apply(draft, to: task, contexts: [computer, garden], projects: [], now: now)
-        try context.save()
-
-        #expect(written == 3, "contexts are never the model's (#215)")
-        #expect(task.title == "Rasenmäher: Ölwechsel")
-        #expect(task.titleSourceRaw == "ai")
-        #expect(task.titleConfidence == 0.9)
-        #expect(task.status == .active)
-        #expect(task.dueDate == saturday)
-        #expect(task.dueHasTime == false)
-        #expect(task.importance == nil, "die Regel setzt Wichtigkeit, nicht mehr der Modell-Draft (#117, AC-7)")
-        #expect(task.urgency == nil, "die Regel setzt Dringlichkeit, nicht mehr der Modell-Draft (#117, AC-7)")
-        #expect(task.duration == .minutes15)
-        #expect((task.contexts ?? []).isEmpty, "the model's contexts are not written (#215)")
-        #expect(task.processedAt == now)
-
-        let revisions = try #require(task.revisions)
-        #expect(revisions.count == 3)
-        let allFromAI = revisions.allSatisfy { $0.author == .ai && $0.seenAt == nil && !($0.reason ?? "").isEmpty }
-        #expect(allFromAI, "every revision is unseen, by the AI, with a reason")
-        #expect(Set(revisions.map(\.field)) == [.title, .dueDate, .duration])
-        #expect(task.hasUnseenAutomaticRevisions)
-        #expect(task.displayTitle == "Rasenmäher: Ölwechsel")
-
-        let all = try context.fetch(FetchDescriptor<TaskItem>())
-        #expect(ViewRules.tasks(for: .quick, in: all).map(\.id) == [task.id])
-    }
-
-    @Test("A title below the threshold leaves the task unverified with the raw text on show")
-    @MainActor func titleBelowThresholdIsUnverified() async throws {
-        let store = try TestStore()
-        let context = store.context
-        let task = TaskItem(rawText: "das Ding mit dem Zeug")
-        context.insert(task)
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Thing", confidence: 0.4, reason: "Unclear note.")
-
-        let written = EnrichmentWriter.apply(draft, to: task, contexts: [], projects: [])
-        try context.save()
-
-        #expect(written == 0)
-        #expect(task.status == .unverified)
-        #expect(task.title == nil)
-        #expect(task.displayTitle == "das Ding mit dem Zeug")
-        #expect(task.processedAt != nil, "processed exactly once, even without a result")
-        #expect((task.revisions ?? []).isEmpty)
-    }
-
-    @Test("The model's project is never written (#469)")
-    @MainActor func modelProjectIsIgnored() async throws {
-        let store = try TestStore()
-        let context = store.context
-        let house = Project(name: "Haus")
-        context.insert(house)
-        let task = TaskItem(rawText: "Dachrinne reinigen")
-        context.insert(task)
-        var draft = EnrichmentDraft()
-        draft.project = EnrichmentDraft.Guess("Haus", confidence: 0.9, reason: "House upkeep.")
-
-        EnrichmentWriter.apply(draft, to: task, contexts: [], projects: [house])
-        try context.save()
-        #expect(task.project == nil)
-        #expect(!(task.revisions ?? []).contains { $0.field == .project })
     }
 }
 
@@ -189,32 +67,6 @@ struct TestStore {
         await coordinator.processPending()
         #expect(task.rulesAppliedAt == marker, "once means once")
         #expect((task.revisions ?? []).filter { $0.field == .dueDate }.count == 1)
-    }
-
-    @Test("Examples are the most recent completed tasks with their final attributes")
-    @MainActor func examplesComeFromDoneTasks() async throws {
-        let store = try TestStore()
-        let context = store.context
-        let garden = TaskContext(name: "Garten")
-        context.insert(garden)
-        for index in 0..<7 {
-            let task = TaskItem(rawText: "Erledigt \(index)")
-            task.status = .done
-            task.title = "Titel \(index)"
-            task.importance = .high
-            task.completedAt = Date(timeIntervalSince1970: Double(index) * 60)
-            context.insert(task)
-            task.contexts = [garden]
-        }
-        context.insert(TaskItem(rawText: "Offen"))
-        try context.save()
-
-        let examples = try EnrichmentCoordinator.examples(in: context)
-        #expect(examples.count == 5)
-        #expect(examples.first?.rawText == "Erledigt 6")
-        #expect(examples.first?.title == "Titel 6")
-        #expect(examples.first?.importance == .high)
-        #expect(examples.first?.contexts == ["Garten"])
     }
 
     /// Der Regelschritt schreibt das Datum (#95, AC-7); seit #982 gibt es nur ihn.
@@ -606,43 +458,6 @@ struct RecognitionCoordinatorTests {
         #expect(fresh.duration == .minutes30)
     }
 
-    /// Die Lücke, die die Analyse im heutigen Code gefunden hat: `EnrichmentWriter.apply` schreibt
-    /// `duration` und `contexts` ohne `== nil`-Guard und läuft im Coordinator **nach** dem
-    /// Regelschritt. Ohne diesen Test überschreibt das Modell den Regelwert still und hängt eine
-    /// zweite Revision an dasselbe Feld.
-    @Test("Der Modellwert überschreibt einen gesetzten Wert nicht mehr (AC-9)")
-    @MainActor func modelDoesNotOverwriteAnExistingValue() async throws {
-        let store = try TestStore()
-        let context = store.context
-        let garden = TaskContext(name: "Garten", isSystemDefault: true, sortOrder: 3)
-        let computer = TaskContext(name: "Computer", isSystemDefault: true, sortOrder: 0)
-        context.insert(garden)
-        context.insert(computer)
-        let task = TaskItem(rawText: "Hecke schneiden")
-        task.duration = .minutes30
-        task.durationSourceRaw = FieldSource.ai.rawValue
-        task.durationConfidence = 1.0
-        task.contexts = [garden]
-        task.contextsSourceRaw = FieldSource.ai.rawValue
-        task.contextsConfidence = 1.0
-        context.insert(task)
-        try context.save()
-
-        var draft = EnrichmentDraft()
-        draft.duration = EnrichmentDraft.Guess(.hour1, confidence: 0.9, reason: "Modellschätzung.")
-        draft.contexts = EnrichmentDraft.Guess(["Computer"], confidence: 0.9, reason: "Modellschätzung.")
-
-        let written = EnrichmentWriter.apply(draft, to: task, contexts: [computer, garden], projects: [])
-        try context.save()
-
-        #expect(written == 0, "der Rückgabewert zählt die übersprungenen Felder nicht mit")
-        #expect(task.duration == .minutes30, "der bereits gesetzte Wert bleibt stehen")
-        #expect(task.durationConfidence == 1.0)
-        #expect((task.contexts ?? []).map(\.name) == ["Garten"], "der bereits gesetzte Wert bleibt stehen")
-        #expect((task.revisions ?? []).filter { $0.field == .duration }.isEmpty)
-        #expect((task.revisions ?? []).filter { $0.field == .contexts }.isEmpty)
-    }
-
     /// Ein vom Nutzer geleertes Feld ist am Herkunftsvermerk nicht zu erkennen: `FieldCodec` setzt
     /// beim Leeren `durationSourceRaw` auf `nil` (`FieldCodec.swift:56`) — genau der Zustand einer nie
     /// berührten Aufgabe. Nur die Nutzer-`Revision` bleibt, weil Revisionen nie gelöscht werden
@@ -748,8 +563,8 @@ struct RecognitionPoolReachabilityTests {
         #expect((second.contexts ?? []).map(\.name) == ["Garten"], "die Kontexte von vorhin auch")
     }
 
-    /// Der Grund, isoliert: `processedAt` wird ausschließlich in `EnrichmentWriter.apply` gesetzt,
-    /// und das läuft nur, wenn das Modell verfügbar ist. `processedAt` behält diese Bedeutung
+    /// Der Grund, isoliert: `processedAt` setzte nur der Modellschreiber, und den gibt es seit #982
+    /// nicht mehr. `processedAt` behält diese Bedeutung
     /// (ADR-4) — die Vergleichsmenge darf deshalb nicht daran hängen, sondern an einem eigenen
     /// Vermerk des Regelschritts (`rulesAppliedAt`, #144). Die Aussage dieses Tests ist unverändert
     /// dieselbe wie im RED-Stand: wer die Regeln durchlaufen hat, gehört in die Vergleichsmenge —
@@ -876,41 +691,11 @@ struct RecognitionPoolReachabilityTests {
     }
 }
 
-/// #932 Schnitt 1: a title the user (or Claude, as a user revision) set before the first run stays; the model writes its title
-/// only where no user revision hangs. And the chain: what Claude set at capture survives the rules and "Analyze again".
+/// #932 Schnitt 1: what Claude set at capture survives the rules and "Analyze again".
 @MainActor final class EnrichmentTitleProtectionTests: XCTestCase {
     private static let fields: [RevisedField] = [
         .title, .notes, .dueDate, .importance, .urgency, .duration, .energy, .contexts, .project,
     ]
-
-    private func modelTitle(_ title: String) -> EnrichmentDraft {
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess(title, confidence: 0.9, reason: "The note names the job.")
-        return draft
-    }
-
-    // MARK: AC-9
-
-    func testModelTitleKeepsAUserTitleAndWritesWhereNoneHangs() throws {
-        let store = try TestStore()
-        let touched = TaskItem(rawText: "Rasenmäher Ölwechsel machen")
-        touched.title = "Ölwechsel"
-        touched.titleSourceRaw = FieldSource.user.rawValue
-        touched.revisions = [Revision(task: touched, field: .title, oldValue: nil, newValue: "Ölwechsel", author: .user,
-                                      reason: OrderExecutor.reason)]
-        let untouched = TaskItem(rawText: "Rasenmäher Ölwechsel machen")
-        store.context.insert(touched)
-        store.context.insert(untouched)
-        try store.context.save()
-
-        EnrichmentWriter.apply(modelTitle("Rasenmäher: Ölwechsel"), to: touched, contexts: [], projects: [])
-        EnrichmentWriter.apply(modelTitle("Rasenmäher: Ölwechsel"), to: untouched, contexts: [], projects: [])
-
-        XCTAssertEqual(touched.title, "Ölwechsel", "the user's title stays")
-        XCTAssertEqual(touched.revisions?.count, 1, "no AI revision on top")
-        XCTAssertEqual(untouched.title, "Rasenmäher: Ölwechsel", "without a user revision the model writes as before")
-        XCTAssertEqual(untouched.titleSourceRaw, FieldSource.ai.rawValue)
-    }
 
     // MARK: AC-10
 

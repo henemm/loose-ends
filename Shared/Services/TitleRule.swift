@@ -1,7 +1,7 @@
 import Foundation
 
 /// The title a task gets at capture, without the model (#202): the raw text, cleaned and cut to at
-/// most twelve words. Only words of the raw text, nothing invented; the model may refine it later.
+/// most twelve words. Only words of the raw text, nothing invented.
 ///
 /// Words a rule reads into a field leave the title (#217): the due date with its time and the small
 /// words leading into it ("bis Freitag", "um 15 Uhr"), and the words that say importance or urgency
@@ -30,51 +30,6 @@ enum TitleRule {
         let withoutPhones = PhoneRule.removing(from: rawText)
         let stripped = strippingRuleWords(from: withoutPhones, reference: reference, calendar: calendar)
         return cleaned(stripped.contains { $0.isLetter || $0.isNumber } ? stripped : rawText)
-    }
-
-    /// Whether a model title comes from the note (#460): at least one of its content words (four
-    /// letters or more) stands in the note, a word start being enough ("Anruf" for "anrufen"). The
-    /// model was handed the notes of past tasks as examples and copied one onto an unrelated note
-    /// ("Das ist jetzt nur ein Test …" became "Eløb Frühbucher anmelden"). A title without content
-    /// words passes: there is nothing to check.
-    static func isFromNote(_ title: String, rawText: String) -> Bool {
-        let noteWords = RawTextWords.words(in: rawText).map(RawTextWords.normalized).filter { $0.count >= 4 }
-        let content = RawTextWords.words(in: title).map(RawTextWords.normalized).filter { $0.count >= 4 }
-        guard !content.isEmpty else { return true }
-        return content.contains { word in noteWords.contains { $0.hasPrefix(word) || word.hasPrefix($0) } }
-    }
-
-    /// Whether a model title takes a word from a past task's note (#607): a content word (four letters or
-    /// more) that does not stand in this note but in one of the notes the model was handed as examples.
-    /// "Cider kaltstellen" became "Cider kaltstellen und Altpapier Altglas wegbringen"; one word of the
-    /// note was enough for `isFromNote`. A word the note lacks is rephrasing, allowed; one an example
-    /// carries is a copy. Word starts count both ways, as in `isFromNote`.
-    static func borrows(_ title: String, rawText: String, pastNotes: [String]) -> Bool {
-        let noteWords = contentWords(in: rawText)
-        let pastWords = Set(pastNotes.flatMap { contentWords(in: $0) })
-        guard !pastWords.isEmpty else { return false }
-        func matches(_ word: String, _ other: String) -> Bool { word.hasPrefix(other) || other.hasPrefix(word) }
-        return contentWords(in: title).contains { word in
-            !noteWords.contains { matches(word, $0) } && pastWords.contains { matches(word, $0) }
-        }
-    }
-
-    private static func contentWords(in text: String) -> [String] {
-        RawTextWords.words(in: text).map(RawTextWords.normalized).filter { $0.count >= 4 }
-    }
-
-    /// Month and weekday names the model may not bring into a title on its own (#507): it was handed the
-    /// capture day and wrote it into "Blumen gießen muss" as "Blumen 17. Oktober, gießen".
-    private static var dateWords: Set<String> { Set(LanguagePacks.titleDateWords.map(RawTextWords.normalized)) }
-
-    /// Whether a model title names a date the note does not: a month or weekday name, or a number, that
-    /// does not stand in the note (#507). The due date is the rules' job (#95); a date in the title is the
-    /// capture day leaking in.
-    static func addsDate(_ title: String, rawText: String) -> Bool {
-        let note = Set(RawTextWords.words(in: rawText).map(RawTextWords.normalized))
-        return RawTextWords.words(in: title).map(RawTextWords.normalized).contains { word in
-            !note.contains(word) && (dateWords.contains(word) || word.allSatisfy(\.isNumber))
-        }
     }
 
     private static func cleaned(_ rawText: String) -> String? {
