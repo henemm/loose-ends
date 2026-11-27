@@ -76,7 +76,7 @@ import Testing
 
         let all = try store.context.fetch(FetchDescriptor<TaskItem>())
         #expect(all.count == 3)
-        for kind in [ViewKind.next, .new, .due, .quick, .old, .waiting, .repeating, .parked, .open, .done] {
+        for kind in [ViewKind.next, .due, .quick, .old, .waiting, .repeating, .parked, .open, .done] {
             let ids = ViewRules.tasks(for: kind, in: all).map(\.id)
             #expect(!ids.contains(milk.id), "\(kind) listed an open subtask")
             #expect(!ids.contains(bread.id), "\(kind) listed a done subtask")
@@ -204,7 +204,7 @@ import Testing
 
         let present = try store.context.fetch(FetchDescriptor<TaskItem>(predicate: TaskItem.present))
         #expect(Set(present.map(\.rawText)) == ["Kartons holen", "Blumen gießen"], "every list leaves the removed task out")
-        for kind in [ViewKind.next, .new, .due, .open, .done, .parked] {
+        for kind in [ViewKind.next, .due, .open, .done, .parked] {
             #expect(!ViewRules.tasks(for: kind, in: [parent, boxes, alone]).contains { $0.id == parent.id },
                     "\(kind) should leave a removed task out")
         }

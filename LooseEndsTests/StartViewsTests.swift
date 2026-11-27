@@ -7,7 +7,7 @@ import Testing
     @Test("With no task at all only Next up and Due remain, New is gone (#1000)")
     @MainActor func dailyThreeAlways() async throws {
         #expect(ViewRules.startViews(in: []) == [.next, .due])
-        #expect(!ViewRules.dailyViews.contains(.new))
+        #expect(ViewKind(rawValue: "new") == nil)
     }
 
     @Test("An occasional view appears once it holds a task, in its fixed place")
@@ -26,7 +26,6 @@ import Testing
         let views = ViewRules.startViews(in: all)
 
         #expect(views == [.next, .due, .repeating, .parked])
-        #expect(!views.contains(.new), "New is gone (#1000)")
         #expect(!views.contains(.waiting), "nothing waits, so Waiting stays out")
         #expect(!views.contains(.done), "Done sits apart at the bottom of the start screen")
     }
@@ -34,7 +33,7 @@ import Testing
     @Test("Daily and occasional views together cover every list view except Done and All open")
     func everyViewHasAPlace() {
         let placed = Set(ViewRules.dailyViews + ViewRules.occasionalViews)
-        let lists = Set(ViewKind.allCases).subtracting([.done, .open, .context, .project, .new])
+        let lists = Set(ViewKind.allCases).subtracting([.done, .open, .context, .project])
         #expect(placed == lists)
     }
 

@@ -5,49 +5,6 @@ import Foundation
 enum ViewRules {
     static let oldAfterDays = 30
 
-    /// Why a task sits in "New", the review tray (#188).
-    enum ReviewReason: Equatable {
-        /// The model rewrote the title; the raw text is the value before.
-        case titleChanged(from: String)
-        /// The model or a rule set fields the user has not seen yet.
-        case sortedByAI
-        /// Enrichment ran, the title stayed below the confidence threshold.
-        case titleNotChecked
-        /// Enrichment has not run yet.
-        case notSortedYet
-    }
-
-    /// Needs a look rather than a nod: nothing sorted yet, or a title nobody vouched for. Only
-    /// the other tasks can be confirmed with one swipe, so an unchecked title never slips through.
-    static func needsLook(_ task: TaskItem) -> Bool {
-        task.status == .unprocessed || task.status == .unverified
-    }
-
-    /// Sits in "New": open, top level, and not sorted, not vouched for, or changed unseen.
-    static func isInNew(_ task: TaskItem) -> Bool {
-        task.parent == nil && task.isOpen
-            && (task.status == .unprocessed || task.status == .unverified || task.hasUnseenAutomaticRevisions)
-    }
-
-    /// "Looks right" in the detail (#349): any task in "New" with something to vouch for. An
-    /// unchecked or unsorted task needs a title; one confirmed before its model step still gets
-    /// that run (`EnrichmentCoordinator`, #318).
-    static func canConfirm(_ task: TaskItem) -> Bool {
-        isInNew(task) && (task.status == .active || task.title != nil)
-    }
-
-    static func reviewReason(of task: TaskItem) -> ReviewReason {
-        switch task.status {
-        case .unprocessed: return .notSortedYet
-        case .unverified: return .titleNotChecked
-        default:
-            if task.titleSourceRaw == FieldSource.ai.rawValue, let title = task.title, title != task.rawText {
-                return .titleChanged(from: task.rawText)
-            }
-            return .sortedByAI
-        }
-    }
-
     /// The two views a day starts from; the start screen shows them even when empty. "New" is not
     /// among them since #1000: a captured task stands in its list at once (ADR-22).
     static let dailyViews: [ViewKind] = [.next, .due]
@@ -380,9 +337,6 @@ enum ViewRules {
         case .next:
             return all.filter { $0.isOpen && $0.nextRank != nil && !$0.isBlocked }
                 .sorted { ($0.nextRank ?? 0) < ($1.nextRank ?? 0) }
-        case .new:
-            return topLevel.filter(isInNew)
-                .sorted { $0.capturedAt > $1.capturedAt }
         case .due:
             // Today and overdue (Henning, 2026-10-15): tomorrow or "Monday" is not due yet.
             let today = calendar.startOfDay(for: now)

@@ -35,9 +35,9 @@ import Testing
     func leaving() {
         var back = DetailBack()
         back.follow(from: nil, to: task)
-        back.follow(from: task, to: .system(.new))
+        back.follow(from: task, to: .system(.due))
         #expect(!back.isOffered)
-        back.follow(from: .system(.new), to: nil)
+        back.follow(from: .system(.due), to: nil)
         #expect(!back.isOffered)
     }
 

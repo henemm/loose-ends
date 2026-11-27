@@ -97,7 +97,7 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
   #1000 S1 is done (2026-11-26): the start page head "New · N to look over" and the "New" entry in the index and sidebar
   are gone (`ViewRules.dailyViews = [.next, .due]`); #1000 S2 is done (2026-11-26):
   no "Looks right" in the detail's bar, swipe or menu, no `ReviewNote`, no "Needs a look" section; opening the detail always marks
-  seen. `isInNew` and the other review rules, `ViewKind.new`, `TaskActions.confirmReview`, the tint and the catalog keys stay until S3. Until #1000/#1001 land, the paragraph below describes the rest as it still is.
+  seen. #1000 S3a is done (2026-11-27): `isInNew`, `needsLook`, `canConfirm`, `reviewReason`, `ViewKind.new` and `TaskActions.confirmReview` are gone; the tint and the catalog keys follow in S3b. Until #1000/#1001 land, the paragraph below describes the rest as it still is.
 - **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,
   regex, calendar, contacts or a word list. The on-device model only gets what needs language
   understanding (refining the title: since #202 `TitleRule` sets it at capture from the cleaned raw

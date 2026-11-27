@@ -85,14 +85,13 @@ enum RevisedField: String, Codable, CaseIterable, Sendable {
 
 /// System and user views. Rules live in ViewRules.
 enum ViewKind: String, Codable, CaseIterable, Sendable {
-    case next, new, due, quick, old, waiting, repeating, parked, open, done, context, project
+    case next, due, quick, old, waiting, repeating, parked, open, done, context, project
 
     var isSystem: Bool { self != .context && self != .project }
 
     var titleKey: String.LocalizationValue {
         switch self {
         case .next: "Next up"
-        case .new: "New"
         case .due: "Due"
         case .quick: "Quick"
         case .old: "Old"
@@ -110,7 +109,6 @@ enum ViewKind: String, Codable, CaseIterable, Sendable {
     var symbol: String {
         switch self {
         case .next: "star"
-        case .new: "tray"
         case .due: "calendar"
         case .quick: "hare"
         case .old: "hourglass"

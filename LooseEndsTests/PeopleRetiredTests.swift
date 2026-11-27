@@ -36,7 +36,6 @@ import Testing
         #expect(RevisionService.origin(of: .people, on: task) == nil)
         #expect(!RevisionService.automaticFields(on: task).contains(.people))
         #expect(!task.hasUnseenAutomaticRevisions)
-        #expect(ViewRules.tasks(for: .new, in: [task]).isEmpty)
         #expect((task.revisions ?? []).first?.field == .people, "the old revision still decodes as what it was")
     }
 }
