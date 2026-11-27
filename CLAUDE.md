@@ -94,7 +94,8 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
   said (duration only named or recognized, else empty). The review step goes: no "New", no "N to look over", no "Looks
   right"; a captured task stands in its list at once (#1000). Rules are sharpened on Henning's own captures (#1001).
   #982 S1 is done (2026-11-26): `EnrichmentCoordinator` has no enricher any more and runs the rules once per task;
-  the model code stays compiled only for the lab app and measurement tests until S3.
+  #982 S3b (2026-11-27): Release builds (app, widgets, share, watch) carry neither the model adapter nor a FoundationModels
+  link; the Debug test host (measurement tests) and the lab app keep it; `testflight.yml` checks the archive.
   #1000 S1 is done (2026-11-26): the start page head "New · N to look over" and the "New" entry in the index and sidebar
   are gone (`ViewRules.dailyViews = [.next, .due]`); #1000 S2 is done (2026-11-26):
   no "Looks right" in the detail's bar, swipe or menu, no `ReviewNote`, no "Needs a look" section; opening the detail always marks
@@ -461,7 +462,8 @@ not scope creep on the current one.
 - `Shared/Enrichment` — `EnrichmentWriter` (the rule step's helpers: `Mode`, `mayWrite`, `userHasTouched`, `encode`; the model's
   draft writer is gone since #982 S3a), `EnrichmentCoordinator`
   (catch-up pass, rules only), `FoundationModelsEnricher` and `TaskEnricher` (on-device model,
-  `#if canImport(FoundationModels)`; the model files are there only for the lab app and the measurement tests, no product
+  `#if canImport(FoundationModels)`; one file with its types, excluded from every Release build (app, widgets, share,
+  watch), kept in the Debug test host and the lab app, archive check in `testflight.yml` (#982 S3b); no product
   path calls them, ADR-22; the rules still use `EnrichmentDraft.Guess`), `DueDateRule`
   (combines the rule parsers into the due date, confidence 1.0, #95), `ImportanceUrgencyRule` (keyword
   match for importance/urgency, confidence 1.0, no default on miss, #117), `DurationRule` (a length the text names, "20 Minuten",

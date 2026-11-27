@@ -1,5 +1,43 @@
-#if canImport(FoundationModels) && !os(watchOS)
 import Foundation
+
+/// Everything the model gets to see. The coordinator builds it, so an enricher stays stateless.
+struct EnrichmentInput: Sendable {
+    var rawText: String
+    var capturedAt: Date
+    var contextVocabulary: [String]
+    var projectNames: [String]
+    var examples: [EnrichmentExample]
+}
+
+/// A recently completed task with its final attributes, shown to the model as an example of how
+/// tasks get sorted here. Picked by recency (`EnrichmentCoordinator.examples`), not by similarity:
+/// the similarity-picked examples are gone since B1 (2026-09-27); learning is recognition of a raw
+/// text captured before, which `RecognitionRule` does without the model (ADR-5, #136).
+struct EnrichmentExample: Sendable {
+    var rawText: String
+    var title: String?
+    var importance: Importance?
+    var urgency: Urgency?
+    var duration: DurationBucket?
+    var contexts: [String]
+}
+
+/// The seam between the pipeline and a language model. Tests use a stub (ADR-11).
+protocol TaskEnricher: Sendable {
+    /// Non-nil when the model cannot run right now (no Apple Intelligence, device locked, limit).
+    var unavailableReason: String? { get }
+    func enrich(_ input: EnrichmentInput) async throws -> EnrichmentDraft
+}
+
+/// Parsing shared by every model adapter, kept plain so it is unit-testable without a model.
+/// The due date no longer passes through here: it comes from `DueDateRule`, not from the model (#95).
+enum EnrichmentParsing {
+    static func clamp(_ confidence: Double) -> Double {
+        min(max(confidence, 0), 1)
+    }
+}
+
+#if canImport(FoundationModels) && !os(watchOS)
 import FoundationModels
 
 /// The on-device model behind `TaskEnricher`: guided generation into a flat schema, then mapping

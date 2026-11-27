@@ -26,51 +26,12 @@ struct EnrichmentDraft: Equatable, Sendable {
     var project: Guess<String>?
 
     /// Four of the five fields the FocusBlox export knows the truth for, as plain strings (#108);
-    /// energy left the model with #112. Pure
-    /// pass-through for the measurement code: it lives here and not in the lab app because
-    /// `Measurement/MeasurementRun.swift` compiles into three targets that see `EnrichmentDraft`
-    /// differently, and only here is the unwrapping visible — and testable — from all of them.
-    /// No product code calls it.
+    /// energy left the model with #112. Pure pass-through for the measurement code: the lab app's
+    /// `MeasurementRunner` reads a model draft through it, and `MeasurementRunTests` test it via the
+    /// app module. No product code calls it.
     var selfConsistencyValues: (importance: String?, urgency: String?, duration: String?,
                                 contexts: [String]) {
         (importance?.value.rawValue, urgency?.value.rawValue, duration?.value.rawValue,
          contexts?.value ?? [])
-    }
-}
-
-/// Everything the model gets to see. The coordinator builds it, so an enricher stays stateless.
-struct EnrichmentInput: Sendable {
-    var rawText: String
-    var capturedAt: Date
-    var contextVocabulary: [String]
-    var projectNames: [String]
-    var examples: [EnrichmentExample]
-}
-
-/// A recently completed task with its final attributes, shown to the model as an example of how
-/// tasks get sorted here. Picked by recency (`EnrichmentCoordinator.examples`), not by similarity:
-/// the similarity-picked examples are gone since B1 (2026-09-27); learning is recognition of a raw
-/// text captured before, which `RecognitionRule` does without the model (ADR-5, #136).
-struct EnrichmentExample: Sendable {
-    var rawText: String
-    var title: String?
-    var importance: Importance?
-    var urgency: Urgency?
-    var duration: DurationBucket?
-    var contexts: [String]
-}
-
-/// The seam between the pipeline and a language model. Tests use a stub (ADR-11).
-protocol TaskEnricher: Sendable {
-    /// Non-nil when the model cannot run right now (no Apple Intelligence, device locked, limit).
-    var unavailableReason: String? { get }
-    func enrich(_ input: EnrichmentInput) async throws -> EnrichmentDraft
-}
-
-/// Parsing shared by every model adapter, kept plain so it is unit-testable without a model.
-/// The due date no longer passes through here: it comes from `DueDateRule`, not from the model (#95).
-enum EnrichmentParsing {
-    static func clamp(_ confidence: Double) -> Double {
-        min(max(confidence, 0), 1)
     }
 }

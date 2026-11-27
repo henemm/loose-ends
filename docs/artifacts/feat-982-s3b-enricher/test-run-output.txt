@@ -1,0 +1,20 @@
+# #982 S3b GREEN – 2026-11-27 21:59 CET, Stand: Worktree (ungestaged) auf 4cc271f
+## ./scripts/sim.sh unit (iPhone 17 Simulator) – xcresult-Zusammenfassung (Test-LooseEnds-2026.11.27_21-46-30-+0100.xcresult)
+{'result': 'Passed', 'totalTestCount': 1392, 'passedTests': 1380, 'failedTests': 0, 'skippedTests': 12, 'expectedFailures': 0}
+## RuleGolden im Log
+[[36mLooseEndsTests[0m] [1mCompiling[0m RuleGoldenTests.swift
+Suite "Goldene Regelausgabe über alle Korpora" started
+Suite "Goldene Regelausgabe über alle Korpora" passed after 36.901 seconds
+## Log-Ende
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: Sprache de_DE wird hier nicht unterstützt (isAvailable false, supportedLocales.count 0, installedLocales.count 0)
+[sim]   The final text keeps the key words – NICHT gemessen: Sprache de_DE wird hier nicht unterstützt (isAvailable false, supportedLocales.count 0, installedLocales.count 0)
+## python3 scripts/test_modell_rest_entfernt.py
+Ran 13 tests in 0.255s
+
+OK
+## XCTest-Zeilen aus dem Unit-Log (wörtlich)
+Executed 6 tests, with 0 failures (0 unexpected) in 0.068 (0.071) seconds
+Executed 104 tests, with 0 failures (0 unexpected) in 22.729 (22.932) seconds
+Executed 104 tests, with 0 failures (0 unexpected) in 22.729 (22.933) seconds

@@ -271,21 +271,6 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             DEVELOPMENT_TEAM= \
             2>&1 | tee ui-smoke.log | xcbeautify
-      - name: Diagnose model availability
-        if: always()
-        continue-on-error: true
-        run: |
-          # EnrichmentCoordinator logs "Model unavailable, rules only: <reason>" or "Enriched <id>: N fields".
-          xcrun simctl spawn "$SIM_UDID" log show --info --style compact --last 2h \
-            --predicate 'subsystem == "com.henning.looseends" AND category == "Enrichment"' \
-            > enrichment.log 2>&1 || true
-          unavailable=$(grep -c "Model unavailable" enrichment.log || true)
-          enriched=$(grep -c "Enriched " enrichment.log || true)
-          echo "Model unavailable: ${unavailable:-0} lines, Enriched: ${enriched:-0} lines"
-          grep -E "Model unavailable|Enriched " enrichment.log | head -20 || true
-          if [ "${unavailable:-0}" -eq 0 ] && [ "${enriched:-0}" -eq 0 ]; then
-            echo "Modellverfügbarkeit nicht erhebbar"
-          fi
       - name: Show crash and failure details
         if: failure()
         run: grep -n -E -i "crash|fatal error|restarting after|failed|error:" ui-smoke.log | head -120 || true

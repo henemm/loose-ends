@@ -342,6 +342,37 @@ jobs:
           done
           [ "$fail" = 0 ]
 
+      # No shipped binary carries the on-device model adapter or links FoundationModels (#982 S3b, ADR-22):
+      # every bundle (*.app, *.appex) of the archive, binary from its CFBundleExecutable. Runs locally too: ARCHIVE=<path>.
+      - name: Verify the archive carries no on-device model
+        run: |
+          set -euo pipefail
+          ARCHIVE="${ARCHIVE:-build/LooseEnds.xcarchive}"
+          APPS="$ARCHIVE/Products/Applications"
+          [ -d "$APPS" ] || { echo "::error::No Products/Applications in $ARCHIVE"; exit 1; }
+          fail=0 checked=0
+          while IFS= read -r -d '' bundle; do
+            if [ -f "$bundle/Contents/Info.plist" ]; then   # macOS layout
+              plist="$bundle/Contents/Info.plist"; dir="$bundle/Contents/MacOS"
+            else
+              plist="$bundle/Info.plist"; dir="$bundle"
+            fi
+            exe=$(plutil -extract CFBundleExecutable raw "$plist" 2>/dev/null || true)
+            name=$(basename "$bundle")
+            if [ -z "$exe" ] || [ ! -f "$dir/$exe" ]; then
+              echo "::error::$name: no binary for CFBundleExecutable"; fail=1; continue
+            fi
+            bin="$dir/$exe"; checked=$((checked + 1))
+            symbols=$( { nm "$bin" 2>/dev/null || true; } | grep -c FoundationModelsEnricher || true)
+            links=$( { otool -L "$bin" 2>/dev/null || true; } | grep -c FoundationModels || true)
+            echo "$name: nm FoundationModelsEnricher=$symbols, otool -L FoundationModels=$links"
+            if [ "$symbols" != 0 ] || [ "$links" != 0 ]; then
+              echo "::error::$name carries the on-device model (#982 S3b, ADR-22)"; fail=1
+            fi
+          done < <(find "$APPS" -type d \( -name '*.app' -o -name '*.appex' \) -print0)
+          [ "$checked" -gt 0 ] || { echo "::error::No bundle binary checked in $APPS"; fail=1; }
+          [ "$fail" = 0 ]
+
       - name: Write export options
         run: |
           cat > ExportOptions.plist <<EOF
@@ -546,6 +577,37 @@ jobs:
           python3 scripts/privacy_manifest.py check "$APP/Contents/Resources/PrivacyInfo.xcprivacy" --account true || { res=FEHLER; fail=1; }
           row "| NSPrivacyCollectedDataTypes | konto true | $res |"
           [ "$res" = OK ] || echo "::error::macOS PrivacyInfo.xcprivacy does not carry the account types (#625)"
+          [ "$fail" = 0 ]
+
+      # No shipped binary carries the on-device model adapter or links FoundationModels (#982 S3b, ADR-22):
+      # every bundle (*.app, *.appex) of the archive, binary from its CFBundleExecutable. Runs locally too: ARCHIVE=<path>.
+      - name: Verify the archive carries no on-device model
+        run: |
+          set -euo pipefail
+          ARCHIVE="${ARCHIVE:-build/LooseEndsMac.xcarchive}"
+          APPS="$ARCHIVE/Products/Applications"
+          [ -d "$APPS" ] || { echo "::error::No Products/Applications in $ARCHIVE"; exit 1; }
+          fail=0 checked=0
+          while IFS= read -r -d '' bundle; do
+            if [ -f "$bundle/Contents/Info.plist" ]; then   # macOS layout
+              plist="$bundle/Contents/Info.plist"; dir="$bundle/Contents/MacOS"
+            else
+              plist="$bundle/Info.plist"; dir="$bundle"
+            fi
+            exe=$(plutil -extract CFBundleExecutable raw "$plist" 2>/dev/null || true)
+            name=$(basename "$bundle")
+            if [ -z "$exe" ] || [ ! -f "$dir/$exe" ]; then
+              echo "::error::$name: no binary for CFBundleExecutable"; fail=1; continue
+            fi
+            bin="$dir/$exe"; checked=$((checked + 1))
+            symbols=$( { nm "$bin" 2>/dev/null || true; } | grep -c FoundationModelsEnricher || true)
+            links=$( { otool -L "$bin" 2>/dev/null || true; } | grep -c FoundationModels || true)
+            echo "$name: nm FoundationModelsEnricher=$symbols, otool -L FoundationModels=$links"
+            if [ "$symbols" != 0 ] || [ "$links" != 0 ]; then
+              echo "::error::$name carries the on-device model (#982 S3b, ADR-22)"; fail=1
+            fi
+          done < <(find "$APPS" -type d \( -name '*.app' -o -name '*.appex' \) -print0)
+          [ "$checked" -gt 0 ] || { echo "::error::No bundle binary checked in $APPS"; fail=1; }
           [ "$fail" = 0 ]
 
       - name: Write export options
