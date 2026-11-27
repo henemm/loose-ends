@@ -8,7 +8,7 @@ Die Liste ist die einzige Sprachliste; Skripte lesen sie mit `scripts/shipped_la
 
 1. **Sprachpaket.** Eine Datei im Ordner `Shared/Language/` mit `static let <name> = LanguagePack(code: "xx", …)` nach dem
    Muster von `Shared/Language/EnglishPack.swift` und `Shared/Language/GermanPack.swift`: Wochentage, Monate, Tageszeiten,
-   Uhrzeit- und Dauerwörter, Wichtigkeit und Dringlichkeit, Ortsphrasen, Titel-Einleitungen, Etiketten-Wörter. Wörter stehen gefaltet,
+   Uhrzeit- und Dauerwörter, Wichtigkeit und Dringlichkeit, Ortsphrasen, Titel-Einleitungen, Tageszeiten (`dayParts`: „Abend“, „morning“, gehen mit einem Datum direkt daneben aus dem Titel, #1001), Etiketten-Wörter. Wörter stehen gefaltet,
    außer Wichtigkeit, Dringlichkeit, Etiketten und Titel-Datumswörter. Die Konformitätstests
    (`LooseEndsTests/Language/LanguagePackConformanceTests.swift`) laufen über alle Sprachen: kein Wort mit zwei Werten, keine leere
    Tabelle ohne Eintrag in der Ausnahmeliste, jedes Wort gefaltet. Das Testpaket `LooseEndsTests/Language/TestPack.swift` und der

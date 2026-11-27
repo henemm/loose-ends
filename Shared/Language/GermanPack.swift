@@ -84,6 +84,7 @@ extension LanguagePack {
             "januar", "februar", "märz", "april", "mai", "juni", "juli", "august", "september", "oktober",
             "november", "dezember", "montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag",
         ],
+        dayParts: ["morgen", "fruh", "vormittag", "mittag", "nachmittag", "abend", "nacht"],
         contextWords: [
             "Computer": ["laptop", "rechner", "drucker", "ausdrucken", "drucken", "website", "webseite", "online",
                          "backup", "software", "installieren"],

@@ -63,6 +63,9 @@ struct LanguagePack: Sendable {
     let titleConnectors: [String]
     /// Month and weekday names a model title may not bring in on its own (#507), as `TitleRule` knew them.
     let titleDateWords: [String]
+    /// Times of day that leave the title with a date right beside them: "heute Abend", "tomorrow morning" (#1001).
+    /// They never set a time. A word that is also a day ("morgen") counts only right after a date.
+    let dayParts: [String]
     /// Words per default context, keyed by the context's English catalog key ("Garden", "Out and about").
     let contextWords: [String: [String]]
     /// The words of "the day after tomorrow" in a language that names that day in words ("day", "after", "tomorrow").
@@ -121,6 +124,7 @@ enum LanguagePacks {
     static var titleLeadIns: [String] { list(\.titleLeadIns) }
     static var titleConnectors: [String] { list(\.titleConnectors) }
     static var titleDateWords: [String] { list(\.titleDateWords) }
+    static var dayParts: [String] { list(\.dayParts) }
     static var placePhrases: [PlacePhrase] { active.flatMap(\.placePhrases) }
 
     /// The English catalog keys of the default contexts that any active pack has words for.

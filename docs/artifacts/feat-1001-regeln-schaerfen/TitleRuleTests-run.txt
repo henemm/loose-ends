@@ -1,0 +1,56 @@
+Simulator prepared: keyboard hint off, calendar access granted for com.henning.looseends (D553352F-E7E6-4A9A-B1F5-190001E01113)
+[0;32m[sim][0m Simulator bereit (iPhone 17).
+[0;34m[sim][0m Unit-Tests (iOS-Simulator): LooseEndsTests/TitleRuleTests
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+[36;1mnote: [0mBuilding targets in dependency order
+[36;1mnote: [0mTarget dependency graph (7 targets)
+[[36mLooseEndsWatchWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsShare[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWidgets[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsWatch[0m] [1mProcessing[0m Info.plist
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWidgets.appex -> LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mCopy[0m LooseEndsWatch.app -> LooseEndsWatch.app
+[[36mLooseEnds[0m] [1mProcessing[0m Info.plist
+[[36mLooseEndsTests[0m] [1mProcessing[0m empty-LooseEndsTests.plist
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWidgets.appex
+[[36mLooseEnds[0m] [1mValidate Embedded Binary[0m LooseEndsWatch.app
+[[36mLooseEndsUITests[0m] [1mProcessing[0m empty-LooseEndsUITests.plist
+Test Suite 'Selected tests' started at 2026-11-27 18:44:14.466.
+Test Suite 'LooseEndsTests.xctest' started at 2026-11-27 18:44:14.469.
+Test Suite 'LooseEndsTests.xctest' passed at 2026-11-27 18:44:14.469.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.003) seconds
+[1mTest run started.[0m
+Suite "TitleRule (#202)" started
+    [32m✔[0m "Trims surrounding whitespace" (0.015 seconds)
+    [32m✔[0m "Closing punctuation goes, also repeated and after a gap" ([33m0.045[0m seconds)
+    [32m✔[0m "At most twelve words, no ellipsis, a comma on the twelfth word goes" ([33m0.035[0m seconds)
+    [32m✔[0m "First letter upper case, also umlauts; ß stays" ([33m0.026[0m seconds)
+    [32m✔[0m "A first character that is no letter leaves the text alone; only the first letter is raised" ([33m0.035[0m seconds)
+    [32m✔[0m "Runs of blanks and line breaks become one space" (0.008 seconds)
+    [32m✔[0m "The rule is idempotent and gives a real title for each of these inputs" ([31m0.100[0m seconds)
+    [32m✔[0m "Nothing left after striking: the title keeps every word" (0.015 seconds)
+    [32m✔[0m "The twelve words count after striking" (0.008 seconds)
+    [32m✔[0m "Capture strikes the rule words; the raw text stays as said" ([33m0.042[0m seconds)
+    [32m✔[0m "Capture sets the title from the rule: no AI marker, no revision, status unprocessed, raw text untouched" (0.013 seconds)
+    [32m✔[0m "Reset after the model title leads back to the rule title" (0.015 seconds)
+    [32m✔[0m "Reset of an old task without a title leads to the cleaned raw text, via revert and via revertAll" (0.020 seconds)
+    [32m✔[0m "The legacy rule applies to the title only: a date with no earlier value stays empty" (0.004 seconds)
+    [32m✔[0m "displayTitle shows the title whatever the status, the raw text only without a title" (0.001 seconds)
+    [32m✔[0m "A title the user emptied stays empty" (0.016 seconds)
+    [32m✔[0m "First run and Analyze again keep the rule title (no model since #982)" ([33m0.088[0m seconds)
+Suite "TitleRule (#202)" passed after 0.772 seconds
+[1mTest session results:[0m /Users/hem/Library/Developer/Xcode/DerivedData/LooseEnds-session-curried-inventing-pancake/Logs/Test/Test-LooseEnds-2026.11.27_18-44-02-+0100.xcresult
+[32;1mTest Succeeded[0m
+[36;1mTesting started[0m
+[0;32m[sim][0m Unit-Tests bestanden.
+[sim] Messstrecken: 2 von 6 übersprungen (nicht gemessen, nicht bestanden):
+[sim]   SelfConsistencyReportTests – fehlt: selfconsistency-run.json
+[sim]   TextFormModelReportTests – fehlt: textform-run.json
+[sim] Latenzschutz (#274):
+[sim]   The first word arrives within 3 s of speech start – NICHT gemessen: nicht im Log
+[sim]   The final text keeps the key words – NICHT gemessen: nicht im Log

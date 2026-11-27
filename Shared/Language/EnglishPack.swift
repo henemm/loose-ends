@@ -13,7 +13,7 @@ extension LanguagePack {
             "january": 1, "february": 2, "march": 3, "april": 4, "may": 5, "june": 6, "july": 7,
             "august": 8, "september": 9, "october": 10, "november": 11, "december": 12,
         ],
-        relativeDays: ["today": 0, "tomorrow": 1],
+        relativeDays: ["today": 0, "tonight": 0, "tomorrow": 1],
         nextWords: ["next"],
         dayUnits: ["day", "days"],
         weekUnits: ["week", "weeks"],
@@ -58,6 +58,7 @@ extension LanguagePack {
             "january", "february", "march", "june", "july", "october", "december",
             "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
         ],
+        dayParts: ["morning", "noon", "afternoon", "evening", "night"],
         contextWords: [
             "Computer": ["computer", "printer", "print out", "install", "spreadsheet"],
             "Phone": ["call", "phone", "ring back"],
