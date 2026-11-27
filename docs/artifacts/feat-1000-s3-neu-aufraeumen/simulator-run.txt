@@ -1,0 +1,33 @@
+# Simulator-Beleg
+erzeugt: 2026-11-27T07:07:35+0100
+befehl: scripts/sim.sh test-proof InboxDrawerSmokeTests
+workflow: feat-1000-s3-neu-aufraeumen
+head: 532891ad8d184e9ac8ffe0269da9e7a9f8320cb0
+basis: a8cc19f9a3fbe569c57544d53f9ff1eddf1881c1 (merge-base origin/main HEAD)
+testklasse: InboxDrawerSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1795759585.082  ende: 1795759654.442
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-1000-s3-neu-aufraeumen/simulator-run/summary.json  sha256:55701e4d64a3f442dc7b5a75650af65c3f1db42ed77e9a6e0e8d112b97a76dcc
+xcresult: docs/artifacts/feat-1000-s3-neu-aufraeumen/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-1000-s3-neu-aufraeumen/simulator-run/*.png (8 Stück)
+
+## Geprüfte Dateien
+- sha256:ba069fd75ae4b53478b1a794451830e5aa4a91781afd951b3de874baf161127d  LooseEnds/Views/TaskListView.swift
+- sha256:7eeb164dd05261d87d93ff0b8eb177c271b7cd4ecbc8ceb673e360ed5cf99a3e  LooseEndsTests/CaptureServiceTests.swift
+- sha256:25b646146ce4cea3f82bf20edea4ef284d1c83bbc6e205ba78d4446e3c8d0001  LooseEndsTests/DetailBackTests.swift
+- sha256:d5cdec9d3f12987d98c1f798b49c755fc6edf907cbc8cd29c138e01fdc63c8b7  LooseEndsTests/EnrichmentTests.swift
+- sha256:63cc571f5d8ca6a1992afb12f4e442093472d5a1d302465ac669880b6992f19d  LooseEndsTests/PeopleRetiredTests.swift
+- sha256:6c6947aef50f31b337f4adff00e9bb9df37eb97708368086f4f4a6cdc9c126cc  LooseEndsTests/ProjectNameRuleTests.swift
+- sha256:c007a763a5bff01ea8fd781235825a3a47f3b8bde43df5d0f0861d28b8284f1f  LooseEndsTests/RevisionServiceTests.swift
+- sha256:0a7a99792b5286d9d97f7fa2ccd2f20b974585a01322586633fed9708fe33fa3  LooseEndsTests/RowKeyActionTests.swift
+- sha256:4300c4a12eff62bb8eb122946a819f53d2c92fbbb2d0a8d0d3bc6f345eb5c77e  LooseEndsTests/StartViewsTests.swift
+- sha256:812e6a255fce22f7f5ff2a61ec51911f608ef76f70898016657ecaef907f9484  LooseEndsTests/SubtaskListsTests.swift
+- sha256:af84235a4f139268e9ed30af6de5dd85517883e53de9d70ed3312051ee6d37ee  LooseEndsTests/SubtaskTests.swift
+- sha256:0ff5e9721f64a0ad6e14c43967fffe89f738d03b5931247e71f3267828f90fbd  LooseEndsTests/ViewKindWithoutNewTests.swift
+- sha256:9bacacc369384bc465c8c816821e52d5f152649ec2c39cf7db1a88528532d79c  Shared/Models/Enums.swift
+- sha256:15f9bdbc4092b181f1384404e5cf7bf2360c73c4429ec3f6068e43447724c277  Shared/Models/RowKeyAction.swift
+- sha256:d5a73786c62e27fbfa707fe646a278fceb7d9a3361126cf27b8e1a4cd8755b50  Shared/Models/ViewRules.swift
+- sha256:08fa397c69d6ea5d7ea3ddb6a95018d6a8ff54604694fa8261e0f4345d505744  Shared/Services/TaskActions.swift

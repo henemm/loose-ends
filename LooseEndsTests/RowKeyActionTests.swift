@@ -90,7 +90,7 @@ import Testing
     }
 
     @Test func spaceFinishesOnlyWhereTheSwipeOffersDone() {
-        for kind in [ViewKind.done, .new, .parked] {
+        for kind in [ViewKind.done, .parked] {
             #expect(!RowKeyAction.spaceCompletes(in: kind, status: .active), "\(kind)")
         }
         for kind in [ViewKind.next, .due, .quick, .old, .waiting, .repeating, .open] {

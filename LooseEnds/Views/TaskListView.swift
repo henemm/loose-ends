@@ -320,7 +320,6 @@ struct TaskListView: View {
 
     private var emptySentence: LocalizedStringKey {
         switch kind {
-        case .new: "Nothing to look over."
         case .next: "Nothing lined up yet."
         case .due: "Nothing due today."
         case .quick: "No quick ones right now."

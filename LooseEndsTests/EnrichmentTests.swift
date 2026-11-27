@@ -97,7 +97,6 @@ struct TestStore {
         #expect(task.displayTitle == "Rasenmäher: Ölwechsel")
 
         let all = try context.fetch(FetchDescriptor<TaskItem>())
-        #expect(ViewRules.tasks(for: .new, in: all).map(\.id) == [task.id], "unseen AI changes keep it in New")
         #expect(ViewRules.tasks(for: .quick, in: all).map(\.id) == [task.id])
     }
 
@@ -165,7 +164,7 @@ struct TestStore {
         #expect(first.rulesAppliedAt == firstMarker, "once means once")
     }
 
-    @Test("A task confirmed with Looks right before its rule step still gets its one run (#318)")
+    @Test("An active task seen before its rule step still gets its one run (#318)")
     @MainActor func confirmedBeforeEnrichmentStillRuns() async throws {
         let store = try TestStore()
         let context = store.context
@@ -178,8 +177,8 @@ struct TestStore {
         context.insert(task)
         context.insert(sub)
         try context.save()
-        TaskActions.confirmReview(task)
-        #expect(task.status == .active)
+        _ = RevisionService.markSeen(task)
+        task.status = .active
         let coordinator = EnrichmentCoordinator(container: container)
 
         await coordinator.processPending()

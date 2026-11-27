@@ -150,8 +150,7 @@ blockierte, "Geparkt" zeigt nur `parked`, "Erledigt" zeigt nur `done`, "Alle off
 | Ansicht | Regel | Sortierung |
 |---------|-------|------------|
 | Als nächstes | `nextRank != nil` und nicht blockiert | nextRank manuell |
-| Neu | `status in (unprocessed, unverified)` oder Revision `author == ai` ungesehen | capturedAt absteigend |
-| (Vermerk) | „Neu“ steht seit #1000 S1 (2026-11-26, ADR-22) nicht mehr auf der Startseite und nicht mehr im Index/in der Seitenleiste (`dailyViews = [.next, .due]`); die Liste selbst entfällt mit Schnitt 2/3 ganz | – |
+| (Vermerk) | „Neu“ entfällt seit #1000 (S1 Startseite, S2 „Passt“, S3a Ansicht und Regeln, 2026-11-27; ADR-22): eine erfasste Aufgabe steht sofort in ihrer Liste | – |
 | Fällig | `dueDate <= heute` (Henning, 2026-10-15: morgen ist noch nicht fällig) | dueDate aufsteigend, überfällig zuerst |
 | Schnell | `duration in (minutes5, minutes15)` | urgency, importance |
 | Alt | `capturedAt < heute − 30 Tage` | capturedAt aufsteigend |

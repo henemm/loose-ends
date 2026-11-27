@@ -37,11 +37,11 @@ enum RowKeyAction: Equatable {
     }
 
     /// Space finishes only where the swipe offers Done: never in Completed (only Restore; it would set
-    /// the completion again), New (the inbox only confirms, #318) or Parked (only Activate), and never a
+    /// the completion again) or Parked (only Activate), and never a
     /// parked task, the parked block of "All open" included.
     static func spaceCompletes(in kind: ViewKind?, status: TaskStatus) -> Bool {
         switch kind {
-        case .done?, .new?, .parked?: false
+        case .done?, .parked?: false
         default: status != .parked && status != .done
         }
     }

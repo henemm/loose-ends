@@ -4,7 +4,7 @@ import Testing
 @testable import LooseEnds
 
 @Suite("CaptureService") struct CaptureServiceTests {
-    @Test("Saves trimmed raw text with channel and source, unprocessed, visible in New")
+    @Test("Saves trimmed raw text with channel and source, unprocessed, visible in Loose ends")
     func savesTrimmed() throws {
         let container = try ModelContainerFactory.make(inMemory: true)
         let context = ModelContext(container)
@@ -21,7 +21,7 @@ import Testing
         #expect(stored.sourceURL == link)
         #expect(stored.status == .unprocessed)
         #expect(stored.title == "Rasenmäher Ölwechsel", "the date leaves the title (#217)")
-        #expect(ViewRules.tasks(for: .new, in: fetched).map(\.id) == [saved.id])
+        #expect(ViewRules.tasks(for: .open, in: fetched).map(\.id) == [saved.id], "it stands in Loose ends at once (#1000)")
     }
 
     @Test("Blank text is rejected and nothing is stored", arguments: ["", "   ", "\n\t "])
@@ -35,8 +35,8 @@ import Testing
         #expect(try context.fetch(FetchDescriptor<TaskItem>()).isEmpty)
     }
 
-    @Test("Newest capture comes first in New")
-    func newestFirst() throws {
+    @Test("Every capture is visible in Loose ends at once (#1000)")
+    func visibleInLooseEnds() throws {
         let container = try ModelContainerFactory.make(inMemory: true)
         let context = ModelContext(container)
         let first = try CaptureService.save("Erste", via: .app, in: context)
@@ -45,7 +45,7 @@ import Testing
         try context.save()
 
         let all = try context.fetch(FetchDescriptor<TaskItem>())
-        #expect(ViewRules.tasks(for: .new, in: all).map(\.rawText) == ["Zweite", "Erste"])
+        #expect(Set(ViewRules.tasks(for: .open, in: all).map(\.rawText)) == ["Zweite", "Erste"])
     }
 
     // MARK: - Attachments (#399)

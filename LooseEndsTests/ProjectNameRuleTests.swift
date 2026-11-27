@@ -52,7 +52,6 @@ import Testing
         #expect(task.hasUnseenAutomaticRevisions)
         #expect(try GuessedProjects.release(in: store.context) == 0)
         #expect(!task.hasUnseenAutomaticRevisions)
-        #expect(!ViewRules.isInNew(task))
     }
 
     @Test("The rule step sets the project named in the note, with the rule as its origin")

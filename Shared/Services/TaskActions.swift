@@ -86,19 +86,6 @@ enum TaskActions {
         }
     }
 
-    /// "Looks right" from the detail (#318): the user vouches for the task as it stands, title
-    /// included, so it leaves New. Opening alone only marks the AI's changes as seen; an unchecked
-    /// or not yet sorted title kept the task in New until the title was edited. Without a title
-    /// there is nothing to vouch for, so the status stays. A task confirmed before its model step
-    /// still gets that one run: `EnrichmentCoordinator` also picks up active tasks without
-    /// `processedAt` (Henning, 2026-10-11).
-    static func confirmReview(_ task: TaskItem, now: Date = Date()) {
-        _ = RevisionService.markSeen(task, now: now)
-        if task.status == .unprocessed || task.status == .unverified, task.title != nil {
-            task.status = .active
-        }
-    }
-
     /// Parking takes the Knäuel mark (#643): a parked task is not the one being avoided today.
     static func park(_ task: TaskItem, now: Date = Date()) {
         task.status = .parked

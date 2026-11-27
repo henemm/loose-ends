@@ -118,13 +118,11 @@ import Testing
         #expect(!RevisionService.automaticFields(on: task).contains(.title))
     }
 
-    @Test("Marking seen clears the marker and takes an active task out of New")
+    @Test("Marking seen clears the marker")
     @MainActor func markSeen() async throws {
         let store = try TestStore()
         let (task, _, _) = try enrichedTask(in: store)
         #expect(task.hasUnseenAutomaticRevisions)
-        let before = try store.context.fetch(FetchDescriptor<TaskItem>())
-        #expect(ViewRules.tasks(for: .new, in: before).map(\.id) == [task.id])
 
         let marked = RevisionService.markSeen(task)
         try store.context.save()
@@ -132,8 +130,6 @@ import Testing
         #expect(marked == 4)
         #expect(!task.hasUnseenAutomaticRevisions)
         #expect(RevisionService.markSeen(task) == 0, "second pass finds nothing")
-        let after = try store.context.fetch(FetchDescriptor<TaskItem>())
-        #expect(ViewRules.tasks(for: .new, in: after).isEmpty)
     }
 
     @Test("Project resets match by name; an unknown name leaves the project empty")

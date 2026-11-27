@@ -78,7 +78,7 @@ import Testing
         #expect(ViewRules.tasks(inContext: phone, in: all).map(\.id) == [tagged.id])
     }
 
-    @Test("New and Old keep to top-level tasks, whatever a subtask carries")
+    @Test("Old keeps to top-level tasks, whatever a subtask carries")
     @MainActor func topLevelViewsStay() async throws {
         let store = try TestStore()
         let parent = Self.task("Umzug", in: store)
@@ -87,7 +87,7 @@ import Testing
         sub.status = .unverified
         let all = [parent, sub]
 
-        for kind in [ViewKind.new, .old] {
+        for kind in [ViewKind.old] {
             #expect(!ViewRules.tasks(for: kind, in: all, now: Self.now, calendar: Self.calendar).contains { $0.id == sub.id },
                     "\(kind) should keep to top-level tasks")
         }
