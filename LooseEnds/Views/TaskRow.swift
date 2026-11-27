@@ -3,7 +3,7 @@ import SwiftUI
 
 /// One row (design briefing, screen 3): the title, or the raw text while nothing better exists,
 /// then one line of at most three traits. High importance and urgency are black glyphs at the
-/// start of that line. Traits the AI set are accent-tinted until seen; an AI title carries the spark.
+/// start of that line. Every trait is grey, whoever set it (ADR-22).
 /// Never taller than title plus one trait line.
 struct TaskRow: View {
     let task: TaskItem
@@ -54,8 +54,8 @@ struct TaskRow: View {
         .accessibilityIdentifier("\(identifierPrefix)\(task.id.uuidString)")
     }
 
-    /// Like a diary (#424): the time at the left edge, red only for time pressure, accent while the
-    /// AI's date is unseen. Empty without a date or duration, but always the same width. A deadline
+    /// Like a diary (#424): the time at the left edge, red only for time pressure, else grey.
+    /// Empty without a date or duration, but always the same width. A deadline
     /// that passed is no deadline (#548): then the margin is the "New date" button over its grey trace.
     @ViewBuilder
     private var margin: some View {
@@ -71,9 +71,7 @@ struct TaskRow: View {
         } else if let onNewDate, let trace = newDateTrace(mark) {
             newDateButton(trace, action: onNewDate)
         } else {
-            let unseenAI = task.hasUnseenAutomaticRevisions
-                && FieldSource.isAutomatic(task.dueDate == nil ? task.durationSourceRaw : task.dueSourceRaw)
-            let style: AnyShapeStyle = mark.pressing ? AnyShapeStyle(.red) : unseenAI ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary)
+            let style: AnyShapeStyle = mark.pressing ? AnyShapeStyle(.red) : AnyShapeStyle(.secondary)
             Text(mark.text)
                 .font(startMetrics?.margin ?? .caption.monospacedDigit())
                 .multilineTextAlignment(.trailing)
@@ -148,13 +146,6 @@ struct TaskRow: View {
                     .italic(task.title == nil || task.status == .unverified)
                     // Two lines before the "…": one cut "Termin beim Hautarzt für O…" (Henning, 2026-10-15, #433).
                     .lineLimit(2)
-                if task.hasUnseenAutomaticRevisions, task.titleSourceRaw == FieldSource.ai.rawValue {
-                    Image(systemName: "sparkle")
-                        .imageScale(.small)
-                        .foregroundStyle(.tint)
-                        .accessibilityLabel("Changed by AI")
-                        .accessibilityIdentifier("aiMarker_\(task.id.uuidString)")
-                }
             }
             if task.importance == .high || task.urgency == .high || !traits.isEmpty {
                 HStack(spacing: 8) {
@@ -191,7 +182,7 @@ struct TaskRow: View {
                                 }
                                 Text(trait.text)
                             }
-                            .foregroundStyle(trait.style)
+                            .foregroundStyle(.secondary)
                         }
                     }
                 }
@@ -217,19 +208,12 @@ struct TaskRow: View {
         let id: String
         let text: String
         var symbol: String?
-        var tinted = false
-
-        var style: AnyShapeStyle {
-            if tinted { return AnyShapeStyle(.tint) }
-            return AnyShapeStyle(.secondary)
-        }
     }
 
     /// Ranked: the bead, waiting, place, duration, subtasks, tag; the date moved to the margin (#424).
     /// The first three win. A tag carries its symbol, as in the detail and on the start screen (#420).
     /// The bead stands first (#645): a task that counts says so before anything else.
     private var traits: [Trait] {
-        let unseen = task.hasUnseenAutomaticRevisions
         var all: [Trait] = []
         // Open or done (#646): "Completed" shows what counted, the Knäuel among it.
         if task.isOpen || task.status == .done {
@@ -247,14 +231,14 @@ struct TaskRow: View {
         }
         // Without a date the margin shows the duration (#424); with one, the duration stays a trait.
         if let duration = task.duration, task.dueDate != nil {
-            all.append(Trait(id: "duration", text: FieldFormatting.duration(duration), symbol: "clock", tinted: unseen && FieldSource.isAutomatic(task.durationSourceRaw)))
+            all.append(Trait(id: "duration", text: FieldFormatting.duration(duration), symbol: "clock"))
         }
         let progress = Subtasks.progress(of: task)
         if progress.total > 0 {
             all.append(Trait(id: "subtasks", text: "\(progress.done)/\(progress.total)", symbol: "checklist"))
         }
         if !hidesContext, let context = (task.contexts ?? []).sorted(by: { $0.sortOrder < $1.sortOrder }).first {
-            all.append(Trait(id: "context", text: context.name, symbol: ViewKind.context.symbol, tinted: unseen && FieldSource.isAutomatic(task.contextsSourceRaw)))
+            all.append(Trait(id: "context", text: context.name, symbol: ViewKind.context.symbol))
         }
         return Array(all.prefix(3))
     }

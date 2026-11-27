@@ -72,7 +72,7 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
 - **One number, everywhere** (Henning, 2026-10-23, #637). The number on the app icon is the number over "Now" and on "Start",
   the same on iPhone, iPad and Mac, and nobody has to add. One source (`ViewRules.now`), no place computes it again; a test
   holds the icon number equal to the rows of "Now".
-- **Color budget.** Accent = tappable (incl. AI tint), red = time pressure, grey = hierarchy, green = the completion moment.
+- **Color budget.** Accent = tappable (the AI tint is gone since #1000 S3b), red = time pressure, grey = hierarchy, green = the completion moment.
 - **The app never proposes the Knäuel or a bead** (Henning, 2026-10-26, #648 dropped): no row, no preselected menu
   entry, no notification suggests a task as the Knäuel or as a bead. Both are set by the user alone.
 - **The service is open to every Apple account, with a daily cap on new accounts** (Henning, 2026-11-22, #625): existing
@@ -97,7 +97,7 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
   #1000 S1 is done (2026-11-26): the start page head "New · N to look over" and the "New" entry in the index and sidebar
   are gone (`ViewRules.dailyViews = [.next, .due]`); #1000 S2 is done (2026-11-26):
   no "Looks right" in the detail's bar, swipe or menu, no `ReviewNote`, no "Needs a look" section; opening the detail always marks
-  seen. #1000 S3a is done (2026-11-27): `isInNew`, `needsLook`, `canConfirm`, `reviewReason`, `ViewKind.new` and `TaskActions.confirmReview` are gone; the tint and the catalog keys follow in S3b. Until #1000/#1001 land, the paragraph below describes the rest as it still is.
+  seen. #1000 S3a is done (2026-11-27): `isInNew`, `needsLook`, `canConfirm`, `reviewReason`, `ViewKind.new` and `TaskActions.confirmReview` are gone; #1000 S3b is done (2026-11-27): no unseen tint or spark in the rows, `Paper.wideNoteInsets` and the nine catalog keys of "New" are gone; #1000 is complete. Until #1001 lands, the paragraph below describes the rest as it still is.
 - **Rules before the model** (Henning, 2026-09-20). Every derived field is first attempted with rules,
   regex, calendar, contacts or a word list. The on-device model only gets what needs language
   understanding (refining the title: since #202 `TitleRule` sets it at capture from the cleaned raw
