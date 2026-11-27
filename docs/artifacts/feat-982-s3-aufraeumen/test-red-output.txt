@@ -1,0 +1,70 @@
+FFF.F.
+======================================================================
+FAIL: test_app_code_has_no_model_title_checks (__main__.ModellRestEntferntTests.test_app_code_has_no_model_title_checks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/curried-inventing-pancake/scripts/test_modell_rest_entfernt.py", line 58, in test_app_code_has_no_model_title_checks
+    self.assertEqual(hits, [], "Titelprüfungen für Modelltitel noch im App-Code")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['Shared/Enrichment/EnrichmentWriter.swift', 'Shared/Services/TitleRule.swift'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'Shared/Enrichment/EnrichmentWriter.swift'
+
+- ['Shared/Enrichment/EnrichmentWriter.swift', 'Shared/Services/TitleRule.swift']
++ [] : Titelprüfungen für Modelltitel noch im App-Code
+
+======================================================================
+FAIL: test_catalog_drops_dead_keys_and_keeps_old_value_labels (__main__.ModellRestEntferntTests.test_catalog_drops_dead_keys_and_keeps_old_value_labels)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/curried-inventing-pancake/scripts/test_modell_rest_entfernt.py", line 67, in test_catalog_drops_dead_keys_and_keeps_old_value_labels
+    self.assertEqual([key for key in REMOVED_KEYS if key in keys], [], "tote Schlüssel stehen noch im Katalog")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['That happens by itself once Apple Intell[64 chars]es.'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'That happens by itself once Apple Intelligence is ready.'
+
++ []
+- ['That happens by itself once Apple Intelligence is ready.',
+-  'Apple Intelligence did not run, only the rules.'] : tote Schlüssel stehen noch im Katalog
+
+======================================================================
+FAIL: test_deadline_and_failure_files_are_gone (__main__.ModellRestEntferntTests.test_deadline_and_failure_files_are_gone)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/curried-inventing-pancake/scripts/test_modell_rest_entfernt.py", line 46, in test_deadline_and_failure_files_are_gone
+    self.assertEqual(left, [], "Modell-Hilfsdateien gibt es noch")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['Shared/Enrichment/ModelDeadline.swift', [34 chars]ift'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'Shared/Enrichment/ModelDeadline.swift'
+
++ []
+- ['Shared/Enrichment/ModelDeadline.swift',
+-  'Shared/Enrichment/ModelFailure.swift'] : Modell-Hilfsdateien gibt es noch
+
+======================================================================
+FAIL: test_no_code_names_the_removed_helpers (__main__.ModellRestEntferntTests.test_no_code_names_the_removed_helpers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/curried-inventing-pancake/scripts/test_modell_rest_entfernt.py", line 53, in test_no_code_names_the_removed_helpers
+    self.assertEqual(hits, [], "Modellrest noch im Code")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['Shared/Enrichment/EnrichmentCoordinator.[670 chars]ly('] != []
+
+First list contains 12 additional elements.
+First extra element 0:
+'Shared/Enrichment/EnrichmentCoordinator.swift: exampleLimit'
+
+Diff is 758 characters long. Set self.maxDiff to None to see it. : Modellrest noch im Code
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.086s
+
+FAILED (failures=4)

@@ -13,11 +13,25 @@ import Testing
         let task = TaskItem(rawText: "Rasenmäher Ölwechsel am Samstag")
         context.insert(task)
         let saturday = try #require(Calendar.current.date(from: DateComponents(year: 2026, month: 9, day: 19)))
-        var draft = EnrichmentDraft()
-        draft.title = EnrichmentDraft.Guess("Rasenmäher: Ölwechsel", confidence: 0.9, reason: "Names the job.")
-        draft.dueDate = EnrichmentDraft.Guess(saturday, confidence: 0.8, reason: "Saturday.")
-        draft.duration = EnrichmentDraft.Guess(.minutes30, confidence: 0.7, reason: "Maintenance.")
-        EnrichmentWriter.apply(draft, to: task, contexts: [garden], projects: [])
+        // The AI values as the model wrote them until #982: value, marker, confidence and one AI revision each.
+        let ai = FieldSource.ai.rawValue
+        task.revisions = [
+            Revision(task: task, field: .title, oldValue: nil, newValue: "Rasenmäher: Ölwechsel", author: .ai, reason: "Names the job."),
+            Revision(task: task, field: .dueDate, oldValue: nil, newValue: saturday.ISO8601Format(), author: .ai, reason: "Saturday."),
+            Revision(task: task, field: .duration, oldValue: nil, newValue: DurationBucket.minutes30.rawValue, author: .ai,
+                     reason: "Maintenance."),
+        ]
+        task.title = "Rasenmäher: Ölwechsel"
+        task.titleSourceRaw = ai
+        task.titleConfidence = 0.9
+        task.dueDate = saturday
+        task.dueHasTime = false
+        task.dueSourceRaw = ai
+        task.dueConfidence = 0.8
+        task.duration = .minutes30
+        task.durationSourceRaw = ai
+        task.durationConfidence = 0.7
+        task.status = .active
         // Contexts from the model as written before #215: old data keeps them, and they still reset.
         let legacyContexts = Revision(task: task, field: .contexts, oldValue: EnrichmentWriter.encode([]),
                                       newValue: EnrichmentWriter.encode(["Garten"]), author: .ai, reason: "Garden tool.")

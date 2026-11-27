@@ -6,18 +6,6 @@ import Testing
 /// "Analyze again" in the detail (#34): the second run ADR-4 allows on the user's request. Since #982 (ADR-22) it
 /// runs the rules only; old AI values stay unless a rule finds a different value for a field the user never touched.
 @Suite("Re-analysis") struct ReanalysisTests {
-    private func draft(
-        title: String? = nil,
-        duration: DurationBucket? = nil,
-        contexts: [String]? = nil
-    ) -> EnrichmentDraft {
-        var draft = EnrichmentDraft()
-        draft.title = title.map { EnrichmentDraft.Guess($0, confidence: 0.9, reason: "Stub.") }
-        draft.duration = duration.map { EnrichmentDraft.Guess($0, confidence: 0.9, reason: "Stub.") }
-        draft.contexts = contexts.map { EnrichmentDraft.Guess($0, confidence: 0.9, reason: "Stub.") }
-        return draft
-    }
-
     private func revisions(of field: RevisedField, on task: TaskItem) -> [Revision] {
         (task.revisions ?? []).filter { $0.field == field }.sorted { $0.createdAt < $1.createdAt }
     }
@@ -157,20 +145,5 @@ import Testing
         #expect(result == .finished(changed: 0))
         #expect(task.duration == .hour1)
         #expect(revisions(of: .duration, on: task).count == before)
-    }
-
-    @Test("The first run is unchanged: the model still only fills an empty duration")
-    @MainActor func firstRunStillGuardsDuration() async throws {
-        let store = try TestStore()
-        let task = TaskItem(rawText: "Zettel sortieren")
-        task.duration = .hour1
-        task.durationSourceRaw = FieldSource.ai.rawValue
-        store.context.insert(task)
-        try store.context.save()
-
-        let written = EnrichmentWriter.apply(draft(duration: .minutes5), to: task, contexts: [], projects: [])
-
-        #expect(written == 0)
-        #expect(task.duration == .hour1)
     }
 }
