@@ -47,9 +47,10 @@ Say it. Clear your head. Task capture with on-device Apple Intelligence for iPho
   Fälle selbst herbeiführen (gezielte Wiederholungsläufe, Nachstellen), dann sofort weiter; kein Stichtag als Plan.
 - **Präferenzen landen im Repo:** äußert Henning eine dauerhafte Vorgabe, steht sie in derselben Antwort hier oder in
   der Doku, nicht nur im lokalen Gedächtnis (Cloud-Sitzungen sehen nur das Repo).
-- **Jede Übergabe löst herdr aus** (Henning, 2026-11-17): Stand auf der Platte, dann `workflow.py autoclear` (setzt die
-  Grenze auch mitten in einer Phase), der Positiv-Block mit „`/clear` ist jetzt gefahrlos“ (nie der Negativ-Block) und als
-  Du-Zeile genau `❗ Du: `/<befehl> #N` — …` mit dem Pflicht-Befehl, nie „`/clear`, dann …“.
+- **Übergaben ohne herdr-Automatik** (Stand 2026-11-27, agent-os-openspec #662/#663): herdr zeigt nur an und
+  startet Sitzungen, es tippt kein `/clear` mehr. `workflow.py autoclear`, Grenz-Vermerk und Positiv-/Negativ-Block
+  entfallen. Im Auto-Modus setzt die Sitzung die Kette an Phasengrenzen selbst fort (die Kontext-Schwelle ist dort kein
+  Halt); sonst endet die Antwort mit der Zeile aus `workflow.py endstate`. Ersetzt die Regel vom 2026-11-17.
 
 ## Ground rules (from docs/project/00-entscheidungen.md)
 
