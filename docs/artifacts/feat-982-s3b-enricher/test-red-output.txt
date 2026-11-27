@@ -1,0 +1,78 @@
+FFFF.FF......
+======================================================================
+FAIL: test_app_excludes_the_adapter_in_release_only (__main__.AdapterNichtImReleaseTests.test_app_excludes_the_adapter_in_release_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/curried-inventing-pancake/scripts/test_modell_rest_entfernt.py", line 131, in test_app_excludes_the_adapter_in_release_only
+    self.assertIn("FoundationModelsEnricher.swift", str(release.get("EXCLUDED_SOURCE_FILE_NAMES", "")),
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  "Release der App schließt den Adapter nicht aus")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'FoundationModelsEnricher.swift' not found in '' : Release der App schließt den Adapter nicht aus
+
+======================================================================
+FAIL: test_archive_jobs_refuse_the_adapter (__main__.AdapterNichtImReleaseTests.test_archive_jobs_refuse_the_adapter)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/curried-inventing-pancake/scripts/test_modell_rest_entfernt.py", line 151, in test_archive_jobs_refuse_the_adapter
+    self.assertTrue(checks, f"{job}: keine Archivprüfung auf den Modelladapter")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : upload: keine Archivprüfung auf den Modelladapter
+
+======================================================================
+FAIL: test_ci_drops_the_model_diagnosis (__main__.AdapterNichtImReleaseTests.test_ci_drops_the_model_diagnosis)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/curried-inventing-pancake/scripts/test_modell_rest_entfernt.py", line 144, in test_ci_drops_the_model_diagnosis
+    self.assertFalse("Diagnose model availability" in ci, "toter CI-Schritt zur Modellverfügbarkeit steht noch")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false : toter CI-Schritt zur Modellverfügbarkeit steht noch
+
+======================================================================
+FAIL: test_extensions_and_watch_exclude_the_adapter (__main__.AdapterNichtImReleaseTests.test_extensions_and_watch_exclude_the_adapter)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/curried-inventing-pancake/scripts/test_modell_rest_entfernt.py", line 122, in test_extensions_and_watch_exclude_the_adapter
+    self.assertEqual(missing, [], "Targets ohne Ausschluss des Adapters")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['LooseEndsWidgets', 'LooseEndsShare', 'LooseEndsWatch'] != []
+
+First list contains 3 additional elements.
+First extra element 0:
+'LooseEndsWidgets'
+
+- ['LooseEndsWidgets', 'LooseEndsShare', 'LooseEndsWatch']
++ [] : Targets ohne Ausschluss des Adapters
+
+======================================================================
+FAIL: test_moved_types_live_beside_the_adapter_outside_the_guard (__main__.AdapterNichtImReleaseTests.test_moved_types_live_beside_the_adapter_outside_the_guard)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/curried-inventing-pancake/scripts/test_modell_rest_entfernt.py", line 111, in test_moved_types_live_beside_the_adapter_outside_the_guard
+    self.assertEqual([t for t in MOVED_TYPES if t in draft], [], "Modelltypen stehen noch in EnrichmentDraft.swift")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['struct EnrichmentInput', 'struct Enrichm[58 chars]ing'] != []
+
+First list contains 4 additional elements.
+First extra element 0:
+'struct EnrichmentInput'
+
++ []
+- ['struct EnrichmentInput',
+-  'struct EnrichmentExample',
+-  'protocol TaskEnricher',
+-  'enum EnrichmentParsing'] : Modelltypen stehen noch in EnrichmentDraft.swift
+
+======================================================================
+FAIL: test_stale_measurement_comment_is_gone (__main__.AdapterNichtImReleaseTests.test_stale_measurement_comment_is_gone)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/curried-inventing-pancake/scripts/test_modell_rest_entfernt.py", line 157, in test_stale_measurement_comment_is_gone
+    self.assertFalse(STALE_COMMENT in draft, "Kommentar verweist auf eine Stelle, die es nicht gibt")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false : Kommentar verweist auf eine Stelle, die es nicht gibt
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.104s
+
+FAILED (failures=6)
