@@ -110,11 +110,10 @@ Eine Liste. Jede Zeile:
 - Wichtigkeit und Dringlichkeit erscheinen in der Zeile nur, wenn hoch: als schwarze SF Symbols (Wichtigkeit `exclamationmark.3`, Dringlichkeit `flame`) am Anfang der Merkmalzeile, ohne Text, ohne Farbe, nie als Emoji (Henning, 2026-10-24, #344, ersetzt Fahne und Blitz). Im Detail als Wörter (Niedrig, Mittel, Hoch), das Zeichen grau hinter dem Wert: Wichtigkeit als Ausrufezeichen-Leiter nach Stufe (`exclamationmark`, `.2`, `.3`), Dringlichkeit `flame`, ebenso Fällig `calendar`, Dauer `clock`, Projekt `folder`. Beide bestimmen außerdem die Sortierung.
 - **Randspalte (Henning, 2026-10-15, #424):** Links am Rand steht die eine Zeit, die zählt, wie im Tagebuch: Uhrzeit oder „Heute“ (rot), „Gestern“/„Vor N Tagen“ bei verpasster Uhrzeit (rot), „Seit gestern“ (grau, #414), „Morgen“, Wochentag, Datum, ohne Fälligkeit die Dauer. Kein Kreis vor der Aufgabe; Unteraufgaben ohne Kreis, erledigt mit feinem grauem Haken. Das Datum fällt aus der Merkmalzeile.
 - Höchstens drei kleine Merkmale, Rangfolge: Zustand (wartet), Fälligkeit, Dauer, Kontext, Person. In einer Kontext-Ansicht entfällt der Kontext. Der Rest ist im Detail. Eine Zeile ist nie höher als Titel plus eine Merkmalzeile, auch wenn alle Attribute gepflegt sind.
-- KI-Marker (Variante C): Merkmale, die die KI gesetzt hat, sind akzentgetönt, bis der Nutzer sie gesehen hat. Ein geänderter Titel trägt zusätzlich den Funken.
+- ~~KI-Marker (Variante C)~~ entfällt seit #1000 Schnitt 3b (2026-11-27, ADR-22, Entwurf A): Merkmale, die eine Regel gesetzt hat, stehen grau wie jedes andere, die Zeit am Rand grau oder rot bei Zeitdruck; kein Funke am Titel. Akzent in der Zeile nur am Knopf „Neues Datum“.
 - Blockiert-Zeichen, wenn eine andere Aufgabe vorher erledigt werden muss.
 - Wisch rechts: Erledigt. Wisch links: Zu "Als nächstes" oder daraus entfernen. In "Alt": Wisch links parkt.
-  In "Neu" (dem Eingang) heißt Wisch rechts „Passt“ mit dem Daumen (`hand.thumbsup`; der Haken gehört allein dem Erledigen, #349) und bestätigt nur, was die KI sortiert hat; Erledigt
-  gibt es dort nur im Halten-Menü, und „Muss angesehen werden“ hat keinen Wisch (Henning, 2026-10-11, #318).
+  Die Ansicht „Neu“ mit dem Wisch „Passt“ (#318) entfiel mit #1000 (ADR-22).
 - Halten: Vorschau plus Menü mit Als nächstes, Erledigt, Verschieben (Morgen, Wochenende, nächste Woche, Datum), Parken, Löschen.
 - Nur "Als nächstes" ist manuell sortierbar (Drag). Alle anderen Ansichten haben feste Sortierung.
 - Leerzustand je Ansicht in einem Satz, ohne Illustration.
@@ -134,7 +133,7 @@ Eine Liste. Jede Zeile:
   an und behält den Fokus, „Hinzufügen“ erscheint erst mit Text. Im Detail der Zeile oben „Teil von <Aufgabe>“. Erledigen
   mit offenen Zeilen fragt „Alle erledigen“ oder „Offene behalten“.
 - Bereich "Quelle": Link zurück zur Mail, wenn vorhanden.
-- Tipp auf ein getöntes Merkmal: Popover mit Vorher, Nachher, Begründung, „Zurücksetzen“ (Wert vor der KI) und „Ändern“ (Picker). Beides ist eine Korrektur.
+- Tipp auf ein Merkmal, das eine Regel gesetzt hat: Vorher, Nachher, Begründung, „Zurücksetzen“ (Wert vor der Regel) und „Ändern“ (Picker). Beides ist eine Korrektur. (Getönt ist es seit #1000 S3b nicht mehr.)
 - „Anzeigen“ neben „n Felder von der KI gesetzt“ öffnet das Änderungen-Sheet (Screen 5) mit allen Einträgen und „Alle zurücksetzen“.
 - Menü hinter „…“: Änderungen anzeigen, Neu analysieren, Als nächstes, Parken, Löschen (rot, mit Rückfrage, nicht rückgängig). „Neu analysieren“ ist die einzige zweite Verarbeitung und deshalb versteckt.
 

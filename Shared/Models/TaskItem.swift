@@ -179,8 +179,8 @@ extension TaskItem {
         (blockedBy ?? []).contains { $0.isOpen } || (parent?.isBlocked ?? false)
     }
 
-    /// Unseen revisions by the model or a rule drive the marker in the list (Variante C, #101).
-    /// A retired field's old revision (people, #301) keeps no task in New.
+    /// Unseen revisions by a rule feed the change list and the detail's seen mark (#101).
+    /// A retired field's old revision (people, #301) does not count.
     var hasUnseenAutomaticRevisions: Bool {
         (revisions ?? []).contains { $0.author.isAutomatic && $0.seenAt == nil && $0.field != .people }
     }

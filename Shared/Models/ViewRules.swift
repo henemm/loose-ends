@@ -331,7 +331,7 @@ enum ViewRules {
         let topLevel = all.filter { $0.parent == nil }
         // What a subtask carries of its own is the entry to these views (#565, Henning 2026-10-27: lined
         // up as next, it did not stand in "Now"): a rank, a duration, a repeat, a park. Only the views
-        // that ask for nothing of the task itself (New, Old, Waiting) stay top level. Done lists a checked line
+        // that ask for nothing of the task itself (Old, Waiting) stay top level. Done lists a checked line
         // that carried something of its own: it stood in a list before, so it stands in "Done" after.
         switch kind {
         case .next:

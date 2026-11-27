@@ -1,0 +1,22 @@
+# Simulator-Beleg
+erzeugt: 2026-11-27T08:44:33+0100
+befehl: scripts/sim.sh test-proof InboxDrawerSmokeTests
+workflow: feat-1000-s3b-toenung
+head: 44e80ac257cec631c7f76552d0934ac045a8001a
+basis: 2324460753146d5acc6713838f31ec4a126d15c3 (merge-base origin/main HEAD)
+testklasse: InboxDrawerSmokeTests
+ergebnis: Passed
+xcodebuild: ** TEST SUCCEEDED **
+tests: 3 gesamt, 3 bestanden, 0 fehlgeschlagen, 0 übersprungen
+start: 1795765406.851  ende: 1795765472.987
+geraet: iPhone 17, iOS 27.2
+summary: docs/artifacts/feat-1000-s3b-toenung/simulator-run/summary.json  sha256:1d150258133aeb7cc87d54cca0d82a3b7af84791448770035fb28ba85158b81c
+xcresult: docs/artifacts/feat-1000-s3b-toenung/simulator-run/run.xcresult  (gitignored)
+screenshots: docs/artifacts/feat-1000-s3b-toenung/simulator-run/*.png (8 Stück)
+
+## Geprüfte Dateien
+- sha256:a140bde091390df0d4cbd1aef5f3d962cff36a4d4934993cf95f531deccfa1b6  LooseEnds/Views/Paper.swift
+- sha256:700cd8d9e5fbab48ec74681a2590687b43e33efa9369c8d922f3d30efa2fda00  LooseEnds/Views/TaskRow.swift
+- sha256:40a649f11284a4ae5f346f5b91e41c516ae353a876a7dabc862d401240452ba7  LooseEndsTests/CatalogWithoutNewTests.swift
+- sha256:81f72c4aa7cc2ff68501788ea1b96cb1857d35f65ef08263fc32d81468bd4e14  Shared/Models/TaskItem.swift
+- sha256:08ca0400fb91d93b8a8b0b362eab71a52c76422ca669999c4a340ce58819c973  Shared/Models/ViewRules.swift
