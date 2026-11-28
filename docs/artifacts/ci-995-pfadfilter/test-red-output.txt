@@ -1,0 +1,40 @@
+AssertionError: 2 != 1 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/curried-inventing-pancake/scripts/run_script_tests.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_red_module_fails_the_run_and_is_named (test_run_script_tests.RunnerTests.test_red_module_fails_the_run_and_is_named)
+AC-2: Exit 1, volle Ausgabe des roten Moduls, Schlusszeile nennt nur es.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/curried-inventing-pancake/scripts/test_run_script_tests.py", line 55, in test_red_module_fails_the_run_and_is_named
+    self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : /opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/hem/Developer/loose-ends/.claude/worktrees/curried-inventing-pancake/scripts/run_script_tests.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_every_job_runs_on_xcode_27_with_the_action (test_ci_xcode27.Workflows.test_every_job_runs_on_xcode_27_with_the_action)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/curried-inventing-pancake/scripts/test_ci_xcode27.py", line 100, in test_every_job_runs_on_xcode_27_with_the_action
+    self.assertEqual(job["runs-on"], "ubuntu-latest", f"{name}:{key}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'xcode-27' != 'ubuntu-latest'
+- xcode-27
++ ubuntu-latest
+ : ci.yml:ui-smoke
+
+======================================================================
+FAIL: test_unit_job_runs_every_script_test (test_ci_xcode27.Workflows.test_unit_job_runs_every_script_test)
+#185: every scripts/test_*.py runs in CI, in one step, before Xcode.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/hem/Developer/loose-ends/.claude/worktrees/curried-inventing-pancake/scripts/test_ci_xcode27.py", line 131, in test_unit_job_runs_every_script_test
+    self.assertIn('"$RUNNER_TEMP/script-tests/bin/python" scripts/run_script_tests.py', step["run"])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '"$RUNNER_TEMP/script-tests/bin/python" scripts/run_script_tests.py' not found in 'python3 -m venv "$RUNNER_TEMP/script-tests"\n"$RUNNER_TEMP/script-tests/bin/pip" install --quiet \'pyyaml~=6.0\' \'pillow~=12.0\'\n"$RUNNER_TEMP/script-tests/bin/python" -m unittest discover -s scripts -p \'test_*.py\' -v\n'
+
+----------------------------------------------------------------------
+Ran 47 tests in 2.661s
+
+FAILED (failures=6, errors=2)

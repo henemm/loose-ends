@@ -281,7 +281,9 @@ Wahl ist.
 
 CI runs on GitHub's preview label `xcode-27` with Xcode 27.0 pinned: every job uses the composite action
 `.github/actions/select-xcode-27`, which selects `/Applications/Xcode_27.app` and stops the run if it
-reports any other version. The deployment target stays at 27.0, nothing in `project.yml` is changed, and
+reports any other version. Exceptions (#995): `changes`, `ui-smoke` and `languages` need no Xcode and run on `ubuntu-latest`.
+The step „Script tests“ runs every `scripts/test_*.py` module in its own process, in parallel, through `scripts/run_script_tests.py`
+(workers `SCRIPT_TESTS_WORKERS`, else 4–8 by cores; limit per module `SCRIPT_TESTS_TIMEOUT`, 600 s). The deployment target stays at 27.0, nothing in `project.yml` is changed, and
 UI Smoke and Speech Stress run only on an iPhone 17 simulator with iOS 27.0 (otherwise the step stops).
 UI Smoke runs as a matrix of six parts (#910, #939): `ui-smoke-plan` splits the classes of `LooseEndsUITests` (not `Watch/`) with
 `scripts/ui_smoke_shards.py` (weight = number of tests, the two photo classes 4 and never in one part, Mac classes 0, greedy,

@@ -52,7 +52,7 @@ jobs:
         run: |
           python3 -m venv "$RUNNER_TEMP/script-tests"
           "$RUNNER_TEMP/script-tests/bin/pip" install --quiet 'pyyaml~=6.0' 'pillow~=12.0'
-          "$RUNNER_TEMP/script-tests/bin/python" -m unittest discover -s scripts -p 'test_*.py' -v
+          "$RUNNER_TEMP/script-tests/bin/python" scripts/run_script_tests.py
       - name: Install XcodeGen
         if: needs.changes.outputs.app == 'true'
         run: brew install xcodegen
@@ -388,12 +388,10 @@ jobs:
     name: UI Smoke (iOS Simulator)
     needs: [changes, ui-smoke-shard]
     if: always()
-    runs-on: xcode-27
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
-      - name: Select Xcode 27.0
-        uses: ./.github/actions/select-xcode-27
       - name: All parts green
         env:
           RESULT: ${{ needs.ui-smoke-shard.result }}
@@ -412,13 +410,11 @@ jobs:
   # #761: the shipped languages, read from the code (`LanguagePacks.shipped`), as the matrix of `ui-smoke-lang`.
   languages:
     name: Shipped languages
-    runs-on: xcode-27
+    runs-on: ubuntu-latest
     outputs:
       list: ${{ steps.read.outputs.list }}
     steps:
       - uses: actions/checkout@v7
-      - name: Select Xcode 27.0
-        uses: ./.github/actions/select-xcode-27
       - id: read
         run: echo "list=$(python3 scripts/shipped_languages.py)" >> "$GITHUB_OUTPUT"
 

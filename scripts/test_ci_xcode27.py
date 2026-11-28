@@ -21,6 +21,8 @@ ACTION = GITHUB / "actions" / "select-xcode-27" / "action.yml"
 CI = GITHUB / "workflows" / "ci.yml"
 STRESS = GITHUB / "workflows" / "speech-stress.yml"
 ACTION_REF = "./.github/actions/select-xcode-27"
+# #995: jobs that need no Xcode (diff decision, smoke summary, language list) run on Linux and hold no macOS runner.
+NO_XCODE_JOBS = ("changes", "ui-smoke", "languages")
 RUNTIME_27 = "com.apple.CoreSimulator.SimRuntime.iOS-27-0"
 RUNTIME_26 = "com.apple.CoreSimulator.SimRuntime.iOS-26-0"
 # #767: the archive checks read MARKETING_VERSION from project.yml; these two lines only read, never write.
@@ -94,8 +96,9 @@ class SelectXcodeAction(unittest.TestCase):
 class Workflows(unittest.TestCase):
     def test_every_job_runs_on_xcode_27_with_the_action(self):
         for name, key, job in jobs():
-            if (name, key) == ("ci.yml", "changes"):
-                continue  # #995: only reads the diff with git and Python, no Xcode
+            if name == "ci.yml" and key in NO_XCODE_JOBS:
+                self.assertEqual(job["runs-on"], "ubuntu-latest", f"{name}:{key}")
+                continue
             self.assertEqual(job["runs-on"], "xcode-27", f"{name}:{key}")
             uses = [s.get("uses") for s in job["steps"]]
             self.assertIn(ACTION_REF, uses, f"{name}:{key}")
@@ -124,13 +127,16 @@ class Workflows(unittest.TestCase):
         """#185: every scripts/test_*.py runs in CI, in one step, before Xcode."""
         steps = load(CI)["jobs"]["unit-tests"]["steps"]
         step = step_named(load(CI)["jobs"]["unit-tests"], "Script tests")
-        self.assertIn("unittest discover -s scripts -p 'test_*.py'", step["run"])
+        # #995: the parallel runner instead of a serial `unittest discover`, with the venv's Python.
+        self.assertIn('"$RUNNER_TEMP/script-tests/bin/python" scripts/run_script_tests.py', step["run"])
+        self.assertNotIn("unittest discover", step["run"])
         names = [s.get("name") for s in steps]
         self.assertLess(names.index("Script tests"), names.index("Build and test"))
 
     def test_check_names_unchanged(self):
         names = {job["name"] for _, _, job in jobs()}
-        for expected in ("Unit Tests (macOS destination)", "Build (iOS Simulator)", "UI Smoke (iOS Simulator)"):
+        for expected in ("Unit Tests (macOS destination)", "Build (iOS Simulator)", "UI Smoke (iOS Simulator)",
+                         "Shipped languages", "UI iPad (iOS Simulator)", "Mac Gallery (macOS)"):
             self.assertIn(expected, names)
 
     def test_ui_smoke_has_a_diagnosis_step_that_never_fails(self):
