@@ -1,0 +1,130 @@
+# #995 GREEN, 2026-11-28T07:01:20Z, 64ec79d+working tree
+$ python3 scripts/run_script_tests.py
+ok   test_asc_store_images 0.3 s, 38 Tests
+ok   test_mac_panel_repeat_summary 2.2 s, 53 Tests
+ok   test_store_screenshots 2.1 s, 30 Tests
+ok   test_asc_what_to_test 9.0 s, 29 Tests
+ok   test_asc_crashes 13.0 s, 24 Tests
+ok   test_asc_app_info 18.6 s, 24 Tests
+ok   test_ci_xcode27 1.0 s, 30 Tests
+ok   test_asc_beta_invite 25.5 s, 27 Tests
+ok   test_asc_version_texts 29.3 s, 33 Tests
+ok   test_asc_beta_probe 10.3 s, 17 Tests
+ok   test_mac_reopen_settle 0.1 s, 31 Tests
+ok   test_asc_store_version 37.7 s, 32 Tests
+ok   test_asc_beta_link 18.3 s, 19 Tests
+ok   test_datenschutz_text 0.1 s, 24 Tests
+ok   test_asc_cleanup_certs 13.4 s, 19 Tests
+ok   test_asc_review_notes 18.5 s, 19 Tests
+ok   test_asc_header_upload 0.1 s, 11 Tests
+ok   test_ui_smoke_shards 0.4 s, 13 Tests
+ok   test_sim_lock 49.6 s, 32 Tests
+ok   test_catalog_languages 0.2 s, 9 Tests
+ok   test_privacy_manifest 0.8 s, 17 Tests
+ok   test_measurement_status 0.1 s, 20 Tests
+ok   test_guardrail_corpus 0.6 s, 19 Tests
+ok   test_sim_proof 0.9 s, 15 Tests
+ok   test_aps_environment 0.2 s, 10 Tests
+ok   test_app_store_datenschutzangaben 0.1 s, 15 Tests
+ok   test_modell_rest_entfernt 0.2 s, 13 Tests
+ok   test_check_cloudkit_production 0.1 s, 14 Tests
+ok   test_asc_beta_setup 12.0 s, 18 Tests
+ok   test_abnahme_liste 0.1 s, 11 Tests
+ok   test_menubar_panel_log 0.2 s, 12 Tests
+ok   test_compare_reports 0.4 s, 13 Tests
+ok   test_app_icon_package 0.1 s, 9 Tests
+ok   test_latency_summary 0.3 s, 9 Tests
+ok   test_evidence_config 0.1 s, 6 Tests
+ok   test_siri_phrases 0.1 s, 6 Tests
+ok   test_next_ticket_hook 2.8 s, 13 Tests
+ok   test_asc_wait_build 18.1 s, 21 Tests
+ok   test_info_plist_sync 0.1 s, 4 Tests
+ok   test_marketing_version 0.1 s, 4 Tests
+ok   test_entitlements_sync 0.2 s, 4 Tests
+ok   test_cloudkit_schema 0.1 s, 2 Tests
+ok   test_next_ticket 30.8 s, 27 Tests
+ok   test_ci_changes 0.2 s, 11 Tests
+ok   test_real_model_result 0.1 s, 7 Tests
+ok   test_board 0.1 s, 8 Tests
+ok   test_shipped_languages 0.1 s, 5 Tests
+ok   test_mac_ci_entitlements 0.3 s, 5 Tests
+ok   test_onboarding_ohne_modell 0.1 s, 2 Tests
+ok   test_ci_settle_sync 0.2 s, 4 Tests
+ok   test_claim_satz 0.1 s, 3 Tests
+ok   test_tags_wording 0.1 s, 2 Tests
+ok   test_run_script_tests 2.4 s, 6 Tests
+ok   test_store_header 7.5 s, 5 Tests
+ok   test_sim_run_xcodebuild 63.2 s, 23 Tests
+ok   test_asc_store_probe 16.0 s, 20 Tests
+ok   test_asc_watch_appinfo 19.2 s, 13 Tests
+ok   test_asc_store_submit 116.9 s, 32 Tests
+58 Module, 0 rot
+real 116,89
+user 111,96
+sys 63,10
+EXIT=0
+
+# Zieltests einzeln (unittest -v)
+$ cd scripts && python3 -m unittest test_run_script_tests test_ci_xcode27 test_ci_changes -v
+test_all_green_passes (test_run_script_tests.RunnerTests.test_all_green_passes)
+Zwei grüne Module → Exit 0, Schlusszeile: 2 Module, 0 rot. ... ok
+test_empty_folder_fails (test_run_script_tests.RunnerTests.test_empty_folder_fails)
+AC-3: kein Testmodul → Exit 1. ... ok
+test_finds_exactly_the_glob_modules (test_run_script_tests.RunnerTests.test_finds_exactly_the_glob_modules)
+AC-1: dieselben Module wie glob scripts/test_*.py, keine anderen. ... ok
+test_hanging_module_hits_the_limit (test_run_script_tests.RunnerTests.test_hanging_module_hits_the_limit)
+AC-4: Zeitlimit überschritten → Exit 1, Modul rot, Lauf endet lange vor dem Schlafende. ... ok
+test_red_module_fails_the_run_and_is_named (test_run_script_tests.RunnerTests.test_red_module_fails_the_run_and_is_named)
+AC-2: Exit 1, volle Ausgabe des roten Moduls, Schlusszeile nennt nur es. ... ok
+test_worker_count (test_run_script_tests.RunnerTests.test_worker_count)
+SCRIPT_TESTS_WORKERS gewinnt, sonst max(4, min(8, Kerne)). ... ok
+test_automation_mode_is_enabled_before_the_test (test_ci_xcode27.MacGallery.test_automation_mode_is_enabled_before_the_test) ... ok
+test_claude_md_names_the_mac_gallery (test_ci_xcode27.MacGallery.test_claude_md_names_the_mac_gallery) ... ok
+test_click_test_clicks_the_fields_and_both_pickers (test_ci_xcode27.MacGallery.test_click_test_clicks_the_fields_and_both_pickers)
+#544: the click test reaches Note, subtask, File and Photo; the gallery only photographs ("Add more" gone, #560). ... ok
+test_click_test_runs_in_the_sandbox_of_the_real_app (test_ci_xcode27.MacGallery.test_click_test_runs_in_the_sandbox_of_the_real_app)
+#544: the click test's app carries the App Sandbox of project.yml; without it the open panel opened ... ok
+test_diagnosis_export_and_upload_run_after_a_failure (test_ci_xcode27.MacGallery.test_diagnosis_export_and_upload_run_after_a_failure) ... ok
+test_export_keeps_only_mac_gallery_attachments (test_ci_xcode27.MacGallery.test_export_keeps_only_mac_gallery_attachments) ... ok
+test_gallery_source_is_mac_only (test_ci_xcode27.MacGallery.test_gallery_source_is_mac_only) ... ok
+test_job_limit_keeps_a_quarter_in_reserve (test_ci_xcode27.MacGallery.test_job_limit_keeps_a_quarter_in_reserve) ... ok
+test_job_runs_on_xcode_27_and_never_fails_silently (test_ci_xcode27.MacGallery.test_job_runs_on_xcode_27_and_never_fails_silently) ... ok
+test_runs_only_the_mac_gallery_on_the_mac_with_ad_hoc_signing (test_ci_xcode27.MacGallery.test_runs_only_the_mac_gallery_on_the_mac_with_ad_hoc_signing) ... ok
+test_ui_smoke_neither_runs_nor_exports_the_mac_gallery (test_ci_xcode27.MacGallery.test_ui_smoke_neither_runs_nor_exports_the_mac_gallery) ... ok
+test_fails_without_iphone_17_on_ios_27_0 (test_ci_xcode27.PickSimulator.test_fails_without_iphone_17_on_ios_27_0) ... ok
+test_picks_iphone_17_on_ios_27_0 (test_ci_xcode27.PickSimulator.test_picks_iphone_17_on_ios_27_0) ... ok
+test_accepts_xcode_27_0 (test_ci_xcode27.SelectXcodeAction.test_accepts_xcode_27_0) ... ok
+test_rejects_other_version (test_ci_xcode27.SelectXcodeAction.test_rejects_other_version) ... ok
+test_selects_fixed_xcode_27_app (test_ci_xcode27.SelectXcodeAction.test_selects_fixed_xcode_27_app) ... ok
+test_claude_md_describes_the_new_ci (test_ci_xcode27.Sources.test_claude_md_describes_the_new_ci) ... ok
+test_no_compiler_switch_left (test_ci_xcode27.Sources.test_no_compiler_switch_left) ... ok
+test_no_server_recognition_dialog_left_to_decline (test_ci_xcode27.SpeechStressOnXcode27.test_no_server_recognition_dialog_left_to_decline) ... ok
+test_stress_runs_skip_the_600_second_diagnostics (test_ci_xcode27.SpeechStressOnXcode27.test_stress_runs_skip_the_600_second_diagnostics) ... ok
+test_check_names_unchanged (test_ci_xcode27.Workflows.test_check_names_unchanged) ... ok
+test_every_job_runs_on_xcode_27_with_the_action (test_ci_xcode27.Workflows.test_every_job_runs_on_xcode_27_with_the_action) ... ok
+test_no_lowering_anywhere_in_github (test_ci_xcode27.Workflows.test_no_lowering_anywhere_in_github) ... ok
+test_sed_pattern_catches_every_writing_spelling (test_ci_xcode27.Workflows.test_sed_pattern_catches_every_writing_spelling) ... ok
+test_sed_pattern_ignores_reading_sed (test_ci_xcode27.Workflows.test_sed_pattern_ignores_reading_sed) ... ok
+test_ui_smoke_has_a_diagnosis_step_that_never_fails (test_ci_xcode27.Workflows.test_ui_smoke_has_a_diagnosis_step_that_never_fails) ... ok
+test_ui_smoke_lets_the_simulator_settle_and_runs_without_parallel_clones (test_ci_xcode27.Workflows.test_ui_smoke_lets_the_simulator_settle_and_runs_without_parallel_clones) ... ok
+test_unit_job_prints_measurement_reports_into_its_own_log (test_ci_xcode27.Workflows.test_unit_job_prints_measurement_reports_into_its_own_log) ... ok
+test_unit_job_runs_every_script_test (test_ci_xcode27.Workflows.test_unit_job_runs_every_script_test)
+#185: every scripts/test_*.py runs in CI, in one step, before Xcode. ... ok
+test_workflows_wait_for_the_simulator_to_finish_booting (test_ci_xcode27.Workflows.test_workflows_wait_for_the_simulator_to_finish_booting) ... ok
+test_app_code_needs_the_app (test_ci_changes.PathRule.test_app_code_needs_the_app) ... ok
+test_empty_list_runs_everything (test_ci_changes.PathRule.test_empty_list_runs_everything) ... ok
+test_nested_markdown_is_not_spared (test_ci_changes.PathRule.test_nested_markdown_is_not_spared) ... ok
+test_scripts_and_docs_only_spare_the_app (test_ci_changes.PathRule.test_scripts_and_docs_only_spare_the_app) ... ok
+test_scripts_ci_runs_need_the_app (test_ci_changes.PathRule.test_scripts_ci_runs_need_the_app) ... ok
+test_server_claude_and_workflows_spare_the_app (test_ci_changes.PathRule.test_server_claude_and_workflows_spare_the_app) ... ok
+test_the_decision_script_itself_spares_the_app (test_ci_changes.PathRule.test_the_decision_script_itself_spares_the_app) ... ok
+test_app_jobs_wait_for_the_decision (test_ci_changes.Workflow.test_app_jobs_wait_for_the_decision) ... ok
+test_changes_job_decides_from_the_merge_diff (test_ci_changes.Workflow.test_changes_job_decides_from_the_merge_diff) ... ok
+test_smoke_summary_passes_when_spared (test_ci_changes.Workflow.test_smoke_summary_passes_when_spared) ... ok
+test_unit_tests_always_run_the_script_tests (test_ci_changes.Workflow.test_unit_tests_always_run_the_script_tests) ... ok
+
+----------------------------------------------------------------------
+Ran 47 tests in 4.711s
+
+OK
+EXIT=0
