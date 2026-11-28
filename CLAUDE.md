@@ -235,6 +235,7 @@ touches any of these paths:
 
 Ausnahme (Henning, 2026-10-30, #758): Änderungen in `LooseEndsWidgets/`, die nur Katalogschlüssel oder Textliterale betreffen (kein Layout, keine Logik, keine Intents, keine `Info.plist`), enden nach Stufe 2. Beleg: Katalogwächter grün und Screenshot der Widget-Galerie im Simulator.
 Ausnahme (Henning, 2026-10-25, #680): Ändert ein Schnitt in `EnrichmentCoordinator.swift` nur den Regelzweig (Wortliste, Kalender, Kontakte, Orte) und nicht den Modellaufruf, endet die Abnahme nach Stufe 2; der Bericht sagt „Regelzweig, kein Modellaufruf, im Simulator belegt“.
+Ausnahme (Henning, 2026-11-28, #982: „ich brauche doch solche dinge nicht zu testen da ich nichts mehr machen kann, als du!!!!!“): Ändert ein Schnitt nichts, was Henning am Gerät sehen oder bedienen kann (Code entfernen, Build-Einstellungen, Archivprüfungen, Umbau ohne neues Verhalten), bekommt er keine Testpunkte und wird nicht um Rückmeldung gebeten. Den Nachweis führt Claude selbst (Simulator, Binärprüfung, grüner TestFlight-Lauf samt Archivprüfung), danach wird das Issue geschlossen. Testpunkte für Henning nur, wo er etwas Neues oder Geändertes sieht, das nur das echte Gerät zeigt.
 
 Berührt der Schnitt keinen dieser Pfade, endet die Abnahme nach Stufe 2, und das wird im
 Abschlussbericht mit genau diesem Satz begründet: „Kein Pfad der Geräteliste berührt." **⛔ Nichts
